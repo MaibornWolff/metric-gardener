@@ -1,13 +1,7 @@
 {
-  "name": "js-parser",
+  "name": "node-parser",
   "version": "1.0.0",
-  "description": "",
-  "main": "parser.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "description": "Node based parser to calculate metrics for different languages",
   "dependencies": {
     "tree-sitter": "^0.20.0",
     "tree-sitter-go": "^0.19.1",

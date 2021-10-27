@@ -76,12 +76,13 @@ class Blub {
 
 (new Blub()).blub(1,2);
 
-`
+`;
+
 const tree = parser.parse(sourceCode);
 
 // more than one return statement within a function/method cannot be covered
 //  elvis operator are not covered yet
-let mccQuery = new Query(PHP, `
+let metricsQuery = new Query(PHP, `
   [
     "function"
     "if"
@@ -102,27 +103,27 @@ let mccQuery = new Query(PHP, `
   "class" @class
 `);
 
-const mccMatches = mccQuery.matches(tree.rootNode);
-const mcc = mccMatches.filter((match) => { return match.pattern === 0 || match.pattern === 1 });
+const matches = metricsQuery.matches(tree.rootNode);
+const mccMatches = matches.filter((match) => { return match.pattern === 0 || match.pattern === 1 });
 
-const commentLineMatches = mccMatches.filter((match) => { return match.pattern === 2 });
+const commentLineMatches = matches.filter((match) => { return match.pattern === 2 });
 const commentLines = commentLineMatches.reduce((accumulator, match) => {
   const captureNode = match.captures[0].node
   return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1
 }, 0);
 
 
-const programMatches = mccMatches.filter((match) => { return match.pattern === 3 });
+const programMatches = matches.filter((match) => { return match.pattern === 3 });
 const loc = programMatches.length > 0 ? programMatches[0].captures[0].node.endPosition.row : 0;
 
-const functionMatches = mccMatches.filter((match) => { return match.pattern === 4 });
-const classMatches = mccMatches.filter((match) => { return match.pattern === 5 });
+const functionMatches = matches.filter((match) => { return match.pattern === 4 });
+const classMatches = matches.filter((match) => { return match.pattern === 5 });
 
 console.log(tree.rootNode.toString());
 
 console.log("\n\n#########################################################");
 console.log("Metrics for the given php file:");
-console.log("\tmcc:\t\t" + mcc.length);
+console.log("\tmcc:\t\t" + mccMatches.length);
 console.log("\tcomment_lines:\t" + commentLines);
 console.log("\tloc:\t\t" + loc);
 console.log("\trloc:\t\t" + (loc - commentLines) );

@@ -59,7 +59,7 @@ func main() {
     }
     
 }
-`
+`;
 
 const tree = parser.parse(sourceCode);
 

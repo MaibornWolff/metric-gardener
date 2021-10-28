@@ -1,14 +1,13 @@
 const Parser = require('tree-sitter');
 const {Query} = Parser
 const TypeScript = require('tree-sitter-typescript').typescript;
-
 const fs = require("fs")
-const exampleSourceCode = fs.readFileSync("./resources/js-example-code.ts")
 
 const parser = new Parser();
 parser.setLanguage(TypeScript);
 
-const tree = parser.parse(exampleSourceCode.toString());
+const sourceCode = getSourceCode()
+const tree = parser.parse(sourceCode);
 
 const metricsQuery = new Query(TypeScript, `
   [
@@ -33,7 +32,6 @@ const metricsQuery = new Query(TypeScript, `
 `);
 
 const caps = metricsQuery.captures(tree.rootNode)
-console.log(caps)
 
 const matches = metricsQuery.matches(tree.rootNode);
 const mccMatches = matches.filter((match) => { return match.pattern <= 4 });
@@ -51,14 +49,41 @@ const loc = programMatches.length > 0 ? programMatches[0].captures[0].node.endPo
 const functionMatches = matches.filter((match) => { return match.pattern === 1 || match.pattern === 2 || match.pattern === 3 });
 const classMatches = matches.filter((match) => { return match.pattern === 8 });
 
-console.log(tree.rootNode.toString());
-
 console.log("\n\n#########################################################");
 console.log("Metrics for the given php file:");
-console.log("\tmcc:\t\t" + mccMatches.length);
+console.log("\tmcc:\t\t" + (mccMatches.length + getReturnStatementComplexity(tree)));
 console.log("\tcomment_lines:\t" + commentLines);
 console.log("\tloc:\t\t" + loc);
 console.log("\trloc:\t\t" + (loc - commentLines) );
 console.log("\tfunctions:\t" + functionMatches.length);
 console.log("\tclasses:\t" + classMatches.length);
 console.log("#########################################################\n\n");
+
+function getReturnStatementComplexity(tree) {
+  let functionsAndMethodsQuery = new Query(TypeScript, `
+    (function) @function
+    (function_declaration) @function
+    (method_definition) @method
+  `);
+
+  const returnStatementQuery = new Query(TypeScript, `
+    (return_statement) @return
+  `);
+
+  let additionalReturnStatementComplexity = 0;
+
+  const functionsOrMethods = functionsAndMethodsQuery.captures(tree.rootNode);
+
+  for (const capture of functionsOrMethods) {
+    const returnCaptures = returnStatementQuery.captures(capture.node)
+    if (returnCaptures.length > 1) {
+      additionalReturnStatementComplexity += returnCaptures.length - 1
+    }
+  }
+
+  return additionalReturnStatementComplexity
+}
+
+function getSourceCode() {
+  return fs.readFileSync("./resources/js-example-code.ts").toString()
+}

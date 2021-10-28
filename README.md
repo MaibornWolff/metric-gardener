@@ -24,4 +24,4 @@
 - `node parser-go.js`
 - `node parser-ts.js`
 
-They will just parse some example code that is placed within the parser.
+They will just parse some example code that is placed within the parser and print the metrics.

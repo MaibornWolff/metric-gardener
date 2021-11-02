@@ -6,7 +6,7 @@ const fs = require("fs")
 const parser = new Parser();
 parser.setLanguage(TypeScript);
 
-const sourceCode = getSourceCode()
+const sourceCode = getSourceCode();
 const tree = parser.parse(sourceCode);
 
 const metricsQuery = new Query(TypeScript, `

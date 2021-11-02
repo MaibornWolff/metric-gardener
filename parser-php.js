@@ -5,7 +5,7 @@ const PHP = require('tree-sitter-php');
 const parser = new Parser();
 parser.setLanguage(PHP);
 
-const sourceCode = getSourceCode()
+const sourceCode = getSourceCode();
 const tree = parser.parse(sourceCode);
 
 //  elvis operator are not covered yet

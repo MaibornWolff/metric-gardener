@@ -2,9 +2,12 @@
 
 ### Supported Languages
 
--   PHP
--   Kotlin
+-   C#
 -   Go
+-   Java
+-   JavaScript
+-   Kotlin
+-   PHP
 -   TypeScript
 
 ### Supported Metrics

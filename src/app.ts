@@ -23,7 +23,7 @@ const metrics: Metric[] = [mcc, functions, classes];
 const walkSync = (
     dir,
     fileList: string[] = [],
-    whiteList: string[] = [],
+    supportedFileExtensions: string[] = [],
     excludedFolders: string[] = []
 ) => {
     fs.readdirSync(dir).forEach((file) => {
@@ -35,8 +35,8 @@ const walkSync = (
                 return;
             }
 
-            fileList = walkSync(path.join(dir, file), fileList, whiteList, excludedFolders);
-        } else if (whiteList.includes(file.split(".").pop().toLowerCase())) {
+            fileList = walkSync(path.join(dir, file), fileList, supportedFileExtensions, excludedFolders);
+        } else if (supportedFileExtensions.includes(file.split(".").pop().toLowerCase())) {
             fileList = fileList.concat(path.join(dir, file));
         }
     });
@@ -51,6 +51,7 @@ const files = walkSync(
     [...grammars.keys()],
     ["node_modules", ".idea", "dist", "build", "out", "vendor"]
 );
+
 console.log(" --- " + files.length + " files detected");
 console.log("\n\n");
 

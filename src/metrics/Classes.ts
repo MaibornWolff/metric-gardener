@@ -4,9 +4,7 @@ import Parser from "tree-sitter";
 import { grammars } from "../grammars";
 
 export class Classes implements Metric {
-    private classesStatementSuperSet = [
-        '"class" @class'
-    ];
+    private classesStatementSuperSet = ['"class" @class'];
 
     calculate(parseFile: ParseFile) {
         const treeSitterLanguage = grammars.get(parseFile.language);

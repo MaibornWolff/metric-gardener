@@ -104,21 +104,13 @@ const commentLineMatches = mccMatches.filter((match) => {
 });
 const commentLines = commentLineMatches.reduce((accumulator, match) => {
     const captureNode = match.captures[0].node;
-    return (
-        accumulator +
-        captureNode.endPosition.row -
-        captureNode.startPosition.row +
-        1
-    );
+    return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
 }, 0);
 
 const programMatches = mccMatches.filter((match) => {
     return match.pattern === 2;
 });
-const loc =
-    programMatches.length > 0
-        ? programMatches[0].captures[0].node.endPosition.row
-        : 0;
+const loc = programMatches.length > 0 ? programMatches[0].captures[0].node.endPosition.row : 0;
 
 const functionMatches = mccMatches.filter((match) => {
     return match.pattern === 3;

@@ -46,21 +46,13 @@ const commentLineMatches = matches.filter((match) => {
 });
 const commentLines = commentLineMatches.reduce((accumulator, match) => {
     const captureNode = match.captures[0].node;
-    return (
-        accumulator +
-        captureNode.endPosition.row -
-        captureNode.startPosition.row +
-        1
-    );
+    return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
 }, 0);
 
 const programMatches = matches.filter((match) => {
     return match.pattern === 6;
 });
-const loc =
-    programMatches.length > 0
-        ? programMatches[0].captures[0].node.endPosition.row
-        : 0;
+const loc = programMatches.length > 0 ? programMatches[0].captures[0].node.endPosition.row : 0;
 
 const functionMatches = matches.filter((match) => {
     return match.pattern === 1 || match.pattern === 2 || match.pattern === 3;
@@ -71,9 +63,7 @@ const classMatches = matches.filter((match) => {
 
 console.log("\n\n#########################################################");
 console.log("Metrics for the given php file:");
-console.log(
-    "\tmcc:\t\t" + (mccMatches.length + getReturnStatementComplexity(tree))
-);
+console.log("\tmcc:\t\t" + (mccMatches.length + getReturnStatementComplexity(tree)));
 console.log("\tcomment_lines:\t" + commentLines);
 console.log("\tloc:\t\t" + loc);
 console.log("\trloc:\t\t" + (loc - commentLines));

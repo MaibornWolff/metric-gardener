@@ -5,7 +5,8 @@
     "main": "dist/app.js",
     "scripts": {
         "start": "tsc && node dist/app.js",
-        "tslint-check": "tslint-config-prettier-check ./tslint.json"
+        "tslint-check": "tslint-config-prettier-check ./tslint.json",
+        "format": "prettier --write \"./**/*\""
     },
     "dependencies": {
         "tree-sitter": "^0.20.0",

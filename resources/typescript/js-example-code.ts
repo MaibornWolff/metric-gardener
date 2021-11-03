@@ -1,9 +1,6 @@
 import "./artificialIntelligence.component.scss";
 import debounce from "lodash.debounce";
-import {
-    FilesSelectionSubscriber,
-    FilesService,
-} from "../../state/store/files/files.service";
+import { FilesSelectionSubscriber, FilesService } from "../../state/store/files/files.service";
 import { FileState } from "../../model/files/files";
 import { IRootScopeService } from "angular";
 import { buildCustomConfigFromState } from "../../util/customConfigBuilder";
@@ -108,9 +105,7 @@ export class ArtificialIntelligenceController
 
     onBlacklistChanged(blacklist: BlacklistItem[]) {
         this.blacklist = blacklist;
-        this.fileState = getVisibleFileStates(
-            this.storeService.getState().files
-        )[0];
+        this.fileState = getVisibleFileStates(this.storeService.getState().files)[0];
 
         if (this.fileState !== undefined) {
             this.debounceCalculation();
@@ -129,23 +124,14 @@ export class ArtificialIntelligenceController
     }
 
     private calculate() {
-        const mainProgrammingLanguage = this.getMostFrequentLanguage(
-            this.fileState.file.map
-        );
+        const mainProgrammingLanguage = this.getMostFrequentLanguage(this.fileState.file.map);
         this._viewModel.analyzedProgrammingLanguage = mainProgrammingLanguage;
 
         this.clearRiskProfile();
 
         if (mainProgrammingLanguage !== undefined) {
-            this.calculateRiskProfile(
-                this.fileState,
-                mainProgrammingLanguage,
-                "mcc"
-            );
-            this.createCustomConfigSuggestions(
-                this.fileState,
-                mainProgrammingLanguage
-            );
+            this.calculateRiskProfile(this.fileState, mainProgrammingLanguage, "mcc");
+            this.createCustomConfigSuggestions(this.fileState, mainProgrammingLanguage);
         }
     }
 
@@ -153,30 +139,21 @@ export class ArtificialIntelligenceController
         this._viewModel.riskProfile = undefined;
     }
 
-    private calculateRiskProfile(
-        fileState: FileState,
-        programmingLanguage,
-        metricName
-    ) {
+    private calculateRiskProfile(fileState: FileState, programmingLanguage, metricName) {
         let totalRloc = 0;
         let numberOfRlocLowRisk = 0;
         let numberOfRlocModerateRisk = 0;
         let numberOfRlocHighRisk = 0;
         let numberOfRlocVeryHighRisk = 0;
 
-        const languageSpecificThresholds =
-            this.getAssociatedMetricThresholds(programmingLanguage);
+        const languageSpecificThresholds = this.getAssociatedMetricThresholds(programmingLanguage);
         const thresholds = languageSpecificThresholds[metricName];
 
         for (const { data } of hierarchy(fileState.file.map)) {
             // TODO calculate risk profile only for focused or currently visible but not excluded files.
             if (
                 data.type !== NodeType.FILE ||
-                isPathBlacklisted(
-                    data.path,
-                    this.blacklist,
-                    BlacklistType.exclude
-                ) ||
+                isPathBlacklisted(data.path, this.blacklist, BlacklistType.exclude) ||
                 data.attributes[metricName] === undefined ||
                 data.attributes["rloc"] === undefined ||
                 this.getFileExtension(data.name) !== programmingLanguage
@@ -207,46 +184,26 @@ export class ArtificialIntelligenceController
 
         this._viewModel.riskProfile = {
             lowRisk: Math.ceil((numberOfRlocLowRisk / totalRloc) * 100),
-            moderateRisk: Math.ceil(
-                (numberOfRlocModerateRisk / totalRloc) * 100
-            ),
+            moderateRisk: Math.ceil((numberOfRlocModerateRisk / totalRloc) * 100),
             highRisk: Math.ceil((numberOfRlocHighRisk / totalRloc) * 100),
-            veryHighRisk: Math.ceil(
-                (numberOfRlocVeryHighRisk / totalRloc) * 100
-            ),
+            veryHighRisk: Math.ceil((numberOfRlocVeryHighRisk / totalRloc) * 100),
         };
     }
 
-    private createCustomConfigSuggestions(
-        fileState: FileState,
-        programmingLanguage
-    ) {
-        const metricValues = this.getSortedMetricValues(
-            fileState,
-            programmingLanguage
-        );
+    private createCustomConfigSuggestions(fileState: FileState, programmingLanguage) {
+        const metricValues = this.getSortedMetricValues(fileState, programmingLanguage);
         const metricAssessmentResults = this.findGoodAndBadMetrics(
             metricValues,
             programmingLanguage
         );
 
-        const noticeableMetricSuggestionLinks = new Map<
-            string,
-            MetricSuggestionParameters
-        >();
+        const noticeableMetricSuggestionLinks = new Map<string, MetricSuggestionParameters>();
         const newCustomConfigs: CustomConfig[] = [];
 
-        for (const [
-            metricName,
-            colorRange,
-        ] of metricAssessmentResults.suspiciousMetrics) {
+        for (const [metricName, colorRange] of metricAssessmentResults.suspiciousMetrics) {
             const suspiciousMetricConfig = this.createOrUpdateCustomConfig(
                 `Suspicious Files - Metric ${metricName.toUpperCase()} - (AI)`,
-                this.prepareOverviewConfigState(
-                    metricName,
-                    colorRange.from,
-                    colorRange.to
-                ),
+                this.prepareOverviewConfigState(metricName, colorRange.from, colorRange.to),
                 fileState
             );
 
@@ -258,8 +215,7 @@ export class ArtificialIntelligenceController
                 generalCustomConfigId: suspiciousMetricConfig.id,
             });
 
-            const outlierThreshold =
-                metricAssessmentResults.outliersThresholds.get(metricName);
+            const outlierThreshold = metricAssessmentResults.outliersThresholds.get(metricName);
             if (outlierThreshold > 0) {
                 const highRiskMetricConfig = this.createOrUpdateCustomConfig(
                     `Very High Risk Files - Metric ${metricName.toUpperCase()} - (AI)`,
@@ -273,9 +229,8 @@ export class ArtificialIntelligenceController
 
                 newCustomConfigs.push(highRiskMetricConfig);
 
-                noticeableMetricSuggestionLinks.get(
-                    metricName
-                ).outlierCustomConfigId = highRiskMetricConfig.id;
+                noticeableMetricSuggestionLinks.get(metricName).outlierCustomConfigId =
+                    highRiskMetricConfig.id;
             }
         }
 
@@ -284,14 +239,10 @@ export class ArtificialIntelligenceController
         this._viewModel.suspiciousMetricSuggestionLinks = [
             ...noticeableMetricSuggestionLinks.values(),
         ];
-        this._viewModel.unsuspiciousMetrics =
-            metricAssessmentResults.unsuspiciousMetrics;
+        this._viewModel.unsuspiciousMetrics = metricAssessmentResults.unsuspiciousMetrics;
     }
 
-    private findGoodAndBadMetrics(
-        metricValues,
-        programmingLanguage
-    ): MetricAssessmentResults {
+    private findGoodAndBadMetrics(metricValues, programmingLanguage): MetricAssessmentResults {
         const metricAssessmentResults: MetricAssessmentResults = {
             suspiciousMetrics: new Map<string, ColorRange>(),
             unsuspiciousMetrics: [],
@@ -301,16 +252,13 @@ export class ArtificialIntelligenceController
         const languageSpecificMetricThresholds =
             this.getAssociatedMetricThresholds(programmingLanguage);
 
-        for (const metricName of Object.keys(
-            languageSpecificMetricThresholds
-        )) {
+        for (const metricName of Object.keys(languageSpecificMetricThresholds)) {
             const valuesOfMetric = metricValues[metricName];
             if (valuesOfMetric === undefined) {
                 continue;
             }
 
-            const thresholdConfig =
-                languageSpecificMetricThresholds[metricName];
+            const thresholdConfig = languageSpecificMetricThresholds[metricName];
             const maxMetricValue = Math.max(...valuesOfMetric);
 
             if (maxMetricValue <= thresholdConfig.percentile70) {
@@ -335,11 +283,7 @@ export class ArtificialIntelligenceController
         return metricAssessmentResults;
     }
 
-    private createOrUpdateCustomConfig(
-        configName: string,
-        state: State,
-        fileState: FileState
-    ) {
+    private createOrUpdateCustomConfig(configName: string, state: State, fileState: FileState) {
         const customConfig = CustomConfigHelper.getCustomConfigByName(
             CustomConfigMapSelectionMode.SINGLE,
             [fileState.file.fileMeta.fileName],
@@ -403,20 +347,13 @@ export class ArtificialIntelligenceController
         return state;
     }
 
-    private getSortedMetricValues(
-        fileState: FileState,
-        programmingLanguage
-    ): MetricValues {
+    private getSortedMetricValues(fileState: FileState, programmingLanguage): MetricValues {
         const metricValues: MetricValues = {};
 
         for (const { data } of hierarchy(fileState.file.map)) {
             if (
                 data.type !== NodeType.FILE ||
-                isPathBlacklisted(
-                    data.path,
-                    this.blacklist,
-                    BlacklistType.exclude
-                ) ||
+                isPathBlacklisted(data.path, this.blacklist, BlacklistType.exclude) ||
                 this.getFileExtension(data.name) !== programmingLanguage
             ) {
                 continue;
@@ -428,10 +365,7 @@ export class ArtificialIntelligenceController
                     if (metricValues[metricIndex] === undefined) {
                         metricValues[metricIndex] = [];
                     }
-                    pushSorted(
-                        metricValues[metricIndex],
-                        data.attributes[metricIndex]
-                    );
+                    pushSorted(metricValues[metricIndex], data.attributes[metricIndex]);
                 }
             }
         }
@@ -440,9 +374,7 @@ export class ArtificialIntelligenceController
     }
 
     private getFileExtension(fileName: string) {
-        return fileName.includes(".")
-            ? fileName.slice(fileName.lastIndexOf(".") + 1)
-            : undefined;
+        return fileName.includes(".") ? fileName.slice(fileName.lastIndexOf(".") + 1) : undefined;
     }
 
     private getMostFrequentLanguage(map: CodeMapNode) {
@@ -454,9 +386,7 @@ export class ArtificialIntelligenceController
             }
 
             if (data.type === NodeType.FILE) {
-                const fileExtension = data.name.slice(
-                    data.name.lastIndexOf(".") + 1
-                );
+                const fileExtension = data.name.slice(data.name.lastIndexOf(".") + 1);
                 numberOfFilesPerLanguage[fileExtension] =
                     numberOfFilesPerLanguage[fileExtension] + 1 || 1;
             }
@@ -467,9 +397,7 @@ export class ArtificialIntelligenceController
         }
 
         return Object.keys(numberOfFilesPerLanguage).reduce((a, b) => {
-            return numberOfFilesPerLanguage[a] > numberOfFilesPerLanguage[b]
-                ? a
-                : b;
+            return numberOfFilesPerLanguage[a] > numberOfFilesPerLanguage[b] ? a : b;
         });
     }
 

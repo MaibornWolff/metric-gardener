@@ -67,9 +67,7 @@ export class McCabeComplexity implements Metric {
         queryBuilder.setStatements(this.mccFunctionsAndMethodsSuperSet);
 
         const functionsAndMethodsQuery = queryBuilder.build();
-        const functionsOrMethods = functionsAndMethodsQuery.captures(
-            tree.rootNode
-        );
+        const functionsOrMethods = functionsAndMethodsQuery.captures(tree.rootNode);
 
         queryBuilder.clear();
         queryBuilder.setStatements(this.mccReturnStatementSuperSet);
@@ -79,12 +77,9 @@ export class McCabeComplexity implements Metric {
         let additionalReturnStatementComplexity = 0;
 
         for (const capture of functionsOrMethods) {
-            const returnCaptures = returnStatementQuery.captures(
-                capture.node
-            );
+            const returnCaptures = returnStatementQuery.captures(capture.node);
             if (returnCaptures.length > 1) {
-                additionalReturnStatementComplexity +=
-                    returnCaptures.length - 1;
+                additionalReturnStatementComplexity += returnCaptures.length - 1;
             }
         }
 

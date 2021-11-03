@@ -59,8 +59,7 @@ export class QueryBuilder {
                 metricsQuery.matches(this.tree.rootNode);
 
                 availableMccKeywords.push(mccKeyword);
-            } catch (e) {
-            }
+            } catch (e) {}
         }
 
         return '["' + availableMccKeywords.join('""') + '"] @keyword';
@@ -71,15 +70,11 @@ export class QueryBuilder {
 
         for (const mccStatement of this.statements) {
             try {
-                const metricsQuery = new Query(
-                    this.treeSitterLanguage,
-                    mccStatement
-                );
+                const metricsQuery = new Query(this.treeSitterLanguage, mccStatement);
                 metricsQuery.matches(this.tree.rootNode);
 
                 availableMccStatements.push(mccStatement);
-            } catch (e) {
-            }
+            } catch (e) {}
         }
 
         return availableMccStatements.join("\n");

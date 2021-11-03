@@ -10,18 +10,13 @@
 ### Supported Metrics
 
 -   mcc
--   comment_lines
--   loc
--   rloc
 -   functions
 -   classes
 
 ### Usage
 
 -   `npm install`
--   `node parser-php.js`
--   `node parser-kotlin.js`
--   `node parser-go.js`
--   `node parser-ts.js`
+-   `npm run start` to parse some provided example code
+-   `npm run start -- /path/to/sources` specify the path to a folder or a file with source code
 
-They will just parse some example code that is placed within the parser and print the metrics.
+The metrics will be printed during parsing.

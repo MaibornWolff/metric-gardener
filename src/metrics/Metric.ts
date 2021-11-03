@@ -1,5 +1,5 @@
 interface Metric {
-    calculate();
+    calculate(parseFile: ParseFile);
 }
 
 interface ParseFile {

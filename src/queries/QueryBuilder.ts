@@ -56,17 +56,12 @@ export class QueryBuilder {
             `
                 );
 
-                const matches = metricsQuery.matches(this.tree.rootNode);
+                metricsQuery.matches(this.tree.rootNode);
 
                 availableMccKeywords.push(mccKeyword);
             } catch (e) {
-                console.log(mccKeyword + " not available");
             }
         }
-
-        console.log("\n\n");
-        console.log("Found keywords for " + this.treeSitterLanguage + ":");
-        console.log(availableMccKeywords, "\n\n");
 
         return '["' + availableMccKeywords.join('""') + '"] @keyword';
     }
@@ -84,15 +79,8 @@ export class QueryBuilder {
 
                 availableMccStatements.push(mccStatement);
             } catch (e) {
-                console.log(mccStatement + " not available");
             }
         }
-
-        console.log("\n\n");
-        console.log(
-            "Found statements for " + this.treeSitterLanguage.name + ":"
-        );
-        console.log(availableMccStatements, "\n\n");
 
         return availableMccStatements.join("\n");
     }

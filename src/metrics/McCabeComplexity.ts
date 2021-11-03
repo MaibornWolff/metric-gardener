@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import fs from "fs";
-import Parser, { Query } from "tree-sitter";
-import { filesToParse, grammars } from "../grammars";
+import Parser from "tree-sitter";
+import { grammars } from "../grammars";
 
 export class McCabeComplexity implements Metric {
     private mccKeywordsSuperSet = [
@@ -47,51 +47,47 @@ export class McCabeComplexity implements Metric {
 
     private mccReturnStatementSuperSet = ["(return_statement) @return"];
 
-    calculate() {
-        for (const [fileLanguage, parseFile] of filesToParse.entries()) {
-            const treeSitterLanguage = grammars.get(fileLanguage);
+    calculate(parseFile: ParseFile) {
+        const treeSitterLanguage = grammars.get(parseFile.language);
 
-            const parser = new Parser();
-            parser.setLanguage(treeSitterLanguage);
+        const parser = new Parser();
+        parser.setLanguage(treeSitterLanguage);
 
-            const sourceCode = fs.readFileSync(parseFile.filePath).toString();
-            const tree = parser.parse(sourceCode);
+        const sourceCode = fs.readFileSync(parseFile.filePath).toString();
+        const tree = parser.parse(sourceCode);
 
-            const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
-            queryBuilder.setKeywords(this.mccKeywordsSuperSet);
-            queryBuilder.setStatements(this.mccStatementsSuperSet);
+        const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
+        queryBuilder.setKeywords(this.mccKeywordsSuperSet);
+        queryBuilder.setStatements(this.mccStatementsSuperSet);
 
-            const query = queryBuilder.build();
-            const matches = query.matches(tree.rootNode);
+        const query = queryBuilder.build();
+        const matches = query.matches(tree.rootNode);
 
-            queryBuilder.clear();
-            queryBuilder.setStatements(this.mccFunctionsAndMethodsSuperSet);
+        queryBuilder.clear();
+        queryBuilder.setStatements(this.mccFunctionsAndMethodsSuperSet);
 
-            const functionsAndMethodsQuery = queryBuilder.build();
-            const functionsOrMethods = functionsAndMethodsQuery.captures(
-                tree.rootNode
+        const functionsAndMethodsQuery = queryBuilder.build();
+        const functionsOrMethods = functionsAndMethodsQuery.captures(
+            tree.rootNode
+        );
+
+        queryBuilder.clear();
+        queryBuilder.setStatements(this.mccReturnStatementSuperSet);
+
+        const returnStatementQuery = queryBuilder.build();
+
+        let additionalReturnStatementComplexity = 0;
+
+        for (const capture of functionsOrMethods) {
+            const returnCaptures = returnStatementQuery.captures(
+                capture.node
             );
-
-            queryBuilder.clear();
-            queryBuilder.setStatements(this.mccReturnStatementSuperSet);
-
-            const returnStatementQuery = queryBuilder.build();
-
-            let additionalReturnStatementComplexity = 0;
-
-            for (const capture of functionsOrMethods) {
-                const returnCaptures = returnStatementQuery.captures(
-                    capture.node
-                );
-                if (returnCaptures.length > 1) {
-                    additionalReturnStatementComplexity +=
-                        returnCaptures.length - 1;
-                }
+            if (returnCaptures.length > 1) {
+                additionalReturnStatementComplexity +=
+                    returnCaptures.length - 1;
             }
-
-            console.log(matches.length + additionalReturnStatementComplexity);
-
-            console.log(parseFile.filePath + " - mcc - " + (matches.length + additionalReturnStatementComplexity));
         }
+
+        console.log("mcc - " + (matches.length + additionalReturnStatementComplexity));
     }
 }

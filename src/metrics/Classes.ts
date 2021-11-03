@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import fs from "fs";
-import Parser, { Query } from "tree-sitter";
+import Parser from "tree-sitter";
 import { grammars } from "../grammars";
 
 export class Classes implements Metric {

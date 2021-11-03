@@ -50,5 +50,7 @@ for (const filePath of files) {
 
 const endTime = performance.now()
 const duration = endTime - startTime
+
+console.log("\n\n")
 console.log(`Parsing took ${duration / 1000} seconds or ${duration / 1000 / 60} minutes respectively`)
 

@@ -10,10 +10,13 @@ export class Functions implements Metric {
         '"fun" @function',
         "(function) @function",
         "(function_declaration) @function",
+        "(function_definition) @function",
         "(method_definition) @function.method",
+        "(method_declaration) @function.method",
+        "(arrow_function) @function.arrow",
     ];
 
-    calculate(parseFile: ParseFile) {
+    calculate(parseFile: ParseFile): MetricResult {
         const treeSitterLanguage = grammars.get(parseFile.language);
 
         const parser = new Parser();
@@ -29,5 +32,10 @@ export class Functions implements Metric {
         const matches = query.matches(tree.rootNode);
 
         console.log("functions - " + matches.length);
+
+        return {
+            metricName: "functions",
+            metricValue: matches.length
+        }
     }
 }

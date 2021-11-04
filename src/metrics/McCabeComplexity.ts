@@ -6,9 +6,9 @@ import { grammars } from "../grammars";
 export class McCabeComplexity implements Metric {
     private mccKeywordsSuperSet = [
         // functions and methods
-        "function",
-        "func",
-        "fun",
+        //"function",
+        //"func",
+        //"fun",
 
         // if statements and logical operators
         "if",
@@ -19,7 +19,7 @@ export class McCabeComplexity implements Metric {
         // loops (do not count do and while together as +2)
         "for",
         "foreach",
-        "do",
+        //"do",
         "while",
 
         // misc
@@ -42,12 +42,14 @@ export class McCabeComplexity implements Metric {
     private mccFunctionsAndMethodsSuperSet = [
         "(function) @function",
         "(function_declaration) @function",
-        "(method_definition) @method",
+        "(function_definition) @function",
+        "(method_definition) @function.method",
+        "(method_declaration) @function.method",
     ];
 
     private mccReturnStatementSuperSet = ["(return_statement) @return"];
 
-    calculate(parseFile: ParseFile) {
+    calculate(parseFile: ParseFile): MetricResult {
         const treeSitterLanguage = grammars.get(parseFile.language);
 
         const parser = new Parser();
@@ -84,5 +86,10 @@ export class McCabeComplexity implements Metric {
         }
 
         console.log("mcc - " + (matches.length + additionalReturnStatementComplexity));
+
+        return {
+            metricName: "mcc",
+            metricValue: (matches.length + additionalReturnStatementComplexity)
+        }
     }
 }

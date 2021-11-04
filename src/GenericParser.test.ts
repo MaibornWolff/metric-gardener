@@ -1,0 +1,54 @@
+import {GenericParser} from "./GenericParser";
+import fs from "fs";
+
+describe('GenericParser', () => {
+
+    describe('parses PHP McCabeComplexity', () => {
+
+        const phpTestResourcesPath = fs.realpathSync(".") + "/resources/php";
+
+        it('should count if statements correctly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/if-statements.php")
+
+            expect(metricResults.get('mcc').metricValue).toBe(8)
+        })
+
+        it('should count functions and methods correctly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/functions-and-methods.php")
+
+            expect(metricResults.get('mcc').metricValue).toBe(6)
+        })
+
+        it('should count multiple return statements within functions and methods correctly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/multiple-return-statements.php")
+
+            expect(metricResults.get('mcc').metricValue).toBe(4)
+        })
+
+        it('should count case statements correctly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/case-statements.php")
+
+            expect(metricResults.get('mcc').metricValue).toBe(3)
+        })
+
+        it('should count try-catch-finally properly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/throw-try-catch-finally.php")
+
+            expect(metricResults.get('mcc').metricValue).toBe(2)
+        })
+
+        it('should count loops properly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/loops.php")
+
+            expect(metricResults.get('mcc').metricValue).toBe(4)
+        })
+
+    })
+
+})

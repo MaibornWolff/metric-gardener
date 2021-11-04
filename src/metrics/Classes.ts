@@ -6,7 +6,7 @@ import { grammars } from "../grammars";
 export class Classes implements Metric {
     private classesStatementSuperSet = ['"class" @class'];
 
-    calculate(parseFile: ParseFile) {
+    calculate(parseFile: ParseFile): MetricResult {
         const treeSitterLanguage = grammars.get(parseFile.language);
 
         const parser = new Parser();
@@ -22,5 +22,10 @@ export class Classes implements Metric {
         const matches = query.matches(tree.rootNode);
 
         console.log("classes - " + matches.length);
+
+        return {
+            metricName: "classes",
+            metricValue: matches.length
+        }
     }
 }

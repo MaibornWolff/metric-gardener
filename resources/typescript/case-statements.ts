@@ -6,9 +6,9 @@ switch (x) {
         // do nothing
         break;
     case 1:
-        return 2;
+        // do nothing
     case 2:
-        return 3;
+        // do nothing
     default:
         // do nothing
         break;

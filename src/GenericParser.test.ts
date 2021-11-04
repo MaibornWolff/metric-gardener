@@ -3,7 +3,7 @@ import fs from "fs";
 
 describe('GenericParser', () => {
 
-    describe('parses PHP McCabeComplexity', () => {
+    describe('parses PHP McCabeComplexity metric', () => {
 
         const phpTestResourcesPath = fs.realpathSync(".") + "/resources/php";
 
@@ -58,7 +58,29 @@ describe('GenericParser', () => {
 
     })
 
-    describe('parses TypeScript McCabeComplexity', () => {
+    describe('parses PHP classes metric', () => {
+        const phpTestResourcesPath = fs.realpathSync(".") + "/resources/php";
+
+        it('should count class declarations', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/classes.php")
+
+            expect(metricResults.get('classes').metricValue).toBe(3)
+        })
+    })
+
+    describe('parses PHP functions metric', () => {
+        const phpTestResourcesPath = fs.realpathSync(".") + "/resources/php";
+
+        it('should count function declarations', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/functions-and-methods.php")
+
+            expect(metricResults.get('functions').metricValue).toBe(6)
+        })
+    })
+
+    describe('parses TypeScript McCabeComplexity metric', () => {
 
         const tsTestResourcesPath = fs.realpathSync(".") + "/resources/typescript";
 
@@ -114,7 +136,29 @@ describe('GenericParser', () => {
 
     })
 
-    describe('parses GO McCabeComplexity', () => {
+    describe('parses TypeScript classes metric', () => {
+        const tsTestResourcesPath = fs.realpathSync(".") + "/resources/typescript";
+
+        it('should count class declarations', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(tsTestResourcesPath + "/classes.ts")
+
+            expect(metricResults.get('classes').metricValue).toBe(3)
+        })
+    })
+
+    describe('parses TypeScript functions metric', () => {
+        const tsTestResourcesPath = fs.realpathSync(".") + "/resources/typescript";
+
+        it('should count functions and methods properly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(tsTestResourcesPath + "/functions-and-methods.ts")
+
+            expect(metricResults.get('functions').metricValue).toBe(9)
+        })
+    })
+
+    describe('parses GO McCabeComplexity metric', () => {
 
         const goTestResourcesPath = fs.realpathSync(".") + "/resources/go";
 
@@ -170,4 +214,14 @@ describe('GenericParser', () => {
 
     })
 
+    describe('parses GO functions metric', () => {
+        const goTestResourcesPath = fs.realpathSync(".") + "/resources/go";
+
+        it('should count functions and methods properly', () => {
+            const parser = new GenericParser()
+            const metricResults = parser.calculateMetrics(goTestResourcesPath + "/functions-and-methods.go")
+
+            expect(metricResults.get('functions').metricValue).toBe(2)
+        })
+    })
 })

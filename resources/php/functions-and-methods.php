@@ -27,3 +27,8 @@ function test() {}
 function outOfScope(): int {
     return 3;
 }
+
+$greet = function($name)
+{
+    printf("Hallo %s\r\n", $name);
+};

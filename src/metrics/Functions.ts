@@ -5,15 +5,12 @@ import { grammars } from "../grammars";
 
 export class Functions implements Metric {
     private functionsStatementSuperSet = [
-        '"function" @function',
-        '"func" @function',
-        '"fun" @function',
         "(function) @function",
         "(function_declaration) @function",
         "(function_definition) @function",
         "(method_definition) @function.method",
         "(method_declaration) @function.method",
-        "(arrow_function) @function.arrow",
+        "(arrow_function) @function",
     ];
 
     calculate(parseFile: ParseFile): MetricResult {

@@ -38,6 +38,9 @@ export class McCabeComplexity implements Metric {
         "(arrow_function) @function",
         "(ternary_expression) @ternary_operator",
         "(conditional_expression) @ternary_operator",
+        "(elvis_expression) @elvis_expression",
+        "(when_expression) @when.expression",
+        "(when_condition) @when.condition",
     ];
 
     private mccFunctionsAndMethodsSuperSet = [
@@ -67,7 +70,7 @@ export class McCabeComplexity implements Metric {
         const matches = query.matches(tree.rootNode);
 
         for (const match of matches) {
-            console.log(match.captures);
+            //console.log(match.captures);
         }
 
         queryBuilder.clear();

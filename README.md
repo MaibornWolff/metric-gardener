@@ -2,13 +2,15 @@
 
 ### Supported Languages
 
--   C#
--   Go
--   Java
--   JavaScript
--   Kotlin
--   PHP
--   TypeScript
+-   C# (no unit tests -> not stable)
+-   Java (no unit tests -> not stable)
+-   JavaScript (no unit tests -> not stable)
+-   Kotlin (no unit tests-> not stable)
+
+-   Go (incompletely unit tested -> not stable)
+
+-   PHP (all metrics unit tested -> stable)
+-   TypeScript (all metrics unit tested -> stable)
 
 ### Supported Metrics
 

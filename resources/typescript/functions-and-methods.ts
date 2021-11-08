@@ -1,7 +1,5 @@
-
 class FunctionsAndMethods {
-    constructor() {
-    }
+    constructor() {}
 
     public testFunction1(x: number, y: string): number {
         return 1;
@@ -18,7 +16,6 @@ class FunctionsAndMethods {
     public static staticMethod() {}
 }
 
-
 function testMethod() {}
 
 function outOfScope(): number {
@@ -27,6 +24,6 @@ function outOfScope(): number {
 
 const myFunction = function myFunctionDefinition() {
     return 42;
-}
+};
 
 const x = (x, y) => x * y;

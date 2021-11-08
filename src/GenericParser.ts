@@ -1,21 +1,23 @@
-import {McCabeComplexity} from "./metrics/McCabeComplexity";
-import {Functions} from "./metrics/Functions";
-import {Classes} from "./metrics/Classes";
-import {grammars} from "./grammars";
-import {getParseFile} from "./helper";
+import { McCabeComplexity } from "./metrics/McCabeComplexity";
+import { Functions } from "./metrics/Functions";
+import { Classes } from "./metrics/Classes";
+import { grammars } from "./grammars";
+import { getParseFile } from "./helper";
 import path from "path";
 import fs from "fs";
 
 export class GenericParser {
-
-    private readonly metrics: Metric[] = []
+    private readonly metrics: Metric[] = [];
 
     constructor() {
-        this.metrics = [new McCabeComplexity(), new Functions(), new Classes()];
+        const nodeTypesJson = fs.readFileSync(fs.realpathSync("./resources/node-types-mapped.config")).toString();
+        const allNodeTypes = JSON.parse(nodeTypesJson);
+
+        this.metrics = [new McCabeComplexity(allNodeTypes), new Functions(allNodeTypes), new Classes(allNodeTypes)];
     }
 
     calculateMetrics(sourcesRoot: string) {
-        sourcesRoot = fs.realpathSync(sourcesRoot)
+        sourcesRoot = fs.realpathSync(sourcesRoot);
 
         console.log("\n\n");
         console.log("----- Try to parse " + sourcesRoot + " recursively -----");
@@ -42,7 +44,9 @@ export class GenericParser {
             }
 
             console.log(
-                " ------------ Parsing File " + path.basename(parseFile.filePath) + "  ------------ "
+                " ------------ Parsing File " +
+                    path.basename(parseFile.filePath) +
+                    "  ------------ "
             );
 
             for (const metric of this.metrics) {
@@ -56,7 +60,9 @@ export class GenericParser {
 
         console.log("\n\n");
         console.log(
-            `Parsing took ${duration / 1000} seconds or ${duration / 1000 / 60} minutes respectively`
+            `Parsing took ${duration / 1000} seconds or ${
+                duration / 1000 / 60
+            } minutes respectively`
         );
 
         return metricResults;
@@ -81,11 +87,16 @@ export class GenericParser {
                     return;
                 }
 
-                fileList = this.findFilesRecursively(path.join(dir, file), supportedFileExtensions, excludedFolders, fileList);
+                fileList = this.findFilesRecursively(
+                    path.join(dir, file),
+                    supportedFileExtensions,
+                    excludedFolders,
+                    fileList
+                );
             } else if (supportedFileExtensions.includes(file.split(".").pop().toLowerCase())) {
                 fileList = fileList.concat(path.join(dir, file));
             }
         });
         return fileList;
-    };
+    }
 }

@@ -2,6 +2,7 @@ import { QueryBuilder } from "../queries/QueryBuilder";
 import fs from "fs";
 import Parser from "tree-sitter";
 import { grammars } from "../grammars";
+import {ExpressionMetricMapping} from "../app";
 
 export class McCabeComplexity implements Metric {
     private mccKeywordsSuperSet = [
@@ -11,37 +12,25 @@ export class McCabeComplexity implements Metric {
         //"fun",
 
         // if statements and logical operators
-        "if",
-        "&&",
-        "||",
-        "??",
+        //"if",
+        //"&&",
+        //"||",
+        //"??",
 
         // loops (do not count do and while together as +2)
-        "for",
-        "foreach",
+        //"for",
+        //"foreach",
         //"do",
-        "while",
+        //"while",
 
         // misc
-        "case",
-        "throw",
-        "catch",
-        "goto",
+        //"case",
+        //"throw",
+        //"catch",
+        //"goto",
     ];
 
-    private mccStatementsSuperSet = [
-        "(function) @function",
-        "(function_declaration) @function",
-        "(function_definition) @function",
-        "(method_definition) @function.method",
-        "(method_declaration) @function.method",
-        "(arrow_function) @function",
-        "(ternary_expression) @ternary_operator",
-        "(conditional_expression) @ternary_operator",
-        "(elvis_expression) @elvis_expression",
-        "(when_expression) @when.expression",
-        "(when_condition) @when.condition",
-    ];
+    private mccStatementsSuperSet = [];
 
     private mccFunctionsAndMethodsSuperSet = [
         "(function) @function",
@@ -52,6 +41,19 @@ export class McCabeComplexity implements Metric {
     ];
 
     private mccReturnStatementSuperSet = ["(return_statement) @return"];
+
+    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+        allNodeTypes.forEach((expressionMapping) => {
+            if (expressionMapping.metrics.includes(this.getName())) {
+                if (expressionMapping.type === "keyword") {
+                    this.mccKeywordsSuperSet.push(expressionMapping.expression);
+                } else if (expressionMapping.type === "statement") {
+                    const { expression } = expressionMapping
+                    this.mccStatementsSuperSet.push("("+expression+") @" + expression)
+                }
+            }
+        })
+    }
 
     calculate(parseFile: ParseFile): MetricResult {
         const treeSitterLanguage = grammars.get(parseFile.language);
@@ -96,8 +98,12 @@ export class McCabeComplexity implements Metric {
         console.log("mcc - " + (matches.length + additionalReturnStatementComplexity));
 
         return {
-            metricName: "mcc",
-            metricValue: (matches.length + additionalReturnStatementComplexity)
-        }
+            metricName: this.getName(),
+            metricValue: matches.length + additionalReturnStatementComplexity,
+        };
+    }
+
+    getName(): string {
+        return "mcc"
     }
 }

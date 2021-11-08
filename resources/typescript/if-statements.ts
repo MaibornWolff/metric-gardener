@@ -1,8 +1,7 @@
-
 let x, b, y, z, yz, myList;
 
 if (x > b) {
-    if (x > 100 && x <= 122 || !x) {
+    if ((x > 100 && x <= 122) || !x) {
         x = 2;
     } else if (x > 122) {
         x = 300;
@@ -24,4 +23,4 @@ x = x > 100 ? 101 : 99;
 x = x + y;
 
 z = x > 0 ? x : false;
-yz = myList['test'] ?? 'test_not_set';
+yz = myList["test"] ?? "test_not_set";

@@ -1,4 +1,3 @@
-
 let x = 2;
 
 switch (x) {
@@ -6,9 +5,9 @@ switch (x) {
         // do nothing
         break;
     case 1:
-        // do nothing
+    // do nothing
     case 2:
-        // do nothing
+    // do nothing
     default:
         // do nothing
         break;

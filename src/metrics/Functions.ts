@@ -2,16 +2,26 @@ import { QueryBuilder } from "../queries/QueryBuilder";
 import fs from "fs";
 import Parser from "tree-sitter";
 import { grammars } from "../grammars";
+import {ExpressionMetricMapping} from "../app";
 
 export class Functions implements Metric {
     private functionsStatementSuperSet = [
-        "(function) @function",
-        "(function_declaration) @function",
-        "(function_definition) @function",
-        "(method_definition) @function.method",
-        "(method_declaration) @function.method",
-        "(arrow_function) @function",
+        //"(function) @function",
+        //"(function_declaration) @function",
+        //"(function_definition) @function",
+        //"(method_definition) @function.method",
+        //"(method_declaration) @function.method",
+        //"(arrow_function) @function",
     ];
+
+    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+        allNodeTypes.forEach((expressionMapping) => {
+            if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
+                const { expression } = expressionMapping
+                this.functionsStatementSuperSet.push("("+expression+") @" + expression)
+            }
+        })
+    }
 
     calculate(parseFile: ParseFile): MetricResult {
         const treeSitterLanguage = grammars.get(parseFile.language);
@@ -31,8 +41,12 @@ export class Functions implements Metric {
         console.log("functions - " + matches.length);
 
         return {
-            metricName: "functions",
-            metricValue: matches.length
-        }
+            metricName: this.getName(),
+            metricValue: matches.length,
+        };
+    }
+
+    getName(): string {
+        return "functions"
     }
 }

@@ -37,6 +37,10 @@ export class QueryBuilder {
                     : "\n" + this.getBruteForcedStatementsQuery();
         }
 
+        // console.log("------------- Start Query: --------------")
+        // console.log(queryString);
+        // console.log("-----------------------------------------")
+
         return new Query(this.treeSitterLanguage, queryString);
     }
 

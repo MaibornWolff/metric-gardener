@@ -2,7 +2,7 @@ import { QueryBuilder } from "../queries/QueryBuilder";
 import fs from "fs";
 import Parser from "tree-sitter";
 import { grammars } from "../grammars";
-import {ExpressionMetricMapping} from "../app";
+import {binaryOperatorTranslations, ExpressionMetricMapping} from "../app";
 
 export class McCabeComplexity implements Metric {
     private mccKeywordsSuperSet = [
@@ -48,8 +48,12 @@ export class McCabeComplexity implements Metric {
                 if (expressionMapping.type === "keyword") {
                     this.mccKeywordsSuperSet.push(expressionMapping.expression);
                 } else if (expressionMapping.type === "statement") {
-                    const { expression } = expressionMapping
-                    this.mccStatementsSuperSet.push("("+expression+") @" + expression)
+                    const { expression, category, operator } = expressionMapping
+                    if (category === "binary_expression") {
+                        this.mccStatementsSuperSet.push("("+category+" operator: \""+operator+"\") @binary_expression_"+binaryOperatorTranslations.get(operator))
+                    } else {
+                        this.mccStatementsSuperSet.push("("+expression+") @" + expression)
+                    }
                 }
             }
         })

@@ -38,7 +38,7 @@ class Blub {
 
         try {
             $x = $x > 100 ? 101 : 99;
-        } catch (\Exception) {
+        } catch (\Exception $exc) {
           throw new Exception("some rewritten error");
         }
 

@@ -5,31 +5,6 @@ import { grammars } from "../grammars";
 import {binaryOperatorTranslations, ExpressionMetricMapping} from "../app";
 
 export class McCabeComplexity implements Metric {
-    private mccKeywordsSuperSet = [
-        // functions and methods
-        //"function",
-        //"func",
-        //"fun",
-
-        // if statements and logical operators
-        //"if",
-        //"&&",
-        //"||",
-        //"??",
-
-        // loops (do not count do and while together as +2)
-        //"for",
-        //"foreach",
-        //"do",
-        //"while",
-
-        // misc
-        //"case",
-        //"throw",
-        //"catch",
-        //"goto",
-    ];
-
     private mccStatementsSuperSet = [];
 
     private mccFunctionsAndMethodsSuperSet = [
@@ -45,9 +20,7 @@ export class McCabeComplexity implements Metric {
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName())) {
-                if (expressionMapping.type === "keyword") {
-                    this.mccKeywordsSuperSet.push(expressionMapping.expression);
-                } else if (expressionMapping.type === "statement") {
+                 if (expressionMapping.type === "statement") {
                     const { expression, category, operator } = expressionMapping
                     if (category === "binary_expression") {
                         this.mccStatementsSuperSet.push("("+category+" operator: \""+operator+"\") @binary_expression_"+binaryOperatorTranslations.get(operator))
@@ -69,7 +42,6 @@ export class McCabeComplexity implements Metric {
         const tree = parser.parse(sourceCode);
 
         const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
-        queryBuilder.setKeywords(this.mccKeywordsSuperSet);
         queryBuilder.setStatements(this.mccStatementsSuperSet);
 
         const query = queryBuilder.build();

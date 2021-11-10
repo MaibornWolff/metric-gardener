@@ -3,7 +3,6 @@ import Parser, { Query } from "tree-sitter";
 export class QueryBuilder {
     private readonly treeSitterLanguage: any;
     private tree: Parser.Tree;
-    private keywords: string[] = [];
     private statements: string[] = [];
 
     constructor(treeSitterLanguage: any, tree: Parser.Tree) {
@@ -11,30 +10,19 @@ export class QueryBuilder {
         this.tree = tree;
     }
 
-    setKeywords(keywords: string[]) {
-        this.keywords = keywords;
-    }
-
     setStatements(statements: string[]) {
         this.statements = statements;
     }
 
     clear() {
-        this.keywords = [];
         this.statements = [];
     }
 
     build(): Query {
         let queryString = "";
-        if (this.keywords.length > 0) {
-            queryString += this.getBruteForcedKeywordsQuery();
-        }
 
         if (this.statements.length > 0) {
-            queryString +=
-                queryString.length > 0
-                    ? this.getBruteForcedStatementsQuery()
-                    : "\n" + this.getBruteForcedStatementsQuery();
+            queryString = this.getBruteForcedStatementsQuery();
         }
 
         // console.log("------------- Start Query: --------------")
@@ -42,31 +30,6 @@ export class QueryBuilder {
         // console.log("-----------------------------------------")
 
         return new Query(this.treeSitterLanguage, queryString);
-    }
-
-    private getBruteForcedKeywordsQuery() {
-        const availableMccKeywords = [];
-
-        for (const mccKeyword of this.keywords) {
-            try {
-                const metricsQuery = new Query(
-                    this.treeSitterLanguage,
-                    `
-              [
-                "` +
-                        mccKeyword +
-                        `"
-              ] @keyword
-            `
-                );
-
-                metricsQuery.matches(this.tree.rootNode);
-
-                availableMccKeywords.push(mccKeyword);
-            } catch (e) {}
-        }
-
-        return '["' + availableMccKeywords.join('""') + '"] @keyword';
     }
 
     private getBruteForcedStatementsQuery() {

@@ -5,13 +5,14 @@ import { grammars } from "./grammars";
 import { getParseFile } from "./helper";
 import path from "path";
 import fs from "fs";
+import {ExpressionMetricMapping} from "./app";
 
 export class GenericParser {
     private readonly metrics: Metric[] = [];
 
     constructor() {
         const nodeTypesJson = fs.readFileSync(fs.realpathSync("./resources/node-types-mapped.config")).toString();
-        const allNodeTypes = JSON.parse(nodeTypesJson);
+        const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
         this.metrics = [new McCabeComplexity(allNodeTypes), new Functions(allNodeTypes), new Classes(allNodeTypes)];
     }

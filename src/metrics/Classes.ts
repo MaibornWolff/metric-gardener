@@ -5,9 +5,7 @@ import { grammars } from "../grammars";
 import {ExpressionMetricMapping} from "../app";
 
 export class Classes implements Metric {
-    private classesStatementSuperSet = [
-        //'"class" @class'
-    ];
+    private classesStatementSuperSet = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {

@@ -5,14 +5,7 @@ import { grammars } from "../grammars";
 import {ExpressionMetricMapping} from "../app";
 
 export class Functions implements Metric {
-    private functionsStatementSuperSet = [
-        //"(function) @function",
-        //"(function_declaration) @function",
-        //"(function_definition) @function",
-        //"(method_definition) @function.method",
-        //"(method_declaration) @function.method",
-        //"(arrow_function) @function",
-    ];
+    private functionsStatementSuperSet = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {

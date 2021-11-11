@@ -4,14 +4,14 @@ import Parser from "tree-sitter";
 import { grammars } from "../grammars";
 import {ExpressionMetricMapping} from "../app";
 
-export class Functions implements Metric {
-    private functionsStatementsSuperSet = [];
+export class LinesOfCode implements Metric {
+    private startRuleStatementsSuperSet = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
                 const { expression } = expressionMapping
-                this.functionsStatementsSuperSet.push("("+expression+") @" + expression)
+                this.startRuleStatementsSuperSet.push("("+expression+") @" + expression)
             }
         })
     }
@@ -26,12 +26,13 @@ export class Functions implements Metric {
         const tree = parser.parse(sourceCode);
 
         const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
-        queryBuilder.setStatements(this.functionsStatementsSuperSet);
+        queryBuilder.setStatements(this.startRuleStatementsSuperSet);
 
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        console.log(this.getName() + " - " + matches.length);
+        const loc = matches.length > 0 ? matches[0].captures[0].node.endPosition.row : 0;
+        console.log(this.getName() + " - " + loc);
 
         return {
             metricName: this.getName(),
@@ -40,6 +41,6 @@ export class Functions implements Metric {
     }
 
     getName(): string {
-        return "functions"
+        return "lines_of_code"
     }
 }

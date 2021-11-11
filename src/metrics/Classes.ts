@@ -5,13 +5,13 @@ import { grammars } from "../grammars";
 import {ExpressionMetricMapping} from "../app";
 
 export class Classes implements Metric {
-    private classesStatementSuperSet = [];
+    private classesStatementsSuperSet = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
                 const { expression } = expressionMapping
-                this.classesStatementSuperSet.push("("+expression+") @" + expression)
+                this.classesStatementsSuperSet.push("("+expression+") @" + expression)
             }
         })
     }
@@ -26,12 +26,12 @@ export class Classes implements Metric {
         const tree = parser.parse(sourceCode);
 
         const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
-        queryBuilder.setStatements(this.classesStatementSuperSet);
+        queryBuilder.setStatements(this.classesStatementsSuperSet);
 
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        console.log("classes - " + matches.length);
+        console.log(this.getName() + " - " + matches.length);
 
         return {
             metricName: this.getName(),

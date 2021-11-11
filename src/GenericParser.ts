@@ -6,6 +6,9 @@ import { getParseFile } from "./helper";
 import path from "path";
 import fs from "fs";
 import {ExpressionMetricMapping} from "./app";
+import {LinesOfCode} from "./metrics/LinesOfCode";
+import {CommentLines} from "./metrics/CommentLines";
+import {RealLinesOfCode} from "./metrics/RealLinesOfCode";
 
 export class GenericParser {
     private readonly metrics: Metric[] = [];
@@ -14,7 +17,14 @@ export class GenericParser {
         const nodeTypesJson = fs.readFileSync(fs.realpathSync("./resources/node-types-mapped.config")).toString();
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
-        this.metrics = [new McCabeComplexity(allNodeTypes), new Functions(allNodeTypes), new Classes(allNodeTypes)];
+        this.metrics = [
+            new McCabeComplexity(allNodeTypes),
+            new Functions(allNodeTypes),
+            new Classes(allNodeTypes),
+            new LinesOfCode(allNodeTypes),
+            new CommentLines(allNodeTypes),
+            new RealLinesOfCode(allNodeTypes)
+        ];
     }
 
     calculateMetrics(sourcesRoot: string) {

@@ -71,7 +71,7 @@ export class McCabeComplexity implements Metric {
             }
         }
 
-        console.log("mcc - " + (matches.length + additionalReturnStatementComplexity));
+        console.log(this.getName() + " - " + (matches.length + additionalReturnStatementComplexity));
 
         return {
             metricName: this.getName(),

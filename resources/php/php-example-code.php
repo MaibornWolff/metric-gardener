@@ -1,5 +1,7 @@
 <?php
-use HorstVV as VV;
+use DieterUsed\Hans\Ruediger\VV as VV;
+
+namespace This\Is\My\Namespace\Horst\VV;
 
 function test() {
     return "blub";
@@ -10,7 +12,7 @@ class Blub {
         if ($x > $b) {
             if ($x > 100 && $x <= 122 || !$x) {
                 return 2;
-            } else if ($x > 122) {
+            } else if ($x > 122 && $x <= 123 && $x <= 124) {
                 return 4;
             }
             return 1;
@@ -55,7 +57,7 @@ class Blub {
 
         return $x + $y;
     }
-    private function blub() {
+    private function blub2() {
     return "horst";
     }
 }

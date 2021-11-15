@@ -5,7 +5,7 @@ const PHP = require("tree-sitter-php");
 const parser = new Parser();
 parser.setLanguage(PHP);
 
-const sourceCode = getSourceCode();
+const sourceCode = getSourceCodePHP();
 const tree = parser.parse(sourceCode);
 
 //  elvis operator are not covered yet
@@ -33,7 +33,24 @@ let metricsQuery = new Query(
 `
 );
 
+function formatCaptures(tree, captures) {
+  return captures.map((c) => {
+    const node = c.node;
+    delete c.node;
+    c.text = tree.getText(node);
+    return c;
+  });
+}
+
 const matches = metricsQuery.matches(tree.rootNode);
+const captures = metricsQuery.captures(tree.rootNode);
+
+const importMatches = matches.filter((match) => {
+    return match.pattern === 0;
+});
+console.log(importMatches, formatCaptures(tree, captures))
+
+
 const mccMatches = matches.filter((match) => {
     return match.pattern === 0 || match.pattern === 1;
 });
@@ -98,10 +115,12 @@ function getReturnStatementComplexity(tree) {
     return additionalReturnStatementComplexity;
 }
 
-function getSourceCode() {
+function getSourceCodePHP() {
     return `
     <?php
-    use Horst\VV as VV;
+    use Dieter\\Hans\\Ruediger\\VV as VV;
+    
+    namespace This\\Is\\My\\Namespace\\Horst\\VV;
     
     function test() {
         return "blub";
@@ -140,7 +159,7 @@ function getSourceCode() {
     
             try {
                 $x = $x > 100 ? 101 : 99;
-            } catch (\\Exception) {
+            } catch (\\Exception $exc) {
               throw new Exception("some rewritten error");
             }
     
@@ -157,7 +176,7 @@ function getSourceCode() {
             
             return $x + $y;
         }
-        private function blub() {
+        private function blub2() {
         return "horst";
         }
     }

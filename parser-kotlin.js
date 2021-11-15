@@ -70,11 +70,11 @@ class ProjectTraverser(var root: File, private val exclude: Array<String> = arra
 
 `;
 
-const tree = parser.parse(sourceCode);
+const tree = parser.parse(getSourceCode());
 
 // more than one return statement within a function/method cannot be covered
 //  case statements, elvis operator are not covered yet
-let mccQuery = new Query(
+let metricsQuery = new Query(
     Kotlin,
     `
   [
@@ -94,12 +94,29 @@ let mccQuery = new Query(
 `
 );
 
-const mccMatches = mccQuery.matches(tree.rootNode);
-const mcc = mccMatches.filter((match) => {
+function formatCaptures(tree, captures) {
+    return captures.map((c) => {
+        const node = c.node;
+        delete c.node;
+        c.text = tree.getText(node);
+        return c;
+    });
+}
+
+const matches = metricsQuery.matches(tree.rootNode);
+const captures = metricsQuery.captures(tree.rootNode);
+
+const importMatches = matches.filter((match) => {
+    return match.pattern === 0;
+});
+console.log(importMatches, formatCaptures(tree, captures))
+
+
+const mcc = matches.filter((match) => {
     return match.pattern === 0;
 });
 
-const commentLineMatches = mccMatches.filter((match) => {
+const commentLineMatches = matches.filter((match) => {
     return match.pattern === 1;
 });
 const commentLines = commentLineMatches.reduce((accumulator, match) => {
@@ -107,15 +124,15 @@ const commentLines = commentLineMatches.reduce((accumulator, match) => {
     return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
 }, 0);
 
-const programMatches = mccMatches.filter((match) => {
+const programMatches = matches.filter((match) => {
     return match.pattern === 2;
 });
 const loc = programMatches.length > 0 ? programMatches[0].captures[0].node.endPosition.row : 0;
 
-const functionMatches = mccMatches.filter((match) => {
+const functionMatches = matches.filter((match) => {
     return match.pattern === 3;
 });
-const classMatches = mccMatches.filter((match) => {
+const classMatches = matches.filter((match) => {
     return match.pattern === 4;
 });
 
@@ -130,3 +147,29 @@ console.log("\trloc:\t\t" + (loc - commentLines));
 console.log("\tfunctions:\t" + functionMatches.length);
 console.log("\tclasses:\t" + classMatches.length);
 console.log("#########################################################\n\n");
+
+
+function getSourceCode() {
+    return `
+        package de.maibornwolff.codecharta.importer.sourcecodeparser
+    
+        import org.sonar.api.internal.apachecommons.io.FilenameUtils
+        import java.io.File
+        import java.nio.file.Paths
+        import de.maibornwolff.kotlin.Dieter.Horst.main as Horst
+        
+        class ProjectTraverser(var root: File, private val exclude: Array<String> = arrayOf()) {
+            private var fileList: MutableList<File> = mutableListOf()
+            private val analyzerFileLists: MutableMap<String, MutableList<String>>? = HashMap()
+            private val horst: Horst = Horst()
+        
+            fun getFileListByExtension(type: String, myHorst: Horst): List<String> {
+                return if (this.analyzerFileLists!!.containsKey(type)) {
+                    this.analyzerFileLists[type] ?: listOf()
+                } else {
+                    ArrayList()
+                }
+            }
+        }
+    `;
+}

@@ -9,22 +9,35 @@ import {ExpressionMetricMapping} from "./app";
 import {LinesOfCode} from "./metrics/LinesOfCode";
 import {CommentLines} from "./metrics/CommentLines";
 import {RealLinesOfCode} from "./metrics/RealLinesOfCode";
+import {Coupling} from "./metrics/Coupling";
+import {CouplingCSharp} from "./metrics/CouplingCSharp";
 
 export class GenericParser {
-    private readonly metrics: Metric[] = [];
+    private readonly fileMetrics: Metric[] = [];
+    private readonly comprisingMetrics: CouplingMetric[] = [];
+
+    private edgeMetrics: CouplingMetricResult;
 
     constructor() {
         const nodeTypesJson = fs.readFileSync(fs.realpathSync("./resources/node-types-mapped.config")).toString();
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
-        this.metrics = [
+        this.fileMetrics = [
             new McCabeComplexity(allNodeTypes),
             new Functions(allNodeTypes),
             new Classes(allNodeTypes),
             new LinesOfCode(allNodeTypes),
             new CommentLines(allNodeTypes),
-            new RealLinesOfCode(allNodeTypes)
+            new RealLinesOfCode(allNodeTypes),
         ];
+
+        this.comprisingMetrics = [
+            new CouplingCSharp(allNodeTypes)
+        ];
+    }
+
+    getEdgeMetrics(): CouplingMetricResult {
+        return this.edgeMetrics
     }
 
     calculateMetrics(sourcesRoot: string) {
@@ -46,13 +59,21 @@ export class GenericParser {
         console.log(" --- " + files.length + " files detected");
         console.log("\n\n");
 
-        const metricResults = new Map<string, MetricResult>();
+        const fileMetrics = new Map<string, Map<string, MetricResult>>();
 
+        const parseFiles = [];
         for (const filePath of files) {
             const parseFile = getParseFile(filePath);
             if (!parseFile || !grammars.has(parseFile.language)) {
                 continue;
             }
+
+            parseFiles.push(parseFile);
+        }
+
+        for (const parseFile of parseFiles) {
+            const metricResults = new Map<string, MetricResult>();
+            fileMetrics.set(parseFile.filePath, metricResults)
 
             console.log(
                 " ------------ Parsing File " +
@@ -60,10 +81,14 @@ export class GenericParser {
                     "  ------------ "
             );
 
-            for (const metric of this.metrics) {
+            for (const metric of this.fileMetrics) {
                 const metricResult = metric.calculate(parseFile);
                 metricResults.set(metricResult.metricName, metricResult);
             }
+        }
+
+        for (const metric of this.comprisingMetrics) {
+            this.edgeMetrics = metric.calculate(parseFiles);
         }
 
         const endTime = performance.now();
@@ -76,7 +101,7 @@ export class GenericParser {
             } minutes respectively`
         );
 
-        return metricResults;
+        return fileMetrics;
     }
 
     private findFilesRecursively(

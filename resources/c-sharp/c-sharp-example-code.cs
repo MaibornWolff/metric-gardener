@@ -2,7 +2,7 @@ using System;
 
 // this code won't work at all
 
-namespace Helper
+namespace Helper.NicerHelpers.NicestHelpers
 {
     public class TestHelper
     {

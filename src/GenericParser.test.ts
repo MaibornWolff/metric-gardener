@@ -7,61 +7,61 @@ describe("GenericParser", () => {
 
         it("should count if statements correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 phpTestResourcesPath + "/if-statements.php"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(8);
+            expect(fileMetrics.get(phpTestResourcesPath + "/if-statements.php").get("mcc").metricValue).toBe(8);
         });
 
         it("should count functions and methods correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 phpTestResourcesPath + "/functions-and-methods.php"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(6);
+            expect(fileMetrics.get(phpTestResourcesPath + "/functions-and-methods.php").get("mcc").metricValue).toBe(6);
         });
 
         it("should count multiple return statements within functions and methods correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 phpTestResourcesPath + "/multiple-return-statements.php"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(4);
+            expect(fileMetrics.get(phpTestResourcesPath + "/multiple-return-statements.php").get("mcc").metricValue).toBe(4);
         });
 
         it("should not count any class declaration", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/classes.php");
+            const fileMetrics = parser.calculateMetrics(phpTestResourcesPath + "/classes.php");
 
-            expect(metricResults.get("mcc").metricValue).toBe(0);
+            expect(fileMetrics.get(phpTestResourcesPath + "/classes.php").get("mcc").metricValue).toBe(0);
         });
 
         it("should count case statements correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 phpTestResourcesPath + "/case-statements.php"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(3);
+            expect(fileMetrics.get(phpTestResourcesPath + "/case-statements.php").get("mcc").metricValue).toBe(3);
         });
 
         it("should count try-catch-finally properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 phpTestResourcesPath + "/throw-try-catch-finally.php"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(2);
+            expect(fileMetrics.get(phpTestResourcesPath + "/throw-try-catch-finally.php").get("mcc").metricValue).toBe(2);
         });
 
         it("should count loops properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/loops.php");
+            const fileMetrics = parser.calculateMetrics(phpTestResourcesPath + "/loops.php");
 
-            expect(metricResults.get("mcc").metricValue).toBe(4);
+            expect(fileMetrics.get(phpTestResourcesPath + "/loops.php").get("mcc").metricValue).toBe(4);
         });
     });
 
@@ -70,9 +70,9 @@ describe("GenericParser", () => {
 
         it("should count class declarations", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(phpTestResourcesPath + "/classes.php");
+            const fileMetrics = parser.calculateMetrics(phpTestResourcesPath + "/classes.php");
 
-            expect(metricResults.get("classes").metricValue).toBe(3);
+            expect(fileMetrics.get(phpTestResourcesPath + "/classes.php").get("classes").metricValue).toBe(3);
         });
     });
 
@@ -81,11 +81,11 @@ describe("GenericParser", () => {
 
         it("should count function declarations", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 phpTestResourcesPath + "/functions-and-methods.php"
             );
 
-            expect(metricResults.get("functions").metricValue).toBe(6);
+            expect(fileMetrics.get(phpTestResourcesPath + "/functions-and-methods.php").get("functions").metricValue).toBe(6);
         });
     });
 
@@ -94,61 +94,61 @@ describe("GenericParser", () => {
 
         it("should count if statements correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 tsTestResourcesPath + "/if-statements.ts"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(8);
+            expect(fileMetrics.get(tsTestResourcesPath + "/if-statements.ts").get("mcc").metricValue).toBe(8);
         });
 
         it("should count functions and methods correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 tsTestResourcesPath + "/functions-and-methods.ts"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(9);
+            expect(fileMetrics.get(tsTestResourcesPath + "/functions-and-methods.ts").get("mcc").metricValue).toBe(9);
         });
 
         it("should count multiple return statements within functions and methods correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 tsTestResourcesPath + "/multiple-return-statements.ts"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(4);
+            expect(fileMetrics.get(tsTestResourcesPath + "/multiple-return-statements.ts").get("mcc").metricValue).toBe(4);
         });
 
         it("should not count any class declaration", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(tsTestResourcesPath + "/classes.ts");
+            const fileMetrics = parser.calculateMetrics(tsTestResourcesPath + "/classes.ts");
 
-            expect(metricResults.get("mcc").metricValue).toBe(0);
+            expect(fileMetrics.get(tsTestResourcesPath + "/classes.ts").get("mcc").metricValue).toBe(0);
         });
 
         it("should count case statements correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 tsTestResourcesPath + "/case-statements.ts"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(3);
+            expect(fileMetrics.get(tsTestResourcesPath + "/case-statements.ts").get("mcc").metricValue).toBe(3);
         });
 
         it("should count try-catch-finally properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 tsTestResourcesPath + "/throw-try-catch-finally.ts"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(2);
+            expect(fileMetrics.get(tsTestResourcesPath + "/throw-try-catch-finally.ts").get("mcc").metricValue).toBe(2);
         });
 
         it("should count loops properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(tsTestResourcesPath + "/loops.ts");
+            const fileMetrics = parser.calculateMetrics(tsTestResourcesPath + "/loops.ts");
 
-            expect(metricResults.get("mcc").metricValue).toBe(3);
+            expect(fileMetrics.get(tsTestResourcesPath + "/loops.ts").get("mcc").metricValue).toBe(3);
         });
     });
 
@@ -157,9 +157,9 @@ describe("GenericParser", () => {
 
         it("should count class declarations", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(tsTestResourcesPath + "/classes.ts");
+            const fileMetrics = parser.calculateMetrics(tsTestResourcesPath + "/classes.ts");
 
-            expect(metricResults.get("classes").metricValue).toBe(3);
+            expect(fileMetrics.get(tsTestResourcesPath + "/classes.ts").get("classes").metricValue).toBe(3);
         });
     });
 
@@ -168,11 +168,11 @@ describe("GenericParser", () => {
 
         it("should count functions and methods properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 tsTestResourcesPath + "/functions-and-methods.ts"
             );
 
-            expect(metricResults.get("functions").metricValue).toBe(9);
+            expect(fileMetrics.get(tsTestResourcesPath + "/functions-and-methods.ts").get("functions").metricValue).toBe(9);
         });
     });
 
@@ -181,61 +181,61 @@ describe("GenericParser", () => {
 
         it("should count if statements correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 goTestResourcesPath + "/if-statements.go"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(7);
+            expect(fileMetrics.get(goTestResourcesPath + "/if-statements.go").get("mcc").metricValue).toBe(7);
         });
 
         it("should count functions and methods correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 goTestResourcesPath + "/functions-and-methods.go"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(2);
+            expect(fileMetrics.get(goTestResourcesPath + "/functions-and-methods.go").get("mcc").metricValue).toBe(2);
         });
 
         it("should count multiple return statements within functions and methods correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 goTestResourcesPath + "/multiple-return-statements.go"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(4);
+            expect(fileMetrics.get(goTestResourcesPath + "/multiple-return-statements.go").get("mcc").metricValue).toBe(4);
         });
 
         it("should not count any class declaration", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(goTestResourcesPath + "/classes.go");
+            const fileMetrics = parser.calculateMetrics(goTestResourcesPath + "/classes.go");
 
-            expect(metricResults.get("mcc").metricValue).toBe(0);
+            expect(fileMetrics.get(goTestResourcesPath + "/classes.go").get("mcc").metricValue).toBe(0);
         });
 
         it("should count case statements correctly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 goTestResourcesPath + "/case-statements.go"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(3);
+            expect(fileMetrics.get(goTestResourcesPath + "/case-statements.go").get("mcc").metricValue).toBe(3);
         });
 
         it("should count try-catch-finally properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 goTestResourcesPath + "/throw-try-catch-finally.go"
             );
 
-            expect(metricResults.get("mcc").metricValue).toBe(0);
+            expect(fileMetrics.get(goTestResourcesPath + "/throw-try-catch-finally.go").get("mcc").metricValue).toBe(0);
         });
 
         it("should count loops properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(goTestResourcesPath + "/loops.go");
+            const fileMetrics = parser.calculateMetrics(goTestResourcesPath + "/loops.go");
 
-            expect(metricResults.get("mcc").metricValue).toBe(4);
+            expect(fileMetrics.get(goTestResourcesPath + "/loops.go").get("mcc").metricValue).toBe(4);
         });
     });
 
@@ -244,11 +244,11 @@ describe("GenericParser", () => {
 
         it("should count functions and methods properly", () => {
             const parser = new GenericParser();
-            const metricResults = parser.calculateMetrics(
+            const fileMetrics = parser.calculateMetrics(
                 goTestResourcesPath + "/functions-and-methods.go"
             );
 
-            expect(metricResults.get("functions").metricValue).toBe(2);
+            expect(fileMetrics.get(goTestResourcesPath + "/functions-and-methods.go").get("functions").metricValue).toBe(2);
         });
     });
 });

@@ -10,6 +10,7 @@ export interface ExpressionMetricMapping {
     operator?: string;
 }
 
+const nodeTypeConfigPath = "./resources";
 const resourcesRoot = process.argv[2] ?? "./resources";
 
 console.log(resourcesRoot);
@@ -99,7 +100,63 @@ for (const [language, nodeTypesFile] of nodeTypeFiles) {
     }
 }
 
-fs.writeFileSync(fs.realpathSync(resourcesRoot + "/node-types.config"), JSON.stringify(Array.from(expressionMappings.values()),null,4).toString());
+fs.writeFileSync(fs.realpathSync(nodeTypeConfigPath + "/node-types.config"), JSON.stringify(Array.from(expressionMappings.values()),null,4).toString());
+
+// console.log = () => {
+//     return
+// }
 
 const parser = new GenericParser();
-parser.calculateMetrics(resourcesRoot)
+const fileMetrics = parser.calculateMetrics(resourcesRoot)
+
+console.log("\n\n")
+console.log("#####################################")
+console.log("#####################################")
+console.log(fileMetrics)
+
+interface CodeChartaNode {
+    name: string, type: "File", attributes: { [key: string]: number } , link: "", children: []
+}
+
+interface CodeChartaEdge {
+    fromNodeName: string
+    toNodeName: string
+    attributes: {
+        coupling: 100.0
+    }
+}
+
+const output: { nodes: CodeChartaNode[], edges: CodeChartaEdge[]} = { nodes: [], edges: [] }
+
+for (const [filePath, metricsMap] of fileMetrics.entries()) {
+    const metrics: { [key: string]: number } = {}
+
+    for (const [metricName, metricValue] of metricsMap.entries()) {
+        metrics[metricName] = metricValue.metricValue
+    }
+
+    // add manually to each node
+    metrics["coupling"] = 100
+
+    output.nodes.push({
+        name: filePath,
+        type: "File",
+        attributes: metrics,
+        link: "",
+        children: []
+    })
+}
+
+const edgeMetrics = parser.getEdgeMetrics()
+const couplingMetricResults = edgeMetrics.metricValue
+
+for (const couplingMetricResult of couplingMetricResults) {
+    output.edges.push({
+        fromNodeName: couplingMetricResult.fromSource,
+        toNodeName: couplingMetricResult.toSource,
+        attributes: {coupling: 100.0}
+    })
+}
+
+
+fs.writeFileSync(fs.realpathSync(nodeTypeConfigPath + "/output.json"), JSON.stringify(output, null, 4).toString())

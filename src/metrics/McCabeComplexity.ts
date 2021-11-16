@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
-import { binaryOperatorTranslations, ExpressionMetricMapping } from "../app";
 import { TreeParser } from "../helper/TreeParser";
+import { binaryOperatorTranslations, ExpressionMetricMapping } from "../helper/Model";
 
 export class McCabeComplexity implements Metric {
     private mccStatementsSuperSet = [];

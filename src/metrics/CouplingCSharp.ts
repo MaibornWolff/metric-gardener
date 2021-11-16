@@ -1,9 +1,9 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { Tree } from "tree-sitter";
 import { grammars } from "../helper/Grammars";
-import { ExpressionMetricMapping } from "../app";
 import { formatCaptures } from "../helper/Helper";
 import { TreeParser } from "../helper/TreeParser";
+import { ExpressionMetricMapping } from "../helper/Model";
 
 interface Package {
     namespace: string;

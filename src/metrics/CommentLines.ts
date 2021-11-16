@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
-import { ExpressionMetricMapping } from "../app";
 import { TreeParser } from "../helper/TreeParser";
+import { ExpressionMetricMapping } from "../helper/Model";
 
 export class CommentLines implements Metric {
     private commentStatementsSuperSet = [];

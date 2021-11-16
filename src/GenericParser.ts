@@ -5,13 +5,12 @@ import { grammars } from "./helper/Grammars";
 import { getParseFile } from "./helper/Helper";
 import path from "path";
 import fs from "fs";
-import { ExpressionMetricMapping } from "./app";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { Coupling } from "./metrics/Coupling";
 import { CouplingCSharp } from "./metrics/CouplingCSharp";
 import { TreeParser } from "./helper/TreeParser";
+import { ExpressionMetricMapping } from "./helper/Model";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];

@@ -1,14 +1,6 @@
 import { GenericParser } from "./GenericParser";
 import fs from "fs";
-
-export interface ExpressionMetricMapping {
-    expression: string;
-    metrics: string[];
-    type: "statement" | "keyword";
-    languages: string[];
-    category: string;
-    operator?: string;
-}
+import { binaryOperatorTranslations, ExpressionMetricMapping } from "./helper/Model";
 
 const nodeTypeConfigPath = "./resources";
 const resourcesRoot = process.argv[2] ?? "./resources";
@@ -25,14 +17,6 @@ const nodeTypeFiles = new Map([
     ["ts", "./node_modules/tree-sitter-typescript/typescript/src/node-types.json"],
 ]);
 
-export const binaryOperatorTranslations = new Map([
-    ["&&", "logical_and"],
-    ["||", "logical_or"],
-    ["??", "null_or_value"],
-    ["and", "and"],
-    ["or", "or"],
-    ["xor", "xor"],
-]);
 const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();
 
 for (const [language, nodeTypesFile] of nodeTypeFiles) {

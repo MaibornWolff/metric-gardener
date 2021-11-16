@@ -17,6 +17,12 @@ const argv = yargs(hideBin(process.argv))
         type: "string",
         description: "Output file path",
     })
+    .option("exclusions", {
+        alias: "e",
+        type: "string",
+        description: "Excluded folders",
+        default: ["node_modules", ".idea", "dist", "build", "out", "vendor"],
+    })
     .option("compress", {
         alias: "c",
         type: "boolean",
@@ -31,8 +37,10 @@ const argv = yargs(hideBin(process.argv))
 const configuration = new Configuration(
     argv["sources-path"],
     argv["output-path"],
+    argv["exclusions"],
     argv["compress"]
 );
+console.log(configuration);
 
 const nodeTypeConfigPath = "./resources";
 

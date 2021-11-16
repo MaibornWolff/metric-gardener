@@ -25,3 +25,13 @@
 -   `npm run start -- /path/to/sources` specify the path to a folder or a file with source code
 
 The metrics will be printed during parsing and passed to ./resources/output.json file.
+
+### TODOs
+
+-   Provide command line options
+-   Handle multiple file extensions during parsing on the fly
+-   Output calculated metrics in a file/json
+-   Execute language specific metrics (e.g. CouplingCSharp) only if necessary
+-   Write script to add new language and map expressions
+-   Support more languages
+-   Unit Tests

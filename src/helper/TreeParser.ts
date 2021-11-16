@@ -1,5 +1,5 @@
 import fs from "fs";
-import { grammars } from "../grammars";
+import { grammars } from "./Grammars";
 import Parser, { Tree } from "tree-sitter";
 
 export class TreeParser {

@@ -1,7 +1,7 @@
 import { McCabeComplexity } from "./metrics/McCabeComplexity";
 import { Functions } from "./metrics/Functions";
 import { Classes } from "./metrics/Classes";
-import { grammars } from "./grammars";
+import { grammars } from "./helper/Grammars";
 import { getParseFile } from "./helper/Helper";
 import path from "path";
 import fs from "fs";

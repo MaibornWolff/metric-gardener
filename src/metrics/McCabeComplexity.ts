@@ -1,5 +1,5 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../grammars";
+import { grammars } from "../helper/Grammars";
 import { binaryOperatorTranslations, ExpressionMetricMapping } from "../app";
 import { TreeParser } from "../helper/TreeParser";
 

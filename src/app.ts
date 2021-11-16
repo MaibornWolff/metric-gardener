@@ -31,25 +31,24 @@ export const binaryOperatorTranslations = new Map([
     ["??", "null_or_value"],
     ["and", "and"],
     ["or", "or"],
-    ["xor", "xor"]
+    ["xor", "xor"],
 ]);
 const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();
 
 for (const [language, nodeTypesFile] of nodeTypeFiles) {
-    const nodeTypes = JSON.parse(
-        fs.readFileSync(nodeTypesFile, "utf8")
-    );
+    const nodeTypes = JSON.parse(fs.readFileSync(nodeTypesFile, "utf8"));
 
     for (const nodeType of nodeTypes) {
         if (nodeType.type === "binary_expression") {
             if (nodeType?.fields?.operator?.types !== undefined) {
                 for (const binaryOperatorType of nodeType.fields.operator.types) {
-                    const {type: binaryOperator} = binaryOperatorType
-                    const mapKey = nodeType.type + "_" + binaryOperatorTranslations.get(binaryOperator)
+                    const { type: binaryOperator } = binaryOperatorType;
+                    const mapKey =
+                        nodeType.type + "_" + binaryOperatorTranslations.get(binaryOperator);
 
                     if (expressionMappings.has(mapKey)) {
                         if (!expressionMappings.get(mapKey).languages.includes(language)) {
-                            expressionMappings.get(mapKey).languages.push(language)
+                            expressionMappings.get(mapKey).languages.push(language);
                         }
                     } else {
                         expressionMappings.set(mapKey, {
@@ -58,17 +57,17 @@ for (const [language, nodeTypesFile] of nodeTypeFiles) {
                             type: "statement",
                             category: "binary_expression",
                             languages: [language],
-                            operator: binaryOperator
+                            operator: binaryOperator,
                         });
                     }
                 }
             }
-            continue
+            continue;
         }
 
         if (expressionMappings.has(nodeType.type)) {
             if (!expressionMappings.get(nodeType.type).languages.includes(language)) {
-                expressionMappings.get(nodeType.type).languages.push(language)
+                expressionMappings.get(nodeType.type).languages.push(language);
             }
         } else {
             expressionMappings.set(nodeType.type, {
@@ -76,7 +75,7 @@ for (const [language, nodeTypesFile] of nodeTypeFiles) {
                 metrics: [],
                 type: "statement",
                 category: "",
-                languages: [language]
+                languages: [language],
             });
         }
 
@@ -84,7 +83,7 @@ for (const [language, nodeTypesFile] of nodeTypeFiles) {
             for (const subNodeType of nodeType.subtypes) {
                 if (expressionMappings.has(subNodeType.type)) {
                     if (!expressionMappings.get(subNodeType.type).languages.includes(language)) {
-                        expressionMappings.get(subNodeType.type).languages.push(language)
+                        expressionMappings.get(subNodeType.type).languages.push(language);
                     }
                 } else {
                     expressionMappings.set(subNodeType.type, {
@@ -100,63 +99,72 @@ for (const [language, nodeTypesFile] of nodeTypeFiles) {
     }
 }
 
-fs.writeFileSync(fs.realpathSync(nodeTypeConfigPath + "/node-types.config"), JSON.stringify(Array.from(expressionMappings.values()),null,4).toString());
+fs.writeFileSync(
+    fs.realpathSync(nodeTypeConfigPath + "/node-types.config"),
+    JSON.stringify(Array.from(expressionMappings.values()), null, 4).toString()
+);
 
 // console.log = () => {
 //     return
 // }
 
 const parser = new GenericParser();
-const fileMetrics = parser.calculateMetrics(resourcesRoot)
+const fileMetrics = parser.calculateMetrics(resourcesRoot);
 
-console.log("\n\n")
-console.log("#####################################")
-console.log("#####################################")
-console.log(fileMetrics)
+console.log("\n\n");
+console.log("#####################################");
+console.log("#####################################");
+console.log(fileMetrics);
 
 interface CodeChartaNode {
-    name: string, type: "File", attributes: { [key: string]: number } , link: "", children: []
+    name: string;
+    type: "File";
+    attributes: { [key: string]: number };
+    link: "";
+    children: [];
 }
 
 interface CodeChartaEdge {
-    fromNodeName: string
-    toNodeName: string
+    fromNodeName: string;
+    toNodeName: string;
     attributes: {
-        coupling: 100.0
-    }
+        coupling: 100.0;
+    };
 }
 
-const output: { nodes: CodeChartaNode[], edges: CodeChartaEdge[]} = { nodes: [], edges: [] }
+const output: { nodes: CodeChartaNode[]; edges: CodeChartaEdge[] } = { nodes: [], edges: [] };
 
 for (const [filePath, metricsMap] of fileMetrics.entries()) {
-    const metrics: { [key: string]: number } = {}
+    const metrics: { [key: string]: number } = {};
 
     for (const [metricName, metricValue] of metricsMap.entries()) {
-        metrics[metricName] = metricValue.metricValue
+        metrics[metricName] = metricValue.metricValue;
     }
 
     // add manually to each node
-    metrics["coupling"] = 100
+    metrics["coupling"] = 100;
 
     output.nodes.push({
         name: filePath,
         type: "File",
         attributes: metrics,
         link: "",
-        children: []
-    })
+        children: [],
+    });
 }
 
-const edgeMetrics = parser.getEdgeMetrics()
-const couplingMetricResults = edgeMetrics.metricValue
+const edgeMetrics = parser.getEdgeMetrics();
+const couplingMetricResults = edgeMetrics.metricValue;
 
 for (const couplingMetricResult of couplingMetricResults) {
     output.edges.push({
         fromNodeName: couplingMetricResult.fromSource,
         toNodeName: couplingMetricResult.toSource,
-        attributes: {coupling: 100.0}
-    })
+        attributes: { coupling: 100.0 },
+    });
 }
 
-
-fs.writeFileSync(fs.realpathSync(nodeTypeConfigPath + "/output.json"), JSON.stringify(output, null, 4).toString())
+fs.writeFileSync(
+    fs.realpathSync(nodeTypeConfigPath + "/output.json"),
+    JSON.stringify(output, null, 4).toString()
+);

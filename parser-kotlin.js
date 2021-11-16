@@ -109,8 +109,7 @@ const captures = metricsQuery.captures(tree.rootNode);
 const importMatches = matches.filter((match) => {
     return match.pattern === 0;
 });
-console.log(importMatches, formatCaptures(tree, captures))
-
+console.log(importMatches, formatCaptures(tree, captures));
 
 const mcc = matches.filter((match) => {
     return match.pattern === 0;
@@ -147,7 +146,6 @@ console.log("\trloc:\t\t" + (loc - commentLines));
 console.log("\tfunctions:\t" + functionMatches.length);
 console.log("\tclasses:\t" + classMatches.length);
 console.log("#########################################################\n\n");
-
 
 function getSourceCode() {
     return `

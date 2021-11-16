@@ -5,13 +5,13 @@ import { grammars } from "./grammars";
 import { getParseFile } from "./helper/Helper";
 import path from "path";
 import fs from "fs";
-import {ExpressionMetricMapping} from "./app";
-import {LinesOfCode} from "./metrics/LinesOfCode";
-import {CommentLines} from "./metrics/CommentLines";
-import {RealLinesOfCode} from "./metrics/RealLinesOfCode";
-import {Coupling} from "./metrics/Coupling";
-import {CouplingCSharp} from "./metrics/CouplingCSharp";
-import {TreeParser} from "./helper/TreeParser";
+import { ExpressionMetricMapping } from "./app";
+import { LinesOfCode } from "./metrics/LinesOfCode";
+import { CommentLines } from "./metrics/CommentLines";
+import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
+import { Coupling } from "./metrics/Coupling";
+import { CouplingCSharp } from "./metrics/CouplingCSharp";
+import { TreeParser } from "./helper/TreeParser";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];
@@ -20,7 +20,9 @@ export class GenericParser {
     private edgeMetrics: CouplingMetricResult;
 
     constructor() {
-        const nodeTypesJson = fs.readFileSync(fs.realpathSync("./resources/node-types-mapped.config")).toString();
+        const nodeTypesJson = fs
+            .readFileSync(fs.realpathSync("./resources/node-types-mapped.config"))
+            .toString();
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
         const treeParser = new TreeParser();
@@ -34,13 +36,11 @@ export class GenericParser {
             new RealLinesOfCode(allNodeTypes, treeParser),
         ];
 
-        this.comprisingMetrics = [
-            new CouplingCSharp(allNodeTypes, treeParser)
-        ];
+        this.comprisingMetrics = [new CouplingCSharp(allNodeTypes, treeParser)];
     }
 
     getEdgeMetrics(): CouplingMetricResult {
-        return this.edgeMetrics
+        return this.edgeMetrics;
     }
 
     calculateMetrics(sourcesRoot: string) {
@@ -76,7 +76,7 @@ export class GenericParser {
 
         for (const parseFile of parseFiles) {
             const metricResults = new Map<string, MetricResult>();
-            fileMetrics.set(parseFile.filePath, metricResults)
+            fileMetrics.set(parseFile.filePath, metricResults);
 
             console.log(
                 " ------------ Parsing File " +

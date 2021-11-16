@@ -1,20 +1,23 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../grammars";
-import {ExpressionMetricMapping} from "../app";
-import {TreeParser} from "../helper/TreeParser";
+import { ExpressionMetricMapping } from "../app";
+import { TreeParser } from "../helper/TreeParser";
 
 export class LinesOfCode implements Metric {
     private startRuleStatementsSuperSet = [];
-    private treeParser: TreeParser
+    private treeParser: TreeParser;
 
     constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
         this.treeParser = treeParser;
         allNodeTypes.forEach((expressionMapping) => {
-            if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
-                const { expression } = expressionMapping
-                this.startRuleStatementsSuperSet.push("("+expression+") @" + expression)
+            if (
+                expressionMapping.metrics.includes(this.getName()) &&
+                expressionMapping.type === "statement"
+            ) {
+                const { expression } = expressionMapping;
+                this.startRuleStatementsSuperSet.push("(" + expression + ") @" + expression);
             }
-        })
+        });
     }
 
     calculate(parseFile: ParseFile): MetricResult {
@@ -36,6 +39,6 @@ export class LinesOfCode implements Metric {
     }
 
     getName(): string {
-        return "lines_of_code"
+        return "lines_of_code";
     }
 }

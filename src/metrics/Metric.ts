@@ -4,7 +4,10 @@ interface MetricResult {
 }
 
 interface CouplingMetricValue {
-    fromNamespace: string, toNamespace: string, fromSource: string, toSource: string
+    fromNamespace: string;
+    toNamespace: string;
+    fromSource: string;
+    toSource: string;
 }
 
 interface CouplingMetricResult {

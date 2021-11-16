@@ -1,30 +1,33 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../grammars";
-import {ExpressionMetricMapping} from "../app";
-import {TreeParser} from "../helper/TreeParser";
+import { ExpressionMetricMapping } from "../app";
+import { TreeParser } from "../helper/TreeParser";
 
 export class RealLinesOfCode implements Metric {
     private classesStatementSuperSet = [];
     private startRuleStatementsSuperSet = [];
     private commentStatementsSuperSet = [];
-    private treeParser: TreeParser
+    private treeParser: TreeParser;
 
     constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
         this.treeParser = treeParser;
 
         allNodeTypes.forEach((expressionMapping) => {
-            if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
-                const { expression } = expressionMapping
+            if (
+                expressionMapping.metrics.includes(this.getName()) &&
+                expressionMapping.type === "statement"
+            ) {
+                const { expression } = expressionMapping;
 
                 if (expressionMapping.category === "start_rule") {
-                    this.startRuleStatementsSuperSet.push("("+expression+") @" + expression)
+                    this.startRuleStatementsSuperSet.push("(" + expression + ") @" + expression);
                 } else if (expressionMapping.category === "comment") {
-                    this.commentStatementsSuperSet.push("("+expression+") @" + expression)
+                    this.commentStatementsSuperSet.push("(" + expression + ") @" + expression);
                 }
 
-                this.classesStatementSuperSet.push("("+expression+") @" + expression)
+                this.classesStatementSuperSet.push("(" + expression + ") @" + expression);
             }
-        })
+        });
     }
 
     calculate(parseFile: ParseFile): MetricResult {
@@ -36,10 +39,11 @@ export class RealLinesOfCode implements Metric {
         const query = queryBuilder.build();
         const startRuleMatches = query.matches(tree.rootNode);
 
-        const loc = startRuleMatches.length > 0 ? startRuleMatches[0].captures[0].node.endPosition.row : 0;
+        const loc =
+            startRuleMatches.length > 0 ? startRuleMatches[0].captures[0].node.endPosition.row : 0;
 
-        queryBuilder.clear()
-        queryBuilder.setStatements(this.commentStatementsSuperSet)
+        queryBuilder.clear();
+        queryBuilder.setStatements(this.commentStatementsSuperSet);
 
         const commentQuery = queryBuilder.build();
         const commentMatches = commentQuery.matches(tree.rootNode);
@@ -49,8 +53,7 @@ export class RealLinesOfCode implements Metric {
             return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
         }, 0);
 
-
-        const realLinesOfCode = Math.max(0, (loc - commentLines))
+        const realLinesOfCode = Math.max(0, loc - commentLines);
         console.log(this.getName() + " - " + realLinesOfCode);
 
         return {
@@ -60,6 +63,6 @@ export class RealLinesOfCode implements Metric {
     }
 
     getName(): string {
-        return "real_lines_of_code"
+        return "real_lines_of_code";
     }
 }

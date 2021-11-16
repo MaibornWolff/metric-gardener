@@ -34,12 +34,12 @@ let metricsQuery = new Query(
 );
 
 function formatCaptures(tree, captures) {
-  return captures.map((c) => {
-    const node = c.node;
-    delete c.node;
-    c.text = tree.getText(node);
-    return c;
-  });
+    return captures.map((c) => {
+        const node = c.node;
+        delete c.node;
+        c.text = tree.getText(node);
+        return c;
+    });
 }
 
 const matches = metricsQuery.matches(tree.rootNode);
@@ -48,8 +48,7 @@ const captures = metricsQuery.captures(tree.rootNode);
 const importMatches = matches.filter((match) => {
     return match.pattern === 0;
 });
-console.log(importMatches, formatCaptures(tree, captures))
-
+console.log(importMatches, formatCaptures(tree, captures));
 
 const mccMatches = matches.filter((match) => {
     return match.pattern === 0 || match.pattern === 1;

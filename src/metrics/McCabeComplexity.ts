@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../grammars";
-import {binaryOperatorTranslations, ExpressionMetricMapping} from "../app";
-import {TreeParser} from "../helper/TreeParser";
+import { binaryOperatorTranslations, ExpressionMetricMapping } from "../app";
+import { TreeParser } from "../helper/TreeParser";
 
 export class McCabeComplexity implements Metric {
     private mccStatementsSuperSet = [];
@@ -15,22 +15,29 @@ export class McCabeComplexity implements Metric {
     ];
 
     private mccReturnStatementSuperSet = ["(return_statement) @return"];
-    private treeParser: TreeParser
+    private treeParser: TreeParser;
 
     constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
         this.treeParser = treeParser;
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName())) {
-                 if (expressionMapping.type === "statement") {
-                    const { expression, category, operator } = expressionMapping
+                if (expressionMapping.type === "statement") {
+                    const { expression, category, operator } = expressionMapping;
                     if (category === "binary_expression") {
-                        this.mccStatementsSuperSet.push("("+category+" operator: \""+operator+"\") @binary_expression_"+binaryOperatorTranslations.get(operator))
+                        this.mccStatementsSuperSet.push(
+                            "(" +
+                                category +
+                                ' operator: "' +
+                                operator +
+                                '") @binary_expression_' +
+                                binaryOperatorTranslations.get(operator)
+                        );
                     } else {
-                        this.mccStatementsSuperSet.push("("+expression+") @" + expression)
+                        this.mccStatementsSuperSet.push("(" + expression + ") @" + expression);
                     }
                 }
             }
-        })
+        });
     }
 
     calculate(parseFile: ParseFile): MetricResult {
@@ -66,7 +73,9 @@ export class McCabeComplexity implements Metric {
             }
         }
 
-        console.log(this.getName() + " - " + (matches.length + additionalReturnStatementComplexity));
+        console.log(
+            this.getName() + " - " + (matches.length + additionalReturnStatementComplexity)
+        );
 
         return {
             metricName: this.getName(),
@@ -75,6 +84,6 @@ export class McCabeComplexity implements Metric {
     }
 
     getName(): string {
-        return "mcc"
+        return "mcc";
     }
 }

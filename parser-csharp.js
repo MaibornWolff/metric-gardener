@@ -36,8 +36,7 @@ const captures = metricsQuery.captures(tree.rootNode);
 const importMatches = matches.filter((match) => {
     return match.pattern === 0;
 });
-console.log(importMatches, formatCaptures(tree, captures))
-
+console.log(importMatches, formatCaptures(tree, captures));
 
 function getSourceCode() {
     return `

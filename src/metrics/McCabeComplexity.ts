@@ -1,8 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import fs from "fs";
-import Parser from "tree-sitter";
 import { grammars } from "../grammars";
 import {binaryOperatorTranslations, ExpressionMetricMapping} from "../app";
+import {TreeParser} from "../helper/TreeParser";
 
 export class McCabeComplexity implements Metric {
     private mccStatementsSuperSet = [];
@@ -16,8 +15,10 @@ export class McCabeComplexity implements Metric {
     ];
 
     private mccReturnStatementSuperSet = ["(return_statement) @return"];
+    private treeParser: TreeParser
 
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+    constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
+        this.treeParser = treeParser;
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName())) {
                  if (expressionMapping.type === "statement") {
@@ -33,15 +34,9 @@ export class McCabeComplexity implements Metric {
     }
 
     calculate(parseFile: ParseFile): MetricResult {
-        const treeSitterLanguage = grammars.get(parseFile.language);
+        const tree = this.treeParser.getParseTree(parseFile);
 
-        const parser = new Parser();
-        parser.setLanguage(treeSitterLanguage);
-
-        const sourceCode = fs.readFileSync(parseFile.filePath).toString();
-        const tree = parser.parse(sourceCode);
-
-        const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
+        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.mccStatementsSuperSet);
 
         const query = queryBuilder.build();

@@ -1,13 +1,14 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import fs from "fs";
-import Parser from "tree-sitter";
 import { grammars } from "../grammars";
 import {ExpressionMetricMapping} from "../app";
+import {TreeParser} from "../helper/TreeParser";
 
 export class CommentLines implements Metric {
     private commentStatementsSuperSet = [];
+    private treeParser: TreeParser
 
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+    constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
+        this.treeParser = treeParser;
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
                 const { expression } = expressionMapping
@@ -17,15 +18,9 @@ export class CommentLines implements Metric {
     }
 
     calculate(parseFile: ParseFile): MetricResult {
-        const treeSitterLanguage = grammars.get(parseFile.language);
+        const tree = this.treeParser.getParseTree(parseFile);
 
-        const parser = new Parser();
-        parser.setLanguage(treeSitterLanguage);
-
-        const sourceCode = fs.readFileSync(parseFile.filePath).toString();
-        const tree = parser.parse(sourceCode);
-
-        const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
+        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.commentStatementsSuperSet);
 
         const query = queryBuilder.build();

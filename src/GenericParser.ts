@@ -2,7 +2,7 @@ import { McCabeComplexity } from "./metrics/McCabeComplexity";
 import { Functions } from "./metrics/Functions";
 import { Classes } from "./metrics/Classes";
 import { grammars } from "./grammars";
-import { getParseFile } from "./helper";
+import { getParseFile } from "./helper/Helper";
 import path from "path";
 import fs from "fs";
 import {ExpressionMetricMapping} from "./app";
@@ -11,6 +11,7 @@ import {CommentLines} from "./metrics/CommentLines";
 import {RealLinesOfCode} from "./metrics/RealLinesOfCode";
 import {Coupling} from "./metrics/Coupling";
 import {CouplingCSharp} from "./metrics/CouplingCSharp";
+import {TreeParser} from "./helper/TreeParser";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];
@@ -22,17 +23,19 @@ export class GenericParser {
         const nodeTypesJson = fs.readFileSync(fs.realpathSync("./resources/node-types-mapped.config")).toString();
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
+        const treeParser = new TreeParser();
+
         this.fileMetrics = [
-            new McCabeComplexity(allNodeTypes),
-            new Functions(allNodeTypes),
-            new Classes(allNodeTypes),
-            new LinesOfCode(allNodeTypes),
-            new CommentLines(allNodeTypes),
-            new RealLinesOfCode(allNodeTypes),
+            new McCabeComplexity(allNodeTypes, treeParser),
+            new Functions(allNodeTypes, treeParser),
+            new Classes(allNodeTypes, treeParser),
+            new LinesOfCode(allNodeTypes, treeParser),
+            new CommentLines(allNodeTypes, treeParser),
+            new RealLinesOfCode(allNodeTypes, treeParser),
         ];
 
         this.comprisingMetrics = [
-            new CouplingCSharp(allNodeTypes)
+            new CouplingCSharp(allNodeTypes, treeParser)
         ];
     }
 
@@ -105,7 +108,7 @@ export class GenericParser {
     }
 
     private findFilesRecursively(
-        dir,
+        dir: string,
         supportedFileExtensions: string[] = [],
         excludedFolders: string[] = [],
         fileList: string[] = []

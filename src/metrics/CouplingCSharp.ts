@@ -1,9 +1,9 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import fs from "fs";
-import Parser from "tree-sitter";
+import {Tree} from "tree-sitter";
 import { grammars } from "../grammars";
 import {ExpressionMetricMapping} from "../app";
-import {formatCaptures} from "../helper";
+import {formatCaptures} from "../helper/Helper";
+import {TreeParser} from "../helper/TreeParser";
 
 interface Package {
     namespace: string, class: string, source: string
@@ -34,9 +34,12 @@ export class CouplingCSharp implements CouplingMetric {
             )
             (member_access_expression) @member_access_expression
         `]
-    ]
+    ];
+    private treeParser: TreeParser
 
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+    constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
+        this.treeParser = treeParser;
+
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName()) && expressionMapping.type === "statement") {
                 const { expression } = expressionMapping
@@ -46,27 +49,18 @@ export class CouplingCSharp implements CouplingMetric {
     }
 
     calculate(parseFiles: ParseFile[]): CouplingMetricResult {
-        const treeSitterLanguage = grammars.get(parseFiles[0].language);
-
-        const parser = new Parser();
-        parser.setLanguage(treeSitterLanguage);
-
         let packages: Map<string, Package> = new Map();
         let usages: Usage[] = [];
 
-        const parsedTrees = new Map()
         for (const parseFile of parseFiles) {
-            const sourceCode = fs.readFileSync(parseFile.filePath).toString();
-            const tree = parser.parse(sourceCode);
-            parsedTrees.set(parseFile.filePath, tree);
-
-            packages = new Map([...packages, ...this.getPackages(tree, parseFile)])
+            packages = new Map([...packages, ...this.getPackages(parseFile)])
         }
 
         for (const parseFile of parseFiles) {
-            const tree = parsedTrees.get(parseFile.filePath)
-            usages = usages.concat(this.getSimpleUsages(tree, parseFile))
-            usages = this.getEnrichedUsageCandidates(packages, usages, tree, parseFile)
+            const tree = this.treeParser.getParseTree(parseFile)
+
+            usages = usages.concat(this.getSimpleUsages(parseFile, tree))
+            usages = this.getEnrichedUsageCandidates(packages, usages, parseFile, tree)
         }
 
         console.log("\n\n")
@@ -86,12 +80,12 @@ export class CouplingCSharp implements CouplingMetric {
     /**
      * TODO scan interface, abstract class, and trait declarations as well (not only classes)
      */
-    private getPackages(tree, parseFile: ParseFile) {
+    private getPackages(parseFile: ParseFile) {
         const packages: Map<string, {namespace: string, class: string, source: string}> = new Map();
 
-        const treeSitterLanguage = grammars.get(parseFile.language)
+        const tree = this.treeParser.getParseTree(parseFile)
 
-        const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
+        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.namespaceStatementsSuperSet);
 
         const query = queryBuilder.build();
@@ -119,10 +113,8 @@ export class CouplingCSharp implements CouplingMetric {
         return packages
     }
 
-    private getEnrichedUsageCandidates(packages: Map<string, Package>, usages: Usage[], tree, parseFile) {
-        const treeSitterLanguage = grammars.get(parseFile.language)
-
-        const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
+    private getEnrichedUsageCandidates(packages: Map<string, Package>, usages: Usage[], parseFile: ParseFile, tree: Tree) {
+        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.namespaceUseStatementsSuperSets[1]);
 
         const usagesQuery = queryBuilder.build();
@@ -189,10 +181,8 @@ export class CouplingCSharp implements CouplingMetric {
         return [...usageCandidates.values()]
     }
 
-    private getSimpleUsages(tree, parseFile) {
-        const treeSitterLanguage = grammars.get(parseFile.language)
-
-        const queryBuilder = new QueryBuilder(treeSitterLanguage, tree);
+    private getSimpleUsages(parseFile: ParseFile, tree: Tree) {
+        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.namespaceUseStatementsSuperSets[0]);
 
         const usagesQuery = queryBuilder.build();

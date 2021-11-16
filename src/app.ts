@@ -1,11 +1,40 @@
 import { GenericParser } from "./GenericParser";
 import fs from "fs";
 import { binaryOperatorTranslations, ExpressionMetricMapping } from "./helper/Model";
+import { Configuration } from "./Configuration";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+const argv = yargs(hideBin(process.argv))
+    .command("parse [sources-path]", "parse file or folders recursively by given path", (yargs) => {
+        return yargs.positional("sources-path", {
+            describe: "path to sources",
+            default: "./resources",
+        });
+    })
+    .option("output-path", {
+        alias: "o",
+        type: "string",
+        description: "Output file path",
+    })
+    .option("compress", {
+        alias: "c",
+        type: "boolean",
+        description: "output .gz-zipped file",
+        default: false,
+    })
+    .demandOption(["sources-path", "output-path"])
+    .strictCommands()
+    .strictOptions()
+    .parseSync();
+
+const configuration = new Configuration(
+    argv["sources-path"],
+    argv["output-path"],
+    argv["compress"]
+);
 
 const nodeTypeConfigPath = "./resources";
-const resourcesRoot = process.argv[2] ?? "./resources";
-
-console.log(resourcesRoot);
 
 const nodeTypeFiles = new Map([
     ["cs", "./node_modules/tree-sitter-c-sharp/src/node-types.json"],
@@ -92,8 +121,8 @@ fs.writeFileSync(
 //     return
 // }
 
-const parser = new GenericParser();
-const fileMetrics = parser.calculateMetrics(resourcesRoot);
+const parser = new GenericParser(configuration);
+const fileMetrics = parser.calculateMetrics();
 
 console.log("\n\n");
 console.log("#####################################");
@@ -138,7 +167,7 @@ for (const [filePath, metricsMap] of fileMetrics.entries()) {
 }
 
 const edgeMetrics = parser.getEdgeMetrics();
-const couplingMetricResults = edgeMetrics.metricValue;
+const couplingMetricResults = edgeMetrics?.metricValue || [];
 
 for (const couplingMetricResult of couplingMetricResults) {
     output.edges.push({

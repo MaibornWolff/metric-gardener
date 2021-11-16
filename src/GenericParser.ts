@@ -11,14 +11,18 @@ import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { CouplingCSharp } from "./metrics/CouplingCSharp";
 import { TreeParser } from "./helper/TreeParser";
 import { ExpressionMetricMapping } from "./helper/Model";
+import { Configuration } from "./Configuration";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];
     private readonly comprisingMetrics: CouplingMetric[] = [];
+    private config: Configuration;
 
     private edgeMetrics: CouplingMetricResult;
 
-    constructor() {
+    constructor(configuration: Configuration) {
+        this.config = configuration;
+
         const nodeTypesJson = fs
             .readFileSync(fs.realpathSync("./resources/node-types-mapped.config"))
             .toString();
@@ -36,14 +40,15 @@ export class GenericParser {
         ];
 
         this.comprisingMetrics = [new CouplingCSharp(allNodeTypes, treeParser)];
+        this.comprisingMetrics = [];
     }
 
     getEdgeMetrics(): CouplingMetricResult {
         return this.edgeMetrics;
     }
 
-    calculateMetrics(sourcesRoot: string) {
-        sourcesRoot = fs.realpathSync(sourcesRoot);
+    calculateMetrics() {
+        const sourcesRoot = fs.realpathSync(this.config.sourcesPath);
 
         console.log("\n\n");
         console.log("----- Try to parse " + sourcesRoot + " recursively -----");

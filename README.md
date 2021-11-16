@@ -28,10 +28,11 @@ The metrics will be printed during parsing and passed to ./resources/output.json
 
 ### TODOs
 
--   Provide command line options
+-   Performance
+-   Provide more command line options
+-   Write script to add new language and map expressions
+-   Support more languages
 -   Handle multiple file extensions during parsing on the fly
 -   Output calculated metrics in a file/json
 -   Execute language specific metrics (e.g. CouplingCSharp) only if necessary
--   Write script to add new language and map expressions
--   Support more languages
 -   Unit Tests

@@ -24,4 +24,4 @@
 -   `npm run start` to parse some provided example code
 -   `npm run start -- /path/to/sources` specify the path to a folder or a file with source code
 
-The metrics will be printed during parsing.
+The metrics will be printed during parsing and passed to ./resources/output.json file.

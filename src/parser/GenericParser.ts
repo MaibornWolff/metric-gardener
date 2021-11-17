@@ -108,6 +108,11 @@ export class GenericParser {
             } minutes respectively`
         );
 
+        console.log("\n\n");
+        console.log("#####################################");
+        console.log("#####################################");
+        console.log(fileMetrics);
+
         return fileMetrics;
     }
 

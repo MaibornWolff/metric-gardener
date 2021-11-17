@@ -41,7 +41,10 @@ export class QueryBuilder {
                 metricsQuery.matches(this.tree.rootNode);
 
                 availableMccStatements.push(mccStatement);
-            } catch (e) {}
+            } catch (error) {
+                // This error can be ignored.
+                // The specific statement seems not to be available for current language
+            }
         }
 
         return availableMccStatements.join("\n");

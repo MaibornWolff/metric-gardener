@@ -49,10 +49,6 @@ export class McCabeComplexity implements Metric {
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        for (const match of matches) {
-            //console.log(match.captures);
-        }
-
         queryBuilder.clear();
         queryBuilder.setStatements(this.mccFunctionsAndMethodsSuperSet);
 

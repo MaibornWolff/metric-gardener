@@ -1,19 +1,13 @@
 import fs from "fs";
 import { grammars } from "./Grammars";
 import Parser, { Tree } from "tree-sitter";
-import { Factory as NamespaceCollectorFactory } from "../collectors/namespaces/Factory";
-import { Factory as UsageCollectorFactory } from "../collectors/usages/Factory";
-import { NamespaceReference } from "../collectors/namespaces/AbstractCollector";
-import { UsageReference } from "../collectors/usages/AbstractCollector";
 
 export class TreeParser {
-    private treeCache: Map<string, Tree> = new Map();
-    private namespaceCollectorFactory = new NamespaceCollectorFactory(this);
-    private usageCollectorFactory = new UsageCollectorFactory(this);
+    private static cache: Map<string, Tree> = new Map();
 
-    getParseTree(parseFile: ParseFile): Tree {
-        if (this.treeCache.has(parseFile.filePath)) {
-            return this.treeCache.get(parseFile.filePath);
+    static getParseTree(parseFile: ParseFile): Tree {
+        if (TreeParser.cache.has(parseFile.filePath)) {
+            return TreeParser.cache.get(parseFile.filePath);
         }
 
         const parser = new Parser();
@@ -21,18 +15,9 @@ export class TreeParser {
 
         const sourceCode = fs.readFileSync(parseFile.filePath).toString();
         const tree = parser.parse(sourceCode);
-        this.treeCache.set(parseFile.filePath, tree);
+
+        TreeParser.cache.set(parseFile.filePath, tree);
 
         return tree;
-    }
-
-    getNamespaces(parseFile: ParseFile): Map<string, NamespaceReference> {
-        const collector = this.namespaceCollectorFactory.getCollector(parseFile);
-        return collector !== undefined ? collector.getNamespaces(parseFile) : new Map();
-    }
-
-    getUsages(parseFile: ParseFile, packages): UsageReference[] {
-        const collector = this.usageCollectorFactory.getCollector(parseFile);
-        return collector !== undefined ? collector.getUsages(parseFile, packages) : [];
     }
 }

@@ -2,12 +2,20 @@ import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { NamespaceReference } from "../collectors/namespaces/AbstractCollector";
 import { UsageReference } from "../collectors/usages/AbstractCollector";
+import { NamespaceCollector } from "../collectors/NamespaceCollector";
+import { UsagesCollector } from "../collectors/UsagesCollector";
 
 export class Coupling implements CouplingMetric {
-    private treeParser: TreeParser;
+    private namespaceCollector: NamespaceCollector;
+    private usageCollector: UsagesCollector;
 
-    constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
-        this.treeParser = treeParser;
+    constructor(
+        allNodeTypes: ExpressionMetricMapping[],
+        namespaceCollector: NamespaceCollector,
+        usageCollector: UsagesCollector
+    ) {
+        this.namespaceCollector = namespaceCollector;
+        this.usageCollector = usageCollector;
     }
 
     calculate(parseFiles: ParseFile[]): CouplingMetricResult {
@@ -15,11 +23,11 @@ export class Coupling implements CouplingMetric {
         let usages: UsageReference[] = [];
 
         for (const parseFile of parseFiles) {
-            packages = new Map([...packages, ...this.treeParser.getNamespaces(parseFile)]);
+            packages = new Map([...packages, ...this.namespaceCollector.getNamespaces(parseFile)]);
         }
 
         for (const parseFile of parseFiles) {
-            usages = usages.concat(this.treeParser.getUsages(parseFile, packages));
+            usages = usages.concat(this.usageCollector.getUsages(parseFile, packages));
         }
 
         console.log("\n\n");
@@ -39,7 +47,7 @@ export class Coupling implements CouplingMetric {
     private getCoupledFilesData(
         packages: Map<string, NamespaceReference>,
         usages: UsageReference[]
-    ) {
+    ): CouplingMetricValue[] {
         return usages.flatMap((usage) => {
             if (packages.has(usage.usedNamespace)) {
                 const fromData = [...packages.values()].filter((value) => {
@@ -54,10 +62,12 @@ export class Coupling implements CouplingMetric {
                             fromNamespace:
                                 firstFromNamespace.namespace +
                                 firstFromNamespace.namespaceDelimiter +
-                                firstFromNamespace.class,
+                                firstFromNamespace.className,
                             toNamespace: usage.usedNamespace,
                             fromSource: usage.source,
                             toSource: packages.get(usage.usedNamespace).source,
+                            fromClassName: firstFromNamespace.className,
+                            toClassName: packages.get(usage.usedNamespace).className,
                         },
                     ];
                 }

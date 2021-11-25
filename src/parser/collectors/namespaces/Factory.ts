@@ -6,9 +6,9 @@ import { CSharpCollector } from "./CSharpCollector";
 export class Factory {
     private collectors = new Map<string, AbstractCollector>();
 
-    constructor(treeParser: TreeParser) {
-        this.collectors.set("cs", new CSharpCollector(treeParser));
-        this.collectors.set("php", new PHPCollector(treeParser));
+    constructor() {
+        this.collectors.set("cs", new CSharpCollector());
+        this.collectors.set("php", new PHPCollector());
     }
 
     getCollector(parseFile: ParseFile): AbstractCollector | undefined {

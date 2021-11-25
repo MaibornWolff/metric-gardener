@@ -7,11 +7,8 @@ export class RealLinesOfCode implements Metric {
     private classesStatementSuperSet = [];
     private startRuleStatementsSuperSet = [];
     private commentStatementsSuperSet = [];
-    private treeParser: TreeParser;
 
-    constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
-        this.treeParser = treeParser;
-
+    constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (
                 expressionMapping.metrics.includes(this.getName()) &&
@@ -31,7 +28,7 @@ export class RealLinesOfCode implements Metric {
     }
 
     calculate(parseFile: ParseFile): MetricResult {
-        const tree = this.treeParser.getParseTree(parseFile);
+        const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.startRuleStatementsSuperSet);

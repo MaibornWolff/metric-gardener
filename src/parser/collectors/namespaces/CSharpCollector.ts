@@ -2,10 +2,6 @@ import { TreeParser } from "../../helper/TreeParser";
 import { AbstractCollector } from "./AbstractCollector";
 
 export class CSharpCollector extends AbstractCollector {
-    constructor(treeParser: TreeParser) {
-        super(treeParser);
-    }
-
     protected getNamespaceDelimiter(): string {
         return ".";
     }

@@ -8,10 +8,6 @@ import { NamespaceReference } from "../namespaces/AbstractCollector";
 const NAMESPACE_DELIMITER = ".";
 
 export class CSharpCollector extends AbstractCollector {
-    constructor(treeParser: TreeParser) {
-        super(treeParser);
-    }
-
     private memberAccessesQuery = `
         (object_creation_expression
             type: (_) @object_class_name
@@ -37,7 +33,7 @@ export class CSharpCollector extends AbstractCollector {
         usages: UsageReference[],
         parseFile: ParseFile
     ) {
-        const tree = this.treeParser.getParseTree(parseFile);
+        const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements([this.memberAccessesQuery]);

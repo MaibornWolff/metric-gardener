@@ -8,15 +8,21 @@ import fs from "fs";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { TreeParser } from "./helper/TreeParser";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Coupling } from "./metrics/Coupling";
+import neo4j from "neo4j-driver";
+import { NamespaceCollector } from "./collectors/NamespaceCollector";
+import { UsagesCollector } from "./collectors/UsagesCollector";
+import { NamespaceReference } from "./collectors/namespaces/AbstractCollector";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];
     private readonly comprisingMetrics: CouplingMetric[] = [];
     private config: Configuration;
+
+    private namespaceCollector: NamespaceCollector;
+    private usageCollector: UsagesCollector;
 
     private edgeMetrics: CouplingMetricResult;
 
@@ -28,18 +34,21 @@ export class GenericParser {
             .toString();
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
-        const treeParser = new TreeParser();
-
         this.fileMetrics = [
-            new McCabeComplexity(allNodeTypes, treeParser),
-            new Functions(allNodeTypes, treeParser),
-            new Classes(allNodeTypes, treeParser),
-            new LinesOfCode(allNodeTypes, treeParser),
-            new CommentLines(allNodeTypes, treeParser),
-            new RealLinesOfCode(allNodeTypes, treeParser),
+            new McCabeComplexity(allNodeTypes),
+            new Functions(allNodeTypes),
+            new Classes(allNodeTypes),
+            new LinesOfCode(allNodeTypes),
+            new CommentLines(allNodeTypes),
+            new RealLinesOfCode(allNodeTypes),
         ];
 
-        this.comprisingMetrics = [new Coupling(allNodeTypes, treeParser)];
+        this.namespaceCollector = new NamespaceCollector();
+        this.usageCollector = new UsagesCollector();
+
+        this.comprisingMetrics = [
+            new Coupling(allNodeTypes, this.namespaceCollector, this.usageCollector),
+        ];
     }
 
     getEdgeMetrics(): CouplingMetricResult {
@@ -96,6 +105,10 @@ export class GenericParser {
             this.edgeMetrics = metric.calculate(parseFiles);
         }
 
+        this.buildDependencyGraph(this.edgeMetrics).then(() => {
+            console.log("Dependency Graph done");
+        });
+
         const endTime = performance.now();
         const duration = endTime - startTime;
 
@@ -112,6 +125,64 @@ export class GenericParser {
         console.log(fileMetrics);
 
         return fileMetrics;
+    }
+
+    private async buildDependencyGraph(couplingData: CouplingMetricResult) {
+        // create dependency graph in neo4j
+        // write nodes and edges to neo4j
+
+        const driver = neo4j.driver("neo4j://localhost:7687", neo4j.auth.basic("neo4j", "admin"));
+        const session = driver.session();
+
+        try {
+            for (const [
+                language,
+                namespaceReferences,
+            ] of this.namespaceCollector.getAllNamespaces()) {
+                for (const namespaceReferenceItem of namespaceReferences.values()) {
+                    const namespaceReference: NamespaceReference = namespaceReferenceItem
+                        .values()
+                        .next().value;
+                    const { namespace, source, className } = namespaceReference;
+
+                    await session.writeTransaction((tx) =>
+                        tx.run(
+                            `
+                                CREATE (n:Class)
+                                SET
+                                    n.namespace = $namespace,
+                                    n.sourcePath = $source,
+                                    n.className = $className,
+                                    n.language = $language
+                            `,
+                            { namespace, source, className, language }
+                        )
+                    );
+                }
+            }
+
+            for (const relationship of couplingData.metricValue) {
+                const { fromSource, toSource } = relationship;
+
+                await session.writeTransaction((tx) =>
+                    tx.run(
+                        `
+                            MATCH
+                                (a:Class),
+                                (b:Class)
+                            WHERE a.sourcePath = $fromSource AND b.sourcePath = $toSource
+                            CREATE (a)-[r:USES]->(b)
+                        `,
+                        { fromSource, toSource }
+                    )
+                );
+            }
+        } finally {
+            await session.close();
+        }
+
+        // on application exit:
+        await driver.close();
     }
 
     private findFilesRecursively(

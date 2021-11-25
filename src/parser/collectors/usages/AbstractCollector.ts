@@ -6,25 +6,19 @@ import { NamespaceReference } from "../namespaces/AbstractCollector";
 
 export interface UsageReference {
     usedNamespace: string;
-    usedSource: string;
+    sourceOfUsing: string;
     alias?: string;
     source: string;
 }
 
 export abstract class AbstractCollector {
-    protected treeParser: TreeParser;
-
-    protected constructor(treeParser: TreeParser) {
-        this.treeParser = treeParser;
-    }
-
     protected abstract getUsagesQuery(): string;
 
     /*
      * Results caching not needed at the moment
      */
     getUsages(parseFile: ParseFile, packages: Map<string, NamespaceReference>): UsageReference[] {
-        const tree = this.treeParser.getParseTree(parseFile);
+        const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements([this.getUsagesQuery()]);
@@ -48,7 +42,7 @@ export abstract class AbstractCollector {
             const namespaceName = usagesTextCaptures[index].text;
             usagesOfFile.push({
                 usedNamespace: namespaceName,
-                usedSource: parseFile.filePath,
+                sourceOfUsing: parseFile.filePath,
                 alias: "",
                 source: parseFile.filePath,
             });

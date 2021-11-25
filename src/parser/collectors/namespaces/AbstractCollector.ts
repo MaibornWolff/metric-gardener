@@ -5,18 +5,13 @@ import { TreeParser } from "../../helper/TreeParser";
 
 export interface NamespaceReference {
     namespace: string;
-    class: string;
+    className: string;
     source: string;
     namespaceDelimiter: string;
 }
 
 export abstract class AbstractCollector {
-    protected treeParser: TreeParser;
     protected cache: Map<string, Map<string, NamespaceReference>> = new Map();
-
-    protected constructor(treeParser: TreeParser) {
-        this.treeParser = treeParser;
-    }
 
     protected abstract getNamespaceDelimiter(): string;
     protected abstract getNamespacesQuery(): string;
@@ -24,14 +19,14 @@ export abstract class AbstractCollector {
     /**
      * TODO scan interface, abstract class, and trait declarations as well (not only classes)
      */
-    getNamespaces(parseFile: ParseFile) {
+    getNamespaces(parseFile: ParseFile): Map<string, NamespaceReference> {
         if (this.cache.has(parseFile.filePath)) {
             return this.cache.get(parseFile.filePath);
         }
 
         const packages: Map<string, NamespaceReference> = new Map();
 
-        const tree = this.treeParser.getParseTree(parseFile);
+        const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements([this.getNamespacesQuery()]);
@@ -52,7 +47,7 @@ export abstract class AbstractCollector {
                 const className = textCaptures[classDeclarationIndex + 1].text;
                 packages.set(namespaceName + this.getNamespaceDelimiter() + className, {
                     namespace: namespaceName,
-                    class: className,
+                    className: className,
                     source: parseFile.filePath,
                     namespaceDelimiter: this.getNamespaceDelimiter(),
                 });
@@ -63,6 +58,8 @@ export abstract class AbstractCollector {
                 index++;
             }
         }
+
+        this.cache.set(parseFile.filePath, packages);
 
         return packages;
     }

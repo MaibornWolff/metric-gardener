@@ -20,15 +20,26 @@
 
 ### Usage
 
+For object-oriented metrics setup neo4j DB first:
+
+-   `cd projects/node-parser/; docker run --publish=7474:7474 --publish=7687:7687 --volume=${PWD}/neo4j/data:/data neo4j --env=NEO4J_AUTH=none`
+
+Then parse your sources:
+
 -   `npm install`
 -   `npm run start -- -o /output/file/path.json` to parse some provided example code
 -   `npm run start -- /path/to/sources -o /output/file/path.json` specify the path to a folder or a file with source code
 
 The metrics will be printed during parsing and passed to ./resources/output.json file.
 
+# Neo4J:
+
+-   Visit `http://localhost:7474/` with `admin/admin`
+
 ### TODOs
 
 -   Debug changed Coupling metric for CSharp projects (Unit test would be best)
+-   Resolve cyclic Dependency in TreeParser and Namespace/Usage Collectors -> Add dedicated Namespace/Usage Parsers
 -   Performance
 -   Provide more command line options
 -   Handle multiple file extensions during parsing on the fly
@@ -68,6 +79,7 @@ um eine eindeutige zurodnung zu bekmomen.
 -   Hybrid Approach möglich
 
 Was ist ein Coupling Graph???
+Oder bauen wir gerade einen Dependency Graph??
 
 Abstractness / (In)Stability:
 Instability [0,1]:= Outgoing Dependencies / (Incoming Dependencies + Outgoing Dependencies)

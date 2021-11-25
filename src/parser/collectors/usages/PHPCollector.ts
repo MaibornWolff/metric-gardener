@@ -5,10 +5,6 @@ import { grammars } from "../../helper/Grammars";
 import { formatCaptures } from "../../helper/Helper";
 
 export class PHPCollector extends AbstractCollector {
-    constructor(treeParser: TreeParser) {
-        super(treeParser);
-    }
-
     private groupedUsagesQuery = `
         (namespace_use_declaration
             (namespace_name) @namespace_name
@@ -35,7 +31,7 @@ export class PHPCollector extends AbstractCollector {
     }
 
     private getGroupedUsages(parseFile: ParseFile) {
-        const tree = this.treeParser.getParseTree(parseFile);
+        const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements([this.groupedUsagesQuery]);
@@ -59,7 +55,7 @@ export class PHPCollector extends AbstractCollector {
 
                 usagesOfFile.push({
                     usedNamespace: namespaceName + "\\" + nextUseItem.text,
-                    usedSource: parseFile.filePath,
+                    sourceOfUsing: parseFile.filePath,
                     alias: "",
                     source: parseFile.filePath,
                 });

@@ -5,10 +5,8 @@ import { ExpressionMetricMapping } from "../helper/Model";
 
 export class CommentLines implements Metric {
     private commentStatementsSuperSet = [];
-    private treeParser: TreeParser;
 
-    constructor(allNodeTypes: ExpressionMetricMapping[], treeParser: TreeParser) {
-        this.treeParser = treeParser;
+    constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (
                 expressionMapping.metrics.includes(this.getName()) &&
@@ -21,7 +19,7 @@ export class CommentLines implements Metric {
     }
 
     calculate(parseFile: ParseFile): MetricResult {
-        const tree = this.treeParser.getParseTree(parseFile);
+        const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.commentStatementsSuperSet);

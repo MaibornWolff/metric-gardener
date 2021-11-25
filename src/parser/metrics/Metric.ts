@@ -8,6 +8,8 @@ interface CouplingMetricValue {
     toNamespace: string;
     fromSource: string;
     toSource: string;
+    fromClassName: string;
+    toClassName: string;
 }
 
 interface CouplingMetricResult {

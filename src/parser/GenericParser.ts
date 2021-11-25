@@ -8,10 +8,10 @@ import fs from "fs";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { CouplingCSharp } from "./metrics/CouplingCSharp";
 import { TreeParser } from "./helper/TreeParser";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
+import { Coupling } from "./metrics/Coupling";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];
@@ -39,8 +39,7 @@ export class GenericParser {
             new RealLinesOfCode(allNodeTypes, treeParser),
         ];
 
-        this.comprisingMetrics = [new CouplingCSharp(allNodeTypes, treeParser)];
-        this.comprisingMetrics = [];
+        this.comprisingMetrics = [new Coupling(allNodeTypes, treeParser)];
     }
 
     getEdgeMetrics(): CouplingMetricResult {
@@ -76,9 +75,7 @@ export class GenericParser {
             }
 
             parseFiles.push(parseFile);
-        }
 
-        for (const parseFile of parseFiles) {
             const metricResults = new Map<string, MetricResult>();
             fileMetrics.set(parseFile.filePath, metricResults);
 
@@ -95,6 +92,7 @@ export class GenericParser {
         }
 
         for (const metric of this.comprisingMetrics) {
+            console.log("\n\nPARSING COUPLING");
             this.edgeMetrics = metric.calculate(parseFiles);
         }
 

@@ -3,6 +3,7 @@ import { AbstractCollector, UsageReference } from "./AbstractCollector";
 import { QueryBuilder } from "../../queries/QueryBuilder";
 import { grammars } from "../../helper/Grammars";
 import { formatCaptures } from "../../helper/Helper";
+import { NamespaceCollector } from "../NamespaceCollector";
 
 export class PHPCollector extends AbstractCollector {
     private groupedUsagesQuery = `
@@ -25,12 +26,12 @@ export class PHPCollector extends AbstractCollector {
         `;
     }
 
-    getUsages(parseFile: ParseFile, packages): UsageReference[] {
-        const usages: UsageReference[] = super.getUsages(parseFile, packages);
-        return usages.concat(this.getGroupedUsages(parseFile));
+    getUsages(parseFile: ParseFile, namespaceCollector): UsageReference[] {
+        const usages: UsageReference[] = super.getUsages(parseFile, namespaceCollector);
+        return usages.concat(this.getGroupedUsages(parseFile, namespaceCollector));
     }
 
-    private getGroupedUsages(parseFile: ParseFile) {
+    private getGroupedUsages(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
@@ -53,11 +54,29 @@ export class PHPCollector extends AbstractCollector {
             while (hasUseGroupItem) {
                 const nextUseItem = usagesTextCaptures[groupItemIndex + 1];
 
+                const usedNamespace = namespaceName + "\\" + nextUseItem.text;
+                const usageNamespaceParts = usedNamespace.split("\\");
+                const usedClass = usageNamespaceParts.pop();
+
+                let usageType = "usage";
+
+                for (const myNamespace of namespaceCollector.getNamespaces(parseFile).values()) {
+                    if (myNamespace.implementedClasses.includes(usedClass)) {
+                        usageType = "implements";
+                        break;
+                    }
+                    if (myNamespace.extendedClass === usedClass) {
+                        usageType = "extends";
+                        break;
+                    }
+                }
+
                 usagesOfFile.push({
                     usedNamespace: namespaceName + "\\" + nextUseItem.text,
                     sourceOfUsing: parseFile.filePath,
                     alias: "",
                     source: parseFile.filePath,
+                    usageType: usageType,
                 });
 
                 hasUseGroupItem =

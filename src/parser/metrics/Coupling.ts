@@ -1,4 +1,3 @@
-import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { NamespaceReference } from "../collectors/namespaces/AbstractCollector";
 import { UsageReference } from "../collectors/usages/AbstractCollector";
@@ -19,22 +18,27 @@ export class Coupling implements CouplingMetric {
     }
 
     calculate(parseFiles: ParseFile[]): CouplingMetricResult {
-        let packages: Map<string, NamespaceReference> = new Map();
+        let namespaces: Map<string, NamespaceReference> = new Map();
         let usages: UsageReference[] = [];
 
         for (const parseFile of parseFiles) {
-            packages = new Map([...packages, ...this.namespaceCollector.getNamespaces(parseFile)]);
+            namespaces = new Map([
+                ...namespaces,
+                ...this.namespaceCollector.getNamespaces(parseFile),
+            ]);
         }
 
         for (const parseFile of parseFiles) {
-            usages = usages.concat(this.usageCollector.getUsages(parseFile, packages));
+            usages = usages.concat(
+                this.usageCollector.getUsages(parseFile, this.namespaceCollector)
+            );
         }
 
         console.log("\n\n");
-        console.log("packages", packages, "\n\n");
+        console.log("namespaces", namespaces, "\n\n");
         console.log("usages", usages);
 
-        const couplingResults = this.getCoupledFilesData(packages, usages);
+        const couplingResults = this.getCoupledFilesData(namespaces, usages);
 
         console.log("\n\n", couplingResults);
 
@@ -45,12 +49,13 @@ export class Coupling implements CouplingMetric {
     }
 
     private getCoupledFilesData(
-        packages: Map<string, NamespaceReference>,
+        namespaces: Map<string, NamespaceReference>,
         usages: UsageReference[]
     ): CouplingMetricValue[] {
         return usages.flatMap((usage) => {
-            if (packages.has(usage.usedNamespace)) {
-                const fromData = [...packages.values()].filter((value) => {
+            if (namespaces.has(usage.usedNamespace)) {
+                // TODO: For what is this??
+                const fromData = [...namespaces.values()].filter((value) => {
                     if (usage.source === value.source) {
                         return value;
                     }
@@ -65,9 +70,10 @@ export class Coupling implements CouplingMetric {
                                 firstFromNamespace.className,
                             toNamespace: usage.usedNamespace,
                             fromSource: usage.source,
-                            toSource: packages.get(usage.usedNamespace).source,
+                            toSource: namespaces.get(usage.usedNamespace).source,
                             fromClassName: firstFromNamespace.className,
-                            toClassName: packages.get(usage.usedNamespace).className,
+                            toClassName: namespaces.get(usage.usedNamespace).className,
+                            usageType: usage.usageType,
                         },
                     ];
                 }

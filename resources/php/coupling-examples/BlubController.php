@@ -1,10 +1,11 @@
 <?php
 
 use App\CouplingExamples\Library\Helper as Helper;
+use App\ControllerInterface;
 
 namespace App\CouplingExamplesOne;
 
-class BlubControllerOne1 {
+class BlubControllerOne1 implements ControllerInterface {
     public function run() {
         $this.executeHelper(new Helper());
     }
@@ -23,10 +24,11 @@ class BlubControllerOne2 {
 }
 
 
-
 namespace App\CouplingExamplesTwo;
 
-class BlubControllerTwo1 {
+use App\CouplingExamplesOne\BlubControllerOne1;
+
+class BlubControllerTwo1 extends BlubControllerOne1 {
     public function run() {
         $this.executeHelper(new Helper());
     }

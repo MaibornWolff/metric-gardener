@@ -23,13 +23,17 @@ export class CSharpCollector extends AbstractCollector {
         `;
     }
 
-    getUsages(parseFile: ParseFile, packages): UsageReference[] {
-        const usages: UsageReference[] = super.getUsages(parseFile, packages);
-        return this.getEnrichedUsageCandidates(packages, usages, parseFile);
+    getUsages(parseFile: ParseFile, namespaceCollector): UsageReference[] {
+        const usages: UsageReference[] = super.getUsages(parseFile, namespaceCollector);
+        return this.getEnrichedUsageCandidates(
+            namespaceCollector.getAllNamespaces(),
+            usages,
+            parseFile
+        );
     }
 
     private getEnrichedUsageCandidates(
-        packages: Map<string, NamespaceReference>,
+        namespaces: Map<string, NamespaceReference>,
         usages: UsageReference[],
         parseFile: ParseFile
     ) {
@@ -78,14 +82,14 @@ export class CSharpCollector extends AbstractCollector {
             for (const objectCreation of objectsCreated) {
                 const candidate: UsageReference = { ...usage };
                 candidate.usedNamespace += NAMESPACE_DELIMITER + objectCreation;
-                if (packages.has(candidate.usedNamespace)) {
+                if (namespaces.has(candidate.usedNamespace)) {
                     usageCandidates.set(candidate.usedNamespace, candidate);
                 }
             }
             for (const accessedClassName of accessedClassNames) {
                 const candidate: UsageReference = { ...usage };
                 candidate.usedNamespace += NAMESPACE_DELIMITER + accessedClassName;
-                if (packages.has(candidate.usedNamespace)) {
+                if (namespaces.has(candidate.usedNamespace)) {
                     usageCandidates.set(candidate.usedNamespace, candidate);
                 }
             }

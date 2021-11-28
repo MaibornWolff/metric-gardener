@@ -105,9 +105,11 @@ export class GenericParser {
             this.edgeMetrics = metric.calculate(parseFiles);
         }
 
-        this.buildDependencyGraph(this.edgeMetrics).then(() => {
-            console.log("Dependency Graph done");
-        });
+        if (this.edgeMetrics.metricValue.length > 0) {
+            this.buildDependencyGraph(this.edgeMetrics).then(() => {
+                console.log("Dependency Graph done");
+            });
+        }
 
         const endTime = performance.now();
         const duration = endTime - startTime;
@@ -135,6 +137,8 @@ export class GenericParser {
         const session = driver.session();
 
         try {
+            await session.writeTransaction((tx) => tx.run("MATCH (n) DETACH DELETE n"));
+
             for (const [
                 language,
                 namespaceReferences,
@@ -143,12 +147,14 @@ export class GenericParser {
                     const namespaceReference: NamespaceReference = namespaceReferenceItem
                         .values()
                         .next().value;
-                    const { namespace, source, className } = namespaceReference;
+                    const { namespace, source, className, classType } = namespaceReference;
 
                     await session.writeTransaction((tx) =>
                         tx.run(
                             `
-                                CREATE (n:Class)
+                                CREATE (n:` +
+                                classType.toUpperCase() +
+                                `)
                                 SET
                                     n.namespace = $namespace,
                                     n.sourcePath = $source,
@@ -162,18 +168,20 @@ export class GenericParser {
             }
 
             for (const relationship of couplingData.metricValue) {
-                const { fromSource, toSource } = relationship;
+                const { fromSource, toSource, usageType } = relationship;
 
                 await session.writeTransaction((tx) =>
                     tx.run(
                         `
                             MATCH
-                                (a:Class),
-                                (b:Class)
+                                (a),
+                                (b)
                             WHERE a.sourcePath = $fromSource AND b.sourcePath = $toSource
-                            CREATE (a)-[r:USES]->(b)
+                            CREATE (a)-[r:` +
+                            usageType.toUpperCase() +
+                            `]->(b)
                         `,
-                        { fromSource, toSource }
+                        { fromSource, toSource, usageType }
                     )
                 );
             }

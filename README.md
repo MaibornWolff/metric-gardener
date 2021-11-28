@@ -59,7 +59,7 @@ entspricht Zyklomatischer Komplexität einer Klasse
 Hybrid Approach: Graph mit Classes als Nodes, Edges als Coupling Info und ParseTree als Metadata pro Node.
 
 CBO: Coupling between Objects ist gleich der Anzahl der mit der betrachteten Klasse gekoppelten Klasse(n).
-Coupling - Call Graph? Vermutlich möglich - Hybrid Approach: yes
+Coupling - Call Graph? Vermutlich möglich - Hybrid Approach: yes - MATCH (n:Class)-[r:USES]-() RETURN n, COUNT(r)
 
 RFC: Response for class ist die Anzahl aller möglichen auszuführenden Methoden. - Call Graph? was ist mit extends? Parent classes werden auch in Sonar nicht berücksichtigt. - Hybrid Approach: pro gekoppelter Klasse (und self) public und static Methoden counten
 
@@ -91,4 +91,8 @@ Abstractness [0,1]: Ratio of Abstract Classes and Interfaces to the total number
 A = Number of Abstract Classes / Number of total classes
 A = 0 -> No abstract classes
 A = 1 -> Only abstract classes
-=> Hybrid Graph müsste Klassen in ihre Packages unterteilen (+ übergeordnete Package Nodes einfügen)
+=> Hybrid Graph müsste Klassen in ihre Packages unterteilen (+ übergeordnete Package Nodes einfügen) - oder in CodeCharta mit einer neuen Metric berechnen: abstract_classes_and_interfaces_count - das könnte man da ja als Summe pro Package sehen und den Ratio bilden.
+
+Zyklische Abhängigkeiten über neo4j kein Problem: - MATCH p=(n)-[*1..15]->(n) RETURN nodes(p)
+
+Zugriffe auf Packages in Übergeordneter Ebene oder auch sowas verbotenes ./../AnotherPackage/Subpackage

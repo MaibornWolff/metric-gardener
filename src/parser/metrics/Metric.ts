@@ -10,6 +10,7 @@ interface CouplingMetricValue {
     toSource: string;
     fromClassName: string;
     toClassName: string;
+    usageType: string | "usage" | "extends" | "implements";
 }
 
 interface CouplingMetricResult {

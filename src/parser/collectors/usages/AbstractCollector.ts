@@ -2,13 +2,14 @@ import { QueryBuilder } from "../../queries/QueryBuilder";
 import { grammars } from "../../helper/Grammars";
 import { formatCaptures } from "../../helper/Helper";
 import { TreeParser } from "../../helper/TreeParser";
-import { NamespaceReference } from "../namespaces/AbstractCollector";
+import { NamespaceCollector } from "../NamespaceCollector";
 
 export interface UsageReference {
     usedNamespace: string;
     sourceOfUsing: string;
     alias?: string;
     source: string;
+    usageType: string | "usage" | "extends" | "implements";
 }
 
 export abstract class AbstractCollector {
@@ -17,7 +18,7 @@ export abstract class AbstractCollector {
     /*
      * Results caching not needed at the moment
      */
-    getUsages(parseFile: ParseFile, packages: Map<string, NamespaceReference>): UsageReference[] {
+    getUsages(parseFile: ParseFile, namespaceCollector: NamespaceCollector): UsageReference[] {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
@@ -39,12 +40,29 @@ export abstract class AbstractCollector {
                 continue;
             }
 
-            const namespaceName = usagesTextCaptures[index].text;
+            const usedNamespace = usagesTextCaptures[index].text;
+            const usageNamespaceParts = usedNamespace.split("\\");
+            const usedClass = usageNamespaceParts.pop();
+
+            let usageType = "usage";
+
+            for (const myNamespace of namespaceCollector.getNamespaces(parseFile).values()) {
+                if (myNamespace.implementedClasses.includes(usedClass)) {
+                    usageType = "implements";
+                    break;
+                }
+                if (myNamespace.extendedClass === usedClass) {
+                    usageType = "extends";
+                    break;
+                }
+            }
+
             usagesOfFile.push({
-                usedNamespace: namespaceName,
+                usedNamespace,
                 sourceOfUsing: parseFile.filePath,
                 alias: "",
                 source: parseFile.filePath,
+                usageType: usageType,
             });
         }
 

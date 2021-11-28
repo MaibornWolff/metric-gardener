@@ -1,4 +1,3 @@
-import { TreeParser } from "../../helper/TreeParser";
 import { AbstractCollector } from "./AbstractCollector";
 
 export class PHPCollector extends AbstractCollector {
@@ -12,9 +11,19 @@ export class PHPCollector extends AbstractCollector {
                 (namespace_definition
                     name: (namespace_name) @namespace_definition_name
                 )
-                (class_declaration
-                    (name) @class_name
-                )+
+                [
+                    (class_declaration
+                        (name) @class_name
+                        (base_clause (qualified_name) @extended_class)?
+                        (class_interface_clause
+                            (qualified_name)+ @implemented_class ("," (qualified_name) @implemented_class)* 
+                        )?
+                    )
+                    (interface_declaration
+                        "interface" @class_type
+                        (name) @class_name
+                    )
+                ]+
             )
         `;
     }

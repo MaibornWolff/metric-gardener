@@ -14,15 +14,14 @@ import { Coupling } from "./metrics/Coupling";
 import neo4j from "neo4j-driver";
 import { NamespaceCollector } from "./collectors/NamespaceCollector";
 import { UsagesCollector } from "./collectors/UsagesCollector";
-import { NamespaceReference } from "./collectors/namespaces/AbstractCollector";
 
 export class GenericParser {
     private readonly fileMetrics: Metric[] = [];
     private readonly comprisingMetrics: CouplingMetric[] = [];
     private config: Configuration;
 
-    private namespaceCollector: NamespaceCollector;
-    private usageCollector: UsagesCollector;
+    private readonly namespaceCollector: NamespaceCollector;
+    private readonly usageCollector: UsagesCollector;
 
     private edgeMetrics: CouplingMetricResult;
 
@@ -119,16 +118,17 @@ export class GenericParser {
         const duration = endTime - startTime;
 
         console.log("\n\n");
+        console.log("#####################################");
+        console.log("#####################################");
+        console.log("\n\n");
         console.log(
             `Parsing took ${duration / 1000} seconds or ${
                 duration / 1000 / 60
             } minutes respectively`
         );
-
         console.log("\n\n");
-        console.log("#####################################");
-        console.log("#####################################");
-        console.log(fileMetrics);
+        console.log(fileMetrics.size + " file(s) parsed successfully.");
+        console.log("\n\n");
 
         return fileMetrics;
     }

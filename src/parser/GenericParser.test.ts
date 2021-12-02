@@ -8,7 +8,7 @@ describe("GenericParser", () => {
     const goTestResourcesPath = "./resources/go/";
 
     function getParserConfiguration(sourcesPath: string) {
-        return new Configuration(sourcesPath, "invalid/output/path", [], false);
+        return new Configuration(sourcesPath, "invalid/output/path", false, null, [], false);
     }
 
     describe("parses PHP Dependencies", () => {

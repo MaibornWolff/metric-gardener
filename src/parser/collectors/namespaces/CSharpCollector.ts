@@ -1,7 +1,10 @@
-/*
-import { AbstractCollector } from "./AbstractCollector";
+import { AbstractCollector, NamespaceResolvingStrategy } from "./AbstractCollector";
 
 export class CSharpCollector extends AbstractCollector {
+    protected getNamespaceResolvingStrategy(): NamespaceResolvingStrategy {
+        return NamespaceResolvingStrategy.Query;
+    }
+
     protected getNamespaceDelimiter(): string {
         return ".";
     }
@@ -15,4 +18,3 @@ export class CSharpCollector extends AbstractCollector {
         `;
     }
 }
-*/

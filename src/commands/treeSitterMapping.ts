@@ -1,8 +1,6 @@
 import { binaryOperatorTranslations, ExpressionMetricMapping } from "../parser/helper/Model";
 import fs from "fs";
 
-const nodeTypeConfigPath = "./resources";
-
 const nodeTypeFiles = new Map([
     ["cs", "./node_modules/tree-sitter-c-sharp/src/node-types.json"],
     ["go", "./node_modules/tree-sitter-go/src/node-types.json"],
@@ -83,7 +81,7 @@ export function generateNodeTypesMappingFile() {
     }
 
     fs.writeFileSync(
-        fs.realpathSync(nodeTypeConfigPath + "/node-types.config"),
+        "./resources/node-types.config",
         JSON.stringify(Array.from(expressionMappings.values()), null, 4).toString()
     );
 }

@@ -20,7 +20,9 @@ const output: { nodes: CodeChartaNode[]; edges: CodeChartaEdge[] } = { nodes: []
 
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
-    edgeMetrics: CouplingMetricResult
+    edgeMetrics: CouplingMetricResult,
+    outputFilePath: string,
+    eraseFromPath: string
 ) {
     for (const [filePath, metricsMap] of fileMetrics.entries()) {
         const metrics: { [key: string]: number } = {};
@@ -30,10 +32,11 @@ export function outputAsJson(
         }
 
         // add manually to each node to enable edge metric for every node
+        // this is CodeCharta specific
         metrics["coupling"] = 100;
 
         output.nodes.push({
-            name: filePath,
+            name: eraseFromPath?.length > 0 ? filePath.replace(eraseFromPath, "") : filePath,
             type: "File",
             attributes: metrics,
             link: "",
@@ -51,8 +54,8 @@ export function outputAsJson(
         });
     }
 
-    fs.writeFileSync(
-        fs.realpathSync("./resources/output.json"),
-        JSON.stringify(output, null, 4).toString()
-    );
+    fs.writeFile(outputFilePath, JSON.stringify(output, null, 4).toString(), function (err) {
+        if (err) throw err;
+        console.log("Results saved to " + outputFilePath);
+    });
 }

@@ -35,9 +35,11 @@ export abstract class AbstractCollector {
         this.importsBySuffixOrAlias.set(parseFile.filePath, new Map());
 
         let importReferences: ImportReference[] = this.getImports(parseFile, namespaceCollector);
-        importReferences = importReferences.concat(
-            this.getGroupedImports(parseFile, namespaceCollector)
-        );
+        if (this.getGroupedImportsQuery().length > 0) {
+            importReferences = importReferences.concat(
+                this.getGroupedImports(parseFile, namespaceCollector)
+            );
+        }
 
         console.log("Alias Map:", parseFile.filePath, this.importsBySuffixOrAlias);
         console.log("Import References", parseFile.filePath, importReferences);
@@ -139,7 +141,7 @@ export abstract class AbstractCollector {
                 const usedNamespace =
                     namespaceName + this.getNamespaceDelimiter() + nextUseItem.text;
 
-                const importRefer: ImportReference = {
+                const importReferences: ImportReference = {
                     usedNamespace: usedNamespace,
                     namespaceSuffix: usedNamespace.split(this.getNamespaceDelimiter()).pop(),
                     sourceOfUsing: parseFile.filePath,
@@ -148,10 +150,10 @@ export abstract class AbstractCollector {
                     usageType: "usage",
                 };
 
-                importsOfFile.push(importRefer);
+                importsOfFile.push(importReferences);
                 this.importsBySuffixOrAlias
                     .get(parseFile.filePath)
-                    .set(importRefer.namespaceSuffix, importRefer);
+                    .set(importReferences.namespaceSuffix, importReferences);
 
                 hasUseGroupItem =
                     importTextCaptures[groupItemIndex + 2]?.name === "namespace_use_item_name";
@@ -223,6 +225,10 @@ export abstract class AbstractCollector {
                 .get(qualifiedNamePrefix);
 
             let fromNamespace = namespaceCollector.getNamespaces(parseFile).values().next().value;
+            if (!fromNamespace) {
+                // no namespace found in current file
+                break;
+            }
 
             // Resolve the right entity/class/namespace in a file with multiple ones
             if (source !== undefined) {
@@ -275,7 +281,7 @@ export abstract class AbstractCollector {
                         sourceOfUsing: parseFile.filePath,
                         usageType: usageType !== undefined ? usageType : "usage",
                     };
-                    // TODO prevent duplicate adds
+                    // TODO prevent duplicate adds in current file
                     //  when is it a duplicate? (usedNamespace + fromNamespace + sourceOfUsing?)
                     usagesAndCandidates.push(usageCandidate);
                 }

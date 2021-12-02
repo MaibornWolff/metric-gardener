@@ -1,15 +1,17 @@
 import { Factory as UsageCollectorFactory } from "./usages/Factory";
-import { UsageReference } from "./usages/AbstractCollector";
+import { UsageCandidate } from "./usages/AbstractCollector";
 import { NamespaceCollector } from "./NamespaceCollector";
 
 export class UsagesCollector {
     private usageCollectorFactory = new UsageCollectorFactory();
-    private cache = new Map<string, UsageReference[]>();
+    private cache = new Map<string, UsageCandidate[]>();
 
-    getUsages(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
+    getUsages(parseFile: ParseFile, namespaceCollector: NamespaceCollector): UsageCandidate[] {
         const collector = this.usageCollectorFactory.getCollector(parseFile);
         const usages =
-            collector !== undefined ? collector.getUsages(parseFile, namespaceCollector) : [];
+            collector !== undefined
+                ? collector.getUsageCandidates(parseFile, namespaceCollector)
+                : [];
 
         if (usages.length === 0) {
             return usages;

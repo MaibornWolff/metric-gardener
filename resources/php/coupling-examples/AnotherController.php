@@ -9,9 +9,9 @@ namespace App\CouplingExamplesOne;
 
 class AnotherControllerOne extends BlubControllerOne1 implements ControllerInterface, FastControllerInterface {
     public function run() {
-        $this.executeHelper(new Helper());
+        $this->executeHelper(new Helper());
     }
     private function executeHelper(Helper $helper) {
-        $helper.help();
+        $helper->help();
     }
 }

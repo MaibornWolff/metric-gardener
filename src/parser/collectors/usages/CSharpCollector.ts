@@ -1,3 +1,4 @@
+/*
 import { TreeParser } from "../../helper/TreeParser";
 import { AbstractCollector, UsageReference } from "./AbstractCollector";
 import { QueryBuilder } from "../../queries/QueryBuilder";
@@ -62,7 +63,10 @@ export class CSharpCollector extends AbstractCollector {
         const rawMemberAccesses = formatCaptures(tree, memberAccesses);
 
         const accessedClassNames = new Set();
-        const regexValidClassNames = new RegExp(/^[A-Z][A-Za-z0-9_]*\.[A-Z][A-Za-z0-9_]*/);
+        const regexValidClassNames = new RegExp(/^[A-Z][A-Za-z0-9_]*\.[A-Z][A-Za-z0-9_]*/
+/*
+);
+
         for (const member of rawMemberAccesses) {
             if (!regexValidClassNames.test(member.text)) {
                 continue;
@@ -100,3 +104,4 @@ export class CSharpCollector extends AbstractCollector {
         return [...usageCandidates.values()];
     }
 }
+*/

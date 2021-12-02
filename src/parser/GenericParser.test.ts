@@ -11,6 +11,17 @@ describe("GenericParser", () => {
         return new Configuration(sourcesPath, "invalid/output/path", [], false);
     }
 
+    describe("parses PHP Dependencies", () => {
+        it("should blub fubb", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const fileMetrics = parser.calculateMetrics();
+            const edgeMetrics = parser.getEdgeMetrics();
+
+            expect(edgeMetrics.metricValue.length).toBeGreaterThan(0);
+        });
+    });
+
     describe("parses PHP McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {
             const inputPath = fs.realpathSync(phpTestResourcesPath + "if-statements.php");

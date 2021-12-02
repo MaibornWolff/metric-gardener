@@ -15,7 +15,15 @@ use System;
 use System\Console\Writer as ConsoleWriter;
 
 class Helper {
-    public function help() {
+    public function help(): HelperOutput {
+        $blub = new App\Horst\MyObject();
+        $blubber = Blubber::MY_CONSTANT;
+
+        App\Horst\MyObject::runStatic();
+
+        \App\Horst\MyObject::runStatic2();
+        $exc = new \Exception();
+
         return "Helping";
     }
 }

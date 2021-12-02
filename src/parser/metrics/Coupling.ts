@@ -1,6 +1,6 @@
 import { ExpressionMetricMapping } from "../helper/Model";
 import { NamespaceReference } from "../collectors/namespaces/AbstractCollector";
-import { UsageReference } from "../collectors/usages/AbstractCollector";
+import { UsageCandidate } from "../collectors/usages/AbstractCollector";
 import { NamespaceCollector } from "../collectors/NamespaceCollector";
 import { UsagesCollector } from "../collectors/UsagesCollector";
 
@@ -19,7 +19,7 @@ export class Coupling implements CouplingMetric {
 
     calculate(parseFiles: ParseFile[]): CouplingMetricResult {
         let namespaces: Map<string, NamespaceReference> = new Map();
-        let usages: UsageReference[] = [];
+        let usages: UsageCandidate[] = [];
 
         for (const parseFile of parseFiles) {
             namespaces = new Map([
@@ -50,34 +50,35 @@ export class Coupling implements CouplingMetric {
 
     private getCoupledFilesData(
         namespaces: Map<string, NamespaceReference>,
-        usages: UsageReference[]
+        usages: UsageCandidate[]
     ): CouplingMetricValue[] {
         return usages.flatMap((usage) => {
-            if (namespaces.has(usage.usedNamespace)) {
-                // TODO: For what is this??
-                const fromData = [...namespaces.values()].filter((value) => {
-                    if (usage.source === value.source) {
-                        return value;
-                    }
-                });
-                if (fromData.length > 0) {
-                    const firstFromNamespace = fromData[0];
-                    return [
-                        {
-                            fromNamespace:
-                                firstFromNamespace.namespace +
-                                firstFromNamespace.namespaceDelimiter +
-                                firstFromNamespace.className,
-                            toNamespace: usage.usedNamespace,
-                            fromSource: usage.source,
-                            toSource: namespaces.get(usage.usedNamespace).source,
-                            fromClassName: firstFromNamespace.className,
-                            toClassName: namespaces.get(usage.usedNamespace).className,
-                            usageType: usage.usageType,
-                        },
-                    ];
-                }
+            // if (namespaces.has(usage.usedNamespace)) {
+            // TODO: For what was this??
+            // const fromData = [...namespaces.values()].filter((value) => {
+            //     if (usage.source === value.source) {
+            //         return value;
+            //     }
+            // });
+            // if (fromData.length > 0) {
+            const firstFromNamespace = namespaces.get(usage.usedNamespace);
+            if (firstFromNamespace) {
+                // TODO: Prevent duplicate adds
+                // TODO: fromClassName and toClassName are broken
+                return [
+                    {
+                        fromNamespace: usage.fromNamespace,
+                        toNamespace: usage.usedNamespace,
+                        fromSource: usage.sourceOfUsing,
+                        toSource: firstFromNamespace.source,
+                        fromClassName: firstFromNamespace.className,
+                        toClassName: namespaces.get(usage.usedNamespace).className,
+                        usageType: usage.usageType,
+                    },
+                ];
             }
+            // }
+            // }
             return [];
         });
     }

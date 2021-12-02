@@ -38,8 +38,9 @@ The metrics will be printed during parsing and passed to ./resources/output.json
 
 ### TODOs
 
+-   Check caching behaviour
+-   Refactor Abstract Usage Collector (small resolver classes?)
 -   Debug changed Coupling metric for CSharp projects (Unit test would be best)
--   Resolve cyclic Dependency in TreeParser and Namespace/Usage Collectors -> Add dedicated Namespace/Usage Parsers
 -   Performance
 -   Provide more command line options
 -   Handle multiple file extensions during parsing on the fly

@@ -85,30 +85,34 @@ export class GenericParser {
 
             parseFiles.push(parseFile);
 
-            const metricResults = new Map<string, MetricResult>();
-            fileMetrics.set(parseFile.filePath, metricResults);
+            if (this.config.parseMetrics) {
+                const metricResults = new Map<string, MetricResult>();
+                fileMetrics.set(parseFile.filePath, metricResults);
 
-            console.log(
-                " ------------ Parsing File " +
-                    path.basename(parseFile.filePath) +
-                    "  ------------ "
-            );
+                console.log(
+                    " ------------ Parsing File " +
+                        path.basename(parseFile.filePath) +
+                        "  ------------ "
+                );
 
-            for (const metric of this.fileMetrics) {
-                const metricResult = metric.calculate(parseFile);
-                metricResults.set(metricResult.metricName, metricResult);
+                for (const metric of this.fileMetrics) {
+                    const metricResult = metric.calculate(parseFile);
+                    metricResults.set(metricResult.metricName, metricResult);
+                }
             }
         }
 
-        for (const metric of this.comprisingMetrics) {
-            console.log("\n\nPARSING COUPLING");
-            this.edgeMetrics = metric.calculate(parseFiles);
-        }
+        if (this.config.parseDependencies) {
+            for (const metric of this.comprisingMetrics) {
+                console.log("\n\nPARSING COUPLING");
+                this.edgeMetrics = metric.calculate(parseFiles);
+            }
 
-        if (this.edgeMetrics.metricValue.length > 0) {
-            this.buildDependencyGraph(this.edgeMetrics).then(() => {
-                console.log("Dependency Graph done");
-            });
+            if (this.config.persistDependencyGraph) {
+                this.buildDependencyGraph(this.edgeMetrics).then(() => {
+                    console.log("Dependency Graph done");
+                });
+            }
         }
 
         const endTime = performance.now();
@@ -132,6 +136,9 @@ export class GenericParser {
     private async buildDependencyGraph(couplingData: CouplingMetricResult) {
         // create dependency graph in neo4j
         // write nodes and edges to neo4j
+        if (!this.config.persistDependencyGraph) {
+            return;
+        }
 
         const driver = neo4j.driver("neo4j://localhost:7687", neo4j.auth.basic("neo4j", "admin"));
         const session = driver.session();
@@ -143,32 +150,39 @@ export class GenericParser {
                 language,
                 namespaceReferences,
             ] of this.namespaceCollector.getAllNamespaces()) {
-                for (const namespaceReferenceItem of namespaceReferences.values()) {
-                    const namespaceReference: NamespaceReference = namespaceReferenceItem
-                        .values()
-                        .next().value;
-                    const { namespace, source, className, classType } = namespaceReference;
+                for (const namespaceReferencesPerFile of namespaceReferences.values()) {
+                    for (const namespaceReference of namespaceReferencesPerFile.values()) {
+                        const { namespace, source, className, classType, namespaceDelimiter } =
+                            namespaceReference;
 
-                    await session.writeTransaction((tx) =>
-                        tx.run(
-                            `
-                                CREATE (n:` +
-                                classType.toUpperCase() +
-                                `)
-                                SET
-                                    n.namespace = $namespace,
-                                    n.sourcePath = $source,
-                                    n.className = $className,
-                                    n.language = $language
-                            `,
-                            { namespace, source, className, language }
-                        )
-                    );
+                        await session.writeTransaction((tx) =>
+                            tx.run(
+                                `
+                                    CREATE (n:` +
+                                    classType.toUpperCase() +
+                                    `)
+                                    SET
+                                        n.namespace = $namespace,
+                                        n.sourcePath = $source,
+                                        n.className = $className,
+                                        n.language = $language,
+                                        n.fullyQualifiedName = $fullyQualifiedName
+                                `,
+                                {
+                                    namespace,
+                                    source,
+                                    className,
+                                    language,
+                                    fullyQualifiedName: namespace + namespaceDelimiter + className,
+                                }
+                            )
+                        );
+                    }
                 }
             }
 
             for (const relationship of couplingData.metricValue) {
-                const { fromSource, toSource, usageType } = relationship;
+                const { fromNamespace, toNamespace, usageType } = relationship;
 
                 await session.writeTransaction((tx) =>
                     tx.run(
@@ -176,12 +190,12 @@ export class GenericParser {
                             MATCH
                                 (a),
                                 (b)
-                            WHERE a.sourcePath = $fromSource AND b.sourcePath = $toSource
+                            WHERE a.fullyQualifiedName = $fromNamespace AND b.fullyQualifiedName = $toNamespace
                             CREATE (a)-[r:` +
                             usageType.toUpperCase() +
                             `]->(b)
                         `,
-                        { fromSource, toSource, usageType }
+                        { fromNamespace, toNamespace, usageType }
                     )
                 );
             }

@@ -1,4 +1,4 @@
-import { TreeParser } from "../../helper/TreeParser";
+/*
 import { AbstractCollector } from "./AbstractCollector";
 
 export class CSharpCollector extends AbstractCollector {
@@ -15,3 +15,4 @@ export class CSharpCollector extends AbstractCollector {
         `;
     }
 }
+*/

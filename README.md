@@ -26,9 +26,7 @@
 
 ### Usage
 
-For object-oriented metrics setup neo4j DB first:
-
--   `cd projects/node-parser/; docker run --publish=7474:7474 --publish=7687:7687 --volume=${PWD}/neo4j/data:/data neo4j --env=NEO4J_AUTH=none`
+For object-oriented metrics setup neo4j DB first. See next Section ``Dependency Graph Exploration with Neo4J`.
 
 Then parse your sources:
 
@@ -41,6 +39,7 @@ Then parse your sources:
 
 -   Be sure a local Neo4j server is running under neo4j://localhost:7687
 -   You can simply run a Neo4j docker container:
+    -   `cd projects/node-parser/`
     -   Windows:`docker run --publish=7474:7474 --publish=7687:7687 --volume=${PWD}/neo4j/data:/data neo4j`
     -   Unix: `docker run --publish=7474:7474 --publish=7687:7687 --volume=$(pwd)/neo4j/data:/data neo4j`
 -   Run parser with activated dependency parsing passing `--parse-dependencies` option
@@ -50,26 +49,27 @@ Then parse your sources:
 
 For Publish 0.1.0:
 
+-   Refactoring
+-   Configurable neo4j connection
 -   Provide more command line options
 -   Performance & Duplicate Adds (see TODO comments)
--   Handle multiple file extensions during parsing on the fly
 -   Fix Unit Tests
--   README Update
--   CSharp finalization? (havy candidate building not implemented yet)
--   Typescript coupling graph?
+-   README Update (experimental remark, up to date cmds, etc.)
 
 -   npm publish / github repo
 
 Priority second:
 
+-   Typescript coupling graph?
+-   CSharp Dependency Parsing finalization? (havy candidate building not implemented yet, not all object access expressions are covered so far)
+-   Write command to add new language and map expressions
+
 -   Refactor Abstract Usage Collector (small resolver classes?)
 -   Exclude System Namespaces like System in CSharp etc. (Configurable option would also be nice (e.g. exclude NameSpace _UnitTest_))
 -   Checkout sample project(s) per language and parse them as an automatically test
 -   ProgressBar
--   Output calculated metrics in a file/json
 -   Separate Infrastructure from Domain Code
--   Write command to add new language and map expressions
--   Write command to generate/import specified node-types.json files
+
 -   Support more languages
 -   Add more Unit Tests
 
@@ -118,16 +118,17 @@ Priority second:
     -   Layer Violence (Zugriff auf verbotene Packages)
     -   oder auch sowas verbotenes ./../AnotherPackage/Subpackage
 
--   Abstractness / (In)Stability: - Instability [0,1]:= Outgoing Dependencies / (Incoming Dependencies + Outgoing Dependencies)
-    I = 0 -> Maximum stable
-    I = 1 -> Maximum UNstable
-    => Hybrid Approach: yes
+-   Abstractness / (In)Stability:
 
-        -   Abstractness [0,1]: Ratio of Abstract Classes and Interfaces to the total number of classes:
+    -   Instability [0,1]:= Outgoing Dependencies / (Incoming Dependencies + Outgoing Dependencies)
+        I = 0 -> Maximum stable
+        I = 1 -> Maximum UNstable
+        => Hybrid Approach: yes
 
-    A = Number of Abstract Classes / Number of total classes
-    A = 0 -> No abstract classes
-    A = 1 -> Only abstract classes - -=> Hybrid Graph müsste Klassen in ihre Packages unterteilen (+ übergeordnete Package Nodes einfügen) - oder in CodeCharta mit einer neuen Metric berechnen: abstract_classes_and_interfaces_count - das könnte man da ja die Summe pro Package in CodeCharta sehen und den Ratio bilden.
+    -   Abstractness [0,1]: Ratio of Abstract Classes and Interfaces to the total number of classes:
+        A = Number of Abstract Classes / Number of total classes
+        A = 0 -> No abstract classes
+        A = 1 -> Only abstract classes - -=> Hybrid Graph müsste Klassen in ihre Packages unterteilen (+ übergeordnete Package Nodes einfügen) - oder in CodeCharta mit einer neuen Metric berechnen: abstract_classes_and_interfaces_count - das könnte man da ja die Summe pro Package in CodeCharta sehen und den Ratio bilden.
 
 -   Performant Alternatives (we could build them by specifing the output format e.g. --package-graph --oo-graph:
     -   File Graph: built from (filepath) imports

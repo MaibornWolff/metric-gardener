@@ -17,8 +17,8 @@ yargs(hideBin(process.argv))
     .command(
         "parse [sources-path]",
         "parse file or folders recursively by given path and calculate metrics",
-        (yargs) => {
-            return yargs
+        (cmdYargs) => {
+            return cmdYargs
                 .positional("sources-path", {
                     describe: "path to sources",
                 })
@@ -73,11 +73,11 @@ function parseSourceCode(argv) {
     );
 
     const parser = new GenericParser(configuration);
-    const fileMetrics = parser.calculateMetrics();
+    const results = parser.calculateMetrics();
 
     outputAsJson(
-        fileMetrics,
-        parser.getEdgeMetrics(),
+        results.fileMetrics,
+        results.couplingMetrics,
         configuration.outputPath,
         configuration.eraseFromPath
     );

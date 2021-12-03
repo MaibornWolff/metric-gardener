@@ -1,8 +1,8 @@
-import { ExpressionMetricMapping } from "../helper/Model";
-import { NamespaceReference } from "../collectors/namespaces/AbstractCollector";
-import { UsageCandidate } from "../collectors/usages/AbstractCollector";
-import { NamespaceCollector } from "../collectors/NamespaceCollector";
-import { UsagesCollector } from "../collectors/UsagesCollector";
+import { ExpressionMetricMapping } from "../../helper/Model";
+import { NamespaceReference } from "../../collectors/namespaces/AbstractCollector";
+import { UsageCandidate } from "../../collectors/usages/AbstractCollector";
+import { NamespaceCollector } from "../../collectors/NamespaceCollector";
+import { UsagesCollector } from "../../collectors/UsagesCollector";
 
 export class Coupling implements CouplingMetric {
     private namespaceCollector: NamespaceCollector;

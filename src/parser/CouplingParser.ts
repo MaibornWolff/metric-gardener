@@ -40,7 +40,7 @@ export class CouplingParser {
 
         let couplingMetrics: CouplingMetricResult;
         for (const metric of this.comprisingMetrics) {
-            // TODO rewrite this to support multiple metrics
+            // TODO rewrite this to support multiple coupling metrics
             couplingMetrics = metric.calculate(parseFiles);
         }
 

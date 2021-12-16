@@ -1,26 +1,27 @@
 import fs from "fs";
 
-interface CodeChartaNode {
+interface OutputNode {
     name: string;
     type: "File";
-    attributes: { [key: string]: number };
-    link: "";
-    children: [];
+    metrics: { [key: string]: number };
 }
 
-interface CodeChartaEdge {
-    fromNodeName: string;
-    toNodeName: string;
-    attributes: {
+interface OutputRelationship {
+    from: string;
+    to: string;
+    metrics: {
         coupling: 100.0;
     };
 }
 
-const output: { nodes: CodeChartaNode[]; edges: CodeChartaEdge[] } = { nodes: [], edges: [] };
+const output: { nodes: OutputNode[]; relationships: OutputRelationship[] } = {
+    nodes: [],
+    relationships: [],
+};
 
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
-    edgeMetrics: CouplingMetricResult,
+    relationshipMetrics: CouplingMetricResult,
     outputFilePath: string
 ) {
     for (const [filePath, metricsMap] of fileMetrics.entries()) {
@@ -33,19 +34,17 @@ export function outputAsJson(
         output.nodes.push({
             name: filePath,
             type: "File",
-            attributes: metrics,
-            link: "",
-            children: [],
+            metrics: metrics,
         });
     }
 
-    const couplingMetricResults = edgeMetrics?.metricValue || [];
+    const couplingMetricResults = relationshipMetrics?.metricValue || [];
 
     for (const couplingMetricResult of couplingMetricResults) {
-        output.edges.push({
-            fromNodeName: couplingMetricResult.fromSource,
-            toNodeName: couplingMetricResult.toSource,
-            attributes: { coupling: 100.0 },
+        output.relationships.push({
+            from: couplingMetricResult.fromSource,
+            to: couplingMetricResult.toSource,
+            metrics: { coupling: 100.0 },
         });
     }
 

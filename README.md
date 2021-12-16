@@ -50,7 +50,7 @@ Then parse your sources:
 For Publish 0.1.0:
 
 -   Refactoring
--   Configurable neo4j connection
+-   Remove neo4j
 -   Provide more command line options
 -   Performance & Duplicate Adds (see TODO comments)
 -   Fix Unit Tests

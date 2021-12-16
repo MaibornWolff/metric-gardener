@@ -54,14 +54,15 @@ For Publish 0.1.0:
 -   Output Format
 
 -   Refactoring
--   Remove neo4j
+-   Unit Tests
+
 -   Provide more command line options
--   Performance & Duplicate Adds (see TODO comments)
--   Fix Unit Tests
--   npm publish / github repo
 
 Priority second:
 
+-   npm publish / github repo
+-   Performance & Duplicate Adds (see TODO comments)
+-   Remove neo4j
 -   Typescript coupling graph?
 -   CSharp Dependency Parsing finalization? (havy candidate building not implemented yet, not all object access expressions are covered so far)
 -   Write command to add new language and map expressions

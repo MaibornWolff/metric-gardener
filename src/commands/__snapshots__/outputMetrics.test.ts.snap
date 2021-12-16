@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`outputMetrics writes json into file  when metrics are present 1`] = `"{\\"nodes\\":[{\\"name\\":\\"/file/path1.test\\",\\"type\\":\\"File\\",\\"metrics\\":{\\"metric1\\":42,\\"metric2\\":43}},{\\"name\\":\\"/file/path2.test\\",\\"type\\":\\"File\\",\\"metrics\\":{\\"metric1\\":42,\\"metric2\\":43}}],\\"relationships\\":[{\\"from\\":\\"fromSource.xy\\",\\"to\\":\\"toSource.xy\\",\\"metrics\\":{\\"coupling\\":100}}]}"`;

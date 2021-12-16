@@ -2,7 +2,7 @@ import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
 
 describe("outputMetrics", () => {
-    describe("writea json into file ", () => {
+    describe("writes json into file ", () => {
         beforeEach(() => {
             jest.resetAllMocks();
             console.log = jest.fn();

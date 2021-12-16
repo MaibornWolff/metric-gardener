@@ -2,15 +2,13 @@ import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
 
 describe("outputMetrics", () => {
-    describe("writes json into file ", () => {
+    describe("writea json into file ", () => {
         beforeEach(() => {
             jest.resetAllMocks();
             console.log = jest.fn();
         });
 
-        it("when metrics are present", async () => {
-            jest.spyOn(fs, "writeFile");
-
+        it("when metrics are present", () => {
             const file1 = new Map<string, MetricResult>();
             file1.set("metric1", { metricName: "metric1", metricValue: 42 });
             file1.set("metric2", { metricName: "metric2", metricValue: 43 });
@@ -37,27 +35,23 @@ describe("outputMetrics", () => {
                 ],
             } as CouplingMetricResult;
 
-            await outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json");
+            jest.spyOn(fs, "writeFileSync").mockImplementation((fileName, jsonString) => {
+                expect(fileName).toBe("mocked-file.json");
+                expect(jsonString).toMatchSnapshot();
+            });
 
-            expect(fs.writeFile).toHaveBeenCalledWith(
-                "mocked-file.json",
-                '{"nodes":[{"name":"/file/path1.test","type":"File","metrics":{"metric1":42,"metric2":43}},{"name":"/file/path2.test","type":"File","metrics":{"metric1":42,"metric2":43}}],"relationships":[{"from":"fromSource.xy","to":"toSource.xy","metrics":{"coupling":100}}]}',
-                expect.any(Function)
-            );
+            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json");
         });
 
-        it("when no metrics are present", async () => {
-            jest.spyOn(fs, "writeFile");
-
+        it("when no metrics are present", () => {
             const fileMetrics = new Map();
             const relationShipMetrics = {} as CouplingMetricResult;
 
-            await outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json");
+            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json");
 
-            expect(fs.writeFile).toHaveBeenCalledWith(
+            expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",
-                '{"nodes":[],"relationships":[]}',
-                expect.any(Function)
+                '{"nodes":[],"relationships":[]}'
             );
         });
     });

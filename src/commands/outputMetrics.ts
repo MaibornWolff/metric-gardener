@@ -14,7 +14,7 @@ interface OutputRelationship {
     };
 }
 
-export async function outputAsJson(
+export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
     relationshipMetrics: CouplingMetricResult,
     outputFilePath: string
@@ -48,8 +48,6 @@ export async function outputAsJson(
         });
     }
 
-    fs.writeFile(outputFilePath, JSON.stringify(output).toString(), function (err) {
-        if (err) throw err;
-        console.log("Results saved to " + outputFilePath);
-    });
+    fs.writeFileSync(outputFilePath, JSON.stringify(output).toString());
+    console.log("Results saved to " + outputFilePath);
 }

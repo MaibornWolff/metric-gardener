@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { ExpressionMetricMapping } from "./Model";
 
 export function formatCaptures(tree, captures) {
     return captures.map((c) => {
@@ -51,4 +52,18 @@ export function findFilesRecursively(
         }
     });
     return fileList;
+}
+
+export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {
+    const statements = [];
+    allNodeTypes.forEach((expressionMapping) => {
+        if (
+            expressionMapping.metrics.includes(metricName) &&
+            expressionMapping.type === "statement"
+        ) {
+            const { expression } = expressionMapping;
+            statements.push("(" + expression + ") @" + expression);
+        }
+    });
+    return statements;
 }

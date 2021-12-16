@@ -2,27 +2,20 @@ import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
+import { getQueryStatements } from "../helper/Helper";
 
 export class Classes implements Metric {
-    private classesStatementsSuperSet = [];
+    private readonly statementsSuperSet = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        allNodeTypes.forEach((expressionMapping) => {
-            if (
-                expressionMapping.metrics.includes(this.getName()) &&
-                expressionMapping.type === "statement"
-            ) {
-                const { expression } = expressionMapping;
-                this.classesStatementsSuperSet.push("(" + expression + ") @" + expression);
-            }
-        });
+        this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
     }
 
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-        queryBuilder.setStatements(this.classesStatementsSuperSet);
+        queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);

@@ -71,10 +71,10 @@ export abstract class AbstractCollector {
 
                 this.importsBySuffixOrAlias
                     .get(parseFile.filePath)
-                    .delete(matchingUsage.namespaceSuffix);
+                    ?.delete(matchingUsage.namespaceSuffix);
                 this.importsBySuffixOrAlias
                     .get(parseFile.filePath)
-                    .set(matchingUsage.alias, matchingUsage);
+                    ?.set(importTextCapture.text, matchingUsage);
 
                 continue;
             }
@@ -93,7 +93,7 @@ export abstract class AbstractCollector {
             usagesOfFile.push(importReference);
             this.importsBySuffixOrAlias
                 .get(parseFile.filePath)
-                .set(importReference.namespaceSuffix, importReference);
+                ?.set(importReference.namespaceSuffix, importReference);
         }
 
         return usagesOfFile;
@@ -118,15 +118,15 @@ export abstract class AbstractCollector {
                 const matchingUsage = importsOfFile[importsOfFile.length - 1];
                 // split as MyAlias by space and use last element by pop
                 // it seems to be not possible to query the 'MyAlias' part only
-                matchingUsage.alias = importTextCaptures[index].text.split(" ").pop();
+                const alias = importTextCaptures[index].text.split(" ").pop();
 
                 this.importsBySuffixOrAlias
                     .get(parseFile.filePath)
-                    .delete(matchingUsage.namespaceSuffix);
-                this.importsBySuffixOrAlias
-                    .get(parseFile.filePath)
-                    .set(matchingUsage.alias, matchingUsage);
-
+                    ?.delete(matchingUsage.namespaceSuffix);
+                if (alias.length > 0) {
+                    matchingUsage.alias = alias;
+                    this.importsBySuffixOrAlias.get(parseFile.filePath)?.set(alias, matchingUsage);
+                }
                 continue;
             }
 
@@ -141,19 +141,22 @@ export abstract class AbstractCollector {
                 const usedNamespace =
                     namespaceName + this.getNamespaceDelimiter() + nextUseItem.text;
 
-                const importReferences: ImportReference = {
-                    usedNamespace: usedNamespace,
-                    namespaceSuffix: usedNamespace.split(this.getNamespaceDelimiter()).pop(),
-                    sourceOfUsing: parseFile.filePath,
-                    alias: "",
-                    source: parseFile.filePath,
-                    usageType: "usage",
-                };
+                const namespaceSuffix = usedNamespace.split(this.getNamespaceDelimiter()).pop();
+                if (namespaceSuffix !== undefined) {
+                    const importReferences: ImportReference = {
+                        usedNamespace: usedNamespace,
+                        namespaceSuffix,
+                        sourceOfUsing: parseFile.filePath,
+                        alias: "",
+                        source: parseFile.filePath,
+                        usageType: "usage",
+                    };
 
-                importsOfFile.push(importReferences);
-                this.importsBySuffixOrAlias
-                    .get(parseFile.filePath)
-                    .set(importReferences.namespaceSuffix, importReferences);
+                    importsOfFile.push(importReferences);
+                    this.importsBySuffixOrAlias
+                        .get(parseFile.filePath)
+                        ?.set(importReferences.namespaceSuffix, importReferences);
+                }
 
                 hasUseGroupItem =
                     importTextCaptures[groupItemIndex + 2]?.name === "namespace_use_item_name";
@@ -216,13 +219,17 @@ export abstract class AbstractCollector {
                 continue;
             }
 
-            processedQualifiedNames.add(qualifiedName);
-
             const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
             const qualifiedNamePrefix = qualifiedNameParts.shift();
+            if (qualifiedNamePrefix === undefined) {
+                continue;
+            }
+
+            processedQualifiedNames.add(qualifiedName);
+
             const resolvedImport = this.importsBySuffixOrAlias
                 .get(parseFile.filePath)
-                .get(qualifiedNamePrefix);
+                ?.get(qualifiedNamePrefix);
 
             let fromNamespace = namespaceCollector.getNamespaces(parseFile).values().next().value;
             if (!fromNamespace) {

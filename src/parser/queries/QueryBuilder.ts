@@ -33,7 +33,7 @@ export class QueryBuilder {
     }
 
     private getBruteForcedStatementsQuery() {
-        const availableMccStatements = [];
+        const availableMccStatements: string[] = [];
 
         for (const mccStatement of this.statements) {
             try {

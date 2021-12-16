@@ -38,7 +38,7 @@ export class CouplingParser {
 
         console.log(" --- " + parseFiles.length + " files detected", "\n\n");
 
-        let couplingMetrics: CouplingMetricResult;
+        let couplingMetrics = {} as CouplingMetricResult;
         for (const metric of this.comprisingMetrics) {
             // TODO rewrite this to support multiple coupling metrics
             couplingMetrics = metric.calculate(parseFiles);

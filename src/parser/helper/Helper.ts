@@ -12,8 +12,8 @@ export function formatCaptures(tree, captures) {
 }
 
 function getParseFile(filePath: string): undefined | ParseFile {
-    if (filePath.includes(".")) {
-        const extension = filePath.split(".").pop();
+    const extension = filePath.split(".").pop();
+    if (extension !== undefined && extension.length > 0) {
         return { language: extension.toLowerCase(), filePath: filePath };
     }
 }
@@ -30,6 +30,8 @@ export function findFilesRecursively(
     }
 
     fs.readdirSync(dir).forEach((file) => {
+        const fileExtension = file.split(".").pop();
+
         if (fs.statSync(path.join(dir, file)).isDirectory()) {
             const isPathExcluded = excludedFolders.some((folder) => {
                 return dir.includes(folder);
@@ -44,18 +46,19 @@ export function findFilesRecursively(
                 excludedFolders,
                 fileList
             );
-        } else if (supportedFileExtensions.includes(file.split(".").pop().toLowerCase())) {
+        } else if (fileExtension && supportedFileExtensions.includes(fileExtension.toLowerCase())) {
             const parseFile = getParseFile(path.join(dir, file));
             if (parseFile != undefined) {
                 fileList = fileList.concat(parseFile);
             }
         }
     });
+
     return fileList;
 }
 
 export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {
-    const statements = [];
+    const statements: string[] = [];
     allNodeTypes.forEach((expressionMapping) => {
         if (
             expressionMapping.metrics.includes(metricName) &&

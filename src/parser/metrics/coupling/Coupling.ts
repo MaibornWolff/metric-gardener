@@ -72,7 +72,7 @@ export class Coupling implements CouplingMetric {
                         fromSource: usage.sourceOfUsing,
                         toSource: firstFromNamespace.source,
                         fromClassName: firstFromNamespace.className,
-                        toClassName: namespaces.get(usage.usedNamespace).className,
+                        toClassName: firstFromNamespace.className,
                         usageType: usage.usageType,
                     },
                 ];

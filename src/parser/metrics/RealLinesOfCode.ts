@@ -4,9 +4,9 @@ import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
 
 export class RealLinesOfCode implements Metric {
-    private classesStatementSuperSet = [];
-    private startRuleStatementsSuperSet = [];
-    private commentStatementsSuperSet = [];
+    private classesStatementSuperSet: string[] = [];
+    private startRuleStatementsSuperSet: string[] = [];
+    private commentStatementsSuperSet: string[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {

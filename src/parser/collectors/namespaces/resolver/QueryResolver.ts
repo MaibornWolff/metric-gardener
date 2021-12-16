@@ -12,8 +12,9 @@ export class QueryResolver {
         namespaceDelimiter,
         namespacesQuery
     ): Map<string, NamespaceReference> {
-        if (this.cache.has(parseFile.filePath)) {
-            return this.cache.get(parseFile.filePath);
+        const cachedItem = this.cache.get(parseFile.filePath);
+        if (cachedItem !== undefined) {
+            return cachedItem;
         }
 
         const namespaceDeclarations: Map<string, NamespaceReference> = new Map();

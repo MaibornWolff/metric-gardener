@@ -5,7 +5,7 @@ import { ExpressionMetricMapping } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 
 export class Classes implements Metric {
-    private readonly statementsSuperSet = [];
+    private readonly statementsSuperSet: string[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());

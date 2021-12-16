@@ -6,7 +6,10 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "strictNullChecks": true
     },
     "exclude": ["resources", "node_modules"],
     "lib": ["es2015"]

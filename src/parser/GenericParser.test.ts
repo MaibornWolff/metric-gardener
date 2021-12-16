@@ -17,7 +17,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(7);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(7);
         });
 
         it("should count functions and methods correctly", () => {
@@ -25,7 +25,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(6);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(6);
         });
 
         it("should count multiple return statements within functions and methods correctly", () => {
@@ -35,7 +35,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
         });
 
         it("should not count any class declaration", () => {
@@ -43,7 +43,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(0);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(0);
         });
 
         it("should count case statements correctly", () => {
@@ -51,7 +51,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(3);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
 
         it("should count try-catch-finally properly", () => {
@@ -59,7 +59,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(2);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(2);
         });
 
         it("should count loops properly", () => {
@@ -67,7 +67,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
         });
     });
 
@@ -77,7 +77,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("classes").metricValue).toBe(3);
+            expect(results.fileMetrics.get(inputPath)?.get("classes")?.metricValue).toBe(3);
         });
     });
 
@@ -87,7 +87,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("functions").metricValue).toBe(6);
+            expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(6);
         });
     });
 
@@ -97,7 +97,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(8);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(8);
         });
 
         it("should count functions and methods correctly", () => {
@@ -105,7 +105,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(8);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(8);
         });
 
         it("should count multiple return statements within functions and methods correctly", () => {
@@ -115,7 +115,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
         });
 
         it("should not count any class declaration", () => {
@@ -123,7 +123,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(0);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(0);
         });
 
         it("should count case statements correctly", () => {
@@ -131,7 +131,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(3);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
 
         it("should count try-catch-finally properly", () => {
@@ -139,7 +139,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(2);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(2);
         });
 
         it("should count loops properly", () => {
@@ -147,7 +147,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(3);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
     });
 
@@ -157,7 +157,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("classes").metricValue).toBe(3);
+            expect(results.fileMetrics.get(inputPath)?.get("classes")?.metricValue).toBe(3);
         });
     });
 
@@ -167,7 +167,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("functions").metricValue).toBe(9);
+            expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(9);
         });
     });
 
@@ -177,7 +177,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(7);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(7);
         });
 
         it("should count functions and methods correctly", () => {
@@ -185,7 +185,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(2);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(2);
         });
 
         it("should count multiple return statements within functions and methods correctly", () => {
@@ -195,7 +195,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
         });
 
         it("should not count any class declaration", () => {
@@ -203,7 +203,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(0);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(0);
         });
 
         it("should count case statements correctly", () => {
@@ -211,7 +211,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(3);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
 
         it("should count try-catch-finally properly", () => {
@@ -219,7 +219,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(0);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(0);
         });
 
         it("should count loops properly", () => {
@@ -227,7 +227,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("mcc").metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
         });
     });
 
@@ -237,7 +237,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath).get("functions").metricValue).toBe(2);
+            expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(2);
         });
     });
 });

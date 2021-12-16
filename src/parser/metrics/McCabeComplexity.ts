@@ -4,7 +4,7 @@ import { TreeParser } from "../helper/TreeParser";
 import { binaryOperatorTranslations, ExpressionMetricMapping } from "../helper/Model";
 
 export class McCabeComplexity implements Metric {
-    private mccStatementsSuperSet = [];
+    private mccStatementsSuperSet: string[] = [];
 
     private mccFunctionsAndMethodsSuperSet = [
         "(function) @function",
@@ -21,7 +21,7 @@ export class McCabeComplexity implements Metric {
             if (expressionMapping.metrics.includes(this.getName())) {
                 if (expressionMapping.type === "statement") {
                     const { expression, category, operator } = expressionMapping;
-                    if (category === "binary_expression") {
+                    if (category === "binary_expression" && operator !== undefined) {
                         this.mccStatementsSuperSet.push(
                             "(" +
                                 category +

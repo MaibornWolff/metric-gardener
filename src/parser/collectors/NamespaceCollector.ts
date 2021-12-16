@@ -21,7 +21,7 @@ export class NamespaceCollector {
         }
 
         const namespacesByLanguage = this.cache.get(parseFile.language);
-        if (!namespacesByLanguage.has(parseFile.filePath)) {
+        if (namespacesByLanguage !== undefined && !namespacesByLanguage.has(parseFile.filePath)) {
             namespacesByLanguage.set(parseFile.filePath, packages);
         }
 

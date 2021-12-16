@@ -6,8 +6,9 @@ export class TreeParser {
     private static cache: Map<string, Tree> = new Map();
 
     static getParseTree(parseFile: ParseFile): Tree {
-        if (TreeParser.cache.has(parseFile.filePath)) {
-            return TreeParser.cache.get(parseFile.filePath);
+        const cachedItem = TreeParser.cache.get(parseFile.filePath);
+        if (cachedItem !== undefined) {
+            return cachedItem;
         }
 
         const parser = new Parser();

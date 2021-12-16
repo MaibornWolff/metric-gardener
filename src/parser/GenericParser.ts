@@ -30,7 +30,7 @@ export class GenericParser {
             fileMetrics = metricsParser.calculateMetrics(parseFiles);
         }
 
-        let couplingMetrics: CouplingMetricResult;
+        let couplingMetrics = {} as CouplingMetricResult;
         if (this.config.parseDependencies) {
             const couplingParser = new CouplingParser(this.config);
             couplingMetrics = couplingParser.calculateMetrics(parseFiles);

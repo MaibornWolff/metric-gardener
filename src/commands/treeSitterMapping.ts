@@ -26,8 +26,8 @@ export function generateNodeTypesMappingFile() {
                             nodeType.type + "_" + binaryOperatorTranslations.get(binaryOperator);
 
                         if (expressionMappings.has(mapKey)) {
-                            if (!expressionMappings.get(mapKey).languages.includes(language)) {
-                                expressionMappings.get(mapKey).languages.push(language);
+                            if (!expressionMappings.get(mapKey)?.languages.includes(language)) {
+                                expressionMappings.get(mapKey)?.languages.push(language);
                             }
                         } else {
                             expressionMappings.set(mapKey, {
@@ -45,8 +45,8 @@ export function generateNodeTypesMappingFile() {
             }
 
             if (expressionMappings.has(nodeType.type)) {
-                if (!expressionMappings.get(nodeType.type).languages.includes(language)) {
-                    expressionMappings.get(nodeType.type).languages.push(language);
+                if (!expressionMappings.get(nodeType.type)?.languages.includes(language)) {
+                    expressionMappings.get(nodeType.type)?.languages.push(language);
                 }
             } else {
                 expressionMappings.set(nodeType.type, {
@@ -62,9 +62,9 @@ export function generateNodeTypesMappingFile() {
                 for (const subNodeType of nodeType.subtypes) {
                     if (expressionMappings.has(subNodeType.type)) {
                         if (
-                            !expressionMappings.get(subNodeType.type).languages.includes(language)
+                            !expressionMappings.get(subNodeType.type)?.languages.includes(language)
                         ) {
-                            expressionMappings.get(subNodeType.type).languages.push(language);
+                            expressionMappings.get(subNodeType.type)?.languages.push(language);
                         }
                     } else {
                         expressionMappings.set(subNodeType.type, {

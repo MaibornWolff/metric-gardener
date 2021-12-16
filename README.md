@@ -51,11 +51,8 @@ Install and parse your sources:
 
 For Publish 0.1.0:
 
--   Output Format
-
 -   Refactoring
 -   Unit Tests
-
 -   Provide more command line options
 
 Priority second:

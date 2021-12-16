@@ -14,16 +14,16 @@ interface OutputRelationship {
     };
 }
 
-const output: { nodes: OutputNode[]; relationships: OutputRelationship[] } = {
-    nodes: [],
-    relationships: [],
-};
-
-export function outputAsJson(
+export async function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
     relationshipMetrics: CouplingMetricResult,
     outputFilePath: string
 ) {
+    const output: { nodes: OutputNode[]; relationships: OutputRelationship[] } = {
+        nodes: [],
+        relationships: [],
+    };
+
     for (const [filePath, metricsMap] of fileMetrics.entries()) {
         const metrics: { [key: string]: number } = {};
 
@@ -38,7 +38,7 @@ export function outputAsJson(
         });
     }
 
-    const couplingMetricResults = relationshipMetrics?.metricValue || [];
+    const couplingMetricResults = relationshipMetrics.metricValue || [];
 
     for (const couplingMetricResult of couplingMetricResults) {
         output.relationships.push({
@@ -48,7 +48,7 @@ export function outputAsJson(
         });
     }
 
-    fs.writeFile(outputFilePath, JSON.stringify(output, null, 4).toString(), function (err) {
+    fs.writeFile(outputFilePath, JSON.stringify(output).toString(), function (err) {
         if (err) throw err;
         console.log("Results saved to " + outputFilePath);
     });

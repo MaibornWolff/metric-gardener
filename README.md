@@ -51,6 +51,8 @@ Install and parse your sources:
 
 For Publish 0.1.0:
 
+-   Output Format
+
 -   Refactoring
 -   Remove neo4j
 -   Provide more command line options

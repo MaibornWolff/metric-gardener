@@ -21,8 +21,7 @@ const output: { nodes: CodeChartaNode[]; edges: CodeChartaEdge[] } = { nodes: []
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
     edgeMetrics: CouplingMetricResult,
-    outputFilePath: string,
-    eraseFromPath: string
+    outputFilePath: string
 ) {
     for (const [filePath, metricsMap] of fileMetrics.entries()) {
         const metrics: { [key: string]: number } = {};
@@ -31,12 +30,8 @@ export function outputAsJson(
             metrics[metricName] = metricValue.metricValue;
         }
 
-        // add manually to each node to enable edge metric for every node
-        // this is CodeCharta specific
-        metrics["coupling"] = 100;
-
         output.nodes.push({
-            name: eraseFromPath?.length > 0 ? filePath.replace(eraseFromPath, "") : filePath,
+            name: filePath,
             type: "File",
             attributes: metrics,
             link: "",

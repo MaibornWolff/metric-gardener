@@ -33,12 +33,6 @@ yargs(hideBin(process.argv))
                     description:
                         "Flag to enable dependency parsing (dependencies will be appended to the output file)",
                 })
-                .option("erase-from-path", {
-                    type: "string",
-                    description:
-                        "Search and replace given string in all file names included in output file",
-                    default: null,
-                })
                 .option("exclusions", {
                     alias: "e",
                     type: "string",
@@ -67,7 +61,6 @@ function parseSourceCode(argv) {
         argv["sources-path"],
         argv["output-path"],
         argv["parse-dependencies"],
-        argv["erase-from-path"],
         argv["exclusions"],
         argv["compress"]
     );
@@ -75,10 +68,5 @@ function parseSourceCode(argv) {
     const parser = new GenericParser(configuration);
     const results = parser.calculateMetrics();
 
-    outputAsJson(
-        results.fileMetrics,
-        results.couplingMetrics,
-        configuration.outputPath,
-        configuration.eraseFromPath
-    );
+    outputAsJson(results.fileMetrics, results.couplingMetrics, configuration.outputPath);
 }

@@ -8,18 +8,8 @@ describe("GenericParser", () => {
     const goTestResourcesPath = "./resources/go/";
 
     function getParserConfiguration(sourcesPath: string) {
-        return new Configuration(sourcesPath, "invalid/output/path", false, null, [], false);
+        return new Configuration(sourcesPath, "invalid/output/path", false, [], false);
     }
-
-    describe("parses PHP Dependencies", () => {
-        it("should blub fubb", () => {
-            const inputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
-            const parser = new GenericParser(getParserConfiguration(inputPath));
-            const results = parser.calculateMetrics();
-
-            expect(results.couplingMetrics.metricValue.length).toBeGreaterThan(0);
-        });
-    });
 
     describe("parses PHP McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {

@@ -4,7 +4,6 @@ export class Configuration {
     parseMetrics: boolean;
     parseDependencies: boolean;
     persistDependencyGraph: boolean;
-    eraseFromPath: string;
     exclusions: string[];
     compress: boolean;
 
@@ -14,7 +13,6 @@ export class Configuration {
         sourcesPath: string,
         outputPath: string,
         parseDependencies: boolean,
-        eraseFromPath: string | null,
         exclusions: string[],
         compress: boolean
     ) {
@@ -23,7 +21,6 @@ export class Configuration {
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;
         this.persistDependencyGraph = parseDependencies;
-        this.eraseFromPath = eraseFromPath;
         this.exclusions = this.defaultExclusions;
         this.compress = compress;
     }

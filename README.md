@@ -60,7 +60,6 @@ For Publish 0.1.0:
 
 -   Refactoring
 -   Unit Tests
--   Provide more command line options
 
 Priority second:
 

@@ -8,7 +8,7 @@ describe("GenericParser", () => {
     const goTestResourcesPath = "./resources/go/";
 
     function getParserConfiguration(sourcesPath: string) {
-        return new Configuration(sourcesPath, "invalid/output/path", false, [], false);
+        return new Configuration(sourcesPath, "invalid/output/path", false, "", false);
     }
 
     describe("parses PHP McCabeComplexity metric", () => {

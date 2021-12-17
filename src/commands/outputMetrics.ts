@@ -1,4 +1,6 @@
 import fs from "fs";
+import { Readable } from "stream";
+import zlib from "zlib";
 
 interface OutputNode {
     name: string;
@@ -17,7 +19,27 @@ interface OutputRelationship {
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
     relationshipMetrics: CouplingMetricResult,
-    outputFilePath: string
+    outputFilePath: string,
+    compress: boolean
+) {
+    const output = buildOutputObject(fileMetrics, relationshipMetrics);
+    const outputString = JSON.stringify(output).toString();
+
+    if (compress) {
+        dumpCompressed(
+            outputString,
+            outputFilePath.endsWith(".gz") ? outputFilePath : outputFilePath + ".gz"
+        );
+    } else {
+        fs.writeFileSync(outputFilePath, outputString);
+    }
+
+    console.log("Results saved to " + outputFilePath);
+}
+
+function buildOutputObject(
+    fileMetrics: Map<string, Map<string, MetricResult>>,
+    relationshipMetrics: CouplingMetricResult
 ) {
     const output: { nodes: OutputNode[]; relationships: OutputRelationship[] } = {
         nodes: [],
@@ -48,6 +70,15 @@ export function outputAsJson(
         });
     }
 
-    fs.writeFileSync(outputFilePath, JSON.stringify(output).toString());
-    console.log("Results saved to " + outputFilePath);
+    return output;
+}
+
+function dumpCompressed(outputString, outputFilePath) {
+    const readableStream = new Readable();
+    readableStream.push(outputString);
+    readableStream.push(null);
+
+    const gzip = zlib.createGzip();
+    const writeStream = fs.createWriteStream(outputFilePath);
+    readableStream.pipe(gzip).pipe(writeStream);
 }

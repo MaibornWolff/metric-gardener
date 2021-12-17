@@ -40,14 +40,14 @@ describe("outputMetrics", () => {
                 expect(jsonString).toMatchSnapshot();
             });
 
-            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json");
+            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json", false);
         });
 
         it("when no metrics are present", () => {
             const fileMetrics = new Map();
             const relationShipMetrics = {} as CouplingMetricResult;
 
-            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json");
+            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json", false);
 
             expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",

@@ -7,13 +7,11 @@ export class Configuration {
     exclusions: string[];
     compress: boolean;
 
-    private defaultExclusions = ["node_modules", ".idea", "dist", "build", "out", "vendor"];
-
     constructor(
         sourcesPath: string,
         outputPath: string,
         parseDependencies: boolean,
-        exclusions: string[],
+        exclusions: string,
         compress: boolean
     ) {
         this.sourcesPath = sourcesPath;
@@ -21,7 +19,7 @@ export class Configuration {
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;
         this.persistDependencyGraph = parseDependencies;
-        this.exclusions = this.defaultExclusions;
+        this.exclusions = exclusions.split(",").map((exclusion) => exclusion.trim());
         this.compress = compress;
     }
 }

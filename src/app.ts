@@ -36,8 +36,8 @@ yargs(hideBin(process.argv))
                 .option("exclusions", {
                     alias: "e",
                     type: "string",
-                    description: "Excluded folders",
-                    default: ["node_modules", ".idea", "dist", "build", "out", "vendor"],
+                    description: "Exclude folders from scanning for files (comma separated list)",
+                    default: "node_modules,.idea,dist,build,out,vendor",
                 })
                 .option("compress", {
                     alias: "c",
@@ -68,5 +68,10 @@ function parseSourceCode(argv) {
     const parser = new GenericParser(configuration);
     const results = parser.calculateMetrics();
 
-    outputAsJson(results.fileMetrics, results.couplingMetrics, configuration.outputPath);
+    outputAsJson(
+        results.fileMetrics,
+        results.couplingMetrics,
+        configuration.outputPath,
+        configuration.compress
+    );
 }

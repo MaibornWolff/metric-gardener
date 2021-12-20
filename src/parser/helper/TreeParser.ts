@@ -1,6 +1,7 @@
 import fs from "fs";
 import { grammars } from "./Grammars";
 import Parser, { Tree } from "tree-sitter";
+import { ParseFile } from "../metrics/Metric";
 
 export class TreeParser {
     private static cache: Map<string, Tree> = new Map();

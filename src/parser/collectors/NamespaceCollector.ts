@@ -1,5 +1,6 @@
 import { NamespaceReference } from "./namespaces/AbstractCollector";
 import { Factory as NamespaceCollectorFactory } from "./namespaces/Factory";
+import { ParseFile } from "../metrics/Metric";
 
 export class NamespaceCollector {
     private namespaceCollectorFactory = new NamespaceCollectorFactory();

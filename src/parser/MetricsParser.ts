@@ -8,6 +8,7 @@ import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
+import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 
 export class MetricsParser {
     private readonly fileMetrics: Metric[] = [];

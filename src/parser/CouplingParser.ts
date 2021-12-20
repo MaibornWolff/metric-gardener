@@ -5,6 +5,7 @@ import { Coupling } from "./metrics/coupling/Coupling";
 import neo4j from "neo4j-driver";
 import { NamespaceCollector } from "./collectors/NamespaceCollector";
 import { UsagesCollector } from "./collectors/UsagesCollector";
+import { CouplingMetric, CouplingMetricValue, ParseFile } from "./metrics/Metric";
 
 export class CouplingParser {
     private readonly comprisingMetrics: CouplingMetric[] = [];

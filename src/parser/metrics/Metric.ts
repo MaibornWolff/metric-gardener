@@ -1,9 +1,9 @@
-interface MetricResult {
+export interface MetricResult {
     metricName: string;
     metricValue: number;
 }
 
-interface CouplingMetricValue {
+export interface CouplingMetricValue {
     fromNamespace: string;
     toNamespace: string;
     fromSource: string;
@@ -13,22 +13,22 @@ interface CouplingMetricValue {
     usageType: string | "usage" | "extends" | "implements";
 }
 
-interface CouplingMetricResult {
+export interface CouplingMetricResult {
     relationships: CouplingMetricValue[];
     metrics: Map<string, { [key: string]: number }>;
 }
 
-interface Metric {
+export interface Metric {
     calculate(parseFile: ParseFile): MetricResult;
     getName(): string;
 }
 
-interface CouplingMetric {
+export interface CouplingMetric {
     calculate(files: ParseFile[]): CouplingMetricResult;
     getName(): string;
 }
 
-interface ParseFile {
+export interface ParseFile {
     language: string;
     filePath: string;
 }

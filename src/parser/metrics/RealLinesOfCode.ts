@@ -2,6 +2,7 @@ import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
+import { Metric, MetricResult, ParseFile } from "./Metric";
 
 export class RealLinesOfCode implements Metric {
     private classesStatementSuperSet: string[] = [];

@@ -1,6 +1,7 @@
 import fs from "fs";
 import { Readable } from "stream";
 import zlib from "zlib";
+import { CouplingMetricResult, MetricResult } from "../parser/metrics/Metric";
 
 interface OutputNode {
     name: string;

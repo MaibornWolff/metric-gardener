@@ -3,6 +3,7 @@ import { NamespaceReference } from "../../collectors/namespaces/AbstractCollecto
 import { UsageCandidate } from "../../collectors/usages/AbstractCollector";
 import { NamespaceCollector } from "../../collectors/NamespaceCollector";
 import { UsagesCollector } from "../../collectors/UsagesCollector";
+import { CouplingMetric, CouplingMetricValue, ParseFile } from "../Metric";
 
 export class Coupling implements CouplingMetric {
     private namespaceCollector: NamespaceCollector;

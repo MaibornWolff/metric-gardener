@@ -3,6 +3,7 @@ import { TreeParser } from "../../../helper/TreeParser";
 import { QueryBuilder } from "../../../queries/QueryBuilder";
 import { grammars } from "../../../helper/Grammars";
 import { formatCaptures } from "../../../helper/Helper";
+import { ParseFile } from "../../../metrics/Metric";
 
 export class QueryResolver {
     protected cache: Map<string, Map<string, NamespaceReference>> = new Map();

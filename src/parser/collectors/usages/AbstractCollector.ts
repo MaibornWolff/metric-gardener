@@ -3,6 +3,7 @@ import { grammars } from "../../helper/Grammars";
 import { formatCaptures } from "../../helper/Helper";
 import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
+import { ParseFile } from "../../metrics/Metric";
 
 export interface ImportReference {
     usedNamespace: string;

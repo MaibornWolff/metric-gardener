@@ -4,6 +4,7 @@ import fs from "fs";
 import { Configuration } from "./Configuration";
 import { MetricsParser } from "./MetricsParser";
 import { CouplingParser } from "./CouplingParser";
+import { CouplingMetricResult, MetricResult } from "./metrics/Metric";
 
 export class GenericParser {
     private readonly config: Configuration;

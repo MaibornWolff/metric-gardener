@@ -1,5 +1,6 @@
 import { QueryResolver } from "./resolver/QueryResolver";
 import { FilenameResolver } from "./resolver/FilenameResolver";
+import { ParseFile } from "../../metrics/Metric";
 
 export interface NamespaceReference {
     namespace: string;

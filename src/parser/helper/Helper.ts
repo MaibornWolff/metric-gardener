@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { ExpressionMetricMapping } from "./Model";
+import { ParseFile } from "../metrics/Metric";
 
 export function formatCaptures(tree, captures) {
     return captures.map((c) => {

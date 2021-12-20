@@ -3,6 +3,7 @@ import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
+import { Metric, MetricResult, ParseFile } from "./Metric";
 
 export class Classes implements Metric {
     private readonly statementsSuperSet: string[] = [];

@@ -18,7 +18,7 @@ export class Configuration {
         this.outputPath = outputPath;
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;
-        this.persistDependencyGraph = parseDependencies;
+        this.persistDependencyGraph = false;
         this.exclusions = exclusions.split(",").map((exclusion) => exclusion.trim());
         this.compress = compress;
     }

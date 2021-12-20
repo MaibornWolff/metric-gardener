@@ -14,8 +14,8 @@ interface CouplingMetricValue {
 }
 
 interface CouplingMetricResult {
-    metricName: string;
-    metricValue: CouplingMetricValue[];
+    relationships: CouplingMetricValue[];
+    metrics: Map<string, { [key: string]: number }>;
 }
 
 interface Metric {

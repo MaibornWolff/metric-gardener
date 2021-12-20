@@ -23,16 +23,25 @@ describe("outputMetrics", () => {
             ]);
 
             const relationShipMetrics = {
-                metricName: "metric1",
-                metricValue: [
+                relationships: [
                     {
                         fromNamespace: "fromNamespace",
                         toNamespace: "toNamespace",
                         usageType: "usage",
-                        fromSource: "fromSource.xy",
-                        toSource: "toSource.xy",
+                        fromSource: "/file/path2.test",
+                        toSource: "/file/path1.test",
                     } as CouplingMetricValue,
                 ],
+                metrics: new Map([
+                    [
+                        "/file/path2.test",
+                        {
+                            outgoing_dependencies: 3,
+                            incoming_dependencies: 2,
+                            instability: 0.6,
+                        },
+                    ],
+                ]),
             } as CouplingMetricResult;
 
             jest.spyOn(fs, "writeFileSync").mockImplementation((fileName, jsonString) => {

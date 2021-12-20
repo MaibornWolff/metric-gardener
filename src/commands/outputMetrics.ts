@@ -53,6 +53,14 @@ function buildOutputObject(
             metrics[metricName] = metricValue.metricValue;
         }
 
+        // merge relationship metrics
+        const couplingMetrics = relationshipMetrics.metrics.get(filePath);
+        if (couplingMetrics !== undefined) {
+            for (const couplingMetric of Object.keys(couplingMetrics)) {
+                metrics[couplingMetric] = couplingMetrics[couplingMetric];
+            }
+        }
+
         output.nodes.push({
             name: filePath,
             type: "File",
@@ -60,7 +68,7 @@ function buildOutputObject(
         });
     }
 
-    const couplingMetricResults = relationshipMetrics.metricValue || [];
+    const couplingMetricResults = relationshipMetrics.relationships || [];
 
     for (const couplingMetricResult of couplingMetricResults) {
         output.relationships.push({

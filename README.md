@@ -1,5 +1,8 @@
 ## A parser to calculate metrics for lots of languages
 
+This parser calculates simple metrics for lots of languages.
+For certain languages, an estimation of coupling metrics helps to assess the quality of software architecture.
+
 **It is based on grammars from [tree-sitter](https://github.com/tree-sitter/tree-sitter).**
 
 ### Usage
@@ -32,6 +35,16 @@ Install and parse your sources:
 -   comment_lines (not unit tested)
 -   real_lines_of_code (not unit tested)
 
+### Coupling Metrics
+
+**Supported for C# and PHP**<br>
+Activate dependency analysis by passing `--parse-dependencies`
+
+-   Coupling Between Objects (CBO)
+-   Incoming Dependencies
+-   Outgoing Dependencies
+-   Instability: Outgoing Dependencies / (Outgoing Dependencies + Incoming Dependencies)
+
 ### Maintenance of tree-sitter grammars
 
 Update grammars of programming languages to be up-to-date
@@ -41,31 +54,12 @@ For this, reimport grammars for supported languages from tree-sitter by:
 
 This will have no effect until you have mapped the changed and new expressions manually to ./resources/node-types-mapped.config
 
-### Dependency Analysis (experimental for C# and PHP)
-
--   For this, please setup a local neo4j DB.
--   Be sure it is running under neo4j://localhost:7687
--   You can simply run a Neo4j docker container:
-
-    -   `cd projects/node-parser/`
-    -   Windows:`docker run --publish=7474:7474 --publish=7687:7687 --volume=${PWD}/neo4j/data:/data neo4j`
-    -   Unix: `docker run --publish=7474:7474 --publish=7687:7687 --volume=$(pwd)/neo4j/data:/data neo4j`
-
--   For C# and PHP you can run the experimental dependency analysis by passing `--parse-dependencies`
--   Then, visit `http://localhost:7474/` with `admin/admin` or view coupling data in generated output file
-
 ### TODOs
 
-For Publish 0.1.0:
-
--   Refactoring
--   Unit Tests
-
-Priority second:
-
 -   npm publish / github repo
+-   Implement CK Metrics, Cyclic Dependencies Metric, etc. without neo4j
 -   Performance & Duplicate Adds (see TODO comments)
--   Remove neo4j
+-   Remove neo4j (but maybe export relationships as a graph file?)
 -   Typescript coupling graph?
 -   CSharp Dependency Parsing finalization? (havy candidate building not implemented yet, not all object access expressions are covered so far)
 -   Write command to add new language and map expressions

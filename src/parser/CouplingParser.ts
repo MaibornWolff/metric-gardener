@@ -38,14 +38,11 @@ export class CouplingParser {
 
         console.log(" --- " + parseFiles.length + " files detected", "\n\n");
 
-        let couplingMetrics = {} as CouplingMetricResult;
-        for (const metric of this.comprisingMetrics) {
-            // TODO rewrite this to support multiple coupling metrics
-            couplingMetrics = metric.calculate(parseFiles);
-        }
+        // TODO rewrite this to support multiple coupling metrics
+        const couplingMetrics = this.comprisingMetrics[0].calculate(parseFiles);
 
         if (this.config.persistDependencyGraph) {
-            this.buildDependencyGraph(couplingMetrics).then(() => {
+            this.buildDependencyGraph(couplingMetrics.relationships).then(() => {
                 console.log(
                     "Dependency Graph done: Visit http://localhost:7474 with login admin/admin"
                 );
@@ -55,7 +52,7 @@ export class CouplingParser {
         return couplingMetrics;
     }
 
-    private async buildDependencyGraph(couplingData: CouplingMetricResult) {
+    private async buildDependencyGraph(relationships: CouplingMetricValue[]) {
         // create dependency graph in neo4j
         // write nodes and edges to neo4j
         if (!this.config.persistDependencyGraph) {
@@ -103,7 +100,7 @@ export class CouplingParser {
                 }
             }
 
-            for (const relationship of couplingData.metricValue) {
+            for (const relationship of relationships) {
                 const { fromNamespace, toNamespace, usageType } = relationship;
 
                 await session.writeTransaction((tx) =>

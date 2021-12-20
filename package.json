@@ -1,7 +1,7 @@
 {
-    "name": "node-parser",
-    "version": "1.0.0",
-    "description": "Node based parser to calculate metrics for different languages",
+    "name": "galaxy-parser",
+    "version": "0.1.0",
+    "description": "A to calculate metrics for lots of languages",
     "main": "dist/app.js",
     "scripts": {
         "start": "tsc && node dist/app.js",

@@ -47,6 +47,8 @@ function buildOutputObject(
         relationships: [],
     };
 
+    const outputNodeReferenceLookUp = new Map<string, OutputNode>();
+
     for (const [filePath, metricsMap] of fileMetrics.entries()) {
         const metrics: { [key: string]: number } = {};
 
@@ -54,19 +56,31 @@ function buildOutputObject(
             metrics[metricName] = metricValue.metricValue;
         }
 
-        // merge relationship metrics
-        const couplingMetrics = relationshipMetrics.metrics.get(filePath);
-        if (couplingMetrics !== undefined) {
-            for (const couplingMetric of Object.keys(couplingMetrics)) {
-                metrics[couplingMetric] = couplingMetrics[couplingMetric];
-            }
-        }
-
-        output.nodes.push({
+        const outputNode: OutputNode = {
             name: filePath,
             type: "File",
             metrics: metrics,
-        });
+        };
+
+        outputNodeReferenceLookUp.set(filePath, outputNode);
+        output.nodes.push(outputNode);
+    }
+
+    // merge relationship metrics with existing nodes or add new node
+    const couplingMetrics = relationshipMetrics.metrics?.entries() ?? [];
+    for (const [filePath, metricsMap] of couplingMetrics) {
+        const existingOutputNode = outputNodeReferenceLookUp.get(filePath);
+        if (existingOutputNode !== undefined) {
+            for (const couplingMetric of Object.keys(metricsMap)) {
+                existingOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
+            }
+        } else {
+            output.nodes.push({
+                name: filePath,
+                type: "File",
+                metrics: metricsMap,
+            });
+        }
     }
 
     const couplingMetricResults = relationshipMetrics.relationships || [];

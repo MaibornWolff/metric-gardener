@@ -49,11 +49,7 @@ export class MetricsParser {
             const metricResults = new Map<string, MetricResult>();
             fileMetrics.set(parseFile.filePath, metricResults);
 
-            console.log(
-                " ------------ Parsing File " +
-                    path.basename(parseFile.filePath) +
-                    "  ------------ "
-            );
+            console.log(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
 
             for (const metric of this.fileMetrics) {
                 const metricResult = metric.calculate(parseFile);

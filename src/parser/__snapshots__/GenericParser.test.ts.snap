@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GenericParser parses C# dependencies and coupling metrics should calculate the right dependencies and coupling metrics 1`] = `
+exports[`GenericParser parsing C# dependencies should calculate the right dependencies and coupling metrics 1`] = `
 Object {
   "metrics": Map {
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\BlubController.cs" => Object {
@@ -186,7 +186,7 @@ Object {
 }
 `;
 
-exports[`GenericParser parses PHP dependencies and coupling metrics should count if statements correctly 1`] = `
+exports[`GenericParser parsing PHP dependencies should calculate the right dependencies and coupling metrics 1`] = `
 Object {
   "metrics": Map {
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\php\\\\coupling-examples\\\\AnotherController.php" => Object {

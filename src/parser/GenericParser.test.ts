@@ -242,7 +242,7 @@ describe("GenericParser", () => {
         });
     });
 
-    describe("parses PHP dependencies and coupling metrics", () => {
+    describe("parsing PHP dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", () => {
             const inputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
             const parser = new GenericParser(getParserConfiguration(inputPath, true));
@@ -252,7 +252,7 @@ describe("GenericParser", () => {
         });
     });
 
-    describe("parses C# dependencies and coupling metrics", () => {
+    describe("parsing C# dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", () => {
             const inputPath = fs.realpathSync(csharpTestResourcesPath + "coupling-examples/");
             const parser = new GenericParser(getParserConfiguration(inputPath, true));

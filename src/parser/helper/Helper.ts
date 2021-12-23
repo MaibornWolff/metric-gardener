@@ -33,22 +33,22 @@ export function findFilesRecursively(
     fs.readdirSync(dir).forEach((file) => {
         const fileExtension = file.split(".").pop();
 
-        if (fs.statSync(path.join(dir, file)).isDirectory()) {
+        const currentPath = path.join(dir, file);
+        if (fs.statSync(currentPath).isDirectory()) {
             const isPathExcluded = excludedFolders.some((folder) => {
-                return dir.includes(folder);
+                return path.basename(currentPath) === folder;
             });
             if (isPathExcluded) {
                 return;
             }
-
             fileList = findFilesRecursively(
-                path.join(dir, file),
+                currentPath,
                 supportedFileExtensions,
                 excludedFolders,
                 fileList
             );
         } else if (fileExtension && supportedFileExtensions.includes(fileExtension.toLowerCase())) {
-            const parseFile = getParseFile(path.join(dir, file));
+            const parseFile = getParseFile(currentPath);
             if (parseFile != undefined) {
                 fileList = fileList.concat(parseFile);
             }

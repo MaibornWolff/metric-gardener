@@ -57,6 +57,7 @@ This will have no effect until you have mapped the changed and new expressions m
 ### TODOs
 
 -   npm publish / github repo
+-   Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
 -   Implement CK Metrics, Cyclic Dependencies Metric, etc. without neo4j
 -   Performance & Duplicate Adds (see TODO comments)
 -   Remove neo4j (but maybe export relationships as a graph file?)
@@ -71,4 +72,3 @@ This will have no effect until you have mapped the changed and new expressions m
 -   Separate Infrastructure from Domain Code
 
 -   Support more languages
--   Add more Unit Tests

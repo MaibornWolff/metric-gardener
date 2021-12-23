@@ -19,7 +19,7 @@ export class GenericParser {
         const parseFiles = findFilesRecursively(
             fs.realpathSync(this.config.sourcesPath),
             [...grammars.keys()],
-            ["node_modules", ".idea", "dist", "build", "out", "vendor"],
+            this.config.exclusions,
             []
         );
 
@@ -49,7 +49,6 @@ export class GenericParser {
                 duration / 1000 / 60
             } minutes respectively`
         );
-        console.log("\n\n", fileMetrics.size + " file(s) parsed successfully.", "\n\n");
 
         return {
             fileMetrics,

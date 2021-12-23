@@ -29,7 +29,7 @@ export class QueryResolver {
         const captures = query.captures(tree.rootNode);
         const textCaptures = formatCaptures(tree, captures);
 
-        console.log(textCaptures);
+        console.log("namespace definitions", parseFile.filePath, textCaptures);
 
         for (let index = 0; index < textCaptures.length; index += 1) {
             const namespaceName = textCaptures[index].text;

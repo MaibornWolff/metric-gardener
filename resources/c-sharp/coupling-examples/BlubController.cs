@@ -1,4 +1,4 @@
-using App.CouplingExamples.Library.Helper;
+using App.CouplingExamples.Library.FunctionCalls;
 
 namespace App.CouplingExamplesOne
 {
@@ -6,10 +6,10 @@ namespace App.CouplingExamplesOne
     {
         public static void Main()
         {
-            var helper = new Helper();
+            var helper = new FunctionCalls();
             helper.help();
 
-            Helper.help();
+            FunctionCalls.help();
 
             var blub = new UnknownClass();
         }
@@ -18,7 +18,7 @@ namespace App.CouplingExamplesOne
     {
         public static void Main()
         {
-            Helper.help();
+            FunctionCalls.help();
         }
     }
 }
@@ -29,7 +29,7 @@ namespace App.CouplingExamplesTwo
     {
         public static void Main()
         {
-            Helper.help();
+            FunctionCalls.help();
         }
     }
 
@@ -37,7 +37,7 @@ namespace App.CouplingExamplesTwo
     {
         public static void Main()
         {
-            Helper.help();
+            FunctionCalls.help();
         }
     }
 }

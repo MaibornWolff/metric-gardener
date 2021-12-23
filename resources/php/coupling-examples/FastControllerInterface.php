@@ -2,6 +2,6 @@
 
 namespace App;
 
-interface FastControllerInterface {
+interface FastControllerInterface extends ControllerInterface, AnotherControllerInterface {
     public function run();
 }

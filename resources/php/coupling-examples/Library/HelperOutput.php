@@ -3,7 +3,9 @@
 namespace App\CouplingExamples\Library;
 
 class HelperOutput {
-    __construct($value) {
+    private Helper $value;
+
+    function __construct($value) {
         $this->value = $value;
     }
 }

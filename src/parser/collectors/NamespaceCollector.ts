@@ -7,24 +7,24 @@ export class NamespaceCollector {
     private cache = new Map<string, Map<string, Map<string, NamespaceReference>>>();
 
     getNamespaces(parseFile: ParseFile): Map<string, NamespaceReference> {
+        let namespacesByLanguage = this.cache.get(parseFile.language);
+        if (namespacesByLanguage === undefined) {
+            this.cache.set(parseFile.language, new Map());
+        }
+
+        namespacesByLanguage = this.cache.get(parseFile.language);
+        const fileNamespaces = namespacesByLanguage?.get(parseFile.filePath);
+        if (fileNamespaces !== undefined) {
+            return fileNamespaces;
+        }
+
         const collector = this.namespaceCollectorFactory.getCollector(parseFile);
         const packages =
             collector !== undefined
                 ? collector.getNamespaces(parseFile)
                 : new Map<string, NamespaceReference>();
 
-        if (packages.size === 0) {
-            return packages;
-        }
-
-        if (!this.cache.has(parseFile.language)) {
-            this.cache.set(parseFile.language, new Map());
-        }
-
-        const namespacesByLanguage = this.cache.get(parseFile.language);
-        if (namespacesByLanguage !== undefined && !namespacesByLanguage.has(parseFile.filePath)) {
-            namespacesByLanguage.set(parseFile.filePath, packages);
-        }
+        this.cache.get(parseFile.language)?.set(parseFile.filePath, packages);
 
         return packages;
     }

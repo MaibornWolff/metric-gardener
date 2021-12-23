@@ -9,7 +9,7 @@ export interface ImportReference {
     usedNamespace: string;
     namespaceSuffix: string;
     sourceOfUsing: string;
-    alias?: string;
+    alias: string;
     source: string;
     usageType: string | "usage" | "extends" | "implements";
 }
@@ -22,6 +22,13 @@ export interface UsageCandidate {
 }
 
 export abstract class AbstractCollector {
+    // In C# for example, it is not possible to know which usage belongs to which import
+    // Imagine:
+    // using System;
+    // Console.WriteLine("foo");
+    // You cannot be sure that the Console.WriteLine (partial) namespace belongs to Namespace System
+    protected abstract indirectNamespaceReferencing(): boolean;
+    protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
     protected abstract getImportsQuery(): string;
     protected abstract getGroupedImportsQuery(): string;
@@ -45,7 +52,7 @@ export abstract class AbstractCollector {
         console.log("Alias Map:", parseFile.filePath, this.importsBySuffixOrAlias);
         console.log("Import References", parseFile.filePath, importReferences);
 
-        const usages = this.getUsages(parseFile, namespaceCollector);
+        const usages = this.getUsages(parseFile, namespaceCollector, importReferences);
         console.log("UsagesAndCandidates", parseFile.filePath, usages);
 
         return usages;
@@ -65,8 +72,13 @@ export abstract class AbstractCollector {
 
         const usagesOfFile: ImportReference[] = [];
 
+        let usageAliasPrefix = "";
         for (const importTextCapture of importsTextCaptures) {
-            if (importTextCapture.name === "namespace_use_alias") {
+            if (importTextCapture.name === "namespace_use_alias_prefix") {
+                usageAliasPrefix = importTextCapture.text;
+                continue;
+            }
+            if (importTextCapture.name === "namespace_use_alias_suffix") {
                 const matchingUsage = usagesOfFile[usagesOfFile.length - 1];
                 matchingUsage.alias = importTextCapture.text;
 
@@ -86,7 +98,7 @@ export abstract class AbstractCollector {
                 usedNamespace,
                 namespaceSuffix: usedNamespace.split(this.getNamespaceDelimiter()).pop(),
                 sourceOfUsing: parseFile.filePath,
-                alias: "",
+                alias: usageAliasPrefix,
                 source: parseFile.filePath,
                 usageType: "usage",
             };
@@ -94,7 +106,16 @@ export abstract class AbstractCollector {
             usagesOfFile.push(importReference);
             this.importsBySuffixOrAlias
                 .get(parseFile.filePath)
-                ?.set(importReference.namespaceSuffix, importReference);
+                ?.set(
+                    usageAliasPrefix.length > 0
+                        ? importReference.alias
+                        : importReference.namespaceSuffix,
+                    importReference
+                );
+
+            if (usageAliasPrefix.length > 0) {
+                usageAliasPrefix = "";
+            }
         }
 
         return usagesOfFile;
@@ -115,10 +136,10 @@ export abstract class AbstractCollector {
         const importsOfFile: ImportReference[] = [];
 
         for (let index = 0; index < importTextCaptures.length; index++) {
-            if (importTextCaptures[index].name === "namespace_use_alias") {
+            if (importTextCaptures[index].name === "namespace_use_alias_suffix") {
                 const matchingUsage = importsOfFile[importsOfFile.length - 1];
-                // split as MyAlias by space and use last element by pop
-                // it seems to be not possible to query the 'MyAlias' part only
+                // split alias from alias keyword (if any) by space and use last element by pop()
+                // it seems to be not possible to query the alias part only
                 const alias = importTextCaptures[index].text.split(" ").pop();
 
                 this.importsBySuffixOrAlias
@@ -169,7 +190,11 @@ export abstract class AbstractCollector {
         return importsOfFile;
     }
 
-    getUsages(parseFile: ParseFile, namespaceCollector: NamespaceCollector): UsageCandidate[] {
+    getUsages(
+        parseFile: ParseFile,
+        namespaceCollector: NamespaceCollector,
+        importReferences: ImportReference[]
+    ): UsageCandidate[] {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
@@ -216,17 +241,20 @@ export abstract class AbstractCollector {
 
         const processedQualifiedNames = new Set<string>();
         for (const { name, text: qualifiedName, usageType, source } of usagesTextCaptures) {
-            if (processedQualifiedNames.has(qualifiedName) || name !== "qualified_name") {
+            if (
+                processedQualifiedNames.has(qualifiedName) ||
+                (name !== "qualified_name" && name !== "call_expression")
+            ) {
                 continue;
             }
+
+            processedQualifiedNames.add(qualifiedName);
 
             const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
             const qualifiedNamePrefix = qualifiedNameParts.shift();
             if (qualifiedNamePrefix === undefined) {
                 continue;
             }
-
-            processedQualifiedNames.add(qualifiedName);
 
             const resolvedImport = this.importsBySuffixOrAlias
                 .get(parseFile.filePath)
@@ -250,6 +278,13 @@ export abstract class AbstractCollector {
             }
 
             if (resolvedImport !== undefined) {
+                if (
+                    name === "call_expression" &&
+                    this.getNamespaceDelimiter() === this.getFunctionCallDelimiter()
+                ) {
+                    // Pop name of called function or similar callables
+                    qualifiedNameParts.pop();
+                }
                 const usageCandidate: UsageCandidate = {
                     usedNamespace:
                         resolvedImport.usedNamespace +
@@ -266,20 +301,45 @@ export abstract class AbstractCollector {
                 };
                 usagesAndCandidates.push(usageCandidate);
             } else {
+                const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
+                if (
+                    name === "call_expression" &&
+                    this.getNamespaceDelimiter() === this.getFunctionCallDelimiter()
+                ) {
+                    // Pop name of called function or similar callables from qualified name
+                    qualifiedNameParts.pop();
+                }
+
+                const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
+
                 // for languages that allow the usage of classes in the same namespace without the need of an import:
                 // add candidate in same namespace for unresolvable usage
 
                 let usedNamespace = fromNamespace.namespace;
-                if (!qualifiedName.startsWith(fromNamespace.namespaceDelimiter)) {
+                if (!cleanQualifiedName.startsWith(fromNamespace.namespaceDelimiter)) {
                     usedNamespace += fromNamespace.namespaceDelimiter;
                 }
-                usedNamespace += qualifiedName;
+                usedNamespace += cleanQualifiedName;
 
-                // Also, add candidate with with exact used namespace
+                // Heavy candidate building
+                // combine current usage with all of the imports
+                const moreCandidates: string[] = [];
+                if (this.indirectNamespaceReferencing()) {
+                    for (const importReference of importReferences) {
+                        moreCandidates.push(
+                            importReference.usedNamespace +
+                                fromNamespace.namespaceDelimiter +
+                                cleanQualifiedName
+                        );
+                    }
+                }
+
+                // Also, add candidate with exact used namespace
                 // in the case that it is a fully qualified (root) namespace
-                // we probably could do this only if namespaceDelimiter is included in the used namespace
 
-                for (const candidateUsedNamespace of [usedNamespace, qualifiedName]) {
+                for (const candidateUsedNamespace of [usedNamespace, cleanQualifiedName].concat(
+                    moreCandidates
+                )) {
                     const usageCandidate: UsageCandidate = {
                         usedNamespace: candidateUsedNamespace,
                         fromNamespace:

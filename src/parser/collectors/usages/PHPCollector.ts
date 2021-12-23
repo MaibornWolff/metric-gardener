@@ -1,6 +1,14 @@
 import { AbstractCollector } from "./AbstractCollector";
 
 export class PHPCollector extends AbstractCollector {
+    protected indirectNamespaceReferencing(): boolean {
+        return false;
+    }
+
+    protected getFunctionCallDelimiter(): string {
+        return "->";
+    }
+
     protected getNamespaceDelimiter(): string {
         return "\\";
     }
@@ -9,7 +17,7 @@ export class PHPCollector extends AbstractCollector {
         return `
             (namespace_use_clause
                 (qualified_name) @namespace_use
-                (namespace_aliasing_clause (name) @namespace_use_alias)?
+                (namespace_aliasing_clause (name) @namespace_use_alias_suffix)?
             )+
         `;
     }
@@ -29,10 +37,8 @@ export class PHPCollector extends AbstractCollector {
     }
 
     /**
-     * Query to select Object Creations, Object Member Access/Calls, Return Types, Function/Method Parameters, Static Access
-     *
-     * class_constant_access_expression
-     * scoped_call_expression
+     * Query to select
+     * Object Creations, Object Member Access/Calls, Return Types, Function/Method Parameters, Static Access
      *
      * @protected
      */
@@ -48,14 +54,17 @@ export class PHPCollector extends AbstractCollector {
                     ":" return_type: (_) @qualified_name
                 )
             )
+            (property_declaration
+                (_) (_ (name) @qualified_name)
+            )
             (object_creation_expression
                 (qualified_name) @qualified_name
             )
             (class_constant_access_expression
-                (qualified_name) @qualified_name
+                (qualified_name) @call_expression
             )
             (scoped_call_expression
-                (qualified_name) @qualified_name
+                (qualified_name) @call_expression
             )
         `;
     }

@@ -26,6 +26,9 @@ export class PHPCollector extends AbstractCollector {
                     (interface_declaration
                         "interface" @class_type
                         (name) @class_name
+                        (base_clause
+                            (qualified_name)+ @implemented_class ("," (qualified_name) @implemented_class)* 
+                        )?
                     )
                 ]+
             )

@@ -4,11 +4,12 @@ import { Configuration } from "./Configuration";
 
 describe("GenericParser", () => {
     const phpTestResourcesPath = "./resources/php/";
+    const csharpTestResourcesPath = "./resources/c-sharp/";
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
 
-    function getParserConfiguration(sourcesPath: string) {
-        return new Configuration(sourcesPath, "invalid/output/path", false, "", false);
+    function getParserConfiguration(sourcesPath: string, parseDependencies = false) {
+        return new Configuration(sourcesPath, "invalid/output/path", parseDependencies, "", false);
     }
 
     describe("parses PHP McCabeComplexity metric", () => {
@@ -238,6 +239,26 @@ describe("GenericParser", () => {
             const results = parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses PHP dependencies and coupling metrics", () => {
+        it("should calculate the right dependencies and coupling metrics", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
+            const parser = new GenericParser(getParserConfiguration(inputPath, true));
+            const results = parser.calculateMetrics();
+
+            expect(results.couplingMetrics).toMatchSnapshot();
+        });
+    });
+
+    describe("parses C# dependencies and coupling metrics", () => {
+        it("should calculate the right dependencies and coupling metrics", () => {
+            const inputPath = fs.realpathSync(csharpTestResourcesPath + "coupling-examples/");
+            const parser = new GenericParser(getParserConfiguration(inputPath, true));
+            const results = parser.calculateMetrics();
+
+            expect(results.couplingMetrics).toMatchSnapshot();
         });
     });
 });

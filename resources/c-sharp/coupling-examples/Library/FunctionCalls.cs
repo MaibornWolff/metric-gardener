@@ -1,17 +1,25 @@
 using System;
 
 using App.CouplingExamplesOne.BlubControllerOne1;
+using CEOT = App.CouplingExamplesOne.BlubControllerOne2;
 using App.CouplingExamplesTwo;
 
-// Nested Namespace
+// Nested Namespace not supported
 namespace App.CouplingExamples.Library
 {
-    public class Helper
+    public class FunctionCalls
     {
+        public FunctionCalls(ParameterTypes parameterTypes)
+        {
+        }
+
         public static void help()
         {
             Console.WriteLine("Helping...");
             BlubControllerTwo1.Main();
+            BlubControllerOne1.Main();
+            CEOT.Main();
+
         }
     }
 

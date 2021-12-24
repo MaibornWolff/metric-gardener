@@ -29,7 +29,8 @@ export class CSharpCollector extends AbstractCollector {
     /**
      * Query to select
      * Object Creations, Object Member Access/Calls, Return Types, Function/Method Parameters, Static Access
-     * TODO constructor types, Typed Function Params like HashMap<Type>, Constant Access
+     * TODO Generic Types in function parameters, return types, class names, etc. e.g. HashMap<Type>,
+     *  Constant Access, Further Types like records (see declaration_list in grammar).
      *
      * @protected
      */
@@ -40,6 +41,9 @@ export class CSharpCollector extends AbstractCollector {
             )
             (method_declaration
                 parameters: (_ (parameter type: (_) @qualified_name))
+            )
+            (property_declaration
+                type: (_) @qualified_name
             )
             (constructor_declaration
                 parameters: (_ (parameter type: (_) @qualified_name))

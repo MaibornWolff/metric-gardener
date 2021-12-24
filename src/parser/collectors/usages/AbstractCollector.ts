@@ -213,7 +213,8 @@ export abstract class AbstractCollector {
 
         const usagesAndCandidates: UsageCandidate[] = [];
 
-        // resolve implemented and extended classes
+        // add implemented and extended classes as usages
+        // to consider the coupling of those
         for (const [fullyQualifiedName, namespaceReference] of namespaceCollector.getNamespaces(
             parseFile
         )) {
@@ -285,12 +286,18 @@ export abstract class AbstractCollector {
                     // Pop name of called function or similar callables
                     qualifiedNameParts.pop();
                 }
+
+                // Skip current one if invalid space is included in potential class or namespace name
+                const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
+                if (cleanQualifiedName.indexOf(" ") >= 0) {
+                    continue;
+                }
+
                 const usageCandidate: UsageCandidate = {
                     usedNamespace:
                         resolvedImport.usedNamespace +
                         (qualifiedNameParts.length > 0
-                            ? this.getNamespaceDelimiter() +
-                              qualifiedNameParts.join(this.getNamespaceDelimiter())
+                            ? this.getNamespaceDelimiter() + cleanQualifiedName
                             : ""),
                     fromNamespace:
                         fromNamespace.namespace +
@@ -310,7 +317,11 @@ export abstract class AbstractCollector {
                     qualifiedNameParts.pop();
                 }
 
+                // Skip current one if invalid space is included in potential class or namespace name
                 const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
+                if (cleanQualifiedName.indexOf(" ") >= 0) {
+                    continue;
+                }
 
                 // for languages that allow the usage of classes in the same namespace without the need of an import:
                 // add candidate in same namespace for unresolvable usage
@@ -320,6 +331,25 @@ export abstract class AbstractCollector {
                     usedNamespace += fromNamespace.namespaceDelimiter;
                 }
                 usedNamespace += cleanQualifiedName;
+
+                // for languages that allow the usage of classes in parent namespace without the need of an import:
+                // Look in parent namespaces for the used class name even if no import is present
+
+                const parentNamespaceCandidates: string[] = [];
+                if (fromNamespace.namespace.includes(this.getNamespaceDelimiter())) {
+                    const sourceNamespaceParts = fromNamespace.namespace.split(
+                        this.getNamespaceDelimiter()
+                    );
+                    while (sourceNamespaceParts.length > 1) {
+                        sourceNamespaceParts.pop();
+
+                        const candidate =
+                            sourceNamespaceParts.join(this.getNamespaceDelimiter()) +
+                            this.getNamespaceDelimiter() +
+                            cleanQualifiedName;
+                        parentNamespaceCandidates.push(candidate);
+                    }
+                }
 
                 // Heavy candidate building
                 // combine current usage with all of the imports
@@ -337,9 +367,10 @@ export abstract class AbstractCollector {
                 // Also, add candidate with exact used namespace
                 // in the case that it is a fully qualified (root) namespace
 
-                for (const candidateUsedNamespace of [usedNamespace, cleanQualifiedName].concat(
-                    moreCandidates
-                )) {
+                const finalCandidates = [usedNamespace, cleanQualifiedName]
+                    .concat(moreCandidates)
+                    .concat(parentNamespaceCandidates);
+                for (const candidateUsedNamespace of finalCandidates) {
                     const usageCandidate: UsageCandidate = {
                         usedNamespace: candidateUsedNamespace,
                         fromNamespace:

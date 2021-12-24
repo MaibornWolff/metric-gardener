@@ -34,6 +34,27 @@ export class CSharpCollector extends AbstractCollector {
                                 )?
                             )
                         )
+                        (declaration_list
+                            (enum_declaration
+                                name: (identifier) @class_name
+                                bases: (base_list                            
+                                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
+                                )?
+                            )
+                        )
+                        (declaration_list
+                            (struct_declaration
+                                name: (identifier) @class_name
+                                bases: (base_list                            
+                                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
+                                )?
+                            )
+                        )
+                        (declaration_list
+                            (delegate_declaration
+                                name: (identifier) @class_name
+                            )
+                        )
                 ]+
             )
         `;

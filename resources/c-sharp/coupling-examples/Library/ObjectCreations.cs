@@ -13,6 +13,9 @@ namespace App.CouplingExamples.Library
             CouplingExamplesOne.BlubControllerOne2 ctrl = new BlubControllerOne2();
             BlubControllerTwo1 ctrl = new BlubControllerTwo1();
             CouplingExamplesTwo.BlubControllerTwo2 ctrl = new BlubControllerTwo2();
+            throw new MyCustomArgumentNullException("error");
+
+            new ParameterTypes().CombinedObjectConstructionAndMethodCall<T>()
         }
     }
 }

@@ -16,7 +16,7 @@ export class Configuration {
     ) {
         this.sourcesPath = sourcesPath;
         this.outputPath = outputPath;
-        this.parseMetrics = true;
+        this.parseMetrics = false;
         this.parseDependencies = parseDependencies;
         this.persistDependencyGraph = false;
         this.exclusions = exclusions.split(",").map((exclusion) => exclusion.trim());

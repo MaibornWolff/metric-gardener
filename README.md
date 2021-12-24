@@ -56,6 +56,7 @@ This will have no effect until you have mapped the changed and new expressions m
 
 ### TODOs
 
+-   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   npm publish / github repo
 -   Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
 -   Implement CK Metrics, Cyclic Dependencies Metric, etc. without neo4j

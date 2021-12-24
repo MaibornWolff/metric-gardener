@@ -16,9 +16,9 @@ Object {
       "outgoing_dependencies": 4,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ParameterTypes.cs" => Object {
-      "coupling_between_objects": 4,
-      "incoming_dependencies": 2,
-      "instability": 0.5,
+      "coupling_between_objects": 5,
+      "incoming_dependencies": 3,
+      "instability": 0.4,
       "outgoing_dependencies": 2,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\IParameterTypes.cs" => Object {
@@ -34,10 +34,16 @@ Object {
       "outgoing_dependencies": 0,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ObjectCreations.cs" => Object {
-      "coupling_between_objects": 5,
+      "coupling_between_objects": 7,
       "incoming_dependencies": 1,
-      "instability": 0.8,
-      "outgoing_dependencies": 4,
+      "instability": 0.8571428571428571,
+      "outgoing_dependencies": 6,
+    },
+    "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\MyCustomArgumentNullException.cs" => Object {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ParameterTypesSpecialized.cs" => Object {
       "coupling_between_objects": 2,
@@ -144,6 +150,24 @@ Object {
       "toClassName": "BlubControllerTwo2",
       "toNamespace": "App.CouplingExamplesTwo.BlubControllerTwo2",
       "toSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\BlubController.cs",
+      "usageType": "usage",
+    },
+    Object {
+      "fromClassName": "MyCustomArgumentNullException",
+      "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
+      "fromSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ObjectCreations.cs",
+      "toClassName": "MyCustomArgumentNullException",
+      "toNamespace": "App.CouplingExamples.Library.MyCustomArgumentNullException",
+      "toSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\MyCustomArgumentNullException.cs",
+      "usageType": "usage",
+    },
+    Object {
+      "fromClassName": "ParameterTypes",
+      "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
+      "fromSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ObjectCreations.cs",
+      "toClassName": "ParameterTypes",
+      "toNamespace": "App.CouplingExamples.Library.ParameterTypes",
+      "toSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ParameterTypes.cs",
       "usageType": "usage",
     },
     Object {

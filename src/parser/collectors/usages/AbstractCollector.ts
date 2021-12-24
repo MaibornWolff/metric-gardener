@@ -287,9 +287,11 @@ export abstract class AbstractCollector {
                     qualifiedNameParts.pop();
                 }
 
-                // Skip current one if invalid space is included in potential class or namespace name
                 const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
-                if (cleanQualifiedName.indexOf(" ") >= 0) {
+                processedQualifiedNames.add(cleanQualifiedName);
+
+                // Skip current one if invalid space is included in potential class or namespace name
+                if (cleanQualifiedName.indexOf(" ") >= 0 || cleanQualifiedName.indexOf("<") >= 0) {
                     continue;
                 }
 
@@ -317,9 +319,11 @@ export abstract class AbstractCollector {
                     qualifiedNameParts.pop();
                 }
 
-                // Skip current one if invalid space is included in potential class or namespace name
                 const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
-                if (cleanQualifiedName.indexOf(" ") >= 0) {
+                processedQualifiedNames.add(cleanQualifiedName);
+
+                // Skip current one if invalid space is included in potential class or namespace name
+                if (cleanQualifiedName.indexOf(" ") >= 0 || cleanQualifiedName.indexOf("<") >= 0) {
                     continue;
                 }
 

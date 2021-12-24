@@ -36,6 +36,10 @@ export class CSharpCollector extends AbstractCollector {
      */
     protected getUsagesQuery(): string {
         return `
+            (generic_name
+                (identifier) @qualified_name
+                (type_argument_list (_) @qualified_name)
+            )
             (method_declaration
                 type: (_) @qualified_name
             )

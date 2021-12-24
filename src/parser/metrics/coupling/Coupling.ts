@@ -134,33 +134,25 @@ export class Coupling implements CouplingMetric {
         namespaces: Map<string, NamespaceReference>,
         usages: UsageCandidate[]
     ): CouplingMetricValue[] {
+        const alreadyProcessed = new Set<string>();
         return usages.flatMap((usage) => {
-            // if (namespaces.has(usage.usedNamespace)) {
-            // TODO: For what was this??
-            // const fromData = [...namespaces.values()].filter((value) => {
-            //     if (usage.source === value.source) {
-            //         return value;
-            //     }
-            // });
-            // if (fromData.length > 0) {
-            const firstFromNamespace = namespaces.get(usage.usedNamespace);
-            if (firstFromNamespace) {
-                // TODO: Prevent duplicate adds
+            const namespaceSource = namespaces.get(usage.usedNamespace);
+            const uniqueId = usage.usedNamespace + usage.fromNamespace;
+            if (namespaceSource !== undefined && !alreadyProcessed.has(uniqueId)) {
+                alreadyProcessed.add(uniqueId);
                 // TODO: fromClassName and toClassName are broken
                 return [
                     {
                         fromNamespace: usage.fromNamespace,
                         toNamespace: usage.usedNamespace,
                         fromSource: usage.sourceOfUsing,
-                        toSource: firstFromNamespace.source,
-                        fromClassName: firstFromNamespace.className,
-                        toClassName: firstFromNamespace.className,
+                        toSource: namespaceSource.source,
+                        fromClassName: namespaceSource.className,
+                        toClassName: namespaceSource.className,
                         usageType: usage.usageType,
                     },
                 ];
             }
-            // }
-            // }
             return [];
         });
     }

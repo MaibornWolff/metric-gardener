@@ -27,10 +27,8 @@ export class CSharpCollector extends AbstractCollector {
     }
 
     /**
-     * Query to select
-     * Object Creations, Object Member Access/Calls, Return Types, Function/Method Parameters, Static Access
-     * TODO Generic Types in function parameters, return types, class names, etc. e.g. HashMap<Type>,
-     *  Constant Access, Further Types like records (see declaration_list in grammar).
+     * TODO Support Constant Access, Further Types like records (see declaration_list in grammar).
+     * TODO Check if we can just query all types at once!
      *
      * @protected
      */

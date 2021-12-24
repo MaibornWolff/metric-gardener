@@ -37,10 +37,8 @@ export class PHPCollector extends AbstractCollector {
     }
 
     /**
-     * Query to select
-     * Object Creations, Object Member Access/Calls, Return Types, Function/Method Parameters, Static Access
-     *
-     * @protected
+     * We cannot query constructors and its parameters due to grammar structure
+     * TODO Support more expressions
      */
     protected getUsagesQuery(): string {
         return `

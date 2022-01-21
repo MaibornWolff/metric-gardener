@@ -12,7 +12,7 @@ export function formatCaptures(tree, captures) {
     });
 }
 
-function getParseFile(filePath: string): undefined | ParseFile {
+export function getParseFile(filePath: string): undefined | ParseFile {
     const extension = filePath.split(".").pop();
     if (extension !== undefined && extension.length > 0) {
         return { language: extension.toLowerCase(), filePath: filePath };

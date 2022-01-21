@@ -32,21 +32,28 @@ export class QueryBuilder {
         return new Query(this.treeSitterLanguage, queryString);
     }
 
+    // This is not necessary anymore
+    // due to the mapped node types (/resources/node-types-mapped.config)
+    // and the information per expressions
+    // in which language it is included
+    // Thus, we do not have to figure out
+    // if the expression is included in a language by query the expression
+    // and catch an exception if it is not included.
     private getBruteForcedStatementsQuery() {
-        const availableMccStatements: string[] = [];
+        const availableStatements: string[] = [];
 
-        for (const mccStatement of this.statements) {
+        for (const statementCandidate of this.statements) {
             try {
-                const metricsQuery = new Query(this.treeSitterLanguage, mccStatement);
+                const metricsQuery = new Query(this.treeSitterLanguage, statementCandidate);
                 metricsQuery.matches(this.tree.rootNode);
 
-                availableMccStatements.push(mccStatement);
+                availableStatements.push(statementCandidate);
             } catch (error) {
                 // This error can be ignored.
                 // The specific statement seems not to be available for current language
             }
         }
 
-        return availableMccStatements.join("\n");
+        return availableStatements.join("\n");
     }
 }

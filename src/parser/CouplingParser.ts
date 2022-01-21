@@ -5,13 +5,15 @@ import { Coupling } from "./metrics/coupling/Coupling";
 import neo4j from "neo4j-driver";
 import { NamespaceCollector } from "./collectors/NamespaceCollector";
 import { UsagesCollector } from "./collectors/UsagesCollector";
-import { CouplingMetric, CouplingMetricValue, ParseFile } from "./metrics/Metric";
+import { CouplingMetric, Relationship, ParseFile } from "./metrics/Metric";
+import { PublicAccessorCollector } from "./collectors/PublicAccessorCollector";
 
 export class CouplingParser {
     private readonly comprisingMetrics: CouplingMetric[] = [];
     private config: Configuration;
 
     private readonly namespaceCollector: NamespaceCollector;
+    private readonly publicAccessorCollector: PublicAccessorCollector;
     private readonly usageCollector: UsagesCollector;
 
     constructor(configuration: Configuration) {
@@ -23,10 +25,16 @@ export class CouplingParser {
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 
         this.namespaceCollector = new NamespaceCollector();
+        this.publicAccessorCollector = new PublicAccessorCollector();
         this.usageCollector = new UsagesCollector();
 
         this.comprisingMetrics = [
-            new Coupling(allNodeTypes, this.namespaceCollector, this.usageCollector),
+            new Coupling(
+                allNodeTypes,
+                this.namespaceCollector,
+                this.usageCollector,
+                this.publicAccessorCollector
+            ),
         ];
     }
 
@@ -53,7 +61,7 @@ export class CouplingParser {
         return couplingMetrics;
     }
 
-    private async buildDependencyGraph(relationships: CouplingMetricValue[]) {
+    private async buildDependencyGraph(relationships: Relationship[]) {
         // create dependency graph in neo4j
         // write nodes and edges to neo4j
         if (!this.config.persistDependencyGraph) {

@@ -7,6 +7,8 @@ namespace App.CouplingExamples.Library
 {
     public class ObjectCreations
     {
+        private IParameterTypes[] arrayOfTypes;
+
         public static void help()
         {
             BlubControllerOne1 ctrl = new BlubControllerOne1();

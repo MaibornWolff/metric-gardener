@@ -1,7 +1,7 @@
-import { NamespaceReference } from "../AbstractCollector";
+import { NamespaceDefinition } from "../AbstractCollector";
 
 export class FilenameResolver {
-    getNamespaces(): Map<string, NamespaceReference> {
+    getNamespaces(): Map<string, NamespaceDefinition> {
         return new Map();
     }
 }

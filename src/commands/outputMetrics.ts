@@ -1,12 +1,15 @@
 import fs from "fs";
 import { Readable } from "stream";
 import zlib from "zlib";
-import { CouplingMetricResult, MetricResult } from "../parser/metrics/Metric";
+import { CouplingResult, MetricResult } from "../parser/metrics/Metric";
 
 interface OutputNode {
     name: string;
     type: "File";
-    metrics: { [key: string]: number };
+    metrics: {
+        [key: string]: number;
+    };
+    types: string[];
 }
 
 interface OutputRelationship {
@@ -19,7 +22,7 @@ interface OutputRelationship {
 
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
-    relationshipMetrics: CouplingMetricResult,
+    relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean
 ) {
@@ -40,7 +43,7 @@ export function outputAsJson(
 
 function buildOutputObject(
     fileMetrics: Map<string, Map<string, MetricResult>>,
-    relationshipMetrics: CouplingMetricResult
+    relationshipMetrics: CouplingResult
 ) {
     const output: { nodes: OutputNode[]; relationships: OutputRelationship[] } = {
         nodes: [],
@@ -50,7 +53,7 @@ function buildOutputObject(
     const outputNodeReferenceLookUp = new Map<string, OutputNode>();
 
     for (const [filePath, metricsMap] of fileMetrics.entries()) {
-        const metrics: { [key: string]: number } = {};
+        const metrics = {};
 
         for (const [metricName, metricValue] of metricsMap.entries()) {
             metrics[metricName] = metricValue.metricValue;
@@ -60,6 +63,7 @@ function buildOutputObject(
             name: filePath,
             type: "File",
             metrics: metrics,
+            types: [],
         };
 
         outputNodeReferenceLookUp.set(filePath, outputNode);
@@ -72,14 +76,27 @@ function buildOutputObject(
         const existingOutputNode = outputNodeReferenceLookUp.get(filePath);
         if (existingOutputNode !== undefined) {
             for (const couplingMetric of Object.keys(metricsMap)) {
+                if (couplingMetric === "namespace") {
+                    existingOutputNode.types = metricsMap.namespace;
+                    // for evaluation purposes only
+                    continue;
+                }
                 existingOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
             }
         } else {
-            output.nodes.push({
+            const newOutputNode: OutputNode = {
                 name: filePath,
                 type: "File",
-                metrics: metricsMap,
-            });
+                metrics: {},
+                types: [],
+            };
+
+            output.nodes.push(newOutputNode);
+
+            newOutputNode.types = metricsMap.namespace;
+            for (const couplingMetric of Object.keys(metricsMap)) {
+                newOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
+            }
         }
     }
 

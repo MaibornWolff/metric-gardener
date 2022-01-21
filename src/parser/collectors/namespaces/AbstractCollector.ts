@@ -2,7 +2,7 @@ import { QueryResolver } from "./resolver/QueryResolver";
 import { FilenameResolver } from "./resolver/FilenameResolver";
 import { ParseFile } from "../../metrics/Metric";
 
-export interface NamespaceReference {
+export interface NamespaceDefinition {
     namespace: string;
     className: string;
     classType: string | "interface" | "class";
@@ -22,7 +22,7 @@ export abstract class AbstractCollector {
     protected abstract getNamespaceDelimiter(): string;
     protected abstract getNamespacesQuery(): string;
 
-    getNamespaces(parseFile: ParseFile): Map<string, NamespaceReference> {
+    getNamespaces(parseFile: ParseFile): Map<string, NamespaceDefinition> {
         if (this.getNamespaceResolvingStrategy() === NamespaceResolvingStrategy.Query) {
             return new QueryResolver().getNamespaces(
                 parseFile,

@@ -1,0 +1,116 @@
+import { Relationship } from "../Metric";
+import { getAdditionalRelationships } from "./CallExpressionResolver";
+import { UnresolvedCallExpression } from "../../collectors/usages/AbstractCollector";
+import { PublicAccessor } from "../../collectors/accessors/AbstractCollector";
+
+describe("CallExpressionResolver", () => {
+    describe("resolves call expressions and retrieves additional and transitive relationships", () => {
+        it("when call expressions with save calls, public accessors and the right dependencies are given", () => {
+            const firstItem: Relationship = {
+                fromNamespace: "FirstItemNamespace.FirstItem",
+                fromSource: "FirstItem",
+                toSource: "SecondItem",
+                toNamespace: "SecondItemNamespace.SecondItem",
+                toClassName: "SecondItem",
+                usageType: "usage",
+            } as Relationship;
+
+            const secondItem: Relationship = {
+                fromNamespace: "SecondItemNamespace.SecondItem",
+                fromSource: "SecondItem",
+                toSource: "ThirdItem",
+                toNamespace: "ThirdItemNamespace.ThirdItem",
+                toClassName: "ThirdItem",
+                usageType: "usage",
+            } as Relationship;
+
+            const thirdItem: Relationship = {
+                fromNamespace: "ThirdItemNamespace.ThirdItem",
+                fromSource: "ThirdItem",
+                toSource: "FourthItem",
+                toNamespace: "FourthItemNamespace.FourthItem",
+                toClassName: "FourthItem",
+                usageType: "usage",
+            } as Relationship;
+
+            const dependencyTree = new Map<string, Relationship[]>();
+            dependencyTree.set(firstItem.fromSource, [firstItem]);
+            dependencyTree.set(secondItem.fromSource, [secondItem]);
+            dependencyTree.set(thirdItem.fromSource, [thirdItem]);
+            dependencyTree.set(thirdItem.toSource, []);
+
+            const callExpression1: UnresolvedCallExpression = {
+                name: "myVariable?.UnknownAccessor?.AccessorInSecondItem?.AccessorInThirdItem?",
+                namespaceDelimiter: ".",
+                variableNameIncluded: true,
+            };
+
+            const callExpression2: UnresolvedCallExpression = {
+                name: "myVariable.AccessorInSecondItem",
+                namespaceDelimiter: ".",
+                variableNameIncluded: true,
+            };
+
+            const unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
+            unresolvedCallExpressions.set(firstItem.fromSource, [callExpression1, callExpression2]);
+
+            const accessor1: PublicAccessor = {
+                filePath: "SecondItem",
+                name: "AccessorInSecondItem",
+                namespaces: [
+                    {
+                        namespace: "SecondItemNamespace",
+                        source: "SecondItem",
+                        className: "SecondItem",
+                        classType: "class",
+                        namespaceDelimiter: ".",
+                        implementedClasses: [],
+                    },
+                ],
+                returnType: "ThirdItem",
+            };
+
+            const accessor2: PublicAccessor = {
+                filePath: "ThirdItem",
+                name: "AccessorInThirdItem",
+                namespaces: [
+                    {
+                        namespace: "ThirdItemNamespace",
+                        source: "ThirdItem",
+                        className: "ThirdItem",
+                        classType: "class",
+                        namespaceDelimiter: ".",
+                        implementedClasses: [],
+                    },
+                ],
+                returnType: "FourthItem",
+            };
+
+            const publicAccessors = new Map<string, PublicAccessor[]>();
+            publicAccessors.set(accessor1.name, [accessor1]);
+            publicAccessors.set(accessor2.name, [accessor2]);
+
+            const additionalRelationships = getAdditionalRelationships(
+                dependencyTree,
+                unresolvedCallExpressions,
+                publicAccessors,
+                new Set<string>()
+            );
+            expect(additionalRelationships.length).toBe(2);
+
+            expect(additionalRelationships[0].fromNamespace).toBe(firstItem.fromNamespace);
+            expect(additionalRelationships[0].fromSource).toBe(firstItem.fromSource);
+            expect(additionalRelationships[0].toNamespace).toBe("ThirdItemNamespace.ThirdItem");
+            expect(additionalRelationships[0].toSource).toBe("ThirdItem");
+            expect(additionalRelationships[0].toClassName).toBe("ThirdItem");
+            expect(additionalRelationships[0].usageType).toBe("usage");
+
+            expect(additionalRelationships[1].fromNamespace).toBe(firstItem.fromNamespace);
+            expect(additionalRelationships[1].fromSource).toBe(firstItem.fromSource);
+            expect(additionalRelationships[1].toNamespace).toBe("FourthItemNamespace.FourthItem");
+            expect(additionalRelationships[1].toSource).toBe("FourthItem");
+            expect(additionalRelationships[1].toClassName).toBe("FourthItem");
+            expect(additionalRelationships[1].usageType).toBe("usage");
+        });
+    });
+});

@@ -1,4 +1,4 @@
-import { NamespaceReference } from "../AbstractCollector";
+import { NamespaceDefinition } from "../AbstractCollector";
 import { TreeParser } from "../../../helper/TreeParser";
 import { QueryBuilder } from "../../../queries/QueryBuilder";
 import { grammars } from "../../../helper/Grammars";
@@ -6,19 +6,19 @@ import { formatCaptures } from "../../../helper/Helper";
 import { ParseFile } from "../../../metrics/Metric";
 
 export class QueryResolver {
-    protected cache: Map<string, Map<string, NamespaceReference>> = new Map();
+    protected cache: Map<string, Map<string, NamespaceDefinition>> = new Map();
 
     getNamespaces(
         parseFile: ParseFile,
         namespaceDelimiter,
         namespacesQuery
-    ): Map<string, NamespaceReference> {
+    ): Map<string, NamespaceDefinition> {
         const cachedItem = this.cache.get(parseFile.filePath);
         if (cachedItem !== undefined) {
             return cachedItem;
         }
 
-        const namespaceDeclarations: Map<string, NamespaceReference> = new Map();
+        const namespaceDeclarations: Map<string, NamespaceDefinition> = new Map();
 
         const tree = TreeParser.getParseTree(parseFile);
 
@@ -36,7 +36,7 @@ export class QueryResolver {
 
             // Jump to first class name or class type capture
             index++;
-            const isInterface =
+            let isInterface =
                 textCaptures[index]?.name === "class_type" &&
                 textCaptures[index]?.text === "interface";
             if (isInterface) {
@@ -47,7 +47,7 @@ export class QueryResolver {
 
             while (hasClassDeclaration) {
                 const className = textCaptures[index].text;
-                const namespaceDeclaration: NamespaceReference = {
+                const namespaceDeclaration: NamespaceDefinition = {
                     namespace: namespaceName,
                     className: className,
                     classType: isInterface ? "interface" : "class",
@@ -89,6 +89,14 @@ export class QueryResolver {
 
                 if (textCaptures[index]?.name === "namespace_definition_name") {
                     break;
+                }
+
+                isInterface =
+                    textCaptures[index]?.name === "class_type" &&
+                    textCaptures[index]?.text === "interface";
+                if (isInterface) {
+                    // Jump to class name capture
+                    index++;
                 }
 
                 hasClassDeclaration = textCaptures[index]?.name === "class_name";

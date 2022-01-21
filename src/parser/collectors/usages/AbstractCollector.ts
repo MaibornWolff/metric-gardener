@@ -21,12 +21,20 @@ export interface UsageCandidate {
     usageType: string | "usage" | "extends" | "implements";
 }
 
+export interface UnresolvedCallExpression {
+    name: string;
+    variableNameIncluded: boolean;
+    namespaceDelimiter: string;
+}
+
 export abstract class AbstractCollector {
-    // In C# for example, it is not possible to know which usage belongs to which import
+    // In C# for example,
+    // it is not possible to know which usage belongs to which import
     // Imagine:
     // using System;
     // Console.WriteLine("foo");
-    // You cannot be sure that the Console.WriteLine (partial) namespace belongs to Namespace System
+    // You cannot be sure that the Console.WriteLine (partial) namespace
+    // belongs to the used namespace "System"
     protected abstract indirectNamespaceReferencing(): boolean;
     protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
@@ -36,10 +44,9 @@ export abstract class AbstractCollector {
 
     private importsBySuffixOrAlias = new Map<string, Map<string, ImportReference>>();
 
-    getUsageCandidates(
-        parseFile: ParseFile,
-        namespaceCollector: NamespaceCollector
-    ): UsageCandidate[] {
+    private processedPublicAccessors = new Set<string>();
+
+    getUsageCandidates(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
         this.importsBySuffixOrAlias.set(parseFile.filePath, new Map());
 
         let importReferences: ImportReference[] = this.getImports(parseFile, namespaceCollector);
@@ -49,16 +56,28 @@ export abstract class AbstractCollector {
             );
         }
 
+        this.processedPublicAccessors = new Set();
+
         console.log("Alias Map:", parseFile.filePath, this.importsBySuffixOrAlias);
         console.log("Import References", parseFile.filePath, importReferences);
 
-        const usages = this.getUsages(parseFile, namespaceCollector, importReferences);
-        console.log("UsagesAndCandidates", parseFile.filePath, usages);
+        const { candidates, unresolvedCallExpressions } = this.getUsages(
+            parseFile,
+            namespaceCollector,
+            importReferences
+        );
+        console.log("UsagesAndCandidates", parseFile.filePath, candidates);
 
-        return usages;
+        return {
+            candidates,
+            unresolvedCallExpressions,
+        };
     }
 
-    getImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector): ImportReference[] {
+    private getImports(
+        parseFile: ParseFile,
+        namespaceCollector: NamespaceCollector
+    ): ImportReference[] {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
@@ -121,7 +140,7 @@ export abstract class AbstractCollector {
         return usagesOfFile;
     }
 
-    getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
+    private getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
@@ -190,11 +209,11 @@ export abstract class AbstractCollector {
         return importsOfFile;
     }
 
-    getUsages(
+    private getUsages(
         parseFile: ParseFile,
         namespaceCollector: NamespaceCollector,
         importReferences: ImportReference[]
-    ): UsageCandidate[] {
+    ) {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
@@ -207,11 +226,13 @@ export abstract class AbstractCollector {
             text: string;
             usageType?: string;
             source?: string;
+            resolved: boolean;
         }[] = formatCaptures(tree, usagesCaptures);
 
         console.log("class/object usages", usagesTextCaptures);
 
         const usagesAndCandidates: UsageCandidate[] = [];
+        const unresolvedCallExpressions: UnresolvedCallExpression[] = [];
 
         // add implemented and extended classes as usages
         // to consider the coupling of those
@@ -225,6 +246,7 @@ export abstract class AbstractCollector {
                         text: implementedClass,
                         usageType: "implements",
                         source: fullyQualifiedName,
+                        resolved: false,
                     });
                 }
             }
@@ -234,6 +256,7 @@ export abstract class AbstractCollector {
                     text: namespaceReference.extendedClass,
                     usageType: "extends",
                     source: fullyQualifiedName,
+                    resolved: false,
                 });
             }
         }
@@ -241,7 +264,10 @@ export abstract class AbstractCollector {
         // resolve usages against import statements and build concrete usages or usage candidates
 
         const processedQualifiedNames = new Set<string>();
-        for (const { name, text: qualifiedName, usageType, source } of usagesTextCaptures) {
+        for (const usagesTextCapture of usagesTextCaptures) {
+            const { name, usageType, source } = usagesTextCapture;
+            let qualifiedName = usagesTextCapture.text;
+
             if (
                 processedQualifiedNames.has(qualifiedName) ||
                 (name !== "qualified_name" && name !== "call_expression")
@@ -252,7 +278,18 @@ export abstract class AbstractCollector {
             processedQualifiedNames.add(qualifiedName);
 
             const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
-            const qualifiedNamePrefix = qualifiedNameParts.shift();
+            const cleanNameParts = qualifiedNameParts.map((namePart) => {
+                if (namePart.endsWith("[]")) {
+                    return namePart.substring(0, namePart.length - 2);
+                } else if (namePart.endsWith("?")) {
+                    return namePart.substring(0, namePart.length - 1);
+                }
+                return namePart;
+            });
+
+            qualifiedName = cleanNameParts.join(this.getNamespaceDelimiter());
+
+            const qualifiedNamePrefix = cleanNameParts.shift();
             if (qualifiedNamePrefix === undefined) {
                 continue;
             }
@@ -284,22 +321,25 @@ export abstract class AbstractCollector {
                     this.getNamespaceDelimiter() === this.getFunctionCallDelimiter()
                 ) {
                     // Pop name of called function or similar callables
-                    qualifiedNameParts.pop();
+                    cleanNameParts.pop();
                 }
 
-                const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
-                processedQualifiedNames.add(cleanQualifiedName);
+                const modifiedQualifiedName = cleanNameParts.join(this.getNamespaceDelimiter());
+                processedQualifiedNames.add(modifiedQualifiedName);
 
                 // Skip current one if invalid space is included in potential class or namespace name
-                if (cleanQualifiedName.indexOf(" ") >= 0 || cleanQualifiedName.indexOf("<") >= 0) {
+                if (
+                    modifiedQualifiedName.indexOf(" ") >= 0 ||
+                    modifiedQualifiedName.indexOf("<") >= 0
+                ) {
                     continue;
                 }
 
                 const usageCandidate: UsageCandidate = {
                     usedNamespace:
                         resolvedImport.usedNamespace +
-                        (qualifiedNameParts.length > 0
-                            ? this.getNamespaceDelimiter() + cleanQualifiedName
+                        (cleanNameParts.length > 0
+                            ? this.getNamespaceDelimiter() + modifiedQualifiedName
                             : ""),
                     fromNamespace:
                         fromNamespace.namespace +
@@ -310,21 +350,33 @@ export abstract class AbstractCollector {
                 };
                 usagesAndCandidates.push(usageCandidate);
             } else {
-                const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
+                const originalCleanNameParts = qualifiedName.split(this.getNamespaceDelimiter());
                 if (
                     name === "call_expression" &&
                     this.getNamespaceDelimiter() === this.getFunctionCallDelimiter()
                 ) {
                     // Pop name of called function or similar callables from qualified name
-                    qualifiedNameParts.pop();
+                    originalCleanNameParts.pop();
                 }
 
-                const cleanQualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
+                const cleanQualifiedName = originalCleanNameParts.join(
+                    this.getNamespaceDelimiter()
+                );
                 processedQualifiedNames.add(cleanQualifiedName);
 
                 // Skip current one if invalid space is included in potential class or namespace name
                 if (cleanQualifiedName.indexOf(" ") >= 0 || cleanQualifiedName.indexOf("<") >= 0) {
                     continue;
+                }
+
+                if (name === "call_expression") {
+                    const unresolvedCallExpression = {
+                        name: qualifiedName,
+                        variableNameIncluded:
+                            this.getNamespaceDelimiter() === this.getFunctionCallDelimiter(),
+                        namespaceDelimiter: this.getNamespaceDelimiter(),
+                    };
+                    unresolvedCallExpressions.push(unresolvedCallExpression);
                 }
 
                 // for languages that allow the usage of classes in the same namespace without the need of an import:
@@ -391,6 +443,9 @@ export abstract class AbstractCollector {
             }
         }
 
-        return usagesAndCandidates;
+        return {
+            candidates: usagesAndCandidates,
+            unresolvedCallExpressions,
+        };
     }
 }

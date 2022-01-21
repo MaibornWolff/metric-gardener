@@ -4,7 +4,7 @@ import fs from "fs";
 import { Configuration } from "./Configuration";
 import { MetricsParser } from "./MetricsParser";
 import { CouplingParser } from "./CouplingParser";
-import { CouplingMetricResult, MetricResult } from "./metrics/Metric";
+import { CouplingResult, MetricResult } from "./metrics/Metric";
 
 export class GenericParser {
     private readonly config: Configuration;
@@ -31,11 +31,13 @@ export class GenericParser {
             fileMetrics = metricsParser.calculateMetrics(parseFiles);
         }
 
-        let couplingMetrics = {} as CouplingMetricResult;
+        let couplingMetrics = {} as CouplingResult;
         if (this.config.parseDependencies) {
             const couplingParser = new CouplingParser(this.config);
             couplingMetrics = couplingParser.calculateMetrics(parseFiles);
         }
+
+        console.log("Final Coupling Metrics", couplingMetrics);
 
         const endTime = performance.now();
         const duration = endTime - startTime;

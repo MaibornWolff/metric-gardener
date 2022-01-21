@@ -3,7 +3,7 @@ export interface MetricResult {
     metricValue: number;
 }
 
-export interface CouplingMetricValue {
+export interface Relationship {
     fromNamespace: string;
     toNamespace: string;
     fromSource: string;
@@ -11,11 +11,21 @@ export interface CouplingMetricValue {
     fromClassName: string;
     toClassName: string;
     usageType: string | "usage" | "extends" | "implements";
+    implementsCount?: number;
 }
 
-export interface CouplingMetricResult {
-    relationships: CouplingMetricValue[];
-    metrics: Map<string, { [key: string]: number }>;
+export interface CouplingMetrics {
+    outgoing_dependencies: number;
+    incoming_dependencies: number;
+    coupling_between_objects: number;
+    instability: number;
+    implementsCount: number;
+    namespace: string[];
+}
+
+export interface CouplingResult {
+    relationships: Relationship[];
+    metrics: Map<string, CouplingMetrics>;
 }
 
 export interface Metric {
@@ -24,7 +34,7 @@ export interface Metric {
 }
 
 export interface CouplingMetric {
-    calculate(files: ParseFile[]): CouplingMetricResult;
+    calculate(files: ParseFile[]): CouplingResult;
     getName(): string;
 }
 

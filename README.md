@@ -57,6 +57,10 @@ This will have no effect until you have mapped the changed and new expressions m
 ### TODOs
 
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
+-   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
+-   Document Query Captures to be able to implement new languages
+-   Verbose Mode to output calculated metrics (-v), executed queries (-vv), ect.
+-   Mapped Expressions: Query expressions for current language only instead of brute force all available metric expressions
 -   npm publish / github repo
 -   Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
 -   Implement CK Metrics, Cyclic Dependencies Metric, etc. without neo4j

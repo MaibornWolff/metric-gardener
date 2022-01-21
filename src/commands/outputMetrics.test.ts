@@ -1,6 +1,6 @@
 import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
-import { CouplingMetricResult, CouplingMetricValue, MetricResult } from "../parser/metrics/Metric";
+import { Relationship, MetricResult, CouplingResult } from "../parser/metrics/Metric";
 
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
@@ -31,7 +31,7 @@ describe("outputMetrics", () => {
                         usageType: "usage",
                         fromSource: "/file/path2.test",
                         toSource: "/file/path1.test",
-                    } as CouplingMetricValue,
+                    } as Relationship,
                 ],
                 metrics: new Map([
                     [
@@ -43,7 +43,7 @@ describe("outputMetrics", () => {
                         },
                     ],
                 ]),
-            } as CouplingMetricResult;
+            } as CouplingResult;
 
             jest.spyOn(fs, "writeFileSync").mockImplementation((fileName, jsonString) => {
                 expect(fileName).toBe("mocked-file.json");
@@ -55,7 +55,7 @@ describe("outputMetrics", () => {
 
         it("when no metrics are present", () => {
             const fileMetrics = new Map();
-            const relationShipMetrics = {} as CouplingMetricResult;
+            const relationShipMetrics = {} as CouplingResult;
 
             outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json", false);
 

@@ -5,6 +5,7 @@ import JavaScript from "tree-sitter-javascript";
 import Kotlin from "tree-sitter-kotlin";
 import PHP from "tree-sitter-php";
 import TypeScript from "tree-sitter-typescript";
+import Python from "tree-sitter-python";
 
 export const grammars = new Map([
     ["cs", CSharp],
@@ -14,4 +15,5 @@ export const grammars = new Map([
     ["kt", Kotlin],
     ["php", PHP],
     ["ts", TypeScript.typescript],
+    ["py", Python],
 ]);

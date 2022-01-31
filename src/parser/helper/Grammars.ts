@@ -1,14 +1,16 @@
 import CSharp from "tree-sitter-c-sharp";
+import CPlusPlus from "tree-sitter-cpp";
 import GO from "tree-sitter-go";
 import Java from "tree-sitter-java";
 import JavaScript from "tree-sitter-javascript";
 import Kotlin from "tree-sitter-kotlin";
 import PHP from "tree-sitter-php";
-import TypeScript from "tree-sitter-typescript";
 import Python from "tree-sitter-python";
+import TypeScript from "tree-sitter-typescript";
 
 export const grammars = new Map([
     ["cs", CSharp],
+    ["cpp", CPlusPlus],
     ["go", GO],
     ["java", Java],
     ["js", JavaScript],

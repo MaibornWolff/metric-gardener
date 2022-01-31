@@ -10,6 +10,7 @@ const nodeTypeFiles = new Map([
     ["php", "./node_modules/tree-sitter-php/src/node-types.json"],
     ["ts", "./node_modules/tree-sitter-typescript/typescript/src/node-types.json"],
     ["py", "./node_modules/tree-sitter-python/src/node-types.json"],
+    ["cpp", "./node_modules/tree-sitter-cpp/src/node-types.json"],
 ]);
 
 const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();

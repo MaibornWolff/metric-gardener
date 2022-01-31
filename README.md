@@ -59,6 +59,8 @@ This will have no effect until you have mapped the changed and new expressions m
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
 -   Improve performance in Abstract Usage Collector (add candidates only if they can be found in previously retrieved fully qualified type names in other words the Namespace Collector).
+-   Start Rule Expression for python is normal expression in other languages:
+-   Introduce Conditions for mapped Statements, to control for what languages they are considered to be counted for a metric.
 -   Document Query Captures to be able to implement new languages
 -   Verbose Mode to output calculated metrics (-v), executed queries (-vv), ect.
 -   Mapped Expressions: Query expressions for current language only instead of brute force all available metric expressions

@@ -94,7 +94,7 @@ export class Coupling implements CouplingMetric {
         tree = updatedTree.tree;
         rootFiles = updatedTree.rootFiles;
 
-        countTransitiveImplements(tree, couplingMetrics);
+        //countTransitiveImplements(tree, couplingMetrics);
 
         console.log("\n\n\n\n\nHILFE", this.filesWithMultipleNamespaces, "\n\n\n\n\n");
 

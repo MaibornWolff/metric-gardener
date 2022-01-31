@@ -57,6 +57,8 @@ export abstract class AbstractCollector {
                     publicAccessors.set(publicAccessor.name, []);
                 }
 
+                // TODO prevent duplicate adds by checking already existing combinations
+                //  of name, returnType, and filepath
                 publicAccessors.get(publicAccessor.name)?.push(publicAccessor);
 
                 if (accessorsTextCaptures[index + 1]?.name === "not_empty_accessor") {

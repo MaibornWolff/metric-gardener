@@ -3,6 +3,7 @@ import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import { formatCaptures } from "../helper/Helper";
 
 export class RealLinesOfCode implements Metric {
     private classesStatementSuperSet: string[] = [];
@@ -36,9 +37,22 @@ export class RealLinesOfCode implements Metric {
 
         const query = queryBuilder.build();
         const startRuleMatches = query.matches(tree.rootNode);
+        if (!startRuleMatches.length) {
+            return {
+                metricName: this.getName(),
+                metricValue: 0,
+            };
+        }
 
-        const loc =
-            startRuleMatches.length > 0 ? startRuleMatches[0].captures[0].node.endPosition.row : 0;
+        const startRuleCaptures = query.captures(tree.rootNode);
+        const startRuleTextCaptures = formatCaptures(tree, startRuleCaptures);
+
+        const emptyLines = this.countEmptyLines(startRuleTextCaptures[0].text);
+
+        let loc = startRuleMatches[0].captures[0].node.endPosition.row;
+
+        // Last line is an empty one, so add one line
+        loc += startRuleTextCaptures[0].text.endsWith("\n") ? 1 : 0;
 
         queryBuilder.clear();
         queryBuilder.setStatements(this.commentStatementsSuperSet);
@@ -51,13 +65,18 @@ export class RealLinesOfCode implements Metric {
             return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
         }, 0);
 
-        const realLinesOfCode = Math.max(0, loc - commentLines);
+        const realLinesOfCode = Math.max(0, loc - commentLines - emptyLines);
         console.log(this.getName() + " - " + realLinesOfCode);
 
         return {
             metricName: this.getName(),
             metricValue: realLinesOfCode,
         };
+    }
+
+    private countEmptyLines(text: string) {
+        // from https://stackoverflow.com/questions/28260659/how-to-count-empty-lines-inside-a-string-in-javascript/28260746
+        return text ? (text.match(/^[ \t]*$/gm) || []).length : 0;
     }
 
     getName(): string {

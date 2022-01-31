@@ -57,7 +57,12 @@ export class CSharpCollector extends AbstractCollector {
                 type: (_) @qualified_name
             )
             (member_access_expression) @call_expression
-            (conditional_access_expression) @call_expression
+            (conditional_access_expression
+                (member_binding_expression name: (_) @call_expression)
+            ) @call_expression
+            (invocation_expression
+                function: (_) @call_expression
+            )
             (member_access_expression
                 expression: (_ (cast_expression type: (_) @qualified_name))
             )

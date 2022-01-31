@@ -11,11 +11,10 @@ export class McCabeComplexity implements Metric {
         "(function) @function",
         "(function_declaration) @function",
         "(function_definition) @function",
+        "(arrow_function) @function",
         "(method_definition) @function.method",
         "(method_declaration) @function.method",
     ];
-
-    private mccReturnStatementSuperSet = ["(return_statement) @return"];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
@@ -48,33 +47,11 @@ export class McCabeComplexity implements Metric {
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        queryBuilder.clear();
-        queryBuilder.setStatements(this.mccFunctionsAndMethodsSuperSet);
-
-        const functionsAndMethodsQuery = queryBuilder.build();
-        const functionsOrMethods = functionsAndMethodsQuery.captures(tree.rootNode);
-
-        queryBuilder.clear();
-        queryBuilder.setStatements(this.mccReturnStatementSuperSet);
-
-        const returnStatementQuery = queryBuilder.build();
-
-        let additionalReturnStatementComplexity = 0;
-
-        for (const capture of functionsOrMethods) {
-            const returnCaptures = returnStatementQuery.captures(capture.node);
-            if (returnCaptures.length > 1) {
-                additionalReturnStatementComplexity += returnCaptures.length - 1;
-            }
-        }
-
-        console.log(
-            this.getName() + " - " + (matches.length + additionalReturnStatementComplexity)
-        );
+        console.log(this.getName() + " - " + matches.length);
 
         return {
             metricName: this.getName(),
-            metricValue: matches.length + additionalReturnStatementComplexity,
+            metricValue: matches.length,
         };
     }
 

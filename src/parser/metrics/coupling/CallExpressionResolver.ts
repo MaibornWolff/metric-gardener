@@ -20,6 +20,8 @@ export function getAdditionalRelationships(
 
         const processedPublicAccessors = new Set<string>();
 
+        const fileAdditionalRelationships: Relationship[] = [];
+
         for (const callExpression of callExpressions) {
             if (processedPublicAccessors.has(callExpression.name)) {
                 continue;
@@ -30,8 +32,6 @@ export function getAdditionalRelationships(
             if (callExpression.variableNameIncluded) {
                 qualifiedNameParts.shift();
             }
-
-            const callExpressionAdditionals: Relationship[] = [];
 
             for (let namePart of qualifiedNameParts) {
                 // remove save call character
@@ -48,84 +48,73 @@ export function getAdditionalRelationships(
                 console.log("CLONED_ACCESSORS", namePart, clonedAccessors.length);
                 console.log(clonedAccessors);
 
-                let additionalDependenciesAdded = 0;
-
                 for (const accessor of clonedAccessors) {
                     if (accessor.namespaces.length === 0) {
                         continue;
                     }
 
-                    // TODO for multiple Namespaces in one file
-                    const fullyQualifiedNameCandidate =
-                        accessor.namespaces[0].namespace +
-                        accessor.namespaces[0].namespaceDelimiter +
-                        accessor.namespaces[0].className;
-
-                    console.log("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
-
-                    // FirstAccessor is a property or method
-                    // The type of myVariable must be a dependency
-                    // of the current base type/class (filePath) to be resolvable:
-                    // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
-                    const baseDependency = fileDependencies.find((dependency) => {
-                        return dependency.toNamespace === fullyQualifiedNameCandidate;
-                    });
-
-                    // In case of chained accesses look in dependencies added for previous chain elements:
-                    // e.g. look up already added dependency of return type of FirstAccessor to find SecondAccessor
-                    // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
-                    const callExpressionDependency = callExpressionAdditionals.find(
-                        (dependency) => {
-                            return dependency.toNamespace === fullyQualifiedNameCandidate;
-                        }
-                    );
-
                     let added;
-                    if (baseDependency !== undefined) {
-                        if (
-                            resolveAccessorReturnType(
-                                baseDependency,
+
+                    for (const namespace of accessor.namespaces) {
+                        const fullyQualifiedNameCandidate =
+                            namespace.namespace +
+                            namespace.namespaceDelimiter +
+                            namespace.className;
+
+                        console.log("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
+
+                        // FirstAccessor is a property or method
+                        // The type of myVariable must be a dependency
+                        // of the current base type/class (filePath) to be resolvable:
+                        // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
+                        const baseDependency = fileDependencies.find((dependency) => {
+                            return dependency.toNamespace === fullyQualifiedNameCandidate;
+                        });
+
+                        // In case of chained accesses look in dependencies added for previous chain elements:
+                        // e.g. look up already added dependency of return type of FirstAccessor to find SecondAccessor
+                        // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
+                        const callExpressionDependency = fileAdditionalRelationships.find(
+                            (dependency) => {
+                                return dependency.toNamespace === fullyQualifiedNameCandidate;
+                            }
+                        );
+
+                        if (baseDependency !== undefined) {
+                            if (
+                                resolveAccessorReturnType(
+                                    baseDependency,
+                                    accessor,
+                                    tree,
+                                    fileAdditionalRelationships,
+                                    alreadyAddedRelationships
+                                )
+                            ) {
+                                break;
+                            }
+                        } else if (callExpressionDependency !== undefined) {
+                            added = resolveAccessorReturnType(
+                                callExpressionDependency,
                                 accessor,
                                 tree,
-                                callExpressionAdditionals,
+                                fileAdditionalRelationships,
                                 alreadyAddedRelationships
-                            )
-                        ) {
+                            );
+                        }
+
+                        if (added) {
                             break;
                         }
-                    } else if (callExpressionDependency !== undefined) {
-                        added = resolveAccessorReturnType(
-                            callExpressionDependency,
-                            accessor,
-                            tree,
-                            callExpressionAdditionals,
-                            alreadyAddedRelationships
-                        );
                     }
 
                     if (added) {
-                        additionalDependenciesAdded++;
-                        // TODO uncomment to stop on first added return type
-                        //break;
+                        break;
                     }
                 }
-
-                if (additionalDependenciesAdded > 1) {
-                    console.log(
-                        "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
-                        additionalDependenciesAdded,
-                        namePart
-                    );
-                    console.log(filePath);
-                    console.log(callExpression);
-                    console.log(clonedAccessors);
-                    console.log(fileDependencies);
-                    console.log(callExpressionAdditionals);
-                }
             }
-
-            additionalRelationships = additionalRelationships.concat(callExpressionAdditionals);
         }
+
+        additionalRelationships = additionalRelationships.concat(fileAdditionalRelationships);
     }
 
     return additionalRelationships;

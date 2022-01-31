@@ -315,13 +315,19 @@ export abstract class AbstractCollector {
                 }
             }
 
+            const originalCleanNameParts = qualifiedName.split(this.getNamespaceDelimiter());
+
             if (resolvedImport !== undefined) {
                 if (
                     name === "call_expression" &&
                     this.getNamespaceDelimiter() === this.getFunctionCallDelimiter()
                 ) {
                     // Pop name of called function or similar callables
-                    cleanNameParts.pop();
+                    if (originalCleanNameParts.length > 1) {
+                        cleanNameParts.pop();
+                    }
+                    // In case it cannot be resolved by resolvedImport name, try it later again
+                    unresolvedCallExpressions.push(this.buildCallExpression(qualifiedName));
                 }
 
                 const modifiedQualifiedName = cleanNameParts.join(this.getNamespaceDelimiter());
@@ -350,10 +356,10 @@ export abstract class AbstractCollector {
                 };
                 usagesAndCandidates.push(usageCandidate);
             } else {
-                const originalCleanNameParts = qualifiedName.split(this.getNamespaceDelimiter());
                 if (
                     name === "call_expression" &&
-                    this.getNamespaceDelimiter() === this.getFunctionCallDelimiter()
+                    this.getNamespaceDelimiter() === this.getFunctionCallDelimiter() &&
+                    originalCleanNameParts.length > 1
                 ) {
                     // Pop name of called function or similar callables from qualified name
                     originalCleanNameParts.pop();
@@ -370,13 +376,7 @@ export abstract class AbstractCollector {
                 }
 
                 if (name === "call_expression") {
-                    const unresolvedCallExpression = {
-                        name: qualifiedName,
-                        variableNameIncluded:
-                            this.getNamespaceDelimiter() === this.getFunctionCallDelimiter(),
-                        namespaceDelimiter: this.getNamespaceDelimiter(),
-                    };
-                    unresolvedCallExpressions.push(unresolvedCallExpression);
+                    unresolvedCallExpressions.push(this.buildCallExpression(qualifiedName));
                 }
 
                 // for languages that allow the usage of classes in the same namespace without the need of an import:
@@ -412,11 +412,23 @@ export abstract class AbstractCollector {
                 const moreCandidates: string[] = [];
                 if (this.indirectNamespaceReferencing()) {
                     for (const importReference of importReferences) {
-                        moreCandidates.push(
-                            importReference.usedNamespace +
-                                fromNamespace.namespaceDelimiter +
-                                cleanQualifiedName
-                        );
+                        if (this.getNamespaceDelimiter() !== this.getFunctionCallDelimiter()) {
+                            moreCandidates.push(
+                                importReference.usedNamespace +
+                                    fromNamespace.namespaceDelimiter +
+                                    cleanQualifiedName
+                            );
+                        } else {
+                            const clonedNameParts = [...originalCleanNameParts];
+                            while (clonedNameParts.length > 0) {
+                                moreCandidates.push(
+                                    importReference.usedNamespace +
+                                        fromNamespace.namespaceDelimiter +
+                                        clonedNameParts.join(this.getNamespaceDelimiter())
+                                );
+                                clonedNameParts.pop();
+                            }
+                        }
                     }
                 }
 
@@ -446,6 +458,16 @@ export abstract class AbstractCollector {
         return {
             candidates: usagesAndCandidates,
             unresolvedCallExpressions,
+        };
+    }
+
+    private buildCallExpression(qualifiedName: string) {
+        return {
+            name: qualifiedName,
+            variableNameIncluded:
+                this.getNamespaceDelimiter() === this.getFunctionCallDelimiter() &&
+                qualifiedName.includes(this.getNamespaceDelimiter()),
+            namespaceDelimiter: this.getNamespaceDelimiter(),
         };
     }
 }

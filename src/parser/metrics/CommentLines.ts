@@ -30,7 +30,7 @@ export class CommentLines implements Metric {
 
         return {
             metricName: this.getName(),
-            metricValue: matches.length,
+            metricValue: commentLines,
         };
     }
 

@@ -11,6 +11,13 @@ export class CSharpCollector extends AbstractCollector {
                 )
                 (#match? @not_empty_accessor "^(?!\\s*$).+")
             )
+            (field_declaration
+                (variable_declaration
+                    type: (_) @accessor_return_type
+                    .
+                    (variable_declarator (identifier) @accessor_name)
+                )
+            )
             (method_declaration
                 type: (_) @accessor_return_type
                 name: (identifier) @accessor_name

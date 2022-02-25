@@ -1,31 +1,30 @@
-import { NamespaceCollector } from "../NamespaceCollector";
 import { ParseFile } from "../../metrics/Metric";
 import { formatCaptures } from "../../helper/Helper";
 import { QueryBuilder } from "../../queries/QueryBuilder";
 import { grammars } from "../../helper/Grammars";
 import { TreeParser } from "../../helper/TreeParser";
-import { NamespaceDefinition } from "../namespaces/AbstractCollector";
+import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
 
-export interface PublicAccessor {
+export interface Accessor {
     name: string;
-    namespaces: NamespaceDefinition[];
+    namespaces: FullyQTN[];
     filePath: string;
     returnType: string;
 }
 
 export abstract class AbstractCollector {
-    protected abstract getPublicAccessorsQuery(): string;
+    protected abstract getAccessorsQuery(): string;
 
-    getPublicAccessors(
+    getAccessors(
         parseFile: ParseFile,
-        namespacesOfFile: Map<string, NamespaceDefinition>
-    ): Map<string, PublicAccessor[]> {
-        const publicAccessors = new Map<string, PublicAccessor[]>();
+        namespacesOfFile: Map<string, FullyQTN>
+    ): Map<string, Accessor[]> {
+        const publicAccessors = new Map<string, Accessor[]>();
 
-        if (this.getPublicAccessorsQuery()) {
+        if (this.getAccessorsQuery()) {
             const tree = TreeParser.getParseTree(parseFile);
             const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-            queryBuilder.setStatements([this.getPublicAccessorsQuery()]);
+            queryBuilder.setStatements([this.getAccessorsQuery()]);
 
             const publicAccessorsQuery = queryBuilder.build();
             const publicAccessorsCaptures = publicAccessorsQuery.captures(tree.rootNode);
@@ -42,7 +41,7 @@ export abstract class AbstractCollector {
             // second index must be the accessor name
             // third index (not_empty_accessor flag) must be ignored, if present
             for (let index = 0; index < accessorsTextCaptures.length; index += 1) {
-                const publicAccessor: PublicAccessor = {
+                const publicAccessor: Accessor = {
                     name: "",
                     namespaces: Array.from(namespacesOfFile.values()),
                     filePath: parseFile.filePath,
@@ -60,10 +59,6 @@ export abstract class AbstractCollector {
                 // TODO prevent duplicate adds by checking already existing combinations
                 //  of name, returnType, and filepath
                 publicAccessors.get(publicAccessor.name)?.push(publicAccessor);
-
-                if (accessorsTextCaptures[index + 1]?.name === "not_empty_accessor") {
-                    index++;
-                }
             }
         }
 

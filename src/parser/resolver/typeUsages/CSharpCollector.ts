@@ -1,6 +1,10 @@
 import { AbstractCollector } from "./AbstractCollector";
 
 export class CSharpCollector extends AbstractCollector {
+    protected noImportForClassesInSameOrParentNamespaces(): boolean {
+        return true;
+    }
+
     protected indirectNamespaceReferencing(): boolean {
         return true;
     }

@@ -1,7 +1,7 @@
 import { Relationship } from "../Metric";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
-import { UnresolvedCallExpression } from "../../collectors/usages/AbstractCollector";
-import { PublicAccessor } from "../../collectors/accessors/AbstractCollector";
+import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector";
+import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 
 describe("CallExpressionResolver", () => {
     describe("resolves call expressions and retrieves additional and transitive relationships", () => {
@@ -54,7 +54,7 @@ describe("CallExpressionResolver", () => {
             const unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
             unresolvedCallExpressions.set(firstItem.fromSource, [callExpression1, callExpression2]);
 
-            const accessor1: PublicAccessor = {
+            const accessor1: Accessor = {
                 filePath: "SecondItem",
                 name: "AccessorInSecondItem",
                 namespaces: [
@@ -70,7 +70,7 @@ describe("CallExpressionResolver", () => {
                 returnType: "ThirdItem",
             };
 
-            const accessor2: PublicAccessor = {
+            const accessor2: Accessor = {
                 filePath: "ThirdItem",
                 name: "AccessorInThirdItem",
                 namespaces: [
@@ -86,7 +86,7 @@ describe("CallExpressionResolver", () => {
                 returnType: "FourthItem",
             };
 
-            const publicAccessors = new Map<string, PublicAccessor[]>();
+            const publicAccessors = new Map<string, Accessor[]>();
             publicAccessors.set(accessor1.name, [accessor1]);
             publicAccessors.set(accessor2.name, [accessor2]);
 

@@ -14,7 +14,7 @@ export interface ImportReference {
     usageType: string | "usage" | "extends" | "implements";
 }
 
-export interface UsageCandidate {
+export interface TypeUsageCandidate {
     usedNamespace: string;
     fromNamespace: string;
     sourceOfUsing: string;
@@ -36,6 +36,7 @@ export abstract class AbstractCollector {
     // You cannot be sure that the Console.WriteLine (partial) namespace
     // belongs to the used namespace "System"
     protected abstract indirectNamespaceReferencing(): boolean;
+    protected abstract noImportForClassesInSameOrParentNamespaces(): boolean;
     protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
     protected abstract getImportsQuery(): string;
@@ -231,7 +232,7 @@ export abstract class AbstractCollector {
 
         console.log("class/object usages", usagesTextCaptures);
 
-        const usagesAndCandidates: UsageCandidate[] = [];
+        const usagesAndCandidates: TypeUsageCandidate[] = [];
         const unresolvedCallExpressions: UnresolvedCallExpression[] = [];
 
         // add implemented and extended classes as usages
@@ -283,6 +284,8 @@ export abstract class AbstractCollector {
                     return namePart.substring(0, namePart.length - 2);
                 } else if (namePart.endsWith("?")) {
                     return namePart.substring(0, namePart.length - 1);
+                } else if (namePart.endsWith("()")) {
+                    return namePart.substring(0, namePart.length - 2);
                 }
                 return namePart;
             });
@@ -341,7 +344,7 @@ export abstract class AbstractCollector {
                     continue;
                 }
 
-                const usageCandidate: UsageCandidate = {
+                const usageCandidate: TypeUsageCandidate = {
                     usedNamespace:
                         resolvedImport.usedNamespace +
                         (cleanNameParts.length > 0
@@ -355,6 +358,33 @@ export abstract class AbstractCollector {
                     usageType: usageType !== undefined ? usageType : "usage",
                 };
                 usagesAndCandidates.push(usageCandidate);
+
+                if (resolvedImport.alias != "") {
+                    if (this.noImportForClassesInSameOrParentNamespaces()) {
+                        // In This case, alias can be a Qualified Name
+                        // Add Same Namespace Candidate
+                        // Add Parent Namespace Candidate
+                        const fromNamespaceParts = fromNamespace.namespace.split(
+                            this.getNamespaceDelimiter()
+                        );
+                        while (fromNamespaceParts.length > 0) {
+                            const usageCandidate: TypeUsageCandidate = {
+                                usedNamespace:
+                                    fromNamespaceParts.join(this.getNamespaceDelimiter()) +
+                                    fromNamespace.namespaceDelimiter +
+                                    resolvedImport.usedNamespace,
+                                fromNamespace:
+                                    fromNamespace.namespace +
+                                    fromNamespace.namespaceDelimiter +
+                                    fromNamespace.className,
+                                sourceOfUsing: parseFile.filePath,
+                                usageType: usageType !== undefined ? usageType : "usage",
+                            };
+                            usagesAndCandidates.push(usageCandidate);
+                            fromNamespaceParts.pop();
+                        }
+                    }
+                }
             } else {
                 if (
                     name === "call_expression" &&
@@ -439,7 +469,7 @@ export abstract class AbstractCollector {
                     .concat(moreCandidates)
                     .concat(parentNamespaceCandidates);
                 for (const candidateUsedNamespace of finalCandidates) {
-                    const usageCandidate: UsageCandidate = {
+                    const usageCandidate: TypeUsageCandidate = {
                         usedNamespace: candidateUsedNamespace,
                         fromNamespace:
                             fromNamespace.namespace +

@@ -1,19 +1,47 @@
 import { Relationship } from "../Metric";
-import { PublicAccessor } from "../../collectors/accessors/AbstractCollector";
-import { UnresolvedCallExpression } from "../../collectors/usages/AbstractCollector";
+import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
+import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector";
+import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector";
 
 export function getAdditionalRelationships(
     tree: Map<string, Relationship[]>,
     unresolvedCallExpressions: Map<string, UnresolvedCallExpression[]>,
-    publicAccessors: Map<string, PublicAccessor[]>,
+    publicAccessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>
 ) {
     let additionalRelationships: Relationship[] = [];
 
     for (const [filePath, callExpressions] of unresolvedCallExpressions) {
-        const fileDependencies = tree.get(filePath);
+        const fileDependencies = [...(tree.get(filePath) ?? [])];
         if (!fileDependencies) {
             continue;
+        }
+
+        // This is done to find calls to an interface that is not directly implemented
+        // Instead one implemented interface can implement other interfaces
+        // So this is a (hidden) transitive dependency
+        const transitiveImplementedFileDependencies: Relationship[] = [];
+        for (const fileDependency of fileDependencies) {
+            const dependenciesOfUsedClass = tree.get(fileDependency.toSource);
+            for (const dependencyOfUsedClass of dependenciesOfUsedClass ?? []) {
+                //if ((dependencyOfUsedClass.usageType === "implements" || dependencyOfUsedClass.usageType === "extends") && dependencyOfUsedClass.fromSource !== dependencyOfUsedClass.toSource) {
+                if (
+                    dependencyOfUsedClass.usageType === "implements" &&
+                    dependencyOfUsedClass.fromSource !== dependencyOfUsedClass.toSource
+                ) {
+                    console.log(
+                        "add trasitive implements dependency for",
+                        filePath,
+                        fileDependency,
+                        "dependency:",
+                        dependencyOfUsedClass
+                    );
+
+                    // TODO: To cover all cases, this must be done recursively
+                    //  I am not sure, if this can be removed after Struct101 comparison
+                    transitiveImplementedFileDependencies.push({ ...dependencyOfUsedClass });
+                }
+            }
         }
 
         console.log("RESOLVING:", fileDependencies);
@@ -45,16 +73,27 @@ export function getAdditionalRelationships(
                 }
 
                 const clonedAccessors = [...publicAccessorsOfPrefix];
-                console.log("CLONED_ACCESSORS", namePart, clonedAccessors.length);
+                console.log(
+                    "CLONED_ACCESSORS",
+                    namePart,
+                    filePath,
+                    clonedAccessors.length,
+                    fileDependencies
+                );
                 console.log(clonedAccessors);
+
+                let added;
 
                 for (const accessor of clonedAccessors) {
                     if (accessor.namespaces.length === 0) {
                         continue;
                     }
 
-                    let added;
-
+                    // Currently, the first matching accessor is going to be added as a dependency
+                    // This might not be correct, if more than one accessors are matching.
+                    // TODO in this case: Add both dependencies instead of adding one randomly.
+                    //  this probably adds actually not existing dependencies,
+                    //  but at the end the real dependency is not lost and included in the results.
                     for (const namespace of accessor.namespaces) {
                         const fullyQualifiedNameCandidate =
                             namespace.namespace +
@@ -63,16 +102,49 @@ export function getAdditionalRelationships(
 
                         console.log("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
 
+                        const calledDependencyInImplementsChain =
+                            transitiveImplementedFileDependencies.find((dependency) => {
+                                return dependency.toNamespace === fullyQualifiedNameCandidate;
+                            });
+                        if (calledDependencyInImplementsChain !== undefined) {
+                            calledDependencyInImplementsChain.fromNamespace =
+                                fileDependencies[0].fromNamespace;
+                            calledDependencyInImplementsChain.fromSource =
+                                fileDependencies[0].fromSource;
+                            calledDependencyInImplementsChain.usageType = "usage";
+                            calledDependencyInImplementsChain.implementsCount = 0;
+
+                            console.log(
+                                "Transitive Implements Chain Method called. Add:",
+                                calledDependencyInImplementsChain
+                            );
+
+                            const uniqueId =
+                                calledDependencyInImplementsChain.toNamespace +
+                                calledDependencyInImplementsChain.fromNamespace;
+
+                            if (!alreadyAddedRelationships.has(uniqueId)) {
+                                fileAdditionalRelationships.push(calledDependencyInImplementsChain);
+                                alreadyAddedRelationships.add(uniqueId);
+                                if (added) {
+                                    console.log("ACCESSOR CONFLICT transitives");
+                                }
+                                added = 1;
+                            }
+                            break;
+                        }
+
                         // FirstAccessor is a property or method
-                        // The type of myVariable must be a dependency
-                        // of the current base type/class (filePath) to be resolvable:
+                        // The type of myVariable must be an already added dependency of the current base type/class (filePath),
+                        // so that subsequent method calls or attribute accesses can be resolved.
+                        // Example:
                         // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
                         const baseDependency = fileDependencies.find((dependency) => {
                             return dependency.toNamespace === fullyQualifiedNameCandidate;
                         });
 
-                        // In case of chained accesses look in dependencies added for previous chain elements:
-                        // e.g. look up already added dependency of return type of FirstAccessor to find SecondAccessor
+                        // In case of chained accesses, look in dependencies added for previous chain elements:
+                        // e.g. look up already added dependency of return type of FirstAccessor to resolve SecondAccessor
                         // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
                         const callExpressionDependency = fileAdditionalRelationships.find(
                             (dependency) => {
@@ -81,25 +153,37 @@ export function getAdditionalRelationships(
                         );
 
                         if (baseDependency !== undefined) {
-                            if (
-                                resolveAccessorReturnType(
-                                    baseDependency,
-                                    accessor,
-                                    tree,
-                                    fileAdditionalRelationships,
-                                    alreadyAddedRelationships
-                                )
-                            ) {
-                                break;
-                            }
-                        } else if (callExpressionDependency !== undefined) {
+                            const prevAdded = added;
+
                             added = resolveAccessorReturnType(
-                                callExpressionDependency,
+                                baseDependency,
                                 accessor,
+                                namespace,
                                 tree,
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships
                             );
+
+                            if (added) {
+                                if (prevAdded) {
+                                    console.log("ACCESSOR CONFLICT baseDependency");
+                                }
+
+                                break;
+                            }
+                        } else if (callExpressionDependency !== undefined) {
+                            const prevAdded = added;
+                            added = resolveAccessorReturnType(
+                                callExpressionDependency,
+                                accessor,
+                                namespace,
+                                tree,
+                                fileAdditionalRelationships,
+                                alreadyAddedRelationships
+                            );
+                            if (prevAdded && added) {
+                                console.log("ACCESSOR CONFLICT callExpressionDependency");
+                            }
                         }
 
                         if (added) {
@@ -108,7 +192,7 @@ export function getAdditionalRelationships(
                     }
 
                     if (added) {
-                        break;
+                        //break;
                     }
                 }
             }
@@ -122,7 +206,8 @@ export function getAdditionalRelationships(
 
 function resolveAccessorReturnType(
     matchingDependency: Relationship,
-    accessor: PublicAccessor,
+    accessor: Accessor,
+    namespace: FullyQTN,
     tree: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>
@@ -133,11 +218,21 @@ function resolveAccessorReturnType(
         !!matchingDependency,
         " -> check return type add: ",
         accessor.returnType,
+        matchingDependency,
         "\n\n"
     );
 
-    const accessorFileDependencies = tree.get(accessor.namespaces[0].source) ?? [];
+    const accessorFileDependencies = tree.get(namespace.source) ?? [];
+    console.log("namespace.source", namespace.source);
+    console.log("accessorFileDependencies", accessorFileDependencies);
     for (const accessorFileDependency of accessorFileDependencies) {
+        // TODO Imagine that returnType is MyTypeNumberOne
+        //  and toClassName MyType
+        //  This would lead to a wrong dependency
+        // Substring search using includes() is used because Return Types can look very differently:
+        // Collection<MyTypeNumberOne>
+        // Map<string, MyTypeNumberOne>
+        // etc.
         if (accessor.returnType.includes(accessorFileDependency.toClassName)) {
             const uniqueId = accessorFileDependency.toNamespace + matchingDependency.fromNamespace;
 
@@ -146,10 +241,11 @@ function resolveAccessorReturnType(
                     "SKIP ADDING RETURN TYPE: ",
                     accessor.returnType,
                     "already added: ",
+                    accessorFileDependency,
                     alreadyAddedRelationships.has(uniqueId),
                     "\n\n"
                 );
-                return 1;
+                continue;
             }
 
             if (matchingDependency.fromNamespace !== accessorFileDependency.toNamespace) {
@@ -158,7 +254,7 @@ function resolveAccessorReturnType(
                 const dependencyClone: Relationship = {
                     fromNamespace: matchingDependency.fromNamespace,
                     fromSource: matchingDependency.fromSource,
-                    implementsCount: 0 /* TODO set right count or remove this property for testing purposes */,
+                    implementsCount: 0 /* TODO set right count or remove this property because it is used for testing purposes only */,
                     toClassName: accessorFileDependency.toClassName,
                     fromClassName: accessorFileDependency.toClassName,
                     toNamespace: accessorFileDependency.toNamespace,

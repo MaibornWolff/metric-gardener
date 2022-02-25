@@ -2,8 +2,8 @@ import { grammars } from "./helper/Grammars";
 import { findFilesRecursively } from "./helper/Helper";
 import fs from "fs";
 import { Configuration } from "./Configuration";
-import { MetricsParser } from "./MetricsParser";
-import { CouplingParser } from "./CouplingParser";
+import { MetricCalculator } from "./MetricCalculator";
+import { CouplingCalculator } from "./CouplingCalculator";
 import { CouplingResult, MetricResult } from "./metrics/Metric";
 
 export class GenericParser {
@@ -27,13 +27,13 @@ export class GenericParser {
 
         let fileMetrics = new Map<string, Map<string, MetricResult>>();
         if (this.config.parseMetrics) {
-            const metricsParser = new MetricsParser(this.config);
+            const metricsParser = new MetricCalculator(this.config);
             fileMetrics = metricsParser.calculateMetrics(parseFiles);
         }
 
         let couplingMetrics = {} as CouplingResult;
         if (this.config.parseDependencies) {
-            const couplingParser = new CouplingParser(this.config);
+            const couplingParser = new CouplingCalculator(this.config);
             couplingMetrics = couplingParser.calculateMetrics(parseFiles);
         }
 

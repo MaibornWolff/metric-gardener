@@ -7,15 +7,6 @@ import { Metric, MetricResult, ParseFile } from "./Metric";
 export class McCabeComplexity implements Metric {
     private mccStatementsSuperSet: string[] = [];
 
-    private mccFunctionsAndMethodsSuperSet = [
-        "(function) @function",
-        "(function_declaration) @function",
-        "(function_definition) @function",
-        "(arrow_function) @function",
-        "(method_definition) @function.method",
-        "(method_declaration) @function.method",
-    ];
-
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName())) {

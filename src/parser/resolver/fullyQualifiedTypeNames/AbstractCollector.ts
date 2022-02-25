@@ -1,8 +1,8 @@
-import { QueryResolver } from "./resolver/QueryResolver";
-import { FilenameResolver } from "./resolver/FilenameResolver";
+import { QueryStrategy } from "./resolverStrategy/QueryStrategy";
+import { FilenameStrategy } from "./resolverStrategy/FilenameResolver";
 import { ParseFile } from "../../metrics/Metric";
 
-export interface NamespaceDefinition {
+export interface FullyQTN {
     namespace: string;
     className: string;
     classType: string | "interface" | "class";
@@ -22,9 +22,9 @@ export abstract class AbstractCollector {
     protected abstract getNamespaceDelimiter(): string;
     protected abstract getNamespacesQuery(): string;
 
-    getNamespaces(parseFile: ParseFile): Map<string, NamespaceDefinition> {
+    getFullyQTNs(parseFile: ParseFile): Map<string, FullyQTN> {
         if (this.getNamespaceResolvingStrategy() === NamespaceResolvingStrategy.Query) {
-            return new QueryResolver().getNamespaces(
+            return new QueryStrategy().getFullyQTNs(
                 parseFile,
                 this.getNamespaceDelimiter(),
                 this.getNamespacesQuery()
@@ -32,7 +32,7 @@ export abstract class AbstractCollector {
         }
 
         if (this.getNamespaceResolvingStrategy() === NamespaceResolvingStrategy.Filename) {
-            return new FilenameResolver().getNamespaces();
+            return new FilenameStrategy().getFullyQTNs();
         }
 
         throw Error(

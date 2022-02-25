@@ -23,6 +23,9 @@ export class CSharpCollector extends AbstractCollector {
                                 bases: (base_list                            
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
+                                body: (declaration_list
+                                    (class_declaration name: (identifier) @class_name)
+                                )*
                             )
                         )
                         (declaration_list

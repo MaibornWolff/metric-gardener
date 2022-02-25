@@ -3,12 +3,12 @@ import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Coupling } from "./metrics/coupling/Coupling";
 import neo4j from "neo4j-driver";
-import { NamespaceCollector } from "./collectors/NamespaceCollector";
-import { UsagesCollector } from "./collectors/UsagesCollector";
+import { NamespaceCollector } from "./resolver/NamespaceCollector";
+import { UsagesCollector } from "./resolver/UsagesCollector";
 import { CouplingMetric, Relationship, ParseFile } from "./metrics/Metric";
-import { PublicAccessorCollector } from "./collectors/PublicAccessorCollector";
+import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector";
 
-export class CouplingParser {
+export class CouplingCalculator {
     private readonly comprisingMetrics: CouplingMetric[] = [];
     private config: Configuration;
 

@@ -60,7 +60,8 @@ export class LinesOfCode implements Metric {
         // TODO not working for Windows Line Endings \r\n
         // this possibly counts the last \n as a new line
         // this would be done twice then because i do it manually already
-        return text ? (text.match(/^([ \t]*$\r?\n)/gm) || []).length : 0;
+        return text ? (text.match(/^[ \t]*\n$/gm) || []).length : 0;
+        //return text ? (text.match(/^([ \t]*$\r?\n)/gm) || []).length : 0;
         //return text ? (text.match(/(^(\r\n|\n|\r))|^\s*$/gm) || []).length : 0;
         //return text ? (text.match(/^([ \t]*$\r\n)/gm) || []).length : 0;
         //return text ? (text.match(/^[ \t]*((\r?\n)|(\r?\n|$))$/gm) || []).length : 0;

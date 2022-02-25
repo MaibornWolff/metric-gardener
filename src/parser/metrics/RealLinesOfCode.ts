@@ -76,7 +76,7 @@ export class RealLinesOfCode implements Metric {
 
     private countEmptyLines(text: string) {
         // from https://stackoverflow.com/questions/28260659/how-to-count-empty-lines-inside-a-string-in-javascript/28260746
-        return text ? (text.match(/^[ \t]*$/gm) || []).length : 0;
+        return text ? (text.match(/^[ \t]*$/g) || []).length : 0;
     }
 
     getName(): string {

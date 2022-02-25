@@ -1,7 +1,6 @@
-import { Factory as UsageCollectorFactory } from "./usages/Factory";
+import { Factory as UsageCollectorFactory } from "./typeUsages/Factory";
 import { NamespaceCollector } from "./NamespaceCollector";
 import { ParseFile } from "../metrics/Metric";
-import { PublicAccessor } from "./accessors/AbstractCollector";
 
 export class UsagesCollector {
     private usageCollectorFactory = new UsageCollectorFactory();

@@ -1,6 +1,9 @@
 import { AbstractCollector } from "./AbstractCollector";
 
 export class PHPCollector extends AbstractCollector {
+    protected noImportForClassesInSameOrParentNamespaces(): boolean {
+        return false;
+    }
     protected indirectNamespaceReferencing(): boolean {
         return false;
     }

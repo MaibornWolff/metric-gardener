@@ -1,16 +1,16 @@
 import { ExpressionMetricMapping } from "../../helper/Model";
-import { NamespaceDefinition } from "../../collectors/namespaces/AbstractCollector";
+import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector";
 import {
     UnresolvedCallExpression,
-    UsageCandidate,
-} from "../../collectors/usages/AbstractCollector";
-import { NamespaceCollector } from "../../collectors/NamespaceCollector";
-import { UsagesCollector } from "../../collectors/UsagesCollector";
+    TypeUsageCandidate,
+} from "../../resolver/typeUsages/AbstractCollector";
+import { NamespaceCollector } from "../../resolver/NamespaceCollector";
+import { UsagesCollector } from "../../resolver/UsagesCollector";
 import { CouplingMetric, Relationship, ParseFile, CouplingMetrics } from "../Metric";
 import { getParseFile } from "../../helper/Helper";
 import { countTransitiveImplements } from "./TransitiveImplementsCounter";
-import { PublicAccessorCollector } from "../../collectors/PublicAccessorCollector";
-import { PublicAccessor } from "../../collectors/accessors/AbstractCollector";
+import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
+import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 
 export class Coupling implements CouplingMetric {
@@ -32,9 +32,9 @@ export class Coupling implements CouplingMetric {
     }
 
     calculate(parseFiles: ParseFile[]) {
-        let namespaces: Map<string, NamespaceDefinition> = new Map();
-        const publicAccessors = new Map<string, PublicAccessor[]>();
-        let usagesCandidates: UsageCandidate[] = [];
+        let namespaces: Map<string, FullyQTN> = new Map();
+        const publicAccessors = new Map<string, Accessor[]>();
+        let usagesCandidates: TypeUsageCandidate[] = [];
         const unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
 
         // preprocessing
@@ -80,6 +80,17 @@ export class Coupling implements CouplingMetric {
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
         let { tree, rootFiles } = this.buildDependencyTree(relationships, couplingMetrics);
 
+        // TODO We do not really need transitive dependencies?
+        //  would lead to bette results in call expression resolvings
+        //  but not really needed, because dependencies are not lost rather they are covered transitively.
+        const additionalTransitiveRelationships = countTransitiveImplements(tree, couplingMetrics);
+        relationships = relationships.concat(additionalTransitiveRelationships);
+
+        couplingMetrics = this.calculateCouplingMetrics(relationships);
+        const updatedTree = this.buildDependencyTree(relationships, couplingMetrics);
+        tree = updatedTree.tree;
+        rootFiles = updatedTree.rootFiles;
+
         const additionalRelationships = getAdditionalRelationships(
             tree,
             unresolvedCallExpressions,
@@ -90,11 +101,6 @@ export class Coupling implements CouplingMetric {
         console.log("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
-        const updatedTree = this.buildDependencyTree(relationships, couplingMetrics);
-        tree = updatedTree.tree;
-        rootFiles = updatedTree.rootFiles;
-
-        //countTransitiveImplements(tree, couplingMetrics);
 
         console.log("\n\n\n\n\nHILFE", this.filesWithMultipleNamespaces, "\n\n\n\n\n");
 
@@ -105,8 +111,8 @@ export class Coupling implements CouplingMetric {
     }
 
     private getRelationships(
-        namespaces: Map<string, NamespaceDefinition>,
-        usagesCandidates: UsageCandidate[]
+        namespaces: Map<string, FullyQTN>,
+        usagesCandidates: TypeUsageCandidate[]
     ): Relationship[] {
         return usagesCandidates.flatMap((usage) => {
             const namespaceSource = namespaces.get(usage.usedNamespace);
@@ -119,6 +125,13 @@ export class Coupling implements CouplingMetric {
             ) {
                 this.alreadyAddedRelationships.add(uniqueId);
 
+                // In C# we do not know if a base class is implemented or just extended
+                // But if class type is interface, then it must be implemented instead of extended
+                const fixedUsageType =
+                    usage.usageType === "implements" && namespaceSource.classType !== "interface"
+                        ? "extends"
+                        : usage.usageType;
+
                 // TODO: fromClassName and toClassName are broken
                 return [
                     {
@@ -128,7 +141,7 @@ export class Coupling implements CouplingMetric {
                         toSource: namespaceSource.source,
                         fromClassName: namespaceSource.className,
                         toClassName: namespaceSource.className,
-                        usageType: usage.usageType,
+                        usageType: fixedUsageType,
                         implementsCount: namespaceSource.implementedClasses.length,
                     },
                 ];

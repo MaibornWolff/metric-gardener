@@ -1,24 +1,20 @@
-import { NamespaceDefinition } from "../AbstractCollector";
+import { FullyQTN } from "../AbstractCollector";
 import { TreeParser } from "../../../helper/TreeParser";
 import { QueryBuilder } from "../../../queries/QueryBuilder";
 import { grammars } from "../../../helper/Grammars";
 import { formatCaptures } from "../../../helper/Helper";
 import { ParseFile } from "../../../metrics/Metric";
 
-export class QueryResolver {
-    protected cache: Map<string, Map<string, NamespaceDefinition>> = new Map();
+export class QueryStrategy {
+    protected cache: Map<string, Map<string, FullyQTN>> = new Map();
 
-    getNamespaces(
-        parseFile: ParseFile,
-        namespaceDelimiter,
-        namespacesQuery
-    ): Map<string, NamespaceDefinition> {
+    getFullyQTNs(parseFile: ParseFile, namespaceDelimiter, namespacesQuery): Map<string, FullyQTN> {
         const cachedItem = this.cache.get(parseFile.filePath);
         if (cachedItem !== undefined) {
             return cachedItem;
         }
 
-        const namespaceDeclarations: Map<string, NamespaceDefinition> = new Map();
+        const namespaceDeclarations: Map<string, FullyQTN> = new Map();
 
         const tree = TreeParser.getParseTree(parseFile);
 
@@ -47,7 +43,7 @@ export class QueryResolver {
 
             while (hasClassDeclaration) {
                 const className = textCaptures[index].text;
-                const namespaceDeclaration: NamespaceDefinition = {
+                const namespaceDeclaration: FullyQTN = {
                     namespace: namespaceName,
                     className: className,
                     classType: isInterface ? "interface" : "class",
@@ -80,7 +76,9 @@ export class QueryResolver {
 
                 while (hasImplements) {
                     const implementedClassName = textCaptures[index].text;
-                    namespaceDeclaration.implementedClasses.push(implementedClassName);
+                    if (!namespaceDeclaration.implementedClasses.includes(implementedClassName)) {
+                        namespaceDeclaration.implementedClasses.push(implementedClassName);
+                    }
 
                     // Jump to next capture, no matter if implements class or any other
                     index++;

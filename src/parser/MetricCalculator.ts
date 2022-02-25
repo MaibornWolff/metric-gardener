@@ -1,7 +1,6 @@
 import { McCabeComplexity } from "./metrics/McCabeComplexity";
 import { Functions } from "./metrics/Functions";
 import { Classes } from "./metrics/Classes";
-import path from "path";
 import fs from "fs";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
@@ -10,7 +9,7 @@ import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 
-export class MetricsParser {
+export class MetricCalculator {
     private readonly fileMetrics: Metric[] = [];
     private config: Configuration;
 

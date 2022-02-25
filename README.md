@@ -22,23 +22,25 @@ Install and parse your sources:
 
 -   Unstable (missing or incomplete unit tests)
     -   C#
+    -   C++
     -   Java
     -   JavaScript
     -   Kotlin
+    -   Python
 
 ### Supported Metrics
 
 -   mcc
 -   functions
 -   classes
--   lines_of_code (not unit tested)
--   comment_lines (not unit tested)
--   real_lines_of_code (not unit tested)
+-   lines_of_code (not unit tested and broken for different line endings)
+-   comment_lines (not unit tested and broken for different line endings)
+-   real_lines_of_code (not unit tested and broken for different line endings)
 
 ### Coupling Metrics
 
 **Supported for C# and PHP**<br>
-Activate dependency analysis by passing `--parse-dependencies`
+Activate dependency analysis by passing `--parseDependencies`
 
 -   Coupling Between Objects (CBO)
 -   Incoming Dependencies

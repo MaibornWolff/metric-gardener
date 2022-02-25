@@ -1,7 +1,7 @@
 {
-    "name": "galaxy-parser",
+    "name": "metric-gardener",
     "version": "0.1.0",
-    "description": "A to calculate metrics for lots of languages",
+    "description": "A tool to calculate metrics for imperative and object-oriented languages",
     "main": "dist/app.js",
     "scripts": {
         "start": "tsc && node dist/app.js",

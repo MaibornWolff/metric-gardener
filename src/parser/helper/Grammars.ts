@@ -11,6 +11,7 @@ import TypeScript from "tree-sitter-typescript";
 export const grammars = new Map([
     ["cs", CSharp],
     ["cpp", CPlusPlus],
+    ["h", CPlusPlus],
     ["go", GO],
     ["java", Java],
     ["js", JavaScript],

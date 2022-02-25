@@ -56,6 +56,7 @@ This will have no effect until you have mapped the changed and new expressions m
 
 ### TODOs
 
+-   Remove metrics from relationship list
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
 -   Improve performance in Abstract Usage Collector (add candidates only if they can be found in previously retrieved fully qualified type names in other words the Namespace Collector).

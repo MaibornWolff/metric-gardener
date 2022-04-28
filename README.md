@@ -33,9 +33,9 @@ Install and parse your sources:
 -   mcc
 -   functions
 -   classes
--   lines_of_code (not unit tested and broken for different line endings)
--   comment_lines (not unit tested and broken for different line endings)
--   real_lines_of_code (not unit tested and broken for different line endings)
+-   lines_of_code (not unit tested)
+-   comment_lines (not unit tested)
+-   real_lines_of_code (not unit tested)
 
 ### Coupling Metrics
 
@@ -58,16 +58,15 @@ This will have no effect until you have mapped the changed and new expressions m
 
 ### TODOs
 
+-   Start Rule Expression for python is normal expression in other languages:
 -   Map start_rule for python
--   No duplicate code for metrics like rloc that depends upon other metric results.
+-   Introduce Conditions for mapped Statements, to control for what languages they are considered to be counted for a metric.
 -   Rename callExpression Resolver to accessor Resolver
 -   Remove metrics from relationship list
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
 -   Improve performance in Abstract Usage Collector (add candidates only if they can be found in previously retrieved fully qualified type names in other words the Namespace Collector).
--   Start Rule Expression for python is normal expression in other languages:
--   Introduce Conditions for mapped Statements, to control for what languages they are considered to be counted for a metric.
--   Document Query Captures to be able to implement new languages
+-   Document the used Query Captures to be able to implement new languages as a developer
 -   Verbose Mode to output calculated metrics (-v), executed queries (-vv), ect.
 -   Mapped Expressions: Query expressions for current language only instead of brute force all available metric expressions
 -   npm publish / github repo
@@ -76,7 +75,6 @@ This will have no effect until you have mapped the changed and new expressions m
 -   Performance & Duplicate Adds (see TODO comments)
 -   Remove neo4j (but maybe export relationships as a graph file?)
 -   Typescript coupling graph?
--   CSharp Dependency Parsing finalization? (havy candidate building not implemented yet, not all object access expressions are covered so far)
 -   Write command to add new language and map expressions
 
 -   Refactor Abstract Usage Collector (small resolver classes?)

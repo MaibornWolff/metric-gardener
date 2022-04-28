@@ -29,22 +29,11 @@ export class LinesOfCode implements Metric {
         }
 
         const startRuleTextCaptures = formatCaptures(tree, startRuleCaptures);
-        console.log(
-            parseFile,
-            matches,
-            matches[0].captures[0],
-            startRuleCaptures,
-            startRuleTextCaptures
-        );
-
-        const emptyLines = this.countEmptyLines(startRuleTextCaptures[0].text);
-        console.log("Empty Lines", emptyLines);
 
         let loc = matches[0].captures[0].node.endPosition.row;
 
         // Last line is an empty one, so add one line
         loc += startRuleTextCaptures[0].text.endsWith("\n") ? 1 : 0;
-        loc = Math.max(0, loc - emptyLines);
 
         console.log(this.getName() + " - " + loc);
 
@@ -52,20 +41,6 @@ export class LinesOfCode implements Metric {
             metricName: this.getName(),
             metricValue: loc,
         };
-    }
-
-    private countEmptyLines(text: string) {
-        // from https://stackoverflow.com/questions/28260659/how-to-count-empty-lines-inside-a-string-in-javascript/28260746
-        // ignore leading tabs and spaces
-        // TODO not working for Windows Line Endings \r\n
-        // this possibly counts the last \n as a new line
-        // this would be done twice then because i do it manually already
-        return text ? (text.match(/^[ \t]*\n$/gm) || []).length : 0;
-        //return text ? (text.match(/^([ \t]*$\r?\n)/gm) || []).length : 0;
-        //return text ? (text.match(/(^(\r\n|\n|\r))|^\s*$/gm) || []).length : 0;
-        //return text ? (text.match(/^([ \t]*$\r\n)/gm) || []).length : 0;
-        //return text ? (text.match(/^[ \t]*((\r?\n)|(\r?\n|$))$/gm) || []).length : 0;
-        //return text ? (text.match(/^[ \t]*$/gm) || []).length : 0;
     }
 
     getName(): string {

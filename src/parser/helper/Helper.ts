@@ -71,3 +71,21 @@ export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metr
     });
     return statements;
 }
+
+export function getExpressionsByCategory(
+    allNodeTypes: ExpressionMetricMapping[],
+    metricName: string,
+    category: string
+) {
+    const expressions: string[] = [];
+    allNodeTypes.forEach((expressionMapping) => {
+        if (
+            expressionMapping.metrics.includes(metricName) &&
+            expressionMapping.category === category
+        ) {
+            const { expression } = expressionMapping;
+            expressions.push(expression);
+        }
+    });
+    return expressions;
+}

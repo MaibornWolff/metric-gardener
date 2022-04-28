@@ -58,6 +58,9 @@ This will have no effect until you have mapped the changed and new expressions m
 
 ### TODOs
 
+-   Map start_rule for python
+-   No duplicate code for metrics like rloc that depends upon other metric results.
+-   Rename callExpression Resolver to accessor Resolver
 -   Remove metrics from relationship list
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building

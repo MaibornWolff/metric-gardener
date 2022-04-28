@@ -6,7 +6,6 @@ import { Metric, MetricResult, ParseFile } from "./Metric";
 import { formatCaptures } from "../helper/Helper";
 
 export class RealLinesOfCode implements Metric {
-    private classesStatementSuperSet: string[] = [];
     private startRuleStatementsSuperSet: string[] = [];
     private commentStatementsSuperSet: string[] = [];
 
@@ -23,8 +22,6 @@ export class RealLinesOfCode implements Metric {
                 } else if (expressionMapping.category === "comment") {
                     this.commentStatementsSuperSet.push("(" + expression + ") @" + expression);
                 }
-
-                this.classesStatementSuperSet.push("(" + expression + ") @" + expression);
             }
         });
     }
@@ -75,8 +72,7 @@ export class RealLinesOfCode implements Metric {
     }
 
     private countEmptyLines(text: string) {
-        // from https://stackoverflow.com/questions/28260659/how-to-count-empty-lines-inside-a-string-in-javascript/28260746
-        return text ? (text.match(/^[ \t]*$/g) || []).length : 0;
+        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ \t]*$/.test(entry)).length;
     }
 
     getName(): string {

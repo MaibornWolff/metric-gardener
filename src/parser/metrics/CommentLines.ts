@@ -2,18 +2,25 @@ import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
-import { getQueryStatements } from "../helper/Helper";
+import { getExpressionsByCategory, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import { SyntaxNode } from "tree-sitter";
 
 export class CommentLines implements Metric {
     private readonly statementsSuperSet: string[] = [];
+    private readonly commentExpressions: string[] = [];
+    private excludedFileHeaderComments: SyntaxNode[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
+        this.commentExpressions = getExpressionsByCategory(allNodeTypes, this.getName(), "comment");
     }
 
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
+        this.excludedFileHeaderComments = this.getExcludedFileHeaderComments(
+            tree.rootNode.children
+        );
 
         const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
         queryBuilder.setStatements(this.statementsSuperSet);
@@ -23,7 +30,18 @@ export class CommentLines implements Metric {
 
         const commentLines = matches.reduce((accumulator, match) => {
             const captureNode = match.captures[0].node;
-            return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
+
+            if (
+                this.isFileHeaderComment(captureNode) ||
+                this.isCommentFollowedByClass(captureNode)
+            ) {
+                return accumulator;
+            }
+
+            const commentLinesWithText = this.findTextLines(captureNode.text).length;
+            const docBlockLines = this.findDocBlockLines(captureNode.text).length;
+
+            return accumulator + commentLinesWithText - docBlockLines;
         }, 0);
 
         console.log(this.getName() + " - " + commentLines);
@@ -32,6 +50,47 @@ export class CommentLines implements Metric {
             metricName: this.getName(),
             metricValue: commentLines,
         };
+    }
+
+    private isCommentFollowedByClass(node: SyntaxNode) {
+        // this is not language independent
+        return node.nextSibling?.type.includes("class");
+    }
+
+    private findTextLines(text: string) {
+        return text.split(/\r\n|\r|\n/g).filter((entry) => /[a-zA-Z0-9]+/g.test(entry));
+    }
+
+    private findDocBlockLines(text: string) {
+        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ *]*@[a-z]+/g.test(entry));
+    }
+
+    private isFileHeaderComment(captureNode: SyntaxNode) {
+        return this.excludedFileHeaderComments.some((excludedComment) => {
+            return (
+                excludedComment.startPosition.row === captureNode.startPosition.row &&
+                excludedComment.startPosition.column === captureNode.startPosition.column &&
+                excludedComment.endPosition.row === captureNode.endPosition.row &&
+                excludedComment.endPosition.column === captureNode.endPosition.column
+            );
+        });
+    }
+
+    private getExcludedFileHeaderComments(rootNodeChildren): SyntaxNode[] {
+        const excludedComments: SyntaxNode[] = [];
+        const clonedChildren = [...rootNodeChildren];
+
+        if (clonedChildren[0] && this.commentExpressions.includes(clonedChildren[0]?.type)) {
+            // The very first elements that are comments are assumed to belong to a licence/copyright comment
+            let hasFollowingComments = this.commentExpressions.includes(clonedChildren[0]?.type);
+
+            while (hasFollowingComments) {
+                excludedComments.push(clonedChildren.shift() as SyntaxNode);
+                hasFollowingComments = this.commentExpressions.includes(clonedChildren[0]?.type);
+            }
+        }
+
+        return excludedComments;
     }
 
     getName(): string {

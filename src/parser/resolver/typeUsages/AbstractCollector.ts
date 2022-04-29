@@ -90,7 +90,7 @@ export abstract class AbstractCollector {
 
         console.log(importsTextCaptures);
 
-        const usagesOfFile: ImportReference[] = [];
+        const importsOfFile: ImportReference[] = [];
 
         let usageAliasPrefix = "";
         for (const importTextCapture of importsTextCaptures) {
@@ -99,7 +99,7 @@ export abstract class AbstractCollector {
                 continue;
             }
             if (importTextCapture.name === "namespace_use_alias_suffix") {
-                const matchingUsage = usagesOfFile[usagesOfFile.length - 1];
+                const matchingUsage = importsOfFile[importsOfFile.length - 1];
                 matchingUsage.alias = importTextCapture.text;
 
                 this.importsBySuffixOrAlias
@@ -123,7 +123,7 @@ export abstract class AbstractCollector {
                 usageType: "usage",
             };
 
-            usagesOfFile.push(importReference);
+            importsOfFile.push(importReference);
             this.importsBySuffixOrAlias
                 .get(parseFile.filePath)
                 ?.set(
@@ -138,7 +138,7 @@ export abstract class AbstractCollector {
             }
         }
 
-        return usagesOfFile;
+        return importsOfFile;
     }
 
     private getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {

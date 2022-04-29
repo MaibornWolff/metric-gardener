@@ -8,7 +8,6 @@ import { NamespaceCollector } from "../../resolver/NamespaceCollector";
 import { UsagesCollector } from "../../resolver/UsagesCollector";
 import { CouplingMetric, Relationship, ParseFile, CouplingMetrics } from "../Metric";
 import { getParseFile } from "../../helper/Helper";
-import { countTransitiveImplements } from "./TransitiveImplementsCounter";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
@@ -78,18 +77,7 @@ export class Coupling implements CouplingMetric {
         console.log("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
-        let { tree, rootFiles } = this.buildDependencyTree(relationships, couplingMetrics);
-
-        // TODO We do not really need transitive dependencies?
-        //  would lead to bette results in call expression resolvings
-        //  but not really needed, because dependencies are not lost rather they are covered transitively.
-        const additionalTransitiveRelationships = countTransitiveImplements(tree, couplingMetrics);
-        relationships = relationships.concat(additionalTransitiveRelationships);
-
-        couplingMetrics = this.calculateCouplingMetrics(relationships);
-        const updatedTree = this.buildDependencyTree(relationships, couplingMetrics);
-        tree = updatedTree.tree;
-        rootFiles = updatedTree.rootFiles;
+        const { tree, rootFiles } = this.buildDependencyTree(relationships, couplingMetrics);
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
@@ -101,8 +89,6 @@ export class Coupling implements CouplingMetric {
         console.log("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
-
-        console.log("\n\n\n\n\nHILFE", this.filesWithMultipleNamespaces, "\n\n\n\n\n");
 
         return {
             relationships: relationships,
@@ -133,6 +119,7 @@ export class Coupling implements CouplingMetric {
                         : usage.usageType;
 
                 // TODO: fromClassName and toClassName are broken
+                //  I think they can be removed if we do not use them anymore.
                 return [
                     {
                         fromNamespace: usage.fromNamespace,

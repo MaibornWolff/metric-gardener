@@ -39,7 +39,6 @@ export abstract class AbstractCollector {
 
             // first index must be the return type
             // second index must be the accessor name
-            // third index (not_empty_accessor flag) must be ignored, if present
             for (let index = 0; index < accessorsTextCaptures.length; index += 1) {
                 const publicAccessor: Accessor = {
                     name: "",

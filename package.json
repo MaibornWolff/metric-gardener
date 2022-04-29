@@ -19,7 +19,6 @@
     "dependencies": {
         "@ganezdragon/tree-sitter-perl": "github:ganezdragon/tree-sitter-perl",
         "javascript-lp-solver": "^0.4.24",
-        "neo4j-driver": "^4.4.1",
         "tree-parser-erlang": "github:AbstractMachinesLab/tree-sitter-erlang",
         "tree-sitter": "^0.20.0",
         "tree-sitter-agda": "github:tree-sitter/tree-sitter-agda",

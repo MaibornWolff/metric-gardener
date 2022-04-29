@@ -17,33 +17,6 @@ export function getAdditionalRelationships(
             continue;
         }
 
-        // This is done to find calls to an interface that is not directly implemented
-        // Instead one implemented interface can implement other interfaces
-        // So this is a (hidden) transitive dependency
-        const transitiveImplementedFileDependencies: Relationship[] = [];
-        for (const fileDependency of fileDependencies) {
-            const dependenciesOfUsedClass = tree.get(fileDependency.toSource);
-            for (const dependencyOfUsedClass of dependenciesOfUsedClass ?? []) {
-                //if ((dependencyOfUsedClass.usageType === "implements" || dependencyOfUsedClass.usageType === "extends") && dependencyOfUsedClass.fromSource !== dependencyOfUsedClass.toSource) {
-                if (
-                    dependencyOfUsedClass.usageType === "implements" &&
-                    dependencyOfUsedClass.fromSource !== dependencyOfUsedClass.toSource
-                ) {
-                    console.log(
-                        "add trasitive implements dependency for",
-                        filePath,
-                        fileDependency,
-                        "dependency:",
-                        dependencyOfUsedClass
-                    );
-
-                    // TODO: To cover all cases, this must be done recursively
-                    //  I am not sure, if this can be removed after Struct101 comparison
-                    transitiveImplementedFileDependencies.push({ ...dependencyOfUsedClass });
-                }
-            }
-        }
-
         console.log("RESOLVING:", fileDependencies);
 
         const processedPublicAccessors = new Set<string>();
@@ -89,11 +62,11 @@ export function getAdditionalRelationships(
                         continue;
                     }
 
-                    // Currently, the first matching accessor is going to be added as a dependency
-                    // This might not be correct, if more than one accessors are matching.
-                    // TODO in this case: Add both dependencies instead of adding one randomly.
-                    //  this probably adds actually not existing dependencies,
-                    //  but at the end the real dependency is not lost and included in the results.
+                    // Warning in case of Accessor Conflicts:
+                    // In case that multiple accessors would fit the call expression,
+                    // add both of them to not lose the correct dependency.
+                    // this might lead to higher coupling values,
+                    // but it is not that crucial as shown in the master thesis related to MetricGardener
                     for (const namespace of accessor.namespaces) {
                         const fullyQualifiedNameCandidate =
                             namespace.namespace +
@@ -101,38 +74,6 @@ export function getAdditionalRelationships(
                             namespace.className;
 
                         console.log("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
-
-                        const calledDependencyInImplementsChain =
-                            transitiveImplementedFileDependencies.find((dependency) => {
-                                return dependency.toNamespace === fullyQualifiedNameCandidate;
-                            });
-                        if (calledDependencyInImplementsChain !== undefined) {
-                            calledDependencyInImplementsChain.fromNamespace =
-                                fileDependencies[0].fromNamespace;
-                            calledDependencyInImplementsChain.fromSource =
-                                fileDependencies[0].fromSource;
-                            calledDependencyInImplementsChain.usageType = "usage";
-                            calledDependencyInImplementsChain.implementsCount = 0;
-
-                            console.log(
-                                "Transitive Implements Chain Method called. Add:",
-                                calledDependencyInImplementsChain
-                            );
-
-                            const uniqueId =
-                                calledDependencyInImplementsChain.toNamespace +
-                                calledDependencyInImplementsChain.fromNamespace;
-
-                            if (!alreadyAddedRelationships.has(uniqueId)) {
-                                fileAdditionalRelationships.push(calledDependencyInImplementsChain);
-                                alreadyAddedRelationships.add(uniqueId);
-                                if (added) {
-                                    console.log("ACCESSOR CONFLICT transitives");
-                                }
-                                added = 1;
-                            }
-                            break;
-                        }
 
                         // FirstAccessor is a property or method
                         // The type of myVariable must be an already added dependency of the current base type/class (filePath),
@@ -153,8 +94,6 @@ export function getAdditionalRelationships(
                         );
 
                         if (baseDependency !== undefined) {
-                            const prevAdded = added;
-
                             added = resolveAccessorReturnType(
                                 baseDependency,
                                 accessor,
@@ -163,16 +102,7 @@ export function getAdditionalRelationships(
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships
                             );
-
-                            if (added) {
-                                if (prevAdded) {
-                                    console.log("ACCESSOR CONFLICT baseDependency");
-                                }
-
-                                break;
-                            }
                         } else if (callExpressionDependency !== undefined) {
-                            const prevAdded = added;
                             added = resolveAccessorReturnType(
                                 callExpressionDependency,
                                 accessor,
@@ -181,18 +111,15 @@ export function getAdditionalRelationships(
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships
                             );
-                            if (prevAdded && added) {
-                                console.log("ACCESSOR CONFLICT callExpressionDependency");
-                            }
                         }
 
                         if (added) {
+                            // Iterate only for the first namespace of an added accessor:
+                            // One namespace of the accessor is fitting and
+                            // the corresponding accessor was added as a dependency
+                            // It seems not necessary to check the other namespaces of the accessor
                             break;
                         }
-                    }
-
-                    if (added) {
-                        //break;
                     }
                 }
             }

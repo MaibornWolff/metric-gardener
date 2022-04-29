@@ -61,7 +61,8 @@ This will have no effect until you have mapped the changed and new expressions m
 Next Steps:
 
 -   Apply new activated_for_languages flag in node-types-mapped.config for conflicting expressions.
--   Document the used Query Captures to be able to implement new languages as a developer
+-   Write Unit tests for basic metrics for other supported languages
+-   Documentation, e.g.: Document the used Query Captures to be able to implement new languages as a developer
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   npm publish / github repo
 

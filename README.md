@@ -60,9 +60,7 @@ This will have no effect until you have mapped the changed and new expressions m
 
 Next Steps:
 
--   Map start_rule for python
--   Start Rule Expression for python is normal expression in other languages:
--   Introduce Conditions for mapped Statements, to control for what languages they are considered to be counted for a metric.
+-   Apply new activated_for_languages flag in node-types-mapped.config for conflicting expressions.
 -   Document the used Query Captures to be able to implement new languages as a developer
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   npm publish / github repo

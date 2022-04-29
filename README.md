@@ -47,6 +47,10 @@ Activate dependency analysis by passing `--parseDependencies`
 -   Outgoing Dependencies
 -   Instability: Outgoing Dependencies / (Outgoing Dependencies + Incoming Dependencies)
 
+**Limitations:**<br>
+
+-   Multiple, nested Namespace Declarations within one .cs file are not covered so far and are ignored during the calculation of coupling.
+
 ### Maintenance of tree-sitter grammars
 
 Update grammars of programming languages to be up-to-date

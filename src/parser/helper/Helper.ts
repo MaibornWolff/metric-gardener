@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { ExpressionMetricMapping } from "./Model";
+import { ExpressionMetricMapping, ExpressionQueryStatement } from "./Model";
 import { ParseFile } from "../metrics/Metric";
 
 export function formatCaptures(tree, captures) {
@@ -59,14 +59,18 @@ export function findFilesRecursively(
 }
 
 export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {
-    const statements: string[] = [];
+    const statements: ExpressionQueryStatement[] = [];
     allNodeTypes.forEach((expressionMapping) => {
         if (
             expressionMapping.metrics.includes(metricName) &&
             expressionMapping.type === "statement"
         ) {
-            const { expression } = expressionMapping;
-            statements.push("(" + expression + ") @" + expression);
+            const queryStatement = new ExpressionQueryStatement(
+                expressionMapping.expression,
+                expressionMapping.activated_for_languages
+            );
+
+            statements.push(queryStatement);
         }
     });
     return statements;

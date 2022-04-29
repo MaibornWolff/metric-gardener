@@ -1,13 +1,13 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
-import { ExpressionMetricMapping } from "../helper/Model";
+import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getExpressionsByCategory, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { SyntaxNode } from "tree-sitter";
 
 export class CommentLines implements Metric {
-    private readonly statementsSuperSet: string[] = [];
+    private readonly statementsSuperSet: QueryStatementInterface[] = [];
     private readonly commentExpressions: string[] = [];
     private excludedFileHeaderComments: SyntaxNode[] = [];
 
@@ -22,7 +22,11 @@ export class CommentLines implements Metric {
             tree.rootNode.children
         );
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
         queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();

@@ -1,16 +1,19 @@
 import Parser, { Query } from "tree-sitter";
+import { QueryStatementInterface } from "../helper/Model";
 
 export class QueryBuilder {
     private readonly treeSitterLanguage: any;
     private tree: Parser.Tree;
-    private statements: string[] = [];
+    private readonly fileExtension: string;
+    private statements: QueryStatementInterface[] = [];
 
-    constructor(treeSitterLanguage: any, tree: Parser.Tree) {
+    constructor(treeSitterLanguage: any, tree: Parser.Tree, fileExtension: string) {
         this.treeSitterLanguage = treeSitterLanguage;
         this.tree = tree;
+        this.fileExtension = fileExtension;
     }
 
-    setStatements(statements: string[]) {
+    setStatements(statements: QueryStatementInterface[]) {
         this.statements = statements;
     }
 
@@ -43,11 +46,19 @@ export class QueryBuilder {
         const availableStatements: string[] = [];
 
         for (const statementCandidate of this.statements) {
+            if (!statementCandidate.activatedFor(this.fileExtension)) {
+                continue;
+            }
+
             try {
-                const metricsQuery = new Query(this.treeSitterLanguage, statementCandidate);
+                const statementQuery = statementCandidate.toQuery();
+                const metricsQuery = new Query(
+                    this.treeSitterLanguage,
+                    statementCandidate.toQuery()
+                );
                 metricsQuery.matches(this.tree.rootNode);
 
-                availableStatements.push(statementCandidate);
+                availableStatements.push(statementQuery);
             } catch (error) {
                 // This error can be ignored.
                 // The specific statement seems not to be available for current language

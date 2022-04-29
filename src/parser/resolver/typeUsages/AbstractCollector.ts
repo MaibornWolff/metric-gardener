@@ -4,6 +4,7 @@ import { formatCaptures } from "../../helper/Helper";
 import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
 import { ParseFile } from "../../metrics/Metric";
+import { SimpleQueryStatement } from "../../helper/Model";
 
 export interface ImportReference {
     usedNamespace: string;
@@ -81,8 +82,12 @@ export abstract class AbstractCollector {
     ): ImportReference[] {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-        queryBuilder.setStatements([this.getImportsQuery()]);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
+        queryBuilder.setStatements([new SimpleQueryStatement(this.getImportsQuery())]);
 
         const importsQuery = queryBuilder.build();
         const importsCaptures = importsQuery.captures(tree.rootNode);
@@ -144,8 +149,12 @@ export abstract class AbstractCollector {
     private getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-        queryBuilder.setStatements([this.getGroupedImportsQuery()]);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
+        queryBuilder.setStatements([new SimpleQueryStatement(this.getGroupedImportsQuery())]);
 
         const groupedImportsQuery = queryBuilder.build();
         const importCaptures = groupedImportsQuery.captures(tree.rootNode);
@@ -217,8 +226,12 @@ export abstract class AbstractCollector {
     ) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-        queryBuilder.setStatements([this.getUsagesQuery()]);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.filePath
+        );
+        queryBuilder.setStatements([new SimpleQueryStatement(this.getUsagesQuery())]);
 
         const usagesQuery = queryBuilder.build();
         const usagesCaptures = usagesQuery.captures(tree.rootNode);

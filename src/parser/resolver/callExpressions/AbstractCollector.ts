@@ -4,6 +4,7 @@ import { QueryBuilder } from "../../queries/QueryBuilder";
 import { grammars } from "../../helper/Grammars";
 import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
+import { SimpleQueryStatement } from "../../helper/Model";
 
 export interface Accessor {
     name: string;
@@ -23,8 +24,12 @@ export abstract class AbstractCollector {
 
         if (this.getAccessorsQuery()) {
             const tree = TreeParser.getParseTree(parseFile);
-            const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-            queryBuilder.setStatements([this.getAccessorsQuery()]);
+            const queryBuilder = new QueryBuilder(
+                grammars.get(parseFile.language),
+                tree,
+                parseFile.language
+            );
+            queryBuilder.setStatements([new SimpleQueryStatement(this.getAccessorsQuery())]);
 
             const publicAccessorsQuery = queryBuilder.build();
             const publicAccessorsCaptures = publicAccessorsQuery.captures(tree.rootNode);

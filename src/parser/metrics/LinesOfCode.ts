@@ -1,12 +1,12 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
-import { ExpressionMetricMapping } from "../helper/Model";
+import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { formatCaptures, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 
 export class LinesOfCode implements Metric {
-    private readonly statementsSuperSet: string[] = [];
+    private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
@@ -15,7 +15,11 @@ export class LinesOfCode implements Metric {
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
         queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();

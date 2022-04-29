@@ -11,7 +11,6 @@ export interface Relationship {
     fromClassName: string;
     toClassName: string;
     usageType: string | "usage" | "extends" | "implements";
-    implementsCount?: number;
 }
 
 export interface CouplingMetrics {
@@ -19,8 +18,6 @@ export interface CouplingMetrics {
     incoming_dependencies: number;
     coupling_between_objects: number;
     instability: number;
-    implementsCount: number;
-    namespace: string[];
 }
 
 export interface CouplingResult {

@@ -4,6 +4,7 @@ import { QueryBuilder } from "../../../queries/QueryBuilder";
 import { grammars } from "../../../helper/Grammars";
 import { formatCaptures } from "../../../helper/Helper";
 import { ParseFile } from "../../../metrics/Metric";
+import { SimpleQueryStatement } from "../../../helper/Model";
 
 export class QueryStrategy {
     protected cache: Map<string, Map<string, FullyQTN>> = new Map();
@@ -18,8 +19,12 @@ export class QueryStrategy {
 
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
-        queryBuilder.setStatements([namespacesQuery]);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
+        queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
 
         const query = queryBuilder.build();
         const captures = query.captures(tree.rootNode);

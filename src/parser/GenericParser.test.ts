@@ -26,17 +26,17 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(6);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(7);
         });
 
-        it("should count multiple return statements within functions and methods correctly", () => {
+        it("should not count multiple return statements within functions and methods like sonar", () => {
             const inputPath = fs.realpathSync(
                 phpTestResourcesPath + "multiple-return-statements.php"
             );
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
 
         it("should not count any class declaration", () => {
@@ -88,7 +88,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(6);
+            expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(7);
         });
     });
 
@@ -106,17 +106,17 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(8);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(9);
         });
 
-        it("should count multiple return statements within functions and methods correctly", () => {
+        it("should not count multiple return statements within functions and methods correctly", () => {
             const inputPath = fs.realpathSync(
                 tsTestResourcesPath + "multiple-return-statements.ts"
             );
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
 
         it("should not count any class declaration", () => {
@@ -127,7 +127,7 @@ describe("GenericParser", () => {
             expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(0);
         });
 
-        it("should count case statements correctly", () => {
+        it("should count case but no default statements correctly", () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "case-statements.ts");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
@@ -189,14 +189,14 @@ describe("GenericParser", () => {
             expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(2);
         });
 
-        it("should count multiple return statements within functions and methods correctly", () => {
+        it("should not count multiple return statements within functions and methods correctly", () => {
             const inputPath = fs.realpathSync(
                 goTestResourcesPath + "multiple-return-statements.go"
             );
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(3);
         });
 
         it("should not count any class declaration", () => {

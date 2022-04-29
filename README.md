@@ -58,29 +58,36 @@ This will have no effect until you have mapped the changed and new expressions m
 
 ### TODOs
 
--   Start Rule Expression for python is normal expression in other languages:
+Next Steps:
+
 -   Map start_rule for python
+-   Start Rule Expression for python is normal expression in other languages:
 -   Introduce Conditions for mapped Statements, to control for what languages they are considered to be counted for a metric.
--   Rename callExpression Resolver to accessor Resolver
--   Remove metrics from relationship list
--   Configurable language specifics (has heavy candidate building, has generics, etc.)
--   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
--   Improve performance in Abstract Usage Collector (add candidates only if they can be found in previously retrieved fully qualified type names in other words the Namespace Collector).
 -   Document the used Query Captures to be able to implement new languages as a developer
--   Verbose Mode to output calculated metrics (-v), executed queries (-vv), ect.
--   Mapped Expressions: Query expressions for current language only instead of brute force all available metric expressions
+-   Configurable language specifics (has heavy candidate building, has generics, etc.)
 -   npm publish / github repo
+
+Performance Optimizations:
+
+-   Mapped Expressions: Query expressions for current language only instead of brute force all available metric expressions
+-   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
+-   Exclude System Namespaces like System in CSharp etc. (Configurable option would also be nice (e.g. exclude NameSpace _UnitTest_))
+-   Improve performance in Abstract Usage Collector (add candidates only if they can be found in previously retrieved fully qualified type names in other words the Namespace Collector).
+
+Refactoring Todos:
+
+-   Rename callExpression Resolver to accessor Resolver
+-   Refactor Abstract Usage Collector (small resolver classes?)
+
+Other TODOs and ideas:
+
+-   Verbose Mode to output calculated metrics (-v), executed queries (-vv), ect.
 -   Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
 -   Implement CK Metrics, Cyclic Dependencies Metric, etc. without neo4j
 -   Performance & Duplicate Adds (see TODO comments)
--   Remove neo4j (but maybe export relationships as a graph file?)
--   Typescript coupling graph?
+-   Export relationships as a graph file
 -   Write command to add new language and map expressions
-
--   Refactor Abstract Usage Collector (small resolver classes?)
--   Exclude System Namespaces like System in CSharp etc. (Configurable option would also be nice (e.g. exclude NameSpace _UnitTest_))
 -   Checkout sample project(s) per language and parse them as an automatically test
 -   ProgressBar
 -   Separate Infrastructure from Domain Code
-
 -   Support more languages

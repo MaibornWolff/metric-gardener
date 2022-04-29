@@ -129,7 +129,6 @@ export class Coupling implements CouplingMetric {
                         fromClassName: namespaceSource.className,
                         toClassName: namespaceSource.className,
                         usageType: fixedUsageType,
-                        implementsCount: namespaceSource.implementedClasses.length,
                     },
                 ];
             }
@@ -217,12 +216,6 @@ export class Coupling implements CouplingMetric {
             this.filesWithMultipleNamespaces.push(parseFile);
         }
 
-        if (!couplingMetrics.namespace.includes(sourceNamespace)) {
-            couplingMetrics.namespace.push(sourceNamespace);
-        }
-
-        couplingMetrics.implementsCount = couplingItem.implementsCount ?? 0;
-
         couplingMetrics[
             direction === "outgoing" ? "outgoing_dependencies" : "incoming_dependencies"
         ] += 1;
@@ -246,8 +239,6 @@ export class Coupling implements CouplingMetric {
             incoming_dependencies: 0,
             coupling_between_objects: 0,
             instability: 0,
-            namespace: [],
-            implementsCount: 0,
         };
     }
 

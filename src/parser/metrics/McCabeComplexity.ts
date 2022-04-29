@@ -1,28 +1,32 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
-import { binaryOperatorTranslations, ExpressionMetricMapping } from "../helper/Model";
+import {
+    ExpressionMetricMapping,
+    ExpressionQueryStatement,
+    OperatorQueryStatement,
+    QueryStatementInterface,
+} from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 
 export class McCabeComplexity implements Metric {
-    private mccStatementsSuperSet: string[] = [];
+    private mccStatementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName())) {
                 if (expressionMapping.type === "statement") {
-                    const { expression, category, operator } = expressionMapping;
+                    const { expression, category, operator, activated_for_languages } =
+                        expressionMapping;
+
                     if (category === "binary_expression" && operator !== undefined) {
                         this.mccStatementsSuperSet.push(
-                            "(" +
-                                category +
-                                ' operator: "' +
-                                operator +
-                                '") @binary_expression_' +
-                                binaryOperatorTranslations.get(operator)
+                            new OperatorQueryStatement(category, operator, activated_for_languages)
                         );
                     } else {
-                        this.mccStatementsSuperSet.push("(" + expression + ") @" + expression);
+                        this.mccStatementsSuperSet.push(
+                            new ExpressionQueryStatement(expression, activated_for_languages)
+                        );
                     }
                 }
             }
@@ -32,7 +36,11 @@ export class McCabeComplexity implements Metric {
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
         queryBuilder.setStatements(this.mccStatementsSuperSet);
 
         const query = queryBuilder.build();

@@ -76,11 +76,6 @@ function buildOutputObject(
         const existingOutputNode = outputNodeReferenceLookUp.get(filePath);
         if (existingOutputNode !== undefined) {
             for (const couplingMetric of Object.keys(metricsMap)) {
-                if (couplingMetric === "namespace") {
-                    existingOutputNode.types = metricsMap.namespace;
-                    // for evaluation purposes only
-                    continue;
-                }
                 existingOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
             }
         } else {
@@ -93,7 +88,6 @@ function buildOutputObject(
 
             output.nodes.push(newOutputNode);
 
-            newOutputNode.types = metricsMap.namespace;
             for (const couplingMetric of Object.keys(metricsMap)) {
                 newOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
             }

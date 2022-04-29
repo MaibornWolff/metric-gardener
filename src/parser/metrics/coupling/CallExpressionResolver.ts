@@ -181,7 +181,6 @@ function resolveAccessorReturnType(
                 const dependencyClone: Relationship = {
                     fromNamespace: matchingDependency.fromNamespace,
                     fromSource: matchingDependency.fromSource,
-                    implementsCount: 0 /* TODO set right count or remove this property because it is used for testing purposes only */,
                     toClassName: accessorFileDependency.toClassName,
                     fromClassName: accessorFileDependency.toClassName,
                     toNamespace: accessorFileDependency.toNamespace,

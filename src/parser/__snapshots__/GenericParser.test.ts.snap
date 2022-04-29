@@ -22,9 +22,9 @@ Object {
       "outgoing_dependencies": 2,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\IParameterTypes.cs" => Object {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 2,
+      "instability": 0.3333333333333333,
       "outgoing_dependencies": 1,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\IAnotherParameterTypes.cs" => Object {
@@ -34,10 +34,10 @@ Object {
       "outgoing_dependencies": 0,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ObjectCreations.cs" => Object {
-      "coupling_between_objects": 7,
+      "coupling_between_objects": 8,
       "incoming_dependencies": 1,
-      "instability": 0.8571428571428571,
-      "outgoing_dependencies": 6,
+      "instability": 0.875,
+      "outgoing_dependencies": 7,
     },
     "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\MyCustomArgumentNullException.cs" => Object {
       "coupling_between_objects": 1,
@@ -106,6 +106,15 @@ Object {
       "toNamespace": "App.CouplingExamples.Library.IAnotherParameterTypes",
       "toSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\IAnotherParameterTypes.cs",
       "usageType": "implements",
+    },
+    Object {
+      "fromClassName": "IParameterTypes",
+      "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
+      "fromSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ObjectCreations.cs",
+      "toClassName": "IParameterTypes",
+      "toNamespace": "App.CouplingExamples.Library.IParameterTypes",
+      "toSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\IParameterTypes.cs",
+      "usageType": "usage",
     },
     Object {
       "fromClassName": "BlubControllerOne1",
@@ -186,7 +195,7 @@ Object {
       "toClassName": "ParameterTypes",
       "toNamespace": "App.CouplingExamples.Library.ParameterTypes",
       "toSource": "C:\\\\Users\\\\CedrikB\\\\projects\\\\node-parser\\\\resources\\\\c-sharp\\\\coupling-examples\\\\Library\\\\ParameterTypes.cs",
-      "usageType": "implements",
+      "usageType": "extends",
     },
     Object {
       "fromClassName": "IParameterTypes",

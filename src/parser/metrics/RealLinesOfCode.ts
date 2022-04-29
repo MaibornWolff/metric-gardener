@@ -1,13 +1,17 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
-import { ExpressionMetricMapping } from "../helper/Model";
+import {
+    ExpressionMetricMapping,
+    ExpressionQueryStatement,
+    QueryStatementInterface,
+} from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { formatCaptures } from "../helper/Helper";
 
 export class RealLinesOfCode implements Metric {
-    private startRuleStatementsSuperSet: string[] = [];
-    private commentStatementsSuperSet: string[] = [];
+    private startRuleStatementsSuperSet: QueryStatementInterface[] = [];
+    private commentStatementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
@@ -15,12 +19,16 @@ export class RealLinesOfCode implements Metric {
                 expressionMapping.metrics.includes(this.getName()) &&
                 expressionMapping.type === "statement"
             ) {
-                const { expression } = expressionMapping;
+                const { expression, activated_for_languages } = expressionMapping;
+                const queryStatement = new ExpressionQueryStatement(
+                    expression,
+                    activated_for_languages
+                );
 
                 if (expressionMapping.category === "start_rule") {
-                    this.startRuleStatementsSuperSet.push("(" + expression + ") @" + expression);
+                    this.startRuleStatementsSuperSet.push(queryStatement);
                 } else if (expressionMapping.category === "comment") {
-                    this.commentStatementsSuperSet.push("(" + expression + ") @" + expression);
+                    this.commentStatementsSuperSet.push(queryStatement);
                 }
             }
         });
@@ -29,7 +37,11 @@ export class RealLinesOfCode implements Metric {
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(grammars.get(parseFile.language), tree);
+        const queryBuilder = new QueryBuilder(
+            grammars.get(parseFile.language),
+            tree,
+            parseFile.language
+        );
         queryBuilder.setStatements(this.startRuleStatementsSuperSet);
 
         const query = queryBuilder.build();

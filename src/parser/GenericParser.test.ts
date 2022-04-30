@@ -172,6 +172,16 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses TypeScript commentLines metric", () => {
+        it("should count properly and ignore file header, class description and doc block comment lines", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "comments.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(5);
+        });
+    });
+
     describe("parses GO McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {
             const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { GenericParser } from "./parser/GenericParser";
 import { Configuration } from "./parser/Configuration";
 import yargs from "yargs";

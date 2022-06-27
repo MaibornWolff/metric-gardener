@@ -8,16 +8,37 @@ import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
+import path from "path";
+import { getInstalledPathSync } from "get-installed-path";
+import { detectInstalled } from "detect-installed";
 
 export class MetricCalculator {
     private readonly fileMetrics: Metric[] = [];
     private config: Configuration;
+    private metricGardenerGlobalInstall = () => {
+        try {
+            detectInstalled.sync("metric-gardener");
+        } catch (error) {
+            return false;
+        }
+    };
+    private metricGardenerPath;
+    private resolvePath = () => {
+        if (this.metricGardenerGlobalInstall()) {
+            this.metricGardenerPath = getInstalledPathSync("metric-gardener");
+        } else {
+            this.metricGardenerPath = getInstalledPathSync("metric-gardener", {
+                local: true,
+                cwd: "../../",
+            });
+        }
+    };
 
     constructor(configuration: Configuration) {
         this.config = configuration;
-
+        this.resolvePath();
         const nodeTypesJson = fs
-            .readFileSync(fs.realpathSync("./resources/node-types-mapped.config"))
+            .readFileSync(path.join(this.metricGardenerPath, "./dist/node-types-mapped.config"))
             .toString();
 
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);

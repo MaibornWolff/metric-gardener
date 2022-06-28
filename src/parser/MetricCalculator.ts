@@ -8,6 +8,7 @@ import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
+import nodeTypesConfig from "./config/nodeTypesConfig.json";
 
 export class MetricCalculator {
     private readonly fileMetrics: Metric[] = [];
@@ -15,12 +16,8 @@ export class MetricCalculator {
 
     constructor(configuration: Configuration) {
         this.config = configuration;
-
-        const nodeTypesJson = fs
-            .readFileSync(fs.realpathSync("./resources/node-types-mapped.config"))
-            .toString();
-
-        const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
+        const allNodeTypes: ExpressionMetricMapping[] =
+            nodeTypesConfig as ExpressionMetricMapping[];
 
         this.fileMetrics = [
             new McCabeComplexity(allNodeTypes),

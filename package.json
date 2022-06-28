@@ -1,6 +1,6 @@
 {
     "name": "metric-gardener",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A tool to calculate metrics for imperative and object-oriented languages",
     "main": "dist/app.js",
     "bin": "dist/app.js",

@@ -11,7 +11,7 @@
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "npm run lint -- --fix",
         "lint:quick": "npm run precommit",
-        "prepare": "tsc && copyfiles node-types-mapped.config dist && husky install",
+        "prepare": "tsc && copyfiles /src/parser/config/nodeTypesConfig.json dist/parser/config/nodeTypesConfig.json && husky install",
         "precommit": "lint-staged"
     },
     "lint-staged": {

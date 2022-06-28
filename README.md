@@ -7,10 +7,20 @@ For certain languages, an estimation of coupling metrics helps to assess the qua
 
 ### Usage
 
-Install and parse your sources:
+#### Install project and parse your sources:
 
 -   `npm install`
 -   `npm run start -- parse /path/to/sources -o /output/file/path.json` specify the path to a folder or a file to be parsed and specify output file path.
+
+#### Global installation via npm
+
+-   `npm install -g metric-gardener`
+-   `metric-gardener parse /path/to/sources -o /output/file/path.json`
+
+#### Local as a npm dependency
+
+-   `npm install metric-gardener`
+-   `npm exec metric-gardener /path/to/sources -o /output/file/path.json`
 
 ### Supported Languages
 
@@ -58,7 +68,7 @@ For this, reimport grammars for supported languages from tree-sitter by:
 
 -   `npm run start -- import-grammars`
 
-This will have no effect until you have mapped the changed and new expressions manually to ./resources/node-types-mapped.config
+This will have no effect until you have mapped the changed and new expressions manually to ./src/parser/config/nodeTypesConfig.json
 
 ### TODOs
 
@@ -68,7 +78,6 @@ Next Steps:
 -   Write Unit tests for basic metrics for other supported languages
 -   Documentation, e.g.: Document the used Query Captures to be able to implement new languages as a developer
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
--   npm publish / github repo
 
 Performance Optimizations:
 

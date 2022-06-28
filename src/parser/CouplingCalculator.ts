@@ -4,7 +4,7 @@ import { Configuration } from "./Configuration";
 import { Coupling } from "./metrics/coupling/Coupling";
 import { NamespaceCollector } from "./resolver/NamespaceCollector";
 import { UsagesCollector } from "./resolver/UsagesCollector";
-import { CouplingMetric, Relationship, ParseFile } from "./metrics/Metric";
+import { CouplingMetric, ParseFile } from "./metrics/Metric";
 import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector";
 
 export class CouplingCalculator {

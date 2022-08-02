@@ -1,9 +1,14 @@
-## A parser to calculate metrics for lots of languages
+## A parser to calculate metrics for lots of languages (alpha status)
 
 This parser calculates simple metrics for lots of languages.
 For certain languages, an estimation of coupling metrics helps to assess the quality of software architecture.
 
 **It is based on grammars from [tree-sitter](https://github.com/tree-sitter/tree-sitter).**
+
+### Main Issues with MetricGardener
+
+-   It is not very well tested.
+-   The performance is very bad currently.
 
 ### Usage
 

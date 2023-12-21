@@ -1,7 +1,12 @@
-## A parser to calculate metrics for lots of languages (alpha status)
+## metric-gardener - static source code parser
 
-This parser calculates simple metrics for lots of languages.
-For certain languages, an estimation of coupling metrics helps to assess the quality of software architecture.
+One parser for all languages!
+No need to build your source code.
+This static source code parser calculates simple software quality metrics for quite a few languages (more will be added).
+
+
+An experimental approach is implemented to approximate couplings metrics for C# and PHP without you having to build the source code.
+This is quite slow and can take up to one or two hours but can provide good results.
 
 **It is based on grammars from [tree-sitter](https://github.com/tree-sitter/tree-sitter).**
 
@@ -52,7 +57,7 @@ For certain languages, an estimation of coupling metrics helps to assess the qua
 -   comment_lines (not unit tested)
 -   real_lines_of_code (not unit tested)
 
-### Coupling Metrics
+### Coupling Metrics (experimental)
 
 **Supported for C# and PHP**<br>
 Activate dependency analysis by passing `--parseDependencies`

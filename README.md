@@ -17,6 +17,10 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 ### Usage
 
+#### Install required build tools:
+
+Ensure that you have installed all build tools necessary to compile the native C++ parts of the required tree-sitter package: https://github.com/nodejs/node-gyp#installation
+
 #### Install project and parse your sources:
 
 -   `npm install`

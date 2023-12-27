@@ -35,7 +35,17 @@ export interface CouplingMetric {
     getName(): string;
 }
 
+/**
+ * Represents a file to be parsed, including its path and programming language.
+ */
 export interface ParseFile {
+    /**
+     * Programming language of the file.
+     */
     language: string;
+
+    /**
+     * Path to the file.
+     */
     filePath: string;
 }

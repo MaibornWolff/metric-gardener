@@ -8,6 +8,9 @@ import {
     QueryStatementInterface,
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import { debuglog } from "node:util";
+
+const dlog = debuglog("metric-gardener");
 
 export class McCabeComplexity implements Metric {
     private mccStatementsSuperSet: QueryStatementInterface[] = [];
@@ -46,7 +49,7 @@ export class McCabeComplexity implements Metric {
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        console.log(this.getName() + " - " + matches.length);
+        dlog(this.getName() + " - " + matches.length);
 
         return {
             metricName: this.getName(),

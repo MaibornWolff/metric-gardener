@@ -19,7 +19,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 #### Install required build tools:
 
--   This project is based upon Node.js. Therefore, there has to be a recent version of Node.js installed on your machine (Version 18 or newer).
+-   This project is based upon Node.js. Therefore, there has to be a recent version of Node.js installed on your machine (version 18 or newer).
 -   Ensure that you have installed all build tools necessary to compile the native C/C++ parts of the required tree-sitter package: https://github.com/nodejs/node-gyp#installation
 
 #### Install project and parse your sources:

@@ -5,6 +5,9 @@ import { grammars } from "../../helper/Grammars";
 import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
 import { SimpleQueryStatement } from "../../helper/Model";
+import { debuglog } from "node:util";
+
+const dlog = debuglog("metric-gardener");
 
 export interface Accessor {
     name: string;
@@ -40,7 +43,7 @@ export abstract class AbstractCollector {
                 source?: string;
             }[] = formatCaptures(tree, publicAccessorsCaptures);
 
-            console.log("public accessors captures", accessorsTextCaptures);
+            dlog("public accessors captures" + accessorsTextCaptures.toString());
 
             // first index must be the return type
             // second index must be the accessor name

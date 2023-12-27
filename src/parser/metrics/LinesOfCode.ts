@@ -4,6 +4,9 @@ import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { formatCaptures, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import { debuglog } from "node:util";
+
+const dlog = debuglog("metric-gardener");
 
 export class LinesOfCode implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
@@ -26,6 +29,7 @@ export class LinesOfCode implements Metric {
         const matches = query.matches(tree.rootNode);
         const startRuleCaptures = query.captures(tree.rootNode);
         if (!matches.length) {
+            dlog("No match! " + this.getName() + " is assumed as 0");
             return {
                 metricName: this.getName(),
                 metricValue: 0,
@@ -39,7 +43,7 @@ export class LinesOfCode implements Metric {
         // Last line is an empty one, so add one line
         loc += startRuleTextCaptures[0].text.endsWith("\n") ? 1 : 0;
 
-        console.log(this.getName() + " - " + loc);
+        dlog(this.getName() + " - " + loc);
 
         return {
             metricName: this.getName(),

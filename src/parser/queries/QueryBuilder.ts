@@ -1,5 +1,8 @@
 import Parser, { Query } from "tree-sitter";
 import { QueryStatementInterface } from "../helper/Model";
+import { debuglog } from "node:util";
+
+const dlog = debuglog("metric-gardener");
 
 export class QueryBuilder {
     private readonly treeSitterLanguage: any;
@@ -28,9 +31,9 @@ export class QueryBuilder {
             queryString = this.getBruteForcedStatementsQuery();
         }
 
-        // console.log("------------- Start Query: --------------")
-        // console.log(queryString);
-        // console.log("-----------------------------------------")
+        dlog("------------- Start Query: --------------");
+        dlog(queryString);
+        dlog("-----------------------------------------");
 
         return new Query(this.treeSitterLanguage, queryString);
     }

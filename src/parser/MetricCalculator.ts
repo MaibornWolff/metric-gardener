@@ -9,6 +9,9 @@ import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
+import { debuglog } from "node:util";
+
+const dlog = debuglog("metric-gardener");
 
 export class MetricCalculator {
     private readonly fileMetrics: Metric[] = [];
@@ -32,12 +35,8 @@ export class MetricCalculator {
     calculateMetrics(parseFiles: ParseFile[]) {
         const sourcesRoot = fs.realpathSync(this.config.sourcesPath);
 
-        console.log(
-            "\n\n",
-            "----- Calculating metrics for " + sourcesRoot + " recursively -----",
-            "\n\n"
-        );
-        console.log(" --- " + parseFiles.length + " files detected", "\n\n");
+        dlog("\n\n", "----- Calculating metrics for " + sourcesRoot + " recursively -----", "\n\n");
+        dlog(" --- " + parseFiles.length + " files detected", "\n\n");
 
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
 
@@ -45,7 +44,7 @@ export class MetricCalculator {
             const metricResults = new Map<string, MetricResult>();
             fileMetrics.set(parseFile.filePath, metricResults);
 
-            console.log(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
+            dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
 
             for (const metric of this.fileMetrics) {
                 const metricResult = metric.calculate(parseFile);

@@ -5,6 +5,9 @@ import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
 import { CouplingResult, MetricResult } from "./metrics/Metric";
+import { debuglog } from "node:util";
+
+const dlog = debuglog("metric-gardener");
 
 export class GenericParser {
     private readonly config: Configuration;
@@ -23,7 +26,7 @@ export class GenericParser {
             []
         );
 
-        console.log(" --- " + parseFiles.length + " files detected", "\n\n");
+        dlog(" --- " + parseFiles.length + " files detected\n\n");
 
         let fileMetrics = new Map<string, Map<string, MetricResult>>();
         if (this.config.parseMetrics) {

@@ -264,6 +264,18 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses TypeScript real lines of code metric", () => {
+        it("should count correctly for a non-empty file, ignoring comments and empty lines", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "real-lines-of-code.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                7
+            );
+        });
+    });
+
     describe("parses GO McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {
             const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");

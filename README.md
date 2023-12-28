@@ -4,7 +4,6 @@ One parser for all languages!
 No need to build your source code.
 This static source code parser calculates simple software quality metrics for quite a few languages (more will be added).
 
-
 An experimental approach is implemented to approximate couplings metrics for C# and PHP without you having to build the source code.
 This is quite slow and can take up to one or two hours but can provide good results.
 
@@ -53,9 +52,9 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   mcc
 -   functions
 -   classes
--   lines_of_code (not unit tested)
+-   lines_of_code - The number of lines inside a file
 -   comment_lines (not unit tested)
--   real_lines_of_code (not unit tested)
+-   real_lines_of_code (not unit tested) - The number of lines inside a file, not counting for comments and empty lines
 
 ### Coupling Metrics (experimental)
 

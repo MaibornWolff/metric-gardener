@@ -14,7 +14,7 @@ class Example {
     exampleMethod(input: string) {
         // A comment
         // I have a comment about this.
-        let a = 2; // a has the value 2 now
+        let a = 2;
         let b = 3;
 
         /*

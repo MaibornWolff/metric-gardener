@@ -274,6 +274,16 @@ describe("GenericParser", () => {
                 7
             );
         });
+
+        it("should count correctly if there is a comment in the same line as actual code", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "same-line-comment.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                2
+            );
+        });
     });
 
     describe("parses GO McCabeComplexity metric", () => {

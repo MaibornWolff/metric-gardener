@@ -1,8 +1,10 @@
 import Parser, { Query } from "tree-sitter";
 import { QueryStatementInterface } from "../helper/Model";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class QueryBuilder {
     private readonly treeSitterLanguage: any;

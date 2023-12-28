@@ -6,9 +6,11 @@ import { NamespaceCollector } from "./resolver/NamespaceCollector";
 import { UsagesCollector } from "./resolver/UsagesCollector";
 import { CouplingMetric, ParseFile } from "./metrics/Metric";
 import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class CouplingCalculator {
     private readonly comprisingMetrics: CouplingMetric[] = [];

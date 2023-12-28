@@ -8,9 +8,11 @@ import {
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { formatCaptures } from "../helper/Helper";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class RealLinesOfCode implements Metric {
     private startRuleStatementsSuperSet: QueryStatementInterface[] = [];

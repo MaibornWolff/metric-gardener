@@ -8,9 +8,11 @@ import {
     QueryStatementInterface,
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class McCabeComplexity implements Metric {
     private mccStatementsSuperSet: QueryStatementInterface[] = [];

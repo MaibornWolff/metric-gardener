@@ -4,6 +4,9 @@
     "description": "A tool to calculate metrics for imperative and object-oriented languages",
     "main": "dist/app.js",
     "bin": "dist/app.js",
+    "engines": {
+        "node": ">=18"
+    },
     "scripts": {
         "start": "tsc && node dist/app.js",
         "test": "jest",

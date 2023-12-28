@@ -5,9 +5,11 @@ import { grammars } from "../../helper/Grammars";
 import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
 import { SimpleQueryStatement } from "../../helper/Model";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export interface Accessor {
     name: string;

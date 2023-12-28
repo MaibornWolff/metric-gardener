@@ -5,9 +5,11 @@ import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
 import { ParseFile } from "../../metrics/Metric";
 import { SimpleQueryStatement } from "../../helper/Model";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export interface ImportReference {
     usedNamespace: string;

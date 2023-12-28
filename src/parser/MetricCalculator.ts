@@ -23,7 +23,7 @@ export class MetricCalculator {
             new McCabeComplexity(allNodeTypes),
             new Functions(allNodeTypes),
             new Classes(allNodeTypes),
-            new LinesOfCode(allNodeTypes),
+            new LinesOfCode(),
             new CommentLines(allNodeTypes),
             new RealLinesOfCode(allNodeTypes),
         ];

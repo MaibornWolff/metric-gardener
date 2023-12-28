@@ -92,6 +92,47 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses PHP lines of code metric", () => {
+        it("should count number of lines correctly for a non-empty file with empty last line", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "empty-last-line.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(66);
+        });
+        it("should count number of lines correctly for a non-empty file with non-empty last line", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(65);
+        });
+
+        it("should count number of lines correctly for an empty file", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "empty.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(1);
+        });
+
+        it("should count number of lines correctly for an file with one non-empty line", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "one-line.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(1);
+        });
+
+        it("should count number of lines correctly for an file with just a line break", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "line-break.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
+        });
+    });
+
     describe("parses TypeScript McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "if-statements.ts");
@@ -182,6 +223,47 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses TypeScript lines of code metric", () => {
+        it("should count number of lines correctly for a non-empty file with empty last line", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "ts-example-code.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(416);
+        });
+        it("should count number of lines correctly for a non-empty file with non-empty last line", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "non-empty-last-line.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(415);
+        });
+
+        it("should count number of lines correctly for an empty file", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "empty.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(1);
+        });
+
+        it("should count number of lines correctly for an file with one non-empty line", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "one-line.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(1);
+        });
+
+        it("should count number of lines correctly for an file with just a line break", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "line-break.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
+        });
+    });
+
     describe("parses GO McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {
             const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
@@ -249,6 +331,47 @@ describe("GenericParser", () => {
             const results = parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses GO lines of code metric", () => {
+        it("should count number of lines correctly for a non-empty file with empty last line", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "empty-last-line.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(54);
+        });
+        it("should count number of lines correctly for a non-empty file with non-empty last line", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "go-example-code.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(53);
+        });
+
+        it("should count number of lines correctly for an empty file", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "empty.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(1);
+        });
+
+        it("should count number of lines correctly for an file with one non-empty line", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "one-line.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(1);
+        });
+
+        it("should count number of lines correctly for an file with just a line break", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "line-break.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
         });
     });
 

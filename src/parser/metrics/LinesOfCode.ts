@@ -1,43 +1,18 @@
-import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
-import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
-import { formatCaptures, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 
+/**
+ * Counts the number of lines in a file, including empty lines.
+ */
 export class LinesOfCode implements Metric {
-    private readonly statementsSuperSet: QueryStatementInterface[] = [];
-
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
-    }
-
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
+        let loc = tree.rootNode.endPosition.row;
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.language
-        );
-        queryBuilder.setStatements(this.statementsSuperSet);
-
-        const query = queryBuilder.build();
-        const matches = query.matches(tree.rootNode);
-        const startRuleCaptures = query.captures(tree.rootNode);
-        if (!matches.length) {
-            return {
-                metricName: this.getName(),
-                metricValue: 0,
-            };
-        }
-
-        const startRuleTextCaptures = formatCaptures(tree, startRuleCaptures);
-
-        let loc = matches[0].captures[0].node.endPosition.row;
-
-        // Last line is an empty one, so add one line
-        loc += startRuleTextCaptures[0].text.endsWith("\n") ? 1 : 0;
+        // Avoid off-by-one error:
+        // The number of the last row equals the number of lines in the file minus one,
+        // as it is counted from line 0. So add one to the result:
+        loc++;
 
         console.log(this.getName() + " - " + loc);
 

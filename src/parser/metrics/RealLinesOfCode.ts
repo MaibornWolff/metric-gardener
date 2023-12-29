@@ -8,9 +8,16 @@ import {
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 
+/**
+ * Counts the number of lines in a file, not counting for comments and empty lines.
+ */
 export class RealLinesOfCode implements Metric {
     private commentStatementsSuperSet: QueryStatementInterface[] = [];
 
+    /**
+     * Constructs a new instance of {@link RealLinesOfCode}.
+     * @param allNodeTypes List of all configured syntax node types.
+     */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (
@@ -65,6 +72,11 @@ export class RealLinesOfCode implements Metric {
         };
     }
 
+    /**
+     * Counts empty lines within the supplied text.
+     * @param text String for which empty lines should be counted.
+     * @private
+     */
     private countEmptyLines(text: string) {
         return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ \t]*$/.test(entry)).length;
     }

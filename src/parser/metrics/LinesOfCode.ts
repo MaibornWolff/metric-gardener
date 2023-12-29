@@ -7,12 +7,11 @@ import { Metric, MetricResult, ParseFile } from "./Metric";
 export class LinesOfCode implements Metric {
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
-        let loc = tree.rootNode.endPosition.row;
 
         // Avoid off-by-one error:
         // The number of the last row equals the number of lines in the file minus one,
         // as it is counted from line 0. So add one to the result:
-        loc++;
+        const loc = tree.rootNode.endPosition.row + 1;
 
         console.log(this.getName() + " - " + loc);
 

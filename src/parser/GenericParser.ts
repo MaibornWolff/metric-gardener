@@ -56,7 +56,7 @@ export class GenericParser {
                     parseFiles = generatorResult.value;
                 } else {
                     const file = generatorResult.value;
-                    fileMetrics[file.filePath] = await metricsParser.calculateMetrics(file);
+                    fileMetrics.set(file.filePath, await metricsParser.calculateMetrics(file));
                 }
             }
         }

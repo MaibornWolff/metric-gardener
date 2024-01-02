@@ -42,13 +42,16 @@ export class GenericParser {
         );
 
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
+        const fileMetricPromises = new Map<string, Promise<Map<string, MetricResult>>>();
+
         let generatorDone = false;
         let parseFiles: ParseFile[] = [];
 
         if (this.config.parseMetrics) {
             const metricsParser = new MetricCalculator(this.config);
 
-            // Cannot use for await of here, because we need the return value for the dependency analysis.
+            // Cannot use the standard "for await ... of" here,
+            // because we need the return value of the generator for the dependency analysis.
             while (!generatorDone) {
                 const generatorResult = await parseFilesGenerator.next();
                 if (generatorResult.done) {
@@ -56,7 +59,7 @@ export class GenericParser {
                     parseFiles = generatorResult.value;
                 } else {
                     const file = generatorResult.value;
-                    fileMetrics.set(file.filePath, await metricsParser.calculateMetrics(file));
+                    fileMetricPromises.set(file.filePath, metricsParser.calculateMetrics(file));
                 }
             }
         }
@@ -79,6 +82,11 @@ export class GenericParser {
         }
 
         dlog("Final Coupling Metrics", couplingMetrics);
+
+        // Await completion of file metric calculations:
+        for (const [filepath, promise] of fileMetricPromises) {
+            fileMetrics.set(filepath, await promise);
+        }
 
         const endTime = performance.now();
         const duration = endTime - startTime;

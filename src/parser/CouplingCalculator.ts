@@ -24,7 +24,7 @@ export class CouplingCalculator {
         this.config = configuration;
 
         const nodeTypesJson = fs
-            .readFileSync(fs.realpathSync("./resources/node-types-mapped.config"))
+            .readFileSync(fs.realpathSync("./src/parser/config/nodeTypesConfig.json"))
             .toString();
         const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
 

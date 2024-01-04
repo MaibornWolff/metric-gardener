@@ -133,6 +133,22 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses PHP commentLines metric", () => {
+        it(
+            "should count number of comment lines correctly, including line with curly brackets and text lines " +
+                "inside block comment",
+            () => {
+                const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
+                const parser = new GenericParser(getParserConfiguration(inputPath));
+                const results = parser.calculateMetrics();
+
+                expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(
+                    8
+                );
+            }
+        );
+    });
+
     describe("parses TypeScript McCabeComplexity metric", () => {
         it("should count if statements correctly", () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "if-statements.ts");
@@ -214,7 +230,7 @@ describe("GenericParser", () => {
     });
 
     describe("parses TypeScript commentLines metric", () => {
-        it("should count properly and ignore file header, class description and doc block comment lines", () => {
+        it("should count properly and ignore file header, class description and doc block tag comment lines", () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "comments.ts");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();

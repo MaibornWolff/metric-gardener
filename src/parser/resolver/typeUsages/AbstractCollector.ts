@@ -5,6 +5,11 @@ import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
 import { ParseFile } from "../../metrics/Metric";
 import { SimpleQueryStatement } from "../../helper/Model";
+import { debuglog, DebugLoggerFunction } from "node:util";
+
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export interface ImportReference {
     usedNamespace: string;
@@ -60,15 +65,15 @@ export abstract class AbstractCollector {
 
         this.processedPublicAccessors = new Set();
 
-        console.log("Alias Map:", parseFile.filePath, this.importsBySuffixOrAlias);
-        console.log("Import References", parseFile.filePath, importReferences);
+        dlog("Alias Map:", parseFile.filePath, this.importsBySuffixOrAlias);
+        dlog("Import References", parseFile.filePath, importReferences);
 
         const { candidates, unresolvedCallExpressions } = this.getUsages(
             parseFile,
             namespaceCollector,
             importReferences
         );
-        console.log("UsagesAndCandidates", parseFile.filePath, candidates);
+        dlog("UsagesAndCandidates", parseFile.filePath, candidates);
 
         return {
             candidates,
@@ -93,7 +98,7 @@ export abstract class AbstractCollector {
         const importsCaptures = importsQuery.captures(tree.rootNode);
         const importsTextCaptures = formatCaptures(tree, importsCaptures);
 
-        console.log(importsTextCaptures);
+        dlog(importsTextCaptures);
 
         const importsOfFile: ImportReference[] = [];
 
@@ -160,7 +165,7 @@ export abstract class AbstractCollector {
         const importCaptures = groupedImportsQuery.captures(tree.rootNode);
         const importTextCaptures = formatCaptures(tree, importCaptures);
 
-        console.log(importTextCaptures);
+        dlog(importTextCaptures);
 
         const importsOfFile: ImportReference[] = [];
 
@@ -243,7 +248,7 @@ export abstract class AbstractCollector {
             resolved: boolean;
         }[] = formatCaptures(tree, usagesCaptures);
 
-        console.log("class/object usages", usagesTextCaptures);
+        dlog("class/object usages", usagesTextCaptures);
 
         const usagesAndCandidates: TypeUsageCandidate[] = [];
         const unresolvedCallExpressions: UnresolvedCallExpression[] = [];

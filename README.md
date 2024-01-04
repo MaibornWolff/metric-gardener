@@ -4,7 +4,6 @@ One parser for all languages!
 No need to build your source code.
 This static source code parser calculates simple software quality metrics for quite a few languages (more will be added).
 
-
 An experimental approach is implemented to approximate couplings metrics for C# and PHP without you having to build the source code.
 This is quite slow and can take up to one or two hours but can provide good results.
 
@@ -84,6 +83,11 @@ For this, reimport grammars for supported languages from tree-sitter by:
 -   `npm run start -- import-grammars`
 
 This will have no effect until you have mapped the changed and new expressions manually to ./src/parser/config/nodeTypesConfig.json
+
+### Enable debug prints
+
+There are additional outputs about the metric calculation process that can be enabled by setting the
+environment variable `NODE_DEBUG` to `metric-gardener`.
 
 ### TODOs
 

@@ -5,14 +5,34 @@ import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
 import { CouplingResult, MetricResult } from "./metrics/Metric";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
+
+/**
+ * Arranges the parsing of files and calculation of metrics as specified by the stored configuration.
+ */
 export class GenericParser {
+    /**
+     * Configuration according to which files are parsed and metrics are calculated.
+     * @private
+     */
     private readonly config: Configuration;
 
+    /**
+     * Constructs a new {@link GenericParser} object with the supplied configuration applied
+     * (see also {@link Configuration}).
+     * @param configuration The configuration to apply for the new {@link GenericParser} object.
+     */
     constructor(configuration: Configuration) {
         this.config = configuration;
     }
 
+    /**
+     * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
+     */
     calculateMetrics() {
         const startTime = performance.now();
 
@@ -23,7 +43,7 @@ export class GenericParser {
             []
         );
 
-        console.log(" --- " + parseFiles.length + " files detected", "\n\n");
+        dlog(" --- " + parseFiles.length + " files detected\n\n");
 
         let fileMetrics = new Map<string, Map<string, MetricResult>>();
         if (this.config.parseMetrics) {

@@ -5,6 +5,11 @@ import { grammars } from "../../../helper/Grammars";
 import { formatCaptures } from "../../../helper/Helper";
 import { ParseFile } from "../../../metrics/Metric";
 import { SimpleQueryStatement } from "../../../helper/Model";
+import { debuglog, DebugLoggerFunction } from "node:util";
+
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class QueryStrategy {
     protected cache: Map<string, Map<string, FullyQTN>> = new Map();
@@ -30,7 +35,7 @@ export class QueryStrategy {
         const captures = query.captures(tree.rootNode);
         const textCaptures = formatCaptures(tree, captures);
 
-        console.log("namespace definitions", parseFile.filePath, textCaptures);
+        dlog("namespace definitions", parseFile.filePath, textCaptures);
 
         for (let index = 0; index < textCaptures.length; index += 1) {
             const namespaceName = textCaptures[index].text;

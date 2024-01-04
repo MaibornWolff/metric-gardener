@@ -8,6 +8,11 @@ import {
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { formatCaptures } from "../helper/Helper";
+import { debuglog, DebugLoggerFunction } from "node:util";
+
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class RealLinesOfCode implements Metric {
     private startRuleStatementsSuperSet: QueryStatementInterface[] = [];
@@ -47,6 +52,7 @@ export class RealLinesOfCode implements Metric {
         const query = queryBuilder.build();
         const startRuleMatches = query.matches(tree.rootNode);
         if (!startRuleMatches.length) {
+            dlog("No match! " + this.getName() + " is assumed as 0");
             return {
                 metricName: this.getName(),
                 metricValue: 0,
@@ -75,7 +81,7 @@ export class RealLinesOfCode implements Metric {
         }, 0);
 
         const realLinesOfCode = Math.max(0, loc - commentLines - emptyLines);
-        console.log(this.getName() + " - " + realLinesOfCode);
+        dlog(this.getName() + " - " + realLinesOfCode);
 
         return {
             metricName: this.getName(),

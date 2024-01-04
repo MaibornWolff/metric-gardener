@@ -1,5 +1,10 @@
 import { TreeParser } from "../helper/TreeParser";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import { debuglog, DebugLoggerFunction } from "node:util";
+
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 /**
  * Counts the number of lines in a file, including empty lines.
@@ -13,7 +18,7 @@ export class LinesOfCode implements Metric {
         // as it is counted from line 0. So add one to the result:
         const loc = tree.rootNode.endPosition.row + 1;
 
-        console.log(this.getName() + " - " + loc);
+        dlog(this.getName() + " - " + loc);
 
         return {
             metricName: this.getName(),

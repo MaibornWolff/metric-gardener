@@ -5,6 +5,11 @@ import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Mode
 import { getExpressionsByCategory, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { SyntaxNode } from "tree-sitter";
+import { debuglog, DebugLoggerFunction } from "node:util";
+
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class CommentLines implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
@@ -48,7 +53,7 @@ export class CommentLines implements Metric {
             return accumulator + commentLinesWithText - docBlockLines;
         }, 0);
 
-        console.log(this.getName() + " - " + commentLines);
+        dlog(this.getName() + " - " + commentLines);
 
         return {
             metricName: this.getName(),

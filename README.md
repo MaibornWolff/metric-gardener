@@ -84,6 +84,11 @@ For this, reimport grammars for supported languages from tree-sitter by:
 
 This will have no effect until you have mapped the changed and new expressions manually to ./src/parser/config/nodeTypesConfig.json
 
+### Enable debug prints
+
+There are additional outputs about the metric calculation process that can be enabled by setting the
+environment variable `NODE_DEBUG` to `metric-gardener`.
+
 ### TODOs
 
 Next Steps:

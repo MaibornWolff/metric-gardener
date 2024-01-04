@@ -7,6 +7,10 @@ import {
     QueryStatementInterface,
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import { debuglog, DebugLoggerFunction } from "node:util";
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 /**
  * Counts the number of lines in a file, not counting for comments and empty lines.
@@ -52,6 +56,7 @@ export class RealLinesOfCode implements Metric {
             tree,
             parseFile.language
         );
+
         queryBuilder.setStatements(this.commentStatementsSuperSet);
 
         const commentQuery = queryBuilder.build();
@@ -63,7 +68,7 @@ export class RealLinesOfCode implements Metric {
         }, 0);
 
         const realLinesOfCode = Math.max(0, loc - commentLines - emptyLines);
-        console.log(this.getName() + " - " + realLinesOfCode);
+        dlog(this.getName() + " - " + realLinesOfCode);
 
         return {
             metricName: this.getName(),

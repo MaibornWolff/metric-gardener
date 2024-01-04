@@ -102,7 +102,7 @@ export class CommentLines implements Metric {
      * @private
      */
     private countDocBlockTagLines(text: string) {
-        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ *]*@[a-z]+/g.test(entry));
+        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[\s*]*@[a-z]+/g.test(entry));
     }
 
     /**

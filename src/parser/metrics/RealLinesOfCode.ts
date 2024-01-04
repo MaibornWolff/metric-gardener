@@ -7,17 +7,21 @@ import {
     QueryStatementInterface,
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
-import { formatCaptures } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
-
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
+/**
+ * Counts the number of lines in a file, not counting for comments and empty lines.
+ */
 export class RealLinesOfCode implements Metric {
-    private startRuleStatementsSuperSet: QueryStatementInterface[] = [];
     private commentStatementsSuperSet: QueryStatementInterface[] = [];
 
+    /**
+     * Constructs a new instance of {@link RealLinesOfCode}.
+     * @param allNodeTypes List of all configured syntax node types.
+     */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         allNodeTypes.forEach((expressionMapping) => {
             if (
@@ -30,9 +34,7 @@ export class RealLinesOfCode implements Metric {
                     activated_for_languages
                 );
 
-                if (expressionMapping.category === "start_rule") {
-                    this.startRuleStatementsSuperSet.push(queryStatement);
-                } else if (expressionMapping.category === "comment") {
+                if (expressionMapping.category === "comment") {
                     this.commentStatementsSuperSet.push(queryStatement);
                 }
             }
@@ -42,34 +44,19 @@ export class RealLinesOfCode implements Metric {
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
+        // Avoid off-by-one error:
+        // The number of the last row equals the number of lines in the file minus one,
+        // as it is counted from line 0. So add one to the result:
+        const loc = tree.rootNode.endPosition.row + 1;
+
+        const emptyLines = this.countEmptyLines(tree.rootNode.text);
+
         const queryBuilder = new QueryBuilder(
             grammars.get(parseFile.language),
             tree,
             parseFile.language
         );
-        queryBuilder.setStatements(this.startRuleStatementsSuperSet);
 
-        const query = queryBuilder.build();
-        const startRuleMatches = query.matches(tree.rootNode);
-        if (!startRuleMatches.length) {
-            dlog("No match! " + this.getName() + " is assumed as 0");
-            return {
-                metricName: this.getName(),
-                metricValue: 0,
-            };
-        }
-
-        const startRuleCaptures = query.captures(tree.rootNode);
-        const startRuleTextCaptures = formatCaptures(tree, startRuleCaptures);
-
-        const emptyLines = this.countEmptyLines(startRuleTextCaptures[0].text);
-
-        let loc = startRuleMatches[0].captures[0].node.endPosition.row;
-
-        // Last line is an empty one, so add one line
-        loc += startRuleTextCaptures[0].text.endsWith("\n") ? 1 : 0;
-
-        queryBuilder.clear();
         queryBuilder.setStatements(this.commentStatementsSuperSet);
 
         const commentQuery = queryBuilder.build();
@@ -89,6 +76,11 @@ export class RealLinesOfCode implements Metric {
         };
     }
 
+    /**
+     * Counts empty lines within the supplied text.
+     * @param text String for which empty lines should be counted.
+     * @private
+     */
     private countEmptyLines(text: string) {
         return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ \t]*$/.test(entry)).length;
     }

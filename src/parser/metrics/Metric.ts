@@ -1,5 +1,15 @@
+/**
+ * Interface for carrying the result of a metric calculation.
+ */
 export interface MetricResult {
+    /**
+     * Name of the metric.
+     */
     metricName: string;
+
+    /**
+     * Value of the metric.
+     */
     metricValue: number;
 }
 
@@ -25,8 +35,21 @@ export interface CouplingResult {
     metrics: Map<string, CouplingMetrics>;
 }
 
+/**
+ * Interface for calculating a concrete metric.
+ */
 export interface Metric {
+    /**
+     * Calculates the metric value for the supplied file.
+     * @param parseFile Source code file for which the metric value should be calculated.
+     * @return A MetricResult containing the calculated metric value.
+     */
     calculate(parseFile: ParseFile): MetricResult;
+
+    /**
+     * Returns the name of this metric.
+     * @return The name of this metric.
+     */
     getName(): string;
 }
 

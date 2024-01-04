@@ -41,8 +41,22 @@ export class RealLinesOfCode implements Metric {
         });
     }
 
-    calculate(parseFile: ParseFile): MetricResult {
-        const tree = TreeParser.getParseTree(parseFile);
+    async calculate(parseFile: ParseFile): Promise<MetricResult> {
+        const tree = await TreeParser.getParseTreeAsync(parseFile);
+
+        // Avoid off-by-one error:
+        // The number of the last row equals the number of lines in the file minus one,
+        // as it is counted from line 0. So add one to the result:
+        const loc = tree.rootNode.endPosition.row + 1;
+
+        const emptyLines = this.countEmptyLines(tree.rootNode.text);
+
+        // Avoid off-by-one error:
+        // The number of the last row equals the number of lines in the file minus one,
+        // as it is counted from line 0. So add one to the result:
+        const loc = tree.rootNode.endPosition.row + 1;
+
+        const emptyLines = this.countEmptyLines(tree.rootNode.text);
 
         // Avoid off-by-one error:
         // The number of the last row equals the number of lines in the file minus one,

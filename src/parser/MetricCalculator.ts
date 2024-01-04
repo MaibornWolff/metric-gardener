@@ -1,7 +1,6 @@
 import { McCabeComplexity } from "./metrics/McCabeComplexity";
 import { Functions } from "./metrics/Functions";
 import { Classes } from "./metrics/Classes";
-import fs from "fs";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
@@ -43,30 +42,19 @@ export class MetricCalculator {
     }
 
     /**
-     * Calculates all basic single file metrics on the specified files.
-     * @param parseFiles Files for which the metrics should be calculated.
-     * @return Map that relates the file path of each file to a map of the calculated metrics.
+     * Calculates all basic single file metrics on the specified file.
+     * @param parseFile File for which the metric should be calculated.
+     * @return Map that relates the metric name to the calculated metrics.
      */
-    calculateMetrics(parseFiles: ParseFile[]) {
-        const sourcesRoot = fs.realpathSync(this.config.sourcesPath);
+    async calculateMetrics(parseFile: ParseFile) {
+        const metricResults = new Map<string, MetricResult>();
 
-        dlog("\n\n", "----- Calculating metrics for " + sourcesRoot + " recursively -----", "\n\n");
-        dlog(" --- " + parseFiles.length + " files detected", "\n\n");
+        dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
 
-        const fileMetrics = new Map<string, Map<string, MetricResult>>();
-
-        for (const parseFile of parseFiles) {
-            const metricResults = new Map<string, MetricResult>();
-            fileMetrics.set(parseFile.filePath, metricResults);
-
-            dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
-
-            for (const metric of this.fileMetrics) {
-                const metricResult = metric.calculate(parseFile);
-                metricResults.set(metricResult.metricName, metricResult);
-            }
+        for (const metric of this.fileMetrics) {
+            const metricResult = await metric.calculate(parseFile);
+            metricResults.set(metricResult.metricName, metricResult);
         }
-
-        return fileMetrics;
+        return metricResults;
     }
 }

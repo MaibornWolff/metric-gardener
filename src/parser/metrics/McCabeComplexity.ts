@@ -38,8 +38,8 @@ export class McCabeComplexity implements Metric {
         });
     }
 
-    calculate(parseFile: ParseFile): MetricResult {
-        const tree = TreeParser.getParseTree(parseFile);
+    async calculate(parseFile: ParseFile): Promise<MetricResult> {
+        const tree = await TreeParser.getParseTreeAsync(parseFile);
 
         const queryBuilder = new QueryBuilder(
             grammars.get(parseFile.language),

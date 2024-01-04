@@ -44,7 +44,7 @@ export interface Metric {
      * @param parseFile Source code file for which the metric value should be calculated.
      * @return A MetricResult containing the calculated metric value.
      */
-    calculate(parseFile: ParseFile): MetricResult;
+    calculate(parseFile: ParseFile): Promise<MetricResult>;
 
     /**
      * Returns the name of this metric.

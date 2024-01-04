@@ -57,7 +57,7 @@ yargs(hideBin(process.argv))
     .strictOptions()
     .parseSync();
 
-function parseSourceCode(argv) {
+async function parseSourceCode(argv) {
     const configuration = new Configuration(
         argv["sources-path"],
         argv["output-path"],
@@ -67,7 +67,7 @@ function parseSourceCode(argv) {
     );
 
     const parser = new GenericParser(configuration);
-    const results = parser.calculateMetrics();
+    const results = await parser.calculateMetrics();
 
     outputAsJson(
         results.fileMetrics,

@@ -21,8 +21,8 @@ export class CommentLines implements Metric {
         this.commentExpressions = getExpressionsByCategory(allNodeTypes, this.getName(), "comment");
     }
 
-    calculate(parseFile: ParseFile): MetricResult {
-        const tree = TreeParser.getParseTree(parseFile);
+    async calculate(parseFile: ParseFile): Promise<MetricResult> {
+        const tree = await TreeParser.getParseTreeAsync(parseFile);
         this.excludedFileHeaderComments = this.getExcludedFileHeaderComments(
             tree.rootNode.children
         );

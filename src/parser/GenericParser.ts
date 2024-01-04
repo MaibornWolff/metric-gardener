@@ -1,10 +1,9 @@
 import { grammars } from "./helper/Grammars";
-import { findFilesRecursively } from "./helper/Helper";
-import fs from "fs";
+import { findFilesAsync } from "./helper/Helper";
 import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
-import { CouplingResult, MetricResult } from "./metrics/Metric";
+import { CouplingResult, MetricResult, ParseFile } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -33,23 +32,45 @@ export class GenericParser {
     /**
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
-    calculateMetrics() {
+    async calculateMetrics() {
         const startTime = performance.now();
 
-        const parseFiles = findFilesRecursively(
-            fs.realpathSync(this.config.sourcesPath),
+        const parseFilesGenerator = findFilesAsync(
+            this.config.sourcesPath,
             [...grammars.keys()],
-            this.config.exclusions,
-            []
+            this.config.exclusions
         );
 
-        dlog(" --- " + parseFiles.length + " files detected\n\n");
+        const fileMetrics = new Map<string, Map<string, MetricResult>>();
+        let generatorDone = false;
+        let parseFiles: ParseFile[] = [];
 
-        let fileMetrics = new Map<string, Map<string, MetricResult>>();
         if (this.config.parseMetrics) {
             const metricsParser = new MetricCalculator(this.config);
-            fileMetrics = metricsParser.calculateMetrics(parseFiles);
+
+            // Cannot use for await of here, because we need the return value for the dependency analysis.
+            while (!generatorDone) {
+                const generatorResult = await parseFilesGenerator.next();
+                if (generatorResult.done) {
+                    generatorDone = true;
+                    parseFiles = generatorResult.value;
+                } else {
+                    const file = generatorResult.value;
+                    fileMetrics[file.filePath] = await metricsParser.calculateMetrics(file);
+                }
+            }
         }
+
+        // In case this.config.parseMetrics is false:
+        while (!generatorDone) {
+            const generatorResult = await parseFilesGenerator.next();
+            if (generatorResult.done) {
+                generatorDone = true;
+                parseFiles = generatorResult.value;
+            }
+        }
+
+        dlog(" --- " + parseFiles.length + " files detected", "\n\n");
 
         let couplingMetrics = {} as CouplingResult;
         if (this.config.parseDependencies) {
@@ -57,7 +78,7 @@ export class GenericParser {
             couplingMetrics = couplingParser.calculateMetrics(parseFiles);
         }
 
-        console.log("Final Coupling Metrics", couplingMetrics);
+        dlog("Final Coupling Metrics", couplingMetrics);
 
         const endTime = performance.now();
         const duration = endTime - startTime;

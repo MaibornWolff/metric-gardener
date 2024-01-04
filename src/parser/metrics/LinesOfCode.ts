@@ -10,7 +10,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Counts the number of lines in a file, including empty lines.
  */
 export class LinesOfCode implements Metric {
-    calculate(parseFile: ParseFile): MetricResult {
+    async calculate(parseFile: ParseFile): Promise<MetricResult> {
         const tree = TreeParser.getParseTree(parseFile);
 
         // Avoid off-by-one error:

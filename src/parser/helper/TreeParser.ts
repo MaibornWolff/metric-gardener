@@ -22,4 +22,21 @@ export class TreeParser {
 
         return tree;
     }
+
+    static async getParseTreeAsync(parseFile: ParseFile): Promise<Tree> {
+        const cachedItem = TreeParser.cache.get(parseFile.filePath);
+        if (cachedItem !== undefined) {
+            return cachedItem;
+        }
+
+        const parser = new Parser();
+        parser.setLanguage(grammars.get(parseFile.language));
+
+        const sourceCode = (await fs.promises.readFile(parseFile.filePath)).toString();
+        const tree = parser.parse(sourceCode);
+
+        TreeParser.cache.set(parseFile.filePath, tree);
+
+        return tree;
+    }
 }

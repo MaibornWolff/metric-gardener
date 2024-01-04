@@ -35,7 +35,7 @@ export class QueryStrategy {
         const captures = query.captures(tree.rootNode);
         const textCaptures = formatCaptures(tree, captures);
 
-        dlog("namespace definitions" + parseFile.filePath + textCaptures);
+        dlog("namespace definitions", parseFile.filePath, textCaptures);
 
         for (let index = 0; index < textCaptures.length; index += 1) {
             const namespaceName = textCaptures[index].text;

@@ -11,9 +11,11 @@ import { getParseFile } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export class Coupling implements CouplingMetric {
     private namespaceCollector: NamespaceCollector;
@@ -71,13 +73,13 @@ export class Coupling implements CouplingMetric {
         // postprocessing
 
         dlog("\n\n");
-        dlog("namespaces" + namespaces + "\n\n");
-        dlog("usages" + usagesCandidates);
-        dlog("\n\n" + "unresolved call expressions" + unresolvedCallExpressions + "\n\n");
-        dlog("\n\n" + "publicAccessors" + publicAccessors + "\n\n");
+        dlog("namespaces", namespaces, "\n\n");
+        dlog("usages", usagesCandidates);
+        dlog("\n\n", "unresolved call expressions", unresolvedCallExpressions, "\n\n");
+        dlog("\n\n", "publicAccessors", publicAccessors, "\n\n");
 
         let relationships = this.getRelationships(namespaces, usagesCandidates);
-        dlog("\n\n" + relationships);
+        dlog("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
         const { tree, rootFiles } = this.buildDependencyTree(relationships, couplingMetrics);
@@ -89,7 +91,7 @@ export class Coupling implements CouplingMetric {
             this.alreadyAddedRelationships
         );
         relationships = relationships.concat(additionalRelationships);
-        dlog("\n\n" + "additionalRelationships" + additionalRelationships + "\n\n");
+        dlog("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
 
@@ -192,7 +194,7 @@ export class Coupling implements CouplingMetric {
             );
         }
 
-        dlog("\n\n" + couplingValues);
+        dlog("\n\n", couplingValues);
         return couplingValues;
     }
 

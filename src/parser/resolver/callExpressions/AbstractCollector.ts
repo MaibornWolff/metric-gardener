@@ -45,7 +45,7 @@ export abstract class AbstractCollector {
                 source?: string;
             }[] = formatCaptures(tree, publicAccessorsCaptures);
 
-            dlog("public accessors captures" + accessorsTextCaptures.toString());
+            dlog("public accessors captures", accessorsTextCaptures);
 
             // first index must be the return type
             // second index must be the accessor name

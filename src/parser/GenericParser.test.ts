@@ -372,6 +372,30 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses GO commentLines metric", () => {
+        it(
+            "should count number of comment lines correctly, including line with curly brackets, inline comments" +
+                " and text lines inside block comment",
+            () => {
+                const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
+                const parser = new GenericParser(getParserConfiguration(inputPath));
+                const results = parser.calculateMetrics();
+
+                expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(
+                    4
+                );
+            }
+        );
+
+        it("should count number of comment lines correctly, including multiple successive comments", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "go-example-code.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(7);
+        });
+    });
+
     describe("parses GO lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file with empty last line", () => {
             const inputPath = fs.realpathSync(goTestResourcesPath + "empty-last-line.go");

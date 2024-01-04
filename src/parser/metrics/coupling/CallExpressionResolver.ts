@@ -2,9 +2,11 @@ import { Relationship } from "../Metric";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector";
 import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector";
-import { debuglog } from "node:util";
+import { debuglog, DebugLoggerFunction } from "node:util";
 
-const dlog = debuglog("metric-gardener");
+let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
+    dlog = logger;
+});
 
 export function getAdditionalRelationships(
     tree: Map<string, Relationship[]>,
@@ -76,7 +78,7 @@ export function getAdditionalRelationships(
                             namespace.namespaceDelimiter +
                             namespace.className;
 
-                        dlog("\n\n" + accessor + " -- " + fullyQualifiedNameCandidate);
+                        dlog("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
 
                         // FirstAccessor is a property or method
                         // The type of myVariable must be an already added dependency of the current base type/class (filePath),
@@ -144,17 +146,17 @@ function resolveAccessorReturnType(
 ) {
     // TODO resolve return type (generics, etc.)
     dlog(
-        "Lookup Status: " +
-            !!matchingDependency +
-            " -> check return type add: " +
-            accessor.returnType +
-            matchingDependency +
-            "\n\n"
+        "Lookup Status: ",
+        !!matchingDependency,
+        " -> check return type add: ",
+        accessor.returnType,
+        matchingDependency,
+        "\n\n"
     );
 
     const accessorFileDependencies = tree.get(namespace.source) ?? [];
-    dlog("namespace.source " + namespace.source);
-    dlog("accessorFileDependencies " + accessorFileDependencies);
+    dlog("namespace.source", namespace.source);
+    dlog("accessorFileDependencies", accessorFileDependencies);
     for (const accessorFileDependency of accessorFileDependencies) {
         // TODO Imagine that returnType is MyTypeNumberOne
         //  and toClassName MyType
@@ -168,12 +170,12 @@ function resolveAccessorReturnType(
 
             if (alreadyAddedRelationships.has(uniqueId)) {
                 dlog(
-                    "SKIP ADDING RETURN TYPE: " +
-                        accessor.returnType +
-                        "already added: " +
-                        accessorFileDependency +
-                        alreadyAddedRelationships.has(uniqueId) +
-                        "\n\n"
+                    "SKIP ADDING RETURN TYPE: ",
+                    accessor.returnType,
+                    "already added: ",
+                    accessorFileDependency,
+                    alreadyAddedRelationships.has(uniqueId),
+                    "\n\n"
                 );
                 continue;
             }
@@ -191,7 +193,7 @@ function resolveAccessorReturnType(
                     usageType: "usage",
                 };
 
-                dlog("ADD RETURN TYPE: " + accessor.returnType + dependencyClone + "\n\n");
+                dlog("ADD RETURN TYPE: ", accessor.returnType, dependencyClone, "\n\n");
                 return additionalRelationships.push(dependencyClone);
             }
 

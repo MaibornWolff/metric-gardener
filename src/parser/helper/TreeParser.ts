@@ -15,7 +15,8 @@ export class TreeParser {
         const parser = new Parser();
         parser.setLanguage(grammars.get(parseFile.language));
 
-        const sourceCode = fs.readFileSync(parseFile.filePath).toString();
+        // As toString() without parameter uses UTF-8, using UTF-8 while reading the file doesn't change the result:
+        const sourceCode = fs.readFileSync(parseFile.filePath, { encoding: "utf8" });
         const tree = parser.parse(sourceCode);
 
         TreeParser.cache.set(parseFile.filePath, tree);
@@ -32,7 +33,8 @@ export class TreeParser {
         const parser = new Parser();
         parser.setLanguage(grammars.get(parseFile.language));
 
-        const sourceCode = (await fs.promises.readFile(parseFile.filePath)).toString();
+        // As toString() without parameter uses UTF-8, using UTF-8 while reading the file doesn't change the result:
+        const sourceCode = await fs.promises.readFile(parseFile.filePath, { encoding: "utf8" }); //.toString();
         const tree = parser.parse(sourceCode);
 
         TreeParser.cache.set(parseFile.filePath, tree);

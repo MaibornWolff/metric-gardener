@@ -90,15 +90,15 @@ export class GenericParser {
 
         const endTime = performance.now();
         const duration = endTime - startTime;
+        const durationSeconds = duration / 1000;
 
-        console.log("\n\n");
+        console.log("\n");
         console.log("#####################################");
         console.log("#####################################");
-        console.log("\n\n");
         console.log(
-            `Parsing took ${duration / 1000} seconds or ${
-                duration / 1000 / 60
-            } minutes respectively`
+            `Parsing took ${durationSeconds} seconds\nor ${Math.floor(
+                durationSeconds / 60
+            )} minutes and ${durationSeconds % 60} seconds respectively\n`
         );
 
         return {

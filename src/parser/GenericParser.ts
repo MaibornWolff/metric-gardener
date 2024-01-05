@@ -1,4 +1,3 @@
-import { grammars } from "./helper/Grammars";
 import { findFilesAsync } from "./helper/Helper";
 import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
@@ -35,11 +34,7 @@ export class GenericParser {
     async calculateMetrics() {
         const startTime = performance.now();
 
-        const parseFilesGenerator = findFilesAsync(
-            this.config.sourcesPath,
-            [...grammars.keys()],
-            this.config.exclusions
-        );
+        const parseFilesGenerator = findFilesAsync(this.config.sourcesPath, this.config.exclusions);
 
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
         const fileMetricPromises = new Map<string, Promise<Map<string, MetricResult>>>();

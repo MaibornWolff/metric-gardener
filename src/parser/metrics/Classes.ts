@@ -1,5 +1,5 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
+import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
@@ -21,9 +21,9 @@ export class Classes implements Metric {
         const tree = await TreeParser.getParseTreeAsync(parseFile);
 
         const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
+            fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
-            parseFile.language
+            parseFile.fileExtension
         );
         queryBuilder.setStatements(this.statementsSuperSet);
 

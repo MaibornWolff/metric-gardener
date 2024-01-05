@@ -1,5 +1,5 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
+import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import { TreeParser } from "../helper/TreeParser";
 import {
     ExpressionMetricMapping,
@@ -52,9 +52,9 @@ export class RealLinesOfCode implements Metric {
         const emptyLines = this.countEmptyLines(tree.rootNode.text);
 
         const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
+            fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
-            parseFile.language
+            parseFile.fileExtension
         );
 
         queryBuilder.setStatements(this.commentStatementsSuperSet);

@@ -59,13 +59,13 @@ export interface CouplingMetric {
 }
 
 /**
- * Represents a file to be parsed, including its path and programming language.
+ * Represents a file to be parsed, including its path and the file extension.
  */
 export interface ParseFile {
     /**
-     * Programming language of the file.
+     * File extension of the file.
      */
-    language: string;
+    fileExtension: string;
 
     /**
      * Path to the file.

@@ -7,7 +7,7 @@ import {
 import { NamespaceCollector } from "../../resolver/NamespaceCollector";
 import { UsagesCollector } from "../../resolver/UsagesCollector";
 import { CouplingMetric, Relationship, ParseFile, CouplingMetrics } from "../Metric";
-import { getParseFile } from "../../helper/Helper";
+import { checkAndGetFileExtension } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
@@ -211,7 +211,7 @@ export class Coupling implements CouplingMetric {
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const parseFile = getParseFile(filePath);
+        const parseFile = checkAndGetFileExtension(filePath);
         if (parseFile === undefined) {
             return;
         }

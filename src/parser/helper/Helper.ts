@@ -29,45 +29,6 @@ export function checkAndGetFileExtension(filePath: string): undefined | ParseFil
     }
 }
 
-export function findFilesRecursively(
-    dir: string,
-    supportedFileExtensions: string[] = [],
-    excludedFolders: string[] = [],
-    fileList: ParseFile[] = []
-): ParseFile[] {
-    if (fs.lstatSync(dir).isFile()) {
-        const parseFile = checkAndGetFileExtension(dir);
-        return parseFile !== undefined ? [parseFile] : [];
-    }
-
-    fs.readdirSync(dir).forEach((file) => {
-        const fileExtension = file.split(".").pop();
-
-        const currentPath = path.join(dir, file);
-        if (fs.statSync(currentPath).isDirectory()) {
-            const isPathExcluded = excludedFolders.some((folder) => {
-                return path.basename(currentPath) === folder;
-            });
-            if (isPathExcluded) {
-                return;
-            }
-            fileList = findFilesRecursively(
-                currentPath,
-                supportedFileExtensions,
-                excludedFolders,
-                fileList
-            );
-        } else if (fileExtension && supportedFileExtensions.includes(fileExtension.toLowerCase())) {
-            const parseFile = checkAndGetFileExtension(currentPath);
-            if (parseFile != undefined) {
-                fileList = fileList.concat(parseFile);
-            }
-        }
-    });
-
-    return fileList;
-}
-
 /**
  * Finds supported source code files recursively in all subdirectories.
  *

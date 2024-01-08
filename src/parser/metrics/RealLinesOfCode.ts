@@ -1,13 +1,9 @@
-import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
-import {
-    ExpressionMetricMapping,
-    ExpressionQueryStatement,
-    QueryStatementInterface,
-} from "../helper/Model";
+import { ExpressionMetricMapping } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { TreeCursor } from "tree-sitter";
+import { getExpressionsByCategory } from "../helper/Helper";
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
@@ -16,63 +12,65 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Counts the number of lines in a file, not counting for comments and empty lines.
  */
 export class RealLinesOfCode implements Metric {
-    private commentStatementsSuperSet: QueryStatementInterface[] = [];
+    private commentStatementsSet: Set<string>;
 
     /**
      * Constructs a new instance of {@link RealLinesOfCode}.
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        allNodeTypes.forEach((expressionMapping) => {
-            if (
-                expressionMapping.metrics.includes(this.getName()) &&
-                expressionMapping.type === "statement"
-            ) {
-                const { expression, activated_for_languages } = expressionMapping;
-                const queryStatement = new ExpressionQueryStatement(
-                    expression,
-                    activated_for_languages
-                );
+        this.commentStatementsSet = new Set(
+            getExpressionsByCategory(allNodeTypes, this.getName(), "comment")
+        );
+    }
 
-                if (expressionMapping.category === "comment") {
-                    this.commentStatementsSuperSet.push(queryStatement);
-                }
+    walkTree(cursor: TreeCursor, commentLines: Set<number>, sureCodeLines: Set<number>) {
+        // This is a comment, so add its lines to the comment lines.
+        if (this.commentStatementsSet.has(cursor.currentNode.type)) {
+            for (let i = cursor.startPosition.row; i < cursor.endPosition.row; i++) {
+                commentLines.add(i);
             }
-        });
+        } else {
+            // Assume that first and last line of whatever kind of node this is, is a real code line.
+            // Unsure if this assumption holds for all kinds of (composed) statements.
+            // It should hold for loops and if-statements in most/all (?) languages.
+            sureCodeLines.add(cursor.startPosition.row);
+            sureCodeLines.add(cursor.endPosition.row);
+            console.log("Added " + cursor.startPosition.row + " and " + cursor.endPosition.row);
+        }
+        // Recurse, depth-first
+        if (cursor.gotoFirstChild()) {
+            this.walkTree(cursor, commentLines, sureCodeLines);
+        }
+        if (cursor.gotoNextSibling()) {
+            this.walkTree(cursor, commentLines, sureCodeLines);
+        } else {
+            // Completed searching this part of the tree, so go up now.
+            cursor.gotoParent();
+        }
     }
 
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
-        // Avoid off-by-one error:
-        // The number of the last row equals the number of lines in the file minus one,
-        // as it is counted from line 0. So add one to the result:
-        const loc = tree.rootNode.endPosition.row + 1;
+        const commentLines = new Set<number>();
+        const sureCodeLines = new Set<number>();
 
-        const emptyLines = this.countEmptyLines(tree.rootNode.text);
+        const cursor = tree.walk();
+        // Assume root node is always some kind of program/file/compilation_unit stuff?
+        cursor.gotoFirstChild();
+        this.walkTree(cursor, commentLines, sureCodeLines);
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.language
-        );
+        console.log(tree.rootNode.toString());
+        console.log(sureCodeLines);
 
-        queryBuilder.setStatements(this.commentStatementsSuperSet);
+        const rloc = sureCodeLines.size;
 
-        const commentQuery = queryBuilder.build();
-        const commentMatches = commentQuery.matches(tree.rootNode);
-
-        const commentLines = commentMatches.reduce((accumulator, match) => {
-            const captureNode = match.captures[0].node;
-            return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
-        }, 0);
-
-        const realLinesOfCode = Math.max(0, loc - commentLines - emptyLines);
-        dlog(this.getName() + " - " + realLinesOfCode);
+        dlog(this.getName() + " - " + rloc);
 
         return {
             metricName: this.getName(),
-            metricValue: realLinesOfCode,
+            metricValue: rloc,
         };
     }
 

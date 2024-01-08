@@ -24,13 +24,18 @@ export class RealLinesOfCode implements Metric {
         );
     }
 
-    walkTree(cursor: TreeCursor, commentLines: Set<number>, sureCodeLines: Set<number>) {
-        // This is a comment, so add its lines to the comment lines.
-        if (this.commentStatementsSet.has(cursor.currentNode.type)) {
-            for (let i = cursor.startPosition.row; i < cursor.endPosition.row; i++) {
-                commentLines.add(i);
-            }
-        } else {
+    /**
+     * Waling through the tree in order to find actual code lines.
+     *
+     * Uses a {@link TreeCursor} for this, as according to the
+     * {@link https://tree-sitter.github.io/tree-sitter/using-parsers#walking-trees-with-tree-cursors|Tree-sitter documentation},
+     * this is the most efficient way to traverse a syntax tree.
+     * @param cursor A {@link TreeCursor} for the syntax tree.
+     * @param sureCodeLines A set in which the line numbers of the found code lines are stored.
+     */
+    walkTree(cursor: TreeCursor, sureCodeLines: Set<number>) {
+        // This is not a comment syntax node, so assume it includes "real code".
+        if (!this.commentStatementsSet.has(cursor.currentNode.type)) {
             // Assume that first and last line of whatever kind of node this is, is a real code line.
             // Unsure if this assumption holds for all kinds of (composed) statements.
             // It should hold for loops and if-statements in most/all (?) languages.
@@ -40,10 +45,10 @@ export class RealLinesOfCode implements Metric {
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {
-            this.walkTree(cursor, commentLines, sureCodeLines);
+            this.walkTree(cursor, sureCodeLines);
         }
         if (cursor.gotoNextSibling()) {
-            this.walkTree(cursor, commentLines, sureCodeLines);
+            this.walkTree(cursor, sureCodeLines);
         } else {
             // Completed searching this part of the tree, so go up now.
             cursor.gotoParent();
@@ -52,14 +57,12 @@ export class RealLinesOfCode implements Metric {
 
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
-
-        const commentLines = new Set<number>();
         const sureCodeLines = new Set<number>();
 
         const cursor = tree.walk();
         // Assume root node is always some kind of program/file/compilation_unit stuff?
         cursor.gotoFirstChild();
-        this.walkTree(cursor, commentLines, sureCodeLines);
+        this.walkTree(cursor, sureCodeLines);
 
         console.log(tree.rootNode.toString());
         console.log(sureCodeLines);

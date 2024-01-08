@@ -4254,7 +4254,7 @@
         "metrics": ["mcc", "functions"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "generator_function",

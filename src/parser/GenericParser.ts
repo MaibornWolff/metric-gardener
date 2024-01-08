@@ -57,7 +57,7 @@ export class GenericParser {
             couplingMetrics = couplingParser.calculateMetrics(parseFiles);
         }
 
-        console.log("Final Coupling Metrics", couplingMetrics);
+        dlog("Final Coupling Metrics", couplingMetrics);
 
         const endTime = performance.now();
         const duration = endTime - startTime;

@@ -72,4 +72,76 @@ export class QueryBuilder {
         }
         return statementQueries.join("\n");
     }
+
+    /**
+     * ONLY FOR DEBUGGING PURPOSES!
+     * This lets you compare the result of the new approach for getStatementsQuery which relies on the "language"
+     * field of the expression mappings to the old, very slow bruteforce approach.
+     * @param returnBruteforceResult Whether to return the result of the bruteforce approach or the new approach.
+     * @return A query string.
+     * @private
+     */
+    private debugCompareBruteforceToMapped(returnBruteforceResult: boolean) {
+        const includedOnlyByMapping: number[] = [];
+        const includedOnlyByBruteforce: number[] = [];
+
+        const statementQueries: string[] = [];
+
+        for (let i = 0; i < this.statements.length; i++) {
+            const statementCandidate = this.statements[i];
+            let chosenByMapping = false;
+
+            if (
+                statementCandidate.applicableFor(this.language) &&
+                statementCandidate.activatedFor(this.language)
+            ) {
+                chosenByMapping = true;
+                if (!returnBruteforceResult) {
+                    statementQueries.push(statementCandidate.toQuery());
+                }
+            }
+
+            if (statementCandidate.activatedFor(this.language)) {
+                try {
+                    const metricsQuery = new Query(
+                        this.treeSitterLanguage,
+                        statementCandidate.toQuery()
+                    );
+                    metricsQuery.matches(this.tree.rootNode);
+
+                    // There was no error, so it is chosen by the bruteforce method:
+                    if (!chosenByMapping) {
+                        includedOnlyByBruteforce.push(i);
+                    }
+                    if (returnBruteforceResult) {
+                        statementQueries.push(statementCandidate.toQuery());
+                    }
+                } catch (error) {
+                    // There was an error, so it is not chosen by the bruteforce method:
+                    if (chosenByMapping) {
+                        includedOnlyByMapping.push(i);
+                    }
+                }
+            }
+        }
+
+        if (includedOnlyByMapping.length > 0) {
+            console.log(
+                "###### The following statements were only included by the new mapping method: ######"
+            );
+            for (const index of includedOnlyByMapping) {
+                console.log(this.statements[index]);
+            }
+        }
+        if (includedOnlyByBruteforce.length > 0) {
+            console.log(
+                "###### The following statements were only included by the bruteforce method: ######"
+            );
+            for (const index of includedOnlyByBruteforce) {
+                console.log(this.statements[index]);
+            }
+        }
+
+        return statementQueries.join("\n");
+    }
 }

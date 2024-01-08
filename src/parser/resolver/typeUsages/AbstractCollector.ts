@@ -1,11 +1,11 @@
 import { QueryBuilder } from "../../queries/QueryBuilder";
-import { grammars } from "../../helper/Grammars";
 import { formatCaptures } from "../../helper/Helper";
 import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
 import { ParseFile } from "../../metrics/Metric";
 import { SimpleQueryStatement } from "../../helper/Model";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryCapture } from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -87,15 +87,14 @@ export abstract class AbstractCollector {
     ): ImportReference[] {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.language
-        );
+        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getImportsQuery())]);
 
         const importsQuery = queryBuilder.build();
-        const importsCaptures = importsQuery.captures(tree.rootNode);
+        let importsCaptures: QueryCapture[] = [];
+        if (importsQuery !== undefined) {
+            importsCaptures = importsQuery.captures(tree.rootNode);
+        }
         const importsTextCaptures = formatCaptures(tree, importsCaptures);
 
         dlog(importsTextCaptures);
@@ -154,15 +153,14 @@ export abstract class AbstractCollector {
     private getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.language
-        );
+        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getGroupedImportsQuery())]);
 
         const groupedImportsQuery = queryBuilder.build();
-        const importCaptures = groupedImportsQuery.captures(tree.rootNode);
+        let importCaptures: QueryCapture[] = [];
+        if (groupedImportsQuery !== undefined) {
+            importCaptures = groupedImportsQuery.captures(tree.rootNode);
+        }
         const importTextCaptures = formatCaptures(tree, importCaptures);
 
         dlog(importTextCaptures);
@@ -231,15 +229,14 @@ export abstract class AbstractCollector {
     ) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.filePath
-        );
+        const queryBuilder = new QueryBuilder(parseFile.filePath, tree);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getUsagesQuery())]);
 
         const usagesQuery = queryBuilder.build();
-        const usagesCaptures = usagesQuery.captures(tree.rootNode);
+        let usagesCaptures: QueryCapture[] = [];
+        if (usagesQuery !== undefined) {
+            usagesCaptures = usagesQuery.captures(tree.rootNode);
+        }
         const usagesTextCaptures: {
             name: string;
             text: string;

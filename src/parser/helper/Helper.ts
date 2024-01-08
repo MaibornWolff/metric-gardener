@@ -15,7 +15,7 @@ export function formatCaptures(tree, captures) {
 export function getParseFile(filePath: string): undefined | ParseFile {
     const extension = filePath.split(".").pop();
     if (extension !== undefined && extension.length > 0) {
-        return { language: extension.toLowerCase(), filePath: filePath };
+        return { fileExtension: extension.toLowerCase(), filePath: filePath };
     }
 }
 
@@ -67,6 +67,7 @@ export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metr
         ) {
             const queryStatement = new ExpressionQueryStatement(
                 expressionMapping.expression,
+                expressionMapping.languages,
                 expressionMapping.activated_for_languages
             );
 

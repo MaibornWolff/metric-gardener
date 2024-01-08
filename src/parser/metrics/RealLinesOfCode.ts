@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import {
     ExpressionMetricMapping,
@@ -8,6 +7,7 @@ import {
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryMatch } from "tree-sitter";
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
@@ -23,20 +23,21 @@ export class RealLinesOfCode implements Metric {
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
+        // Should I use this? What about the category == "comment" thing?
+        // getQueryStatements(allNodeTypes, this.getName());
+
         allNodeTypes.forEach((expressionMapping) => {
             if (
                 expressionMapping.metrics.includes(this.getName()) &&
-                expressionMapping.type === "statement"
+                expressionMapping.type === "statement" &&
+                expressionMapping.category === "comment"
             ) {
-                const { expression, activated_for_languages } = expressionMapping;
                 const queryStatement = new ExpressionQueryStatement(
-                    expression,
-                    activated_for_languages
+                    expressionMapping.expression,
+                    expressionMapping.languages,
+                    expressionMapping.activated_for_languages
                 );
-
-                if (expressionMapping.category === "comment") {
-                    this.commentStatementsSuperSet.push(queryStatement);
-                }
+                this.commentStatementsSuperSet.push(queryStatement);
             }
         });
     }
@@ -51,16 +52,15 @@ export class RealLinesOfCode implements Metric {
 
         const emptyLines = this.countEmptyLines(tree.rootNode.text);
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.language
-        );
+        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
 
         queryBuilder.setStatements(this.commentStatementsSuperSet);
 
         const commentQuery = queryBuilder.build();
-        const commentMatches = commentQuery.matches(tree.rootNode);
+        let commentMatches: QueryMatch[] = [];
+        if (commentQuery !== undefined) {
+            commentMatches = commentQuery.matches(tree.rootNode);
+        }
 
         const commentLines = commentMatches.reduce((accumulator, match) => {
             const captureNode = match.captures[0].node;

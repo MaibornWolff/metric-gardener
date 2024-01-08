@@ -1,10 +1,10 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
 import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryMatch } from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -20,15 +20,14 @@ export class Functions implements Metric {
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
-            tree,
-            parseFile.language
-        );
+        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
         queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();
-        const matches = query.matches(tree.rootNode);
+        let matches: QueryMatch[] = [];
+        if (query !== undefined) {
+            matches = query.matches(tree.rootNode);
+        }
 
         dlog(this.getName() + " - " + matches.length);
 

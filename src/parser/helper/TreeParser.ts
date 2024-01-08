@@ -1,5 +1,5 @@
 import fs from "fs";
-import { grammars } from "./Grammars";
+import { fileExtensionToGrammar } from "./Languages";
 import Parser, { Tree } from "tree-sitter";
 import { ParseFile } from "../metrics/Metric";
 
@@ -13,7 +13,7 @@ export class TreeParser {
         }
 
         const parser = new Parser();
-        parser.setLanguage(grammars.get(parseFile.language));
+        parser.setLanguage(fileExtensionToGrammar(parseFile.fileExtension));
 
         const sourceCode = fs.readFileSync(parseFile.filePath).toString();
         const tree = parser.parse(sourceCode);

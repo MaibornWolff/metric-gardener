@@ -1,4 +1,4 @@
-import { grammars } from "./helper/Grammars";
+import { fileExtensionToLanguage } from "./helper/Languages";
 import { findFilesRecursively } from "./helper/Helper";
 import fs from "fs";
 import { Configuration } from "./Configuration";
@@ -38,7 +38,7 @@ export class GenericParser {
 
         const parseFiles = findFilesRecursively(
             fs.realpathSync(this.config.sourcesPath),
-            [...grammars.keys()],
+            [...fileExtensionToLanguage.keys()],
             this.config.exclusions,
             []
         );

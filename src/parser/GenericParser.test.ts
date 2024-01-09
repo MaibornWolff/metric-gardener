@@ -452,6 +452,16 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses Python comment lines metric", () => {
+        it("should count correctly, excluding inline and block comments", () => {
+            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "loops.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(5);
+        });
+    });
+
     describe("parses Python real lines of code metric", () => {
         it("should count correctly for a non-empty file with pythons non-C-syntax code blocks", () => {
             const inputPath = fs.realpathSync(pythonTestRecourcesPath + "blocks.py");

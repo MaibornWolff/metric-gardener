@@ -7,6 +7,7 @@ describe("GenericParser", () => {
     const csharpTestResourcesPath = "./resources/c-sharp/";
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
+    const pythonTestRecourcesPath = "./resources/python/";
 
     function getParserConfiguration(sourcesPath: string, parseDependencies = false) {
         return new Configuration(sourcesPath, "invalid/output/path", parseDependencies, "", false);
@@ -130,6 +131,28 @@ describe("GenericParser", () => {
             const results = parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses PHP real lines of code metric", () => {
+        it("should count correctly for a non-empty file, ignoring comments and empty lines", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                43
+            );
+        });
+
+        it("should count correctly if there is a comment in the same line as actual code", () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "same-line-comment.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                11
+            );
         });
     });
 
@@ -266,12 +289,12 @@ describe("GenericParser", () => {
 
     describe("parses TypeScript real lines of code metric", () => {
         it("should count correctly for a non-empty file, ignoring comments and empty lines", () => {
-            const inputPath = fs.realpathSync(tsTestResourcesPath + "real-lines-of-code.ts");
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
-                7
+                43
             );
         });
 
@@ -282,6 +305,16 @@ describe("GenericParser", () => {
 
             expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
                 2
+            );
+        });
+
+        it("should count weirdly formatted lines of code correctly", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "weird-lines.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                32
             );
         });
     });
@@ -394,6 +427,60 @@ describe("GenericParser", () => {
             const results = parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses Go real lines of code metric", () => {
+        it("should count correctly for a non-empty file, ignoring comments,  inline comments and empty lines", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "go-example-code.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                32
+            );
+        });
+
+        it("should count correctly if there is a comment that includes code", () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                19
+            );
+        });
+    });
+
+    describe("parses Python real lines of code metric", () => {
+        it("should count correctly for a non-empty file with pythons non-C-syntax code blocks", () => {
+            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "blocks.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                9
+            );
+        });
+
+        it("should count correctly for a non-empty file with nested loops and comments", () => {
+            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "loops.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                4
+            );
+        });
+
+        it("should count correctly in the presence of block comments", () => {
+            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "block-comment.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                3
+            );
         });
     });
 

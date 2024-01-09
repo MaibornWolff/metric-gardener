@@ -43,7 +43,9 @@ export class RealLinesOfCode implements Metric {
                 // Assume that first and last line of whatever kind of node this is, is a real code line.
                 // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
                 sureCodeLines.add(cursor.startPosition.row);
-                sureCodeLines.add(cursor.endPosition.row);
+                // sureCodeLines.add(cursor.endPosition.row);
+                // Adding the last line is not necessary, as every last line has to have some syntactical element,
+                // which is again expressed as another syntax node.
             }
         }
         // Recurse, depth-first

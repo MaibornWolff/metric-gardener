@@ -45,17 +45,6 @@ export class RealLinesOfCode implements Metric {
                 sureCodeLines.add(cursor.startPosition.row);
                 sureCodeLines.add(cursor.endPosition.row);
             }
-
-            // dlog(
-            //     "Node type " +
-            //         cursor.nodeType +
-            //         " (ID " +
-            //         cursor.currentNode.typeId +
-            //         ") - Added " +
-            //         cursor.startPosition.row +
-            //         " and " +
-            //         cursor.endPosition.row
-            // );
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {
@@ -88,15 +77,6 @@ export class RealLinesOfCode implements Metric {
             metricName: this.getName(),
             metricValue: rloc,
         };
-    }
-
-    /**
-     * Counts empty lines within the supplied text.
-     * @param text String for which empty lines should be counted.
-     * @private
-     */
-    private countEmptyLines(text: string) {
-        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ \t]*$/.test(entry)).length;
     }
 
     getName(): string {

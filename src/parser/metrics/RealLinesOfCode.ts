@@ -36,17 +36,12 @@ export class RealLinesOfCode implements Metric {
     walkTree(cursor: TreeCursor, sureCodeLines: Set<number>) {
         // This is not a comment syntax node, so assume it includes "real code".
         if (!this.commentStatementsSet.has(cursor.currentNode.type)) {
-            // Languages like Go do use new line characters for marking the end of a statement, which leads to wrong
-            // results here, as they have an end position on the next line. So filter them out as well:
-            const isNewLineNode = /\n/.test(cursor.currentNode.type); // Should also filter \r\n, etc.
-            if (!isNewLineNode) {
-                // Assume that first and last line of whatever kind of node this is, is a real code line.
-                // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
-                sureCodeLines.add(cursor.startPosition.row);
-                // sureCodeLines.add(cursor.endPosition.row);
-                // Adding the last line is not necessary, as every last line has to have some syntactical element,
-                // which is again expressed as another syntax node.
-            }
+            // Assume that first and last line of whatever kind of node this is, is a real code line.
+            // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
+            sureCodeLines.add(cursor.startPosition.row);
+            // sureCodeLines.add(cursor.endPosition.row);
+            // Adding the last line is not necessary, as every last line has to have some syntactical element,
+            // which is again expressed as another syntax node.
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {

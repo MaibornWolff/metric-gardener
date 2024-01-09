@@ -63,9 +63,6 @@ export class QueryBuilder {
         const statementQueries: string[] = [];
 
         for (const statement of this.statements) {
-            // Is "activatedFor" still necessary? I have only found one node with the activated_for_languages filed.
-            // However, it seems helpful for some (e.g. debugging) purposes,
-            // so I kept it and introduced "applicableFor" along it.
             if (statement.applicableFor(this.language) && statement.activatedFor(this.language)) {
                 statementQueries.push(statement.toQuery());
             }

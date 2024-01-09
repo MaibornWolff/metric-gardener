@@ -23,9 +23,6 @@ export class RealLinesOfCode implements Metric {
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        // Should I use this? What about the category == "comment" thing?
-        // getQueryStatements(allNodeTypes, this.getName());
-
         allNodeTypes.forEach((expressionMapping) => {
             if (
                 expressionMapping.metrics.includes(this.getName()) &&

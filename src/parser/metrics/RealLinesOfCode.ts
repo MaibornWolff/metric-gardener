@@ -41,21 +41,21 @@ export class RealLinesOfCode implements Metric {
             const isNewLineNode = /\n/.test(cursor.currentNode.type); // Should also filter \r\n, etc.
             if (!isNewLineNode) {
                 // Assume that first and last line of whatever kind of node this is, is a real code line.
-                // I cannot guarantee if this assumption holds for all kinds of block/composed statements.
-                // It does hold for loops and if-statements in all tested languages.
+                // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
                 sureCodeLines.add(cursor.startPosition.row);
                 sureCodeLines.add(cursor.endPosition.row);
             }
-            console.log(
-                "Node type " +
-                    cursor.nodeType +
-                    " (ID " +
-                    cursor.currentNode.typeId +
-                    ") - Added " +
-                    cursor.startPosition.row +
-                    " and " +
-                    cursor.endPosition.row
-            );
+
+            // dlog(
+            //     "Node type " +
+            //         cursor.nodeType +
+            //         " (ID " +
+            //         cursor.currentNode.typeId +
+            //         ") - Added " +
+            //         cursor.startPosition.row +
+            //         " and " +
+            //         cursor.endPosition.row
+            // );
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {
@@ -74,12 +74,11 @@ export class RealLinesOfCode implements Metric {
         const sureCodeLines = new Set<number>();
 
         const cursor = tree.walk();
-        // Assume root node is always some kind of program/file/compilation_unit stuff?
+        // Assume the root node is always some kind of program/file/compilation_unit stuff
         cursor.gotoFirstChild();
         this.walkTree(cursor, sureCodeLines);
 
-        console.log(tree.rootNode.toString());
-        console.log(sureCodeLines);
+        dlog("Included lines for rloc: ", sureCodeLines);
 
         const rloc = sureCodeLines.size;
 

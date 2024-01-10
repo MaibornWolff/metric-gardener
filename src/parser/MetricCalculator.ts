@@ -44,9 +44,10 @@ export class MetricCalculator {
     /**
      * Calculates all basic single file metrics on the specified file.
      * @param parseFile File for which the metric should be calculated.
-     * @return Map that relates the metric name to the calculated metrics.
+     * @return A tuple that contains the path of the file and a Map
+     * that relates each metric name to the calculated metric.
      */
-    async calculateMetrics(parseFile: ParseFile) {
+    async calculateMetrics(parseFile: ParseFile): Promise<[string, Map<string, MetricResult>]> {
         const metricResults = new Map<string, MetricResult>();
 
         dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
@@ -55,6 +56,6 @@ export class MetricCalculator {
             const metricResult = await metric.calculate(parseFile);
             metricResults.set(metricResult.metricName, metricResult);
         }
-        return metricResults;
+        return [parseFile.filePath, metricResults];
     }
 }

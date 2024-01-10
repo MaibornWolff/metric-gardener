@@ -36,20 +36,18 @@ export class GenericParser {
 
         const parseFilesGenerator = findFilesAsync(this.config.sourcesPath, this.config.exclusions);
 
-        const fileMetrics = new Map<string, Map<string, MetricResult>>();
-        const fileMetricPromises = new Map<string, Promise<Map<string, MetricResult>>>();
-
+        const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
         const parseFiles: ParseFile[] = [];
 
         if (this.config.parseMetrics) {
             const metricsParser = new MetricCalculator(this.config);
 
             for await (const file of parseFilesGenerator) {
-                fileMetricPromises.set(file.filePath, metricsParser.calculateMetrics(file));
+                fileMetricPromises.push(metricsParser.calculateMetrics(file));
                 parseFiles.push(file);
             }
         }
-        // In case this.config.parseMetrics is false:
+        // In case this.config.parseMetrics is false, as we need all files for the coupling metrics:
         else {
             for await (const file of parseFilesGenerator) {
                 parseFiles.push(file);
@@ -67,8 +65,10 @@ export class GenericParser {
         dlog("Final Coupling Metrics", couplingMetrics);
 
         // Await completion of file metric calculations:
-        for (const [filepath, promise] of fileMetricPromises) {
-            fileMetrics.set(filepath, await promise);
+        const fileMetrics = new Map<string, Map<string, MetricResult>>();
+        const promisesResults = await Promise.all(fileMetricPromises);
+        for (const [filepath, metricsMap] of promisesResults) {
+            fileMetrics.set(filepath, metricsMap);
         }
 
         const endTime = performance.now();

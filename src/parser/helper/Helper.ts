@@ -43,8 +43,7 @@ export function checkAndGetFileExtension(filePath: string): undefined | ParseFil
 export async function* findFilesAsync(
     sourcePath: string,
     excludedFolders: string[] = []
-): AsyncGenerator<ParseFile, ParseFile[]> {
-    let fileList: ParseFile[] = [];
+): AsyncGenerator<ParseFile> {
     try {
         const dir = await fs.promises.realpath(sourcePath);
 
@@ -52,7 +51,6 @@ export async function* findFilesAsync(
         if ((await fs.promises.lstat(dir)).isFile()) {
             const parseFile = checkAndGetFileExtension(dir);
             if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
-                fileList = [parseFile];
                 yield parseFile;
             }
         } else {
@@ -66,14 +64,12 @@ export async function* findFilesAsync(
     } catch (e) {
         console.error(e);
     }
-    return fileList;
 }
 
 async function* findFilesAsyncRecursive(
     dir: string,
     excludedFolders: Set<string>
-): AsyncGenerator<ParseFile, ParseFile[]> {
-    let fileList: ParseFile[] = [];
+): AsyncGenerator<ParseFile> {
     try {
         const openedDir = await fs.promises.opendir(dir);
 
@@ -85,9 +81,7 @@ async function* findFilesAsyncRecursive(
                 if (!isPathExcluded) {
                     // The current directory is not excluded, so recurse into subdirectory,
                     // using delegating yield* generator call:
-                    fileList = fileList.concat(
-                        yield* findFilesAsyncRecursive(currentPath, excludedFolders)
-                    );
+                    yield* findFilesAsyncRecursive(currentPath, excludedFolders);
                 }
             } // End of if (isDirectory)
             else {
@@ -96,7 +90,6 @@ async function* findFilesAsyncRecursive(
                     parseFile !== undefined &&
                     fileExtensionToGrammar.has(parseFile.fileExtension)
                 ) {
-                    fileList.push(parseFile);
                     yield parseFile;
                 }
             } // End of else (isDirectory)
@@ -104,7 +97,6 @@ async function* findFilesAsyncRecursive(
     } catch (e) {
         console.error(e);
     }
-    return fileList;
 }
 
 export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {

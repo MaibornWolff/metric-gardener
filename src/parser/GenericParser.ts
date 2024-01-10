@@ -39,32 +39,20 @@ export class GenericParser {
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
         const fileMetricPromises = new Map<string, Promise<Map<string, MetricResult>>>();
 
-        let generatorDone = false;
-        let parseFiles: ParseFile[] = [];
+        const parseFiles: ParseFile[] = [];
 
         if (this.config.parseMetrics) {
             const metricsParser = new MetricCalculator(this.config);
 
-            // Cannot use the standard "for await ... of" here,
-            // because we need the return value of the generator for the dependency analysis.
-            while (!generatorDone) {
-                const generatorResult = await parseFilesGenerator.next();
-                if (generatorResult.done) {
-                    generatorDone = true;
-                    parseFiles = generatorResult.value;
-                } else {
-                    const file = generatorResult.value;
-                    fileMetricPromises.set(file.filePath, metricsParser.calculateMetrics(file));
-                }
+            for await (const file of parseFilesGenerator) {
+                fileMetricPromises.set(file.filePath, metricsParser.calculateMetrics(file));
+                parseFiles.push(file);
             }
         }
-
         // In case this.config.parseMetrics is false:
-        while (!generatorDone) {
-            const generatorResult = await parseFilesGenerator.next();
-            if (generatorResult.done) {
-                generatorDone = true;
-                parseFiles = generatorResult.value;
+        else {
+            for await (const file of parseFilesGenerator) {
+                parseFiles.push(file);
             }
         }
 

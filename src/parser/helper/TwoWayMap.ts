@@ -28,4 +28,34 @@ export class ConstantTwoWayMap<Key, Value> {
     getKey(value: Value) {
         return this.reverseMap.get(value);
     }
+
+    /**
+     * Gets all values for the keys of the specified iterable. Calls the specified function for all
+     * mapped values, skipping elements for which there is no value available in the map.
+     * @param iterator Iterable of elements to map.
+     * @param insertFunction Function to call with the retrieved values.
+     */
+    getAllValuesFunctional(iterator: Iterable<Key>, insertFunction: (value: Value) => any) {
+        for (const key of iterator) {
+            const mapResult = this.getValue(key);
+            if (mapResult !== undefined) {
+                insertFunction(mapResult);
+            }
+        }
+    }
+
+    /**
+     * Gets all keys for the values of the specified iterable. Calls the specified function for all
+     * reverse-mapped keys, skipping elements for which there is no key available in the map.
+     * @param iterator Iterable of values to reverse-map.
+     * @param insertFunction Function to call with the retrieved keys.
+     */
+    getAllKeysFunctional(iterator: Iterable<Value>, insertFunction: (key: Key) => any) {
+        for (const value of iterator) {
+            const mapResult = this.getKey(value);
+            if (mapResult !== undefined) {
+                insertFunction(mapResult);
+            }
+        }
+    }
 }

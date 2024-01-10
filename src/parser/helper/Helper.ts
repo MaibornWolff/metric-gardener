@@ -3,6 +3,42 @@ import path from "path";
 import { ExpressionMetricMapping, ExpressionQueryStatement } from "./Model";
 import { ParseFile } from "../metrics/Metric";
 
+/**
+ * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
+ * mapped values, skipping elements for which there is no value available in the map.
+ * @param iterator Iterable of elements to map.
+ * @param map Map to use for mapping.
+ * @param insertFunction Function to call with the retrieved values.
+ */
+export function mapAllFunctional<KeyType, ValueType>(
+    iterator: Iterable<KeyType>,
+    map: Map<KeyType, ValueType>,
+    insertFunction: (v: ValueType) => any
+) {
+    for (const key of iterator) {
+        const mapResult = map.get(key);
+        if (mapResult !== undefined) {
+            insertFunction(mapResult);
+        }
+    }
+}
+
+/**
+ * Maps all elements of the specified iterable using the specified map. Returns an array of all mapped values,
+ * skipping elements for which there is no value available in the map.
+ * @param iterator Iterable of elements to map.
+ * @param map Map to use for mapping.
+ * @return Array of the mapped elements.
+ */
+export function mapAllIntoArray<KeyType, ValueType>(
+    iterator: Iterable<KeyType>,
+    map: Map<KeyType, ValueType>
+): ValueType[] {
+    const result: ValueType[] = [];
+    mapAllFunctional(iterator, map, (value) => result.push(value));
+    return result;
+}
+
 export function formatCaptures(tree, captures) {
     return captures.map((c) => {
         const node = c.node;

@@ -54,23 +54,16 @@ export class ExpressionQueryStatement implements QueryStatementInterface {
         activated_for_languages?: string[]
     ) {
         this.expression = expression;
+        this.applicableForLanguages = new Set();
+        languageToAbbreviation.getAllKeysFunctional(applicable_for_languages, (key) =>
+            this.applicableForLanguages.add(key)
+        );
 
         this.activatedForLanguages = new Set();
         if (activated_for_languages !== undefined) {
-            for (const languageString of activated_for_languages) {
-                const language = languageToAbbreviation.getKey(languageString);
-                if (language !== undefined) {
-                    this.activatedForLanguages.add(language);
-                }
-            }
-        }
-
-        this.applicableForLanguages = new Set();
-        for (const languageString of applicable_for_languages) {
-            const language = languageToAbbreviation.getKey(languageString);
-            if (language !== undefined) {
-                this.applicableForLanguages.add(language);
-            }
+            languageToAbbreviation.getAllKeysFunctional(activated_for_languages, (key) =>
+                this.activatedForLanguages.add(key)
+            );
         }
     }
 
@@ -103,23 +96,16 @@ export class OperatorQueryStatement implements QueryStatementInterface {
         this.category = category;
         this.operator = operator;
         this.expression = category + ' operator: "' + operator + '"';
+        this.applicableForLanguages = new Set();
+        languageToAbbreviation.getAllKeysFunctional(applicableForLanguages, (key) =>
+            this.applicableForLanguages.add(key)
+        );
 
         this.activatedForLanguages = new Set();
         if (activatedForLanguages !== undefined) {
-            for (const languageString of activatedForLanguages) {
-                const language = languageToAbbreviation.getKey(languageString);
-                if (language !== undefined) {
-                    this.activatedForLanguages.add(language);
-                }
-            }
-        }
-
-        this.applicableForLanguages = new Set();
-        for (const languageString of applicableForLanguages) {
-            const language = languageToAbbreviation.getKey(languageString);
-            if (language !== undefined) {
-                this.applicableForLanguages.add(language);
-            }
+            languageToAbbreviation.getAllKeysFunctional(activatedForLanguages, (key) =>
+                this.activatedForLanguages.add(key)
+            );
         }
     }
 

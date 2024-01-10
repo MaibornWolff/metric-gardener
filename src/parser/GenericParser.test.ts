@@ -237,6 +237,14 @@ describe("GenericParser", () => {
 
             expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(14);
         });
+
+        it("should count properly, also in the presence of multiple block comments in the same line", () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "same-line-comment.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(4);
+        });
     });
 
     describe("parses TypeScript lines of code metric", () => {
@@ -297,7 +305,7 @@ describe("GenericParser", () => {
             const results = parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
-                2
+                3
             );
         });
     });

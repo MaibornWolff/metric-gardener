@@ -39,18 +39,19 @@ export class CommentLines implements Metric {
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        let commentLines = 0;
+        const commentLines = new Set<number>();
         for (const match of matches) {
             const captureNode: SyntaxNode = match.captures[0].node;
-            commentLines =
-                commentLines + 1 + (captureNode.endPosition.row - captureNode.startPosition.row);
+            for (let i = captureNode.startPosition.row; i <= captureNode.endPosition.row; i++) {
+                commentLines.add(i);
+            }
         }
 
-        dlog(this.getName() + " - " + commentLines);
+        dlog(this.getName() + " - " + commentLines.size);
 
         return {
             metricName: this.getName(),
-            metricValue: commentLines,
+            metricValue: commentLines.size,
         };
     }
 

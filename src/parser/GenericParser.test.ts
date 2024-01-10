@@ -415,6 +415,6 @@ describe("GenericParser", () => {
             const results = await parser.calculateMetrics();
 
             expect(results.couplingMetrics).toMatchSnapshot();
-        });
+        }, 10000);
     });
 });

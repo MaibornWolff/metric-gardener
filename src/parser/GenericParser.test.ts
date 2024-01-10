@@ -135,15 +135,15 @@ describe("GenericParser", () => {
 
     describe("parses PHP commentLines metric", () => {
         it(
-            "should count number of comment lines correctly, including line with curly brackets and text lines " +
-                "inside block comment",
+            "should count number of comment lines correctly, including line with curly brackets and comment " +
+                "lines inside block comment",
             () => {
                 const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
                 const parser = new GenericParser(getParserConfiguration(inputPath));
                 const results = parser.calculateMetrics();
 
                 expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(
-                    8
+                    12
                 );
             }
         );
@@ -230,12 +230,12 @@ describe("GenericParser", () => {
     });
 
     describe("parses TypeScript commentLines metric", () => {
-        it("should count properly and ignore file header, class description and doc block tag comment lines", () => {
+        it("should count properly, also counting file header, class description and doc block tag comment lines", () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "comments.ts");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(5);
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(14);
         });
     });
 
@@ -375,14 +375,14 @@ describe("GenericParser", () => {
     describe("parses GO commentLines metric", () => {
         it(
             "should count number of comment lines correctly, including line with curly brackets, inline comments" +
-                " and text lines inside block comment",
+                " and lines of the block comment",
             () => {
                 const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
                 const parser = new GenericParser(getParserConfiguration(inputPath));
                 const results = parser.calculateMetrics();
 
                 expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(
-                    4
+                    6
                 );
             }
         );
@@ -392,7 +392,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(7);
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(9);
         });
     });
 

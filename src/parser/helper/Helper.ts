@@ -59,7 +59,7 @@ export async function* findFilesAsync(
             // Create set to improve lookup performance:
             const excludedSet = new Set(excludedFolders);
             // The folder at sourcePath itself cannot be excluded, so continue using delegating yield* generator call:
-            return yield* findFilesAsyncRecursive(sourcePath, excludedSet);
+            yield* findFilesAsyncRecursive(sourcePath, excludedSet);
         }
     } catch (e) {
         console.error(e);

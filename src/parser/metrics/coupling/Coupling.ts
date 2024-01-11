@@ -12,12 +12,14 @@ import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector"
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { Configuration } from "../../Configuration";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export class Coupling implements CouplingMetric {
+    private config: Configuration;
     private namespaceCollector: NamespaceCollector;
     private publicAccessorCollector: PublicAccessorCollector;
     private usageCollector: UsagesCollector;
@@ -25,11 +27,13 @@ export class Coupling implements CouplingMetric {
     private alreadyAddedRelationships = new Set<string>();
 
     constructor(
+        config: Configuration,
         allNodeTypes: ExpressionMetricMapping[],
         namespaceCollector: NamespaceCollector,
         usageCollector: UsagesCollector,
         publicAccessorCollector: PublicAccessorCollector
     ) {
+        this.config = config;
         this.namespaceCollector = namespaceCollector;
         this.usageCollector = usageCollector;
         this.publicAccessorCollector = publicAccessorCollector;
@@ -211,7 +215,7 @@ export class Coupling implements CouplingMetric {
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const parseFile = checkAndGetFileExtension(filePath);
+        const parseFile = checkAndGetFileExtension(filePath, this.config);
         if (parseFile === undefined) {
             return;
         }

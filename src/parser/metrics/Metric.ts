@@ -71,4 +71,10 @@ export interface ParseFile {
      * Path to the file.
      */
     filePath: string;
+
+    /**
+     * Path to the file to be included in the output file.
+     * Might be a relative path.
+     */
+    printedFilePath: string;
 }

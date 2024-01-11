@@ -56,6 +56,6 @@ export class MetricCalculator {
             const metricResult = await metric.calculate(parseFile);
             metricResults.set(metricResult.metricName, metricResult);
         }
-        return [parseFile.filePath, metricResults];
+        return [parseFile.printedFilePath, metricResults];
     }
 }

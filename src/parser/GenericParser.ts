@@ -34,7 +34,7 @@ export class GenericParser {
     async calculateMetrics() {
         const startTime = performance.now();
 
-        const parseFilesGenerator = findFilesAsync(this.config.sourcesPath, this.config.exclusions);
+        const parseFilesGenerator = findFilesAsync(this.config);
 
         const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
         const parseFiles: ParseFile[] = [];

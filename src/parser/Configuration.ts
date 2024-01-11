@@ -3,7 +3,7 @@
  */
 export class Configuration {
     /**
-     * Path to the source files to be parsed.
+     * Resolved, absolute path to the source files to be parsed.
      */
     sourcesPath: string;
 

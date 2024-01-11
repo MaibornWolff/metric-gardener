@@ -45,11 +45,9 @@ export async function* findFilesAsync(
     excludedFolders: string[] = []
 ): AsyncGenerator<ParseFile> {
     try {
-        const dir = await fs.promises.realpath(sourcePath);
-
         // Handle special case: if the specified sourcePath is a single file, just yield the file.
-        if ((await fs.promises.lstat(dir)).isFile()) {
-            const parseFile = checkAndGetFileExtension(dir);
+        if ((await fs.promises.lstat(sourcePath)).isFile()) {
+            const parseFile = checkAndGetFileExtension(sourcePath);
             if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
                 yield parseFile;
             }

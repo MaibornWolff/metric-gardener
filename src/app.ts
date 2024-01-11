@@ -5,6 +5,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { generateNodeTypesMappingFile } from "./commands/treeSitterMapping";
 import { outputAsJson } from "./commands/outputMetrics";
+import fs from "fs";
 
 yargs(hideBin(process.argv))
     .command(
@@ -59,7 +60,7 @@ yargs(hideBin(process.argv))
 
 async function parseSourceCode(argv) {
     const configuration = new Configuration(
-        argv["sources-path"],
+        await fs.promises.realpath(argv["sources-path"]),
         argv["output-path"],
         argv["parse-dependencies"],
         argv["exclusions"],

@@ -15,19 +15,26 @@ export function formatCaptures(tree, captures) {
 }
 
 /**
- * Returns the file path relative to the specified base directory, or the name of the file,
- * if the base path points to this single file.
- * @param filePath Path to the file to which the relative path should point.
- * @param baseDir The base directory.
+ * Formats the specified file path for being output in the way it is configured for this parser run.
+ * @param filePath The file path.
+ * @param config The configuration for this parser run.
  */
-export function makePathRelative(filePath: string, baseDir: string) {
-    let relPath = path.relative(baseDir, filePath);
-    if (relPath.length == 0) {
-        // The path specified by the user points to a single file,
-        // so return the name of the file as path to print.
-        relPath = path.basename(filePath);
+export function formatPrintPath(filePath: string, config: Configuration): string {
+    let result = filePath;
+    if (config.relativePaths) {
+        // Returns the file path relative to the specified base directory, or the name of the file,
+        // if the base path points to this single file.
+        result = path.relative(config.sourcesPath, filePath);
+        if (config.sourcesPath.length == 0) {
+            // The path specified by the user points to a single file,
+            // so return the name of the file as path to print.
+            config.sourcesPath = path.basename(filePath);
+        }
     }
-    return relPath;
+    if (config.enforceBackwardSlash) {
+        result = result.replace(/\//g, "\\");
+    }
+    return result;
 }
 
 /**

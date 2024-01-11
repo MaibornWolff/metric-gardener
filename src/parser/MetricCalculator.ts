@@ -9,7 +9,7 @@ import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { makePathRelative } from "./helper/Helper";
+import { formatPrintPath } from "./helper/Helper";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -58,10 +58,6 @@ export class MetricCalculator {
             metricResults.set(metricResult.metricName, metricResult);
         }
 
-        if (this.config.relativePaths) {
-            return [makePathRelative(parseFile.filePath, this.config.sourcesPath), metricResults];
-        } else {
-            return [parseFile.filePath, metricResults];
-        }
+        return [formatPrintPath(parseFile.filePath, this.config), metricResults];
     }
 }

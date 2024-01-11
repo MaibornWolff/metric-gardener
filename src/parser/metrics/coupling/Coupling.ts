@@ -7,7 +7,7 @@ import {
 import { NamespaceCollector } from "../../resolver/NamespaceCollector";
 import { UsagesCollector } from "../../resolver/UsagesCollector";
 import { CouplingMetric, Relationship, ParseFile, CouplingMetrics } from "../Metric";
-import { checkAndGetFileExtension, makePathRelative } from "../../helper/Helper";
+import { checkAndGetFileExtension, formatPrintPath } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
@@ -99,23 +99,14 @@ export class Coupling implements CouplingMetric {
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
 
-        if (this.config.relativePaths) {
+        if (this.config.needsPrintPathFormatting()) {
             for (const relationship of relationships) {
-                relationship.fromSource = makePathRelative(
-                    relationship.fromSource,
-                    this.config.sourcesPath
-                );
-                relationship.toSource = makePathRelative(
-                    relationship.toSource,
-                    this.config.sourcesPath
-                );
+                relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
+                relationship.toSource = formatPrintPath(relationship.toSource, this.config);
             }
             const relCouplingMetrics = new Map();
             for (const [absolutePath, metricValues] of couplingMetrics) {
-                relCouplingMetrics.set(
-                    makePathRelative(absolutePath, this.config.sourcesPath),
-                    metricValues
-                );
+                relCouplingMetrics.set(formatPrintPath(absolutePath, this.config), metricValues);
             }
             couplingMetrics = relCouplingMetrics;
         }

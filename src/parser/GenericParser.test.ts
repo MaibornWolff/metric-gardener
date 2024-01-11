@@ -13,7 +13,7 @@ describe("GenericParser", () => {
         parseDependencies = false,
         printRelativePaths = false
     ) {
-        return new Configuration(
+        const config = new Configuration(
             sourcesPath,
             "invalid/output/path",
             parseDependencies,
@@ -21,6 +21,9 @@ describe("GenericParser", () => {
             false,
             printRelativePaths
         );
+        // For platform-independent testing:
+        config.enforceBackwardSlash = true;
+        return config;
     }
 
     describe("parses PHP McCabeComplexity metric", () => {

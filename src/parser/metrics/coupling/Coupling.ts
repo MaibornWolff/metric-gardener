@@ -7,7 +7,7 @@ import {
 import { NamespaceCollector } from "../../resolver/NamespaceCollector";
 import { UsagesCollector } from "../../resolver/UsagesCollector";
 import { CouplingMetric, Relationship, ParseFile, CouplingMetrics } from "../Metric";
-import { checkAndGetFileExtension } from "../../helper/Helper";
+import { checkAndGetFileExtension, makePathRelative } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
@@ -98,6 +98,27 @@ export class Coupling implements CouplingMetric {
         dlog("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
+
+        if (this.config.relativePaths) {
+            for (const relationship of relationships) {
+                relationship.fromSource = makePathRelative(
+                    relationship.fromSource,
+                    this.config.sourcesPath
+                );
+                relationship.toSource = makePathRelative(
+                    relationship.toSource,
+                    this.config.sourcesPath
+                );
+            }
+            const relCouplingMetrics = new Map();
+            for (const [absolutePath, metricValues] of couplingMetrics) {
+                relCouplingMetrics.set(
+                    makePathRelative(absolutePath, this.config.sourcesPath),
+                    metricValues
+                );
+            }
+            couplingMetrics = relCouplingMetrics;
+        }
 
         return {
             relationships: relationships,
@@ -215,7 +236,7 @@ export class Coupling implements CouplingMetric {
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const parseFile = checkAndGetFileExtension(filePath, this.config);
+        const parseFile = checkAndGetFileExtension(filePath);
         if (parseFile === undefined) {
             return;
         }

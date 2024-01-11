@@ -1,5 +1,3 @@
-import fs from "fs";
-
 /**
  * Configures the files to be parsed and the metrics to be calculated.
  */
@@ -58,7 +56,7 @@ export class Configuration {
         compress: boolean,
         relativePaths: boolean
     ) {
-        this.sourcesPath = fs.realpathSync(sourcesPath);
+        this.sourcesPath = sourcesPath;
         this.outputPath = outputPath;
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;

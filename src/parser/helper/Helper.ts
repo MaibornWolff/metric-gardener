@@ -33,12 +33,11 @@ export function checkAndGetFileExtension(filePath: string): undefined | ParseFil
  * Finds supported source code files recursively in all subdirectories.
  *
  * This is an asynchronous generator function using asynchronous I/O,
- * which means it yields values when available. However, after this generator is done,
- * the complete list of files is also available as return value of this function.
+ * which means it yields values when available.
  *
  * @param sourcePath Path under which to search for source code files.
  * @param excludedFolders Subdirectories which should not be searched.
- * @return List of all found files if needed for further processing.
+ * @return AsyncGenerator yielding found source code files.
  */
 export async function* findFilesAsync(
     sourcePath: string,

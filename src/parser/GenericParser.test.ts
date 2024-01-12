@@ -8,22 +8,32 @@ describe("GenericParser", () => {
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
 
+    /**
+     * Gets a parser configuration for the test cases.
+     * @param sourcesPath Path to the source files.
+     * @param parseDependencies Whether to enable parsing dependencies.
+     * @param formatFilePaths Whether to format the output file paths to be independent
+     * of project location and platform.
+     * When this is enabled, do not forget to also format the file path when accessing metric results from the output.
+     * You should use {@link formatPrintPath} for this, e.g.:
+     * <pre><code>
+     * results.fileMetrics.get(formatPrintPath(inputPath, config))
+     * </code></pre>
+     */
     function getParserConfiguration(
         sourcesPath: string,
         parseDependencies = false,
-        printRelativePaths = false
+        formatFilePaths = false
     ) {
-        const config = new Configuration(
+        return new Configuration(
             sourcesPath,
             "invalid/output/path",
             parseDependencies,
             "",
             false,
-            printRelativePaths
+            formatFilePaths, // For project location-independent testing
+            formatFilePaths // For platform-independent testing
         );
-        // For platform-independent testing:
-        config.enforceBackwardSlash = true;
-        return config;
     }
 
     describe("parses PHP McCabeComplexity metric", () => {

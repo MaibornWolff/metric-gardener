@@ -15,17 +15,11 @@ Object {
       "instability": 0.6666666666666666,
       "outgoing_dependencies": 4,
     },
-    "Library\\\\ParameterTypes.cs" => Object {
-      "coupling_between_objects": 5,
-      "incoming_dependencies": 3,
-      "instability": 0.4,
-      "outgoing_dependencies": 2,
-    },
-    "Library\\\\ObjectCreations.cs" => Object {
-      "coupling_between_objects": 8,
+    "Library\\\\IAnotherParameterTypes.cs" => Object {
+      "coupling_between_objects": 1,
       "incoming_dependencies": 1,
-      "instability": 0.875,
-      "outgoing_dependencies": 7,
+      "instability": 0,
+      "outgoing_dependencies": 0,
     },
     "Library\\\\IParameterTypes.cs" => Object {
       "coupling_between_objects": 3,
@@ -39,11 +33,17 @@ Object {
       "instability": 0,
       "outgoing_dependencies": 0,
     },
-    "Library\\\\IAnotherParameterTypes.cs" => Object {
-      "coupling_between_objects": 1,
+    "Library\\\\ObjectCreations.cs" => Object {
+      "coupling_between_objects": 8,
       "incoming_dependencies": 1,
-      "instability": 0,
-      "outgoing_dependencies": 0,
+      "instability": 0.875,
+      "outgoing_dependencies": 7,
+    },
+    "Library\\\\ParameterTypes.cs" => Object {
+      "coupling_between_objects": 5,
+      "incoming_dependencies": 3,
+      "instability": 0.4,
+      "outgoing_dependencies": 2,
     },
     "Library\\\\ParameterTypesSpecialized.cs" => Object {
       "coupling_between_objects": 2,
@@ -97,6 +97,15 @@ Object {
       "toNamespace": "App.CouplingExamplesOne.BlubControllerOne2",
       "toSource": "BlubController.cs",
       "usageType": "usage",
+    },
+    Object {
+      "fromClassName": "IAnotherParameterTypes",
+      "fromNamespace": "App.CouplingExamples.Library.IParameterTypes",
+      "fromSource": "Library\\\\IParameterTypes.cs",
+      "toClassName": "IAnotherParameterTypes",
+      "toNamespace": "App.CouplingExamples.Library.IAnotherParameterTypes",
+      "toSource": "Library\\\\IAnotherParameterTypes.cs",
+      "usageType": "implements",
     },
     Object {
       "fromClassName": "IParameterTypes",
@@ -162,13 +171,22 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "IAnotherParameterTypes",
-      "fromNamespace": "App.CouplingExamples.Library.IParameterTypes",
-      "fromSource": "Library\\\\IParameterTypes.cs",
-      "toClassName": "IAnotherParameterTypes",
-      "toNamespace": "App.CouplingExamples.Library.IAnotherParameterTypes",
-      "toSource": "Library\\\\IAnotherParameterTypes.cs",
-      "usageType": "implements",
+      "fromClassName": "ObjectCreations",
+      "fromNamespace": "App.CouplingExamples.Library.ParameterTypes",
+      "fromSource": "Library\\\\ParameterTypes.cs",
+      "toClassName": "ObjectCreations",
+      "toNamespace": "App.CouplingExamples.Library.ObjectCreations",
+      "toSource": "Library\\\\ObjectCreations.cs",
+      "usageType": "usage",
+    },
+    Object {
+      "fromClassName": "FunctionCalls",
+      "fromNamespace": "App.CouplingExamples.Library.ParameterTypes",
+      "fromSource": "Library\\\\ParameterTypes.cs",
+      "toClassName": "FunctionCalls",
+      "toNamespace": "App.CouplingExamples.Library.FunctionCalls",
+      "toSource": "Library\\\\FunctionCalls.cs",
+      "usageType": "usage",
     },
     Object {
       "fromClassName": "ParameterTypes",
@@ -188,24 +206,6 @@ Object {
       "toSource": "Library\\\\IParameterTypes.cs",
       "usageType": "implements",
     },
-    Object {
-      "fromClassName": "ObjectCreations",
-      "fromNamespace": "App.CouplingExamples.Library.ParameterTypes",
-      "fromSource": "Library\\\\ParameterTypes.cs",
-      "toClassName": "ObjectCreations",
-      "toNamespace": "App.CouplingExamples.Library.ObjectCreations",
-      "toSource": "Library\\\\ObjectCreations.cs",
-      "usageType": "usage",
-    },
-    Object {
-      "fromClassName": "FunctionCalls",
-      "fromNamespace": "App.CouplingExamples.Library.ParameterTypes",
-      "fromSource": "Library\\\\ParameterTypes.cs",
-      "toClassName": "FunctionCalls",
-      "toNamespace": "App.CouplingExamples.Library.FunctionCalls",
-      "toSource": "Library\\\\FunctionCalls.cs",
-      "usageType": "usage",
-    },
   ],
 }
 `;
@@ -219,11 +219,17 @@ Object {
       "instability": 1,
       "outgoing_dependencies": 4,
     },
-    "Library\\\\Helper.php" => Object {
-      "coupling_between_objects": 4,
-      "incoming_dependencies": 3,
-      "instability": 0.25,
-      "outgoing_dependencies": 1,
+    "AnotherControllerInterface.php" => Object {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "BlubController.php" => Object {
+      "coupling_between_objects": 5,
+      "incoming_dependencies": 2,
+      "instability": 0.6,
+      "outgoing_dependencies": 3,
     },
     "ControllerInterface.php" => Object {
       "coupling_between_objects": 3,
@@ -237,17 +243,11 @@ Object {
       "instability": 0.6666666666666666,
       "outgoing_dependencies": 2,
     },
-    "BlubController.php" => Object {
-      "coupling_between_objects": 5,
-      "incoming_dependencies": 2,
-      "instability": 0.6,
-      "outgoing_dependencies": 3,
-    },
-    "AnotherControllerInterface.php" => Object {
-      "coupling_between_objects": 1,
-      "incoming_dependencies": 1,
-      "instability": 0,
-      "outgoing_dependencies": 0,
+    "Library\\\\Helper.php" => Object {
+      "coupling_between_objects": 4,
+      "incoming_dependencies": 3,
+      "instability": 0.25,
+      "outgoing_dependencies": 1,
     },
     "Library\\\\HelperOutput.php" => Object {
       "coupling_between_objects": 2,

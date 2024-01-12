@@ -15,6 +15,23 @@ export function formatCaptures(tree, captures) {
 }
 
 /**
+ * Similar to strcmp in C, this compares two strings and returns a negative value if a < b, a positive value if b < a,
+ * and 0 if a === b.
+ * @param a First string.
+ * @param b Second string.
+ * @return negative value if a < b, a positive value if b < a, and 0 if a === b.
+ */
+export function strcmp(a: string, b: string) {
+    if (a < b) {
+        return -1;
+    } else if (b < a) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/**
  * Formats the specified file path for being output in the way it is configured for this parser run.
  * @param filePath The file path.
  * @param config The configuration for this parser run.

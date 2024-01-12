@@ -1,6 +1,8 @@
 import { GenericParser } from "./GenericParser";
 import fs from "fs";
 import { Configuration } from "./Configuration";
+import { strcmp } from "./helper/Helper";
+import { CouplingResult } from "./metrics/Metric";
 
 describe("GenericParser", () => {
     const phpTestResourcesPath = "./resources/php/";
@@ -34,6 +36,21 @@ describe("GenericParser", () => {
             formatFilePaths, // For project location-independent testing
             formatFilePaths // For platform-independent testing
         );
+    }
+
+    /**
+     * Sorts the contents of the specified {@link CouplingResult} in a deterministic way.
+     * This is necessary as there can be deviations concerning the order
+     * in which files are found on different platforms.
+     * @param couplingResult The CouplingResult whose contents should be sorted.
+     */
+    function sortCouplingResults(couplingResult: CouplingResult) {
+        // Sort the metrics in ascending order of the file paths
+        couplingResult.metrics = new Map(
+            [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0]))
+        );
+        // Just order the relationships in some deterministic way for the snapshot comparison:
+        couplingResult.relationships.sort();
     }
 
     describe("parses PHP McCabeComplexity metric", () => {
@@ -428,7 +445,10 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath, true, true));
             const results = await parser.calculateMetrics();
 
-            expect(results.couplingMetrics).toMatchSnapshot();
+            const couplingResult = results.couplingMetrics;
+            sortCouplingResults(couplingResult);
+
+            expect(couplingResult).toMatchSnapshot();
         });
     });
 
@@ -438,7 +458,10 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath, true, true));
             const results = await parser.calculateMetrics();
 
-            expect(results.couplingMetrics).toMatchSnapshot();
+            const couplingResult = results.couplingMetrics;
+            sortCouplingResults(couplingResult);
+
+            expect(couplingResult).toMatchSnapshot();
         }, 10000);
     });
 });

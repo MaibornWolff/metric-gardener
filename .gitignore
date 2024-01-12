@@ -1,6 +1,11 @@
 .idea
 node_modules
-dist
-./resources/output.json
 neo4j
 .clinic
+
+dist/*
+!dist/parser/
+dist/parser/*
+!dist/parser/__snapshots__/
+
+./resources/output.json

@@ -32,7 +32,7 @@ export class GenericParser {
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
     async calculateMetrics() {
-        const startTime = performance.now();
+        console.time("Time to complete");
 
         const parseFilesGenerator = findFilesAsync(this.config.sourcesPath, this.config.exclusions);
 
@@ -71,18 +71,10 @@ export class GenericParser {
             fileMetrics.set(filepath, metricsMap);
         }
 
-        const endTime = performance.now();
-        const duration = endTime - startTime;
-        const durationSeconds = duration / 1000;
-
-        console.log("\n");
         console.log("#####################################");
         console.log("#####################################");
-        console.log(
-            `Parsing took ${durationSeconds} seconds\nor ${Math.floor(
-                durationSeconds / 60
-            )} minutes and ${durationSeconds % 60} seconds respectively\n`
-        );
+        console.log("Metrics calculation finished.")
+        console.timeEnd("Time to complete");
 
         return {
             fileMetrics,

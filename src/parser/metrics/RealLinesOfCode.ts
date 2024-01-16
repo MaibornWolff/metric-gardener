@@ -33,7 +33,7 @@ export class RealLinesOfCode implements Metric {
      * @param cursor A {@link TreeCursor} for the syntax tree.
      * @param sureCodeLines A set in which the line numbers of the found code lines are stored.
      */
-    walkTree(cursor: TreeCursor, sureCodeLines: Set<number>) {
+    walkTree(cursor: TreeCursor, sureCodeLines = new Set<number>()) {
         // This is not a comment syntax node, so assume it includes "real code".
         if (!this.commentStatementsSet.has(cursor.currentNode.type)) {
             // Assume that first and last line of whatever kind of node this is, is a real code line.
@@ -53,16 +53,16 @@ export class RealLinesOfCode implements Metric {
             // Completed searching this part of the tree, so go up now.
             cursor.gotoParent();
         }
+        return sureCodeLines;
     }
 
     calculate(parseFile: ParseFile): MetricResult {
         const tree = TreeParser.getParseTree(parseFile);
-        const sureCodeLines = new Set<number>();
 
         const cursor = tree.walk();
         // Assume the root node is always some kind of program/file/compilation_unit stuff
         cursor.gotoFirstChild();
-        this.walkTree(cursor, sureCodeLines);
+        const sureCodeLines = this.walkTree(cursor);
 
         dlog("Included lines for rloc: ", sureCodeLines);
 

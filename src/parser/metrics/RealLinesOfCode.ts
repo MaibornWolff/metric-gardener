@@ -1,6 +1,5 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
-import { TreeParser } from "../helper/TreeParser";
 import {
     ExpressionMetricMapping,
     ExpressionQueryStatement,
@@ -8,6 +7,7 @@ import {
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import Parser from "tree-sitter";
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
@@ -41,9 +41,7 @@ export class RealLinesOfCode implements Metric {
         });
     }
 
-    async calculate(parseFile: ParseFile): Promise<MetricResult> {
-        const tree = await TreeParser.getParseTreeAsync(parseFile);
-
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         // Avoid off-by-one error:
         // The number of the last row equals the number of lines in the file minus one,
         // as it is counted from line 0. So add one to the result:

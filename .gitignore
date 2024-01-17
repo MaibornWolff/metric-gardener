@@ -2,6 +2,7 @@
 node_modules
 neo4j
 .clinic
+.DS_Store
 
 dist/*
 !dist/parser/

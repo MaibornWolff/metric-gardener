@@ -49,8 +49,12 @@ describe("GenericParser", () => {
         couplingResult.metrics = new Map(
             [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0]))
         );
-        // Just order the relationships in some deterministic way for the snapshot comparison:
-        couplingResult.relationships.sort();
+        couplingResult.relationships.sort((a, b) => {
+            // Unique ID for relationships adapted from metrics/coupling/Coupling.ts getRelationships(...)
+            const uniqueIdA = a.toNamespace + a.fromNamespace;
+            const uniqueIdB = b.toNamespace + b.fromNamespace;
+            return strcmp(uniqueIdA, uniqueIdB);
+        });
     }
 
     describe("parses PHP McCabeComplexity metric", () => {

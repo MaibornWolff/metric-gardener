@@ -9,4 +9,8 @@ dist/*
 dist/parser/*
 !dist/parser/__snapshots__/
 
+!dist/commands
+dist/commands/*
+!dist/commands/__snapshots__/
+
 ./resources/output.json

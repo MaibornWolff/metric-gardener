@@ -26,9 +26,8 @@ export function strcmp(a: string, b: string) {
         return -1;
     } else if (b < a) {
         return 1;
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 /**

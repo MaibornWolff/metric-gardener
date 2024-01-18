@@ -3,7 +3,7 @@ import { GenericParser } from "./parser/GenericParser";
 import { Configuration } from "./parser/Configuration";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { generateNodeTypesMappingFile } from "./commands/treeSitterMapping";
+import { updateNodeMappings } from "./commands/treeSitterMapping";
 import { outputAsJson } from "./commands/outputMetrics";
 import fs from "fs";
 
@@ -13,7 +13,7 @@ yargs(hideBin(process.argv))
         "(re-)import grammar expression types for supported languages",
         {},
         (argv) => {
-            generateNodeTypesMappingFile();
+            updateNodeMappings();
         }
     )
     .command(

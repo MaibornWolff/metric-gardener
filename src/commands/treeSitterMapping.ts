@@ -56,7 +56,7 @@ export async function updateNodeMappings() {
     // Save the updated mappings:
     fs.promises
         .writeFile(
-            "./src/parser/config/nodeTypesConfig.json",
+            pathToNodeTypesConfig,
             JSON.stringify(Array.from(expressionMappings.values()), null, 4)
         )
         .then(
@@ -147,7 +147,13 @@ async function updateLanguage(
                     if (expressionMappings.has(mapKey)) {
                         if (!expressionMappings.get(mapKey)?.languages.includes(languageAbbr)) {
                             expressionMappings.get(mapKey)?.languages.push(languageAbbr);
-                            dlog("Language " + languageAbbr + " was added to node type " + mapKey);
+                            dlog(
+                                "Language " +
+                                    languageAbbr +
+                                    ' was added to node type "' +
+                                    mapKey +
+                                    '".'
+                            );
                         }
                     } else {
                         expressionMappings.set(mapKey, {
@@ -158,8 +164,13 @@ async function updateLanguage(
                             languages: [languageAbbr],
                             operator: binaryOperator,
                         });
-
-                        dlog("New node type " + mapKey + " was added for language " + languageAbbr);
+                        dlog(
+                            'New node type "' +
+                                mapKey +
+                                '" was added for language "' +
+                                languageAbbr +
+                                '".'
+                        );
                     }
                 }
             }
@@ -171,6 +182,13 @@ async function updateLanguage(
         if (expressionMappings.has(nodeType.type)) {
             if (!expressionMappings.get(nodeType.type)?.languages.includes(languageAbbr)) {
                 expressionMappings.get(nodeType.type)?.languages.push(languageAbbr);
+                dlog(
+                    'Language "' +
+                        languageAbbr +
+                        '" was added to node type "' +
+                        nodeType.type +
+                        '".'
+                );
             }
         } else {
             expressionMappings.set(nodeType.type, {
@@ -180,17 +198,31 @@ async function updateLanguage(
                 category: "",
                 languages: [languageAbbr],
             });
+            dlog(
+                'New node type "' +
+                    nodeType.type +
+                    '" was added for language "' +
+                    languageAbbr +
+                    '".'
+            );
         }
 
         if (nodeType.subtypes !== undefined) {
             for (const subNodeType of nodeType.subtypes) {
-                removedNodeTypes.delete(nodeType.type);
+                removedNodeTypes.delete(subNodeType.type);
 
                 if (expressionMappings.has(subNodeType.type)) {
                     if (
                         !expressionMappings.get(subNodeType.type)?.languages.includes(languageAbbr)
                     ) {
                         expressionMappings.get(subNodeType.type)?.languages.push(languageAbbr);
+                        dlog(
+                            'Language "' +
+                                languageAbbr +
+                                '" was added to node type "' +
+                                nodeType.type +
+                                '".'
+                        );
                     }
                 } else {
                     expressionMappings.set(subNodeType.type, {
@@ -200,6 +232,13 @@ async function updateLanguage(
                         category: "",
                         languages: [languageAbbr],
                     });
+                    dlog(
+                        'New node type "' +
+                            nodeType.type +
+                            '" was added for language "' +
+                            languageAbbr +
+                            '".'
+                    );
                 }
             }
         }
@@ -219,7 +258,13 @@ function applyRemovedNodeTypes(removedNodeTypesForLanguage: Map<string, Set<stri
             if (!removedNodeTypesForLanguage.get(currentLangAbbr)?.has(nodeName)) {
                 updatedLanguages.push(currentLangAbbr);
             } else {
-                dlog("Node type " + nodeName + " was removed for language " + currentLangAbbr);
+                dlog(
+                    'Node type "' +
+                        nodeName +
+                        '" was removed for language "' +
+                        currentLangAbbr +
+                        '".'
+                );
                 if (
                     nodeType.metrics.length > 0 &&
                     (nodeType.activated_for_languages === undefined ||

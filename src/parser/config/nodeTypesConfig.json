@@ -189,6 +189,13 @@
         "languages": ["cs"]
     },
     {
+        "expression": "binary_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"]
+    },
+    {
         "expression": "boolean_literal",
         "metrics": [],
         "type": "statement",
@@ -1543,6 +1550,13 @@
         "type": "statement",
         "category": "",
         "languages": ["cs"]
+    },
+    {
+        "expression": ";",
+        "metrics": [],
+        "type": "keyword",
+        "category": "",
+        "languages": ["java"]
     },
     {
         "expression": "await",

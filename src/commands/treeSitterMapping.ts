@@ -2,6 +2,8 @@ import { ExpressionMetricMapping } from "../parser/helper/Model";
 import fs from "fs";
 import nodeTypesConfig from "../parser/config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { EOL } from "os";
+import { Changelog } from "./Changelog";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -24,8 +26,11 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
 ]);
 
 export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";
+const pathToWriteChangelog = "./nodeTypeChanges.csv";
+const csvSeparator = ";";
 
 const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();
+const changelog: Changelog = new Changelog();
 
 /**
  * Updates the node mappings for calculating metrics with the currently installed language grammars.
@@ -44,14 +49,35 @@ export async function updateNodeMappings() {
         if (presentNodeTypes === undefined) {
             presentNodeTypes = new Set();
         }
-        const promise = updateLanguage(languageAbbr, presentNodeTypes).then((removed) =>
-            removedNodeTypesForLanguage.set(languageAbbr, removed)
+        const promise = updateLanguage(languageAbbr, presentNodeTypes).then(
+            (removed) => {
+                if (removed === null) {
+                    return false;
+                }
+                removedNodeTypesForLanguage.set(languageAbbr, removed);
+                return true;
+            },
+            (reason) => {
+                console.error(reason);
+                return false;
+            }
         );
+
         updatePromises.push(promise);
     }
 
-    await Promise.all(updatePromises);
-    applyRemovedNodeTypes(removedNodeTypesForLanguage);
+    try {
+        const result = await Promise.all(updatePromises);
+        if (result.includes(false)) {
+            console.error("Error while updating the node mappings. Cancel update...");
+            return;
+        }
+        await applyRemovedNodeTypes(removedNodeTypesForLanguage);
+    } catch (e) {
+        console.error("Error while updating the node mappings. Cancel update...");
+        console.error(e);
+        return;
+    }
 
     // Save the updated mappings:
     fs.promises
@@ -77,6 +103,7 @@ export async function updateNodeMappings() {
 
 function importPresentMappings(): Map<string, Set<string>> {
     expressionMappings.clear();
+    changelog.clear();
 
     const presentNodeTypesForLanguage: Map<string, Set<string>> = new Map();
     for (const langAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
@@ -99,11 +126,11 @@ function importPresentMappings(): Map<string, Set<string>> {
 async function updateLanguage(
     languageAbbr: string,
     presentNodes: Set<string>
-): Promise<Set<string>> {
+): Promise<Set<string> | null> {
     const fileLocation = languageAbbreviationToNodeTypeFiles.get(languageAbbr);
     if (fileLocation === undefined) {
         console.error("No file path found for language " + languageAbbr);
-        return new Set(); // Abort without changes to the expression mappings and no node removed.
+        return null; // Cancel whole update.
     }
 
     const nodeTypesPromise = fs.promises.readFile(fileLocation, "utf8").catch((reason) => {
@@ -114,7 +141,7 @@ async function updateLanguage(
 
     const nodeTypesJson = await nodeTypesPromise;
     if (nodeTypesJson === null) {
-        return new Set();
+        return null;
     }
 
     let nodeTypes;
@@ -123,7 +150,7 @@ async function updateLanguage(
     } catch (e) {
         console.error("Error while parsing the json-file " + fileLocation);
         console.error(e);
-        return new Set();
+        return null;
     }
 
     const removedNodeTypes: Set<string> = new Set(presentNodes);
@@ -144,9 +171,11 @@ async function updateLanguage(
                     const mapKey = nodeType.type + "_" + binaryOperator;
                     removedNodeTypes.delete(mapKey);
 
-                    if (expressionMappings.has(mapKey)) {
-                        if (!expressionMappings.get(mapKey)?.languages.includes(languageAbbr)) {
-                            expressionMappings.get(mapKey)?.languages.push(languageAbbr);
+                    const expression = expressionMappings.get(mapKey);
+                    if (expression !== undefined) {
+                        if (!expression.languages.includes(languageAbbr)) {
+                            expression.languages.push(languageAbbr);
+                            changelog.addedNodeToLanguage(expression, languageAbbr);
                             dlog(
                                 "Language " +
                                     languageAbbr +
@@ -164,6 +193,7 @@ async function updateLanguage(
                             languages: [languageAbbr],
                             operator: binaryOperator,
                         });
+                        changelog.addedNewNode(mapKey, languageAbbr);
                         dlog(
                             'New node type "' +
                                 mapKey +
@@ -182,6 +212,7 @@ async function updateLanguage(
         if (expressionMappings.has(nodeType.type)) {
             if (!expressionMappings.get(nodeType.type)?.languages.includes(languageAbbr)) {
                 expressionMappings.get(nodeType.type)?.languages.push(languageAbbr);
+                changelog.addedNodeToLanguage(nodeType.type, languageAbbr);
                 dlog(
                     'Language "' +
                         languageAbbr +
@@ -198,6 +229,7 @@ async function updateLanguage(
                 category: "",
                 languages: [languageAbbr],
             });
+            changelog.addedNewNode(nodeType.type, languageAbbr);
             dlog(
                 'New node type "' +
                     nodeType.type +
@@ -216,6 +248,7 @@ async function updateLanguage(
                         !expressionMappings.get(subNodeType.type)?.languages.includes(languageAbbr)
                     ) {
                         expressionMappings.get(subNodeType.type)?.languages.push(languageAbbr);
+                        changelog.addedNodeToLanguage(subNodeType.type, languageAbbr);
                         dlog(
                             'Language "' +
                                 languageAbbr +
@@ -232,6 +265,7 @@ async function updateLanguage(
                         category: "",
                         languages: [languageAbbr],
                     });
+                    changelog.addedNewNode(subNodeType.type, languageAbbr);
                     dlog(
                         'New node type "' +
                             nodeType.type +
@@ -247,46 +281,182 @@ async function updateLanguage(
     return removedNodeTypes;
 }
 
-function applyRemovedNodeTypes(removedNodeTypesForLanguage: Map<string, Set<string>>) {
+function escapeForCsv(s: string) {
+    const escaped = s.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/"/g, '""');
+    return '"' + escaped + '"';
+}
+
+/**
+ * Writes the changelog.
+ * @return Promise that fulfills once the changelog has been written successfully.
+ */
+function writeChangelog() {
+    return new Promise<void>((resolve, reject) => {
+        const writeStream = fs.createWriteStream(pathToWriteChangelog);
+
+        writeStream.on("error", (err) => {
+            console.error("Error while writing the changelog:");
+            console.error(err);
+            reject();
+        });
+        writeStream.on("finish", () => {
+            console.log('Saved overview of all changes to "' + pathToWriteChangelog + '".');
+            resolve();
+        });
+
+        writeStream.write("Changelog for updating the expression mappings" + EOL);
+        writeStream.write("New syntax nodes:" + EOL + EOL);
+        writeStream.write("Name:" + csvSeparator + "Added to language(s):" + EOL);
+
+        for (const entry of changelog.getAll().values()) {
+            if (entry.isNew) {
+                writeStream.write(
+                    escapeForCsv(entry.expression) +
+                        csvSeparator +
+                        Array.from(entry.addedLanguages) +
+                        EOL
+                );
+            }
+        }
+
+        writeStream.write(EOL + "Removed syntax nodes:" + EOL);
+        writeStream.write(
+            "Name:" +
+                csvSeparator +
+                "Removed from language(s):" +
+                csvSeparator +
+                "Used for calculating the metric(s):" +
+                csvSeparator +
+                "Was explicitly only activated for language(s):" +
+                EOL
+        );
+
+        for (const entry of changelog.getAll().values()) {
+            if (entry.remainingLanguages.size + entry.addedLanguages.size === 0) {
+                const mapping = expressionMappings.get(entry.expression);
+                if (mapping !== undefined) {
+                    const activatedForLangOutput =
+                        mapping.activated_for_languages === undefined
+                            ? ""
+                            : mapping.activated_for_languages;
+                    writeStream.write(
+                        escapeForCsv(entry.expression) +
+                            csvSeparator +
+                            Array.from(entry.removedLanguages) +
+                            csvSeparator +
+                            mapping.metrics +
+                            csvSeparator +
+                            activatedForLangOutput +
+                            EOL
+                    );
+                } else {
+                    console.error(
+                        "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
+                            entry.expression
+                    );
+                }
+            }
+        }
+
+        writeStream.write(
+            EOL + "Syntax nodes which were removed from or added to languages:" + EOL
+        );
+        writeStream.write(
+            "Name:" +
+                csvSeparator +
+                "Added to language(s):" +
+                csvSeparator +
+                "Removed from language(s):" +
+                csvSeparator +
+                "Remains in language(s):" +
+                csvSeparator +
+                "Used for calculating the metric(s):" +
+                csvSeparator +
+                "Was explicitly only activated for language(s):" +
+                EOL
+        );
+
+        for (const entry of changelog.getAll().values()) {
+            if (entry.remainingLanguages.size + entry.addedLanguages.size > 0) {
+                const mapping = expressionMappings.get(entry.expression);
+                if (mapping !== undefined) {
+                    const activatedForLangOutput =
+                        mapping.activated_for_languages === undefined
+                            ? ""
+                            : mapping.activated_for_languages;
+                    writeStream.write(
+                        escapeForCsv(entry.expression) +
+                            csvSeparator +
+                            Array.from(entry.addedLanguages) +
+                            csvSeparator +
+                            Array.from(entry.removedLanguages) +
+                            csvSeparator +
+                            Array.from(entry.remainingLanguages) +
+                            csvSeparator +
+                            mapping.metrics +
+                            csvSeparator +
+                            activatedForLangOutput +
+                            EOL
+                    );
+                } else {
+                    console.error(
+                        "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
+                            entry.expression
+                    );
+                }
+            }
+        }
+        writeStream.end();
+    });
+}
+
+async function applyRemovedNodeTypes(
+    removedNodeTypesForLanguage: Map<string, Set<string>>
+): Promise<void> {
     const nodesToRemove: string[] = [];
 
-    for (const [nodeName, nodeType] of expressionMappings) {
+    for (const [expressionName, expression] of expressionMappings) {
         const updatedLanguages: string[] = [];
         // Keep only languages for which the node type has not been removed from the language's grammar:
-        for (let i = 0; i < nodeType.languages.length; i++) {
-            const currentLangAbbr = nodeType.languages[i];
-            if (!removedNodeTypesForLanguage.get(currentLangAbbr)?.has(nodeName)) {
+        for (let i = 0; i < expression.languages.length; i++) {
+            const currentLangAbbr = expression.languages[i];
+            if (!removedNodeTypesForLanguage.get(currentLangAbbr)?.has(expressionName)) {
                 updatedLanguages.push(currentLangAbbr);
             } else {
+                changelog.removedNodeFromLanguage(expression, currentLangAbbr);
                 dlog(
-                    'Node type "' +
-                        nodeName +
+                    'Expression "' +
+                        expressionName +
                         '" was removed for language "' +
                         currentLangAbbr +
                         '".'
                 );
                 if (
-                    nodeType.metrics.length > 0 &&
-                    (nodeType.activated_for_languages === undefined ||
-                        nodeType.activated_for_languages.includes(currentLangAbbr))
+                    expression.metrics.length > 0 &&
+                    (expression.activated_for_languages === undefined ||
+                        expression.activated_for_languages.includes(currentLangAbbr))
                 ) {
                     console.warn(
                         '## Attention required! Language "' +
                             currentLangAbbr +
                             '" no longer includes the node type "' +
-                            nodeName +
+                            expressionName +
                             '", which was used for calculating the metric(s) ' +
-                            nodeType.metrics +
+                            expression.metrics +
                             ". You may have to add a new node of that language to the metric(s) in nodeTypesConfig.json. ##"
                     );
                 }
             }
         }
         if (updatedLanguages.length === 0) {
-            nodesToRemove.push(nodeName);
+            nodesToRemove.push(expressionName);
         }
-        nodeType.languages = updatedLanguages;
+        expression.languages = updatedLanguages;
     }
+
+    // Make sure to write the change information before deleting any metric mapping.
+    // If there is an error, catch that in the updateNodeMappings() and cancel the whole update.
+    await writeChangelog();
 
     for (const nodeName of nodesToRemove) {
         const nodeType = expressionMappings.get(nodeName);

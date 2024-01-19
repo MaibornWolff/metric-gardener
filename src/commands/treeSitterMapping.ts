@@ -93,6 +93,7 @@ export async function updateNodeMappings() {
                         pathToNodeTypesConfig +
                         '".'
                 );
+                console.log("####################################");
             },
             (reason) => {
                 console.error("Error while writing nodeTypesConfig.json");
@@ -300,6 +301,7 @@ function writeChangelog() {
             reject();
         });
         writeStream.on("finish", () => {
+            console.log("####################################");
             console.log('Saved overview of all changes to "' + pathToWriteChangelog + '".');
             resolve();
         });

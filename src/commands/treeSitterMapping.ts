@@ -209,10 +209,11 @@ async function updateLanguage(
 
         removedNodeTypes.delete(nodeType.type);
 
-        if (expressionMappings.has(nodeType.type)) {
-            if (!expressionMappings.get(nodeType.type)?.languages.includes(languageAbbr)) {
-                expressionMappings.get(nodeType.type)?.languages.push(languageAbbr);
-                changelog.addedNodeToLanguage(nodeType.type, languageAbbr);
+        const expression = expressionMappings.get(nodeType.type);
+        if (expression !== undefined) {
+            if (!expression.languages.includes(languageAbbr)) {
+                expression.languages.push(languageAbbr);
+                changelog.addedNodeToLanguage(expression, languageAbbr);
                 dlog(
                     'Language "' +
                         languageAbbr +
@@ -243,12 +244,11 @@ async function updateLanguage(
             for (const subNodeType of nodeType.subtypes) {
                 removedNodeTypes.delete(subNodeType.type);
 
-                if (expressionMappings.has(subNodeType.type)) {
-                    if (
-                        !expressionMappings.get(subNodeType.type)?.languages.includes(languageAbbr)
-                    ) {
-                        expressionMappings.get(subNodeType.type)?.languages.push(languageAbbr);
-                        changelog.addedNodeToLanguage(subNodeType.type, languageAbbr);
+                const expression = expressionMappings.get(subNodeType.type);
+                if (expression !== undefined) {
+                    if (!expression.languages.includes(languageAbbr)) {
+                        expression.languages.push(languageAbbr);
+                        changelog.addedNodeToLanguage(expression, languageAbbr);
                         dlog(
                             'Language "' +
                                 languageAbbr +
@@ -319,7 +319,7 @@ function writeChangelog() {
             }
         }
 
-        writeStream.write(EOL + "Removed syntax nodes:" + EOL);
+        writeStream.write(EOL + "Removed syntax nodes:" + EOL + EOL);
         writeStream.write(
             "Name:" +
                 csvSeparator +
@@ -359,7 +359,7 @@ function writeChangelog() {
         }
 
         writeStream.write(
-            EOL + "Syntax nodes which were removed from or added to languages:" + EOL
+            EOL + "Syntax nodes which were removed from or added to languages:" + EOL + EOL
         );
         writeStream.write(
             "Name:" +

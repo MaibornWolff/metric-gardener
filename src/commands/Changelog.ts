@@ -34,9 +34,6 @@ export class Changelog {
      * @param languageAbbr Abbreviation of the language.
      */
     addedNodeToLanguage(expression: ExpressionMetricMapping, languageAbbr: string) {
-        if (expression === undefined || expression.expression === undefined) {
-            throw new Error("UNDEFINED EXPRESSION PASSED");
-        }
         // There is no changelog entry for this expression yet, so create it.
         if (!this.changelog.has(expression.expression)) {
             this.changelog.set(
@@ -71,9 +68,6 @@ export class Changelog {
      * @param languageAbbr Abbreviation of the language.
      */
     removedNodeFromLanguage(expression: ExpressionMetricMapping, languageAbbr: string) {
-        if (expression === undefined || expression.expression === undefined) {
-            throw new Error("UNDEFINED EXPRESSION PASSED");
-        }
         if (!this.changelog.has(expression.expression)) {
             this.changelog.set(
                 expression.expression,

@@ -36,19 +36,25 @@ export class CommentLines implements Metric {
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        const commentLines = new Set<number>();
+        let numberOfLines = 0;
+        let lastCommitLine = -1;
+
         for (const match of matches) {
             const captureNode: SyntaxNode = match.captures[0].node;
-            for (let i = captureNode.startPosition.row; i <= captureNode.endPosition.row; i++) {
-                commentLines.add(i);
+            const startRow = captureNode.startPosition.row;
+            // If we have not already counted for a comment on the same line:
+            if (lastCommitLine != startRow) {
+                const endRow = captureNode.endPosition.row;
+                numberOfLines += endRow - startRow + 1;
+                lastCommitLine = endRow;
             }
         }
 
-        dlog(this.getName() + " - " + commentLines.size);
+        dlog(this.getName() + " - " + numberOfLines);
 
         return {
             metricName: this.getName(),
-            metricValue: commentLines.size,
+            metricValue: numberOfLines,
         };
     }
 

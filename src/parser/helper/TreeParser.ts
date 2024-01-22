@@ -15,9 +15,26 @@ export class TreeParser {
         const parser = new Parser();
         parser.setLanguage(fileExtensionToGrammar(parseFile.fileExtension));
 
-        const sourceCode = fs.readFileSync(parseFile.filePath).toString();
+        const sourceCode = fs.readFileSync(parseFile.filePath, { encoding: "utf8" });
         const tree = parser.parse(sourceCode);
 
+        TreeParser.cache.set(parseFile.filePath, tree);
+
+        return tree;
+    }
+
+    static async getParseTreeAsync(parseFile: ParseFile): Promise<Tree> {
+        const cachedItem = TreeParser.cache.get(parseFile.filePath);
+        if (cachedItem !== undefined) {
+            return cachedItem;
+        }
+
+        const parser = new Parser();
+        parser.setLanguage(fileExtensionToGrammar(parseFile.fileExtension));
+
+        const sourceCode = await fs.promises.readFile(parseFile.filePath, { encoding: "utf8" });
+
+        const tree = parser.parse(sourceCode);
         TreeParser.cache.set(parseFile.filePath, tree);
 
         return tree;

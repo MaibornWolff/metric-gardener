@@ -7,7 +7,7 @@ import Kotlin from "tree-sitter-kotlin";
 import PHP from "tree-sitter-php";
 import Python from "tree-sitter-python";
 import TypeScript from "tree-sitter-typescript";
-import { ConstantTwoWayMap } from "./TwoWayMap";
+import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 
 /**
  * Enum of all supported programming languages.

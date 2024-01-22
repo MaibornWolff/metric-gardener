@@ -29,6 +29,7 @@ export abstract class AbstractCollector {
 
         if (this.getAccessorsQuery()) {
             const tree = TreeParser.getParseTree(parseFile);
+
             const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
             queryBuilder.setStatements([new SimpleQueryStatement(this.getAccessorsQuery())]);
 

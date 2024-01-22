@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { TreeParser } from "../helper/TreeParser";
 import {
     ExpressionMetricMapping,
     ExpressionQueryStatement,
@@ -9,6 +8,7 @@ import {
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
+import Parser from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -47,9 +47,7 @@ export class McCabeComplexity implements Metric {
         });
     }
 
-    calculate(parseFile: ParseFile): MetricResult {
-        const tree = TreeParser.getParseTree(parseFile);
-
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
         queryBuilder.setStatements(this.mccStatementsSuperSet);
 

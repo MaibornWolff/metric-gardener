@@ -1,10 +1,10 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
-import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import Parser from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -17,9 +17,7 @@ export class Classes implements Metric {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
     }
 
-    async calculate(parseFile: ParseFile): Promise<MetricResult> {
-        const tree = await TreeParser.getParseTreeAsync(parseFile);
-
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const queryBuilder = new QueryBuilder(
             fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,

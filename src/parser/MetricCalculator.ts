@@ -10,6 +10,7 @@ import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
+import { TreeParser } from "./helper/TreeParser";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -49,15 +50,37 @@ export class MetricCalculator {
      * that relates each metric name to the calculated metric.
      */
     async calculateMetrics(parseFile: ParseFile): Promise<[string, Map<string, MetricResult>]> {
-        const metricResults = new Map<string, MetricResult>();
+        try {
+            const metricResults = new Map<string, MetricResult>();
+            const resultPromises: Promise<MetricResult>[] = [];
 
-        dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
+            dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
 
-        for (const metric of this.fileMetrics) {
-            const metricResult = await metric.calculate(parseFile);
-            metricResults.set(metricResult.metricName, metricResult);
+            const tree = TreeParser.getParseTree(parseFile);
+
+            for (const metric of this.fileMetrics) {
+                resultPromises.push(
+                    metric.calculate(parseFile, tree).catch((reason) => {
+                        console.error("Error while calculating metric");
+                        console.error(reason);
+                        return { metricName: "ERROR", metricValue: -1 };
+                    })
+                );
+            }
+
+            const resultsArray = await Promise.all(resultPromises);
+            for (const result of resultsArray) {
+                metricResults.set(result.metricName, result);
+            }
+
+            return [formatPrintPath(parseFile.filePath, this.config), metricResults];
+        } catch (e) {
+            console.error("Error while parsing file metrics");
+            console.error(e);
+            return [
+                parseFile.filePath,
+                new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
+            ];
         }
-
-        return [formatPrintPath(parseFile.filePath, this.config), metricResults];
     }
 }

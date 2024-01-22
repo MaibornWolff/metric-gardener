@@ -1,6 +1,6 @@
-import { TreeParser } from "../helper/TreeParser";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import Parser from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -10,9 +10,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Counts the number of lines in a file, including empty lines.
  */
 export class LinesOfCode implements Metric {
-    async calculate(parseFile: ParseFile): Promise<MetricResult> {
-        const tree = TreeParser.getParseTree(parseFile);
-
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         // Avoid off-by-one error:
         // The number of the last row equals the number of lines in the file minus one,
         // as it is counted from line 0. So add one to the result:

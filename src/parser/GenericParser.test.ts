@@ -447,8 +447,8 @@ describe("GenericParser", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             const inputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
             const parser = new GenericParser(getParserConfiguration(inputPath, true, true));
-            const results = await parser.calculateMetrics();
 
+            const results = await parser.calculateMetrics();
             const couplingResult = results.couplingMetrics;
             sortCouplingResults(couplingResult);
 
@@ -460,8 +460,8 @@ describe("GenericParser", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             const inputPath = fs.realpathSync(csharpTestResourcesPath + "coupling-examples/");
             const parser = new GenericParser(getParserConfiguration(inputPath, true, true));
-            const results = await parser.calculateMetrics();
 
+            const results = await parser.calculateMetrics();
             const couplingResult = results.couplingMetrics;
             sortCouplingResults(couplingResult);
 

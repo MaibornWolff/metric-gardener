@@ -76,25 +76,22 @@ export function checkAndGetFileExtension(filePath: string): undefined | ParseFil
  * which means it yields values when available.
  *
  * @param config Configuration of this parser run.
+ * @return AsyncGenerator yielding found source code files.
  */
 export async function* findFilesAsync(config: Configuration): AsyncGenerator<ParseFile> {
-    try {
-        // Handle special case: if the specified sourcePath is a single file, just yield the file.
-        if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
-            const parseFile = checkAndGetFileExtension(config.sourcesPath);
-            if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
-                yield parseFile;
-            }
-        } else {
-            // sourcePath points to a directory, so use recursive function to find all files.
-
-            // Create set to improve lookup performance:
-            const excludedSet = new Set(config.exclusions);
-            // The folder at sourcePath itself cannot be excluded, so continue using delegating yield* generator call:
-            yield* findFilesAsyncRecursive(config.sourcesPath, excludedSet);
+    // Handle special case: if the specified sourcePath is a single file, just yield the file.
+    if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
+        const parseFile = checkAndGetFileExtension(config.sourcesPath);
+        if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
+            yield parseFile;
         }
-    } catch (e) {
-        console.error(e);
+    } else {
+        // sourcePath points to a directory, so use recursive function to find all files.
+
+        // Create set to improve lookup performance:
+        const excludedSet = new Set(config.exclusions);
+        // The folder at sourcePath itself cannot be excluded, so continue using delegating yield* generator call:
+        yield* findFilesAsyncRecursive(config.sourcesPath, excludedSet);
     }
 }
 
@@ -102,33 +99,26 @@ async function* findFilesAsyncRecursive(
     dir: string,
     excludedFolders: Set<string>
 ): AsyncGenerator<ParseFile> {
-    try {
-        const openedDir = await fs.promises.opendir(dir);
+    const openedDir = await fs.promises.opendir(dir);
 
-        for await (const currentEntry of openedDir) {
-            const currentPath = path.join(dir, currentEntry.name);
+    for await (const currentEntry of openedDir) {
+        const currentPath = path.join(dir, currentEntry.name);
 
-            if (currentEntry.isDirectory()) {
-                const isPathExcluded = excludedFolders.has(currentEntry.name);
-                if (!isPathExcluded) {
-                    // The current directory is not excluded, so recurse into subdirectory,
-                    // using delegating yield* generator call:
-                    yield* findFilesAsyncRecursive(currentPath, excludedFolders);
-                }
-            } // End of if (isDirectory)
-            else {
-                const parseFile = checkAndGetFileExtension(currentPath);
-                if (
-                    parseFile !== undefined &&
-                    fileExtensionToGrammar.has(parseFile.fileExtension)
-                ) {
-                    yield parseFile;
-                }
-            } // End of else (isDirectory)
-        } // End of for await (directory entries)
-    } catch (e) {
-        console.error(e);
-    }
+        if (currentEntry.isDirectory()) {
+            const isPathExcluded = excludedFolders.has(currentEntry.name);
+            if (!isPathExcluded) {
+                // The current directory is not excluded, so recurse into subdirectory,
+                // using delegating yield* generator call:
+                yield* findFilesAsyncRecursive(currentPath, excludedFolders);
+            }
+        } // End of if (isDirectory)
+        else {
+            const parseFile = checkAndGetFileExtension(currentPath);
+            if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
+                yield parseFile;
+            }
+        } // End of else (isDirectory)
+    } // End of for await (directory entries)
 }
 
 export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {

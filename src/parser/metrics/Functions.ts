@@ -18,7 +18,7 @@ export class Functions implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();

@@ -24,7 +24,7 @@ export class QueryStrategy {
 
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
 
         const query = queryBuilder.build();

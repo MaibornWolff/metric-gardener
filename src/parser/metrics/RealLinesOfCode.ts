@@ -48,7 +48,7 @@ export class RealLinesOfCode implements Metric {
 
         const emptyLines = this.countEmptyLines(tree.rootNode.text);
 
-        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.commentStatementsSuperSet);
 
         const commentQuery = queryBuilder.build();

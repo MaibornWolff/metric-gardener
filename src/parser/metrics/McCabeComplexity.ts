@@ -48,7 +48,7 @@ export class McCabeComplexity implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.mccStatementsSuperSet);
 
         const query = queryBuilder.build();

@@ -2,6 +2,7 @@ import Parser, { Query } from "tree-sitter";
 import { QueryStatementInterface } from "../helper/Model";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { fileExtensionToLanguage, Languages, languageToGrammar } from "../helper/Languages";
+import { ParseFile } from "../metrics/Metric";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -13,13 +14,13 @@ export class QueryBuilder {
     private tree: Parser.Tree;
     private statements: QueryStatementInterface[] = [];
 
-    constructor(fileExtension: string, tree: Parser.Tree) {
+    constructor(parseFile: ParseFile, tree: Parser.Tree) {
         this.tree = tree;
-        const language = fileExtensionToLanguage.get(fileExtension);
+        const language = fileExtensionToLanguage.get(parseFile.fileExtension);
 
         if (language === undefined) {
             this.language = Languages.Unsupported;
-            dlog("Unsupported file extension: " + fileExtension);
+            console.log("Unsupported file extension: " + parseFile.fileExtension);
         } else {
             this.language = language;
             this.treeSitterLanguage = languageToGrammar.get(language);

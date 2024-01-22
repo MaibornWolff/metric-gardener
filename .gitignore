@@ -3,3 +3,5 @@ node_modules
 dist
 ./resources/output.json
 neo4j
+.clinic
+.DS_Store

@@ -8,7 +8,10 @@ import PHP from "tree-sitter-php";
 import Python from "tree-sitter-python";
 import TypeScript from "tree-sitter-typescript";
 
-export const grammars = new Map([
+/**
+ * Maps supported file extensions to the corresponding language grammar.
+ */
+export const fileExtensionToGrammar = new Map([
     ["cs", CSharp],
     ["cpp", CPlusPlus],
     ["h", CPlusPlus],

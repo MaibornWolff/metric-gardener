@@ -1,3 +1,5 @@
+import Parser from "tree-sitter";
+
 /**
  * Interface for carrying the result of a metric calculation.
  */
@@ -40,11 +42,12 @@ export interface CouplingResult {
  */
 export interface Metric {
     /**
-     * Calculates the metric value for the supplied file.
+     * Calculates the metric value for the specified file.
      * @param parseFile Source code file for which the metric value should be calculated.
+     * @param tree Syntax tree for the file.
      * @return A MetricResult containing the calculated metric value.
      */
-    calculate(parseFile: ParseFile): MetricResult;
+    calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult>;
 
     /**
      * Returns the name of this metric.
@@ -59,13 +62,13 @@ export interface CouplingMetric {
 }
 
 /**
- * Represents a file to be parsed, including its path and programming language.
+ * Represents a file to be parsed, including its path and the file extension.
  */
 export interface ParseFile {
     /**
-     * Programming language of the file.
+     * File extension of the file.
      */
-    language: string;
+    fileExtension: string;
 
     /**
      * Path to the file.

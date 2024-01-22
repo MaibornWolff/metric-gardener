@@ -1,7 +1,6 @@
 import { McCabeComplexity } from "./metrics/McCabeComplexity";
 import { Functions } from "./metrics/Functions";
 import { Classes } from "./metrics/Classes";
-import fs from "fs";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
@@ -10,6 +9,7 @@ import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { TreeParser } from "./helper/TreeParser";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -43,30 +43,43 @@ export class MetricCalculator {
     }
 
     /**
-     * Calculates all basic single file metrics on the specified files.
-     * @param parseFiles Files for which the metrics should be calculated.
-     * @return Map that relates the file path of each file to a map of the calculated metrics.
+     * Calculates all basic single file metrics on the specified file.
+     * @param parseFile File for which the metric should be calculated.
+     * @return A tuple that contains the path of the file and a Map
+     * that relates each metric name to the calculated metric.
      */
-    calculateMetrics(parseFiles: ParseFile[]) {
-        const sourcesRoot = fs.realpathSync(this.config.sourcesPath);
-
-        dlog("\n\n", "----- Calculating metrics for " + sourcesRoot + " recursively -----", "\n\n");
-        dlog(" --- " + parseFiles.length + " files detected", "\n\n");
-
-        const fileMetrics = new Map<string, Map<string, MetricResult>>();
-
-        for (const parseFile of parseFiles) {
+    async calculateMetrics(parseFile: ParseFile): Promise<[string, Map<string, MetricResult>]> {
+        try {
             const metricResults = new Map<string, MetricResult>();
-            fileMetrics.set(parseFile.filePath, metricResults);
+            const resultPromises: Promise<MetricResult>[] = [];
 
             dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
 
-            for (const metric of this.fileMetrics) {
-                const metricResult = metric.calculate(parseFile);
-                metricResults.set(metricResult.metricName, metricResult);
-            }
-        }
+            const tree = TreeParser.getParseTree(parseFile);
 
-        return fileMetrics;
+            for (const metric of this.fileMetrics) {
+                resultPromises.push(
+                    metric.calculate(parseFile, tree).catch((reason) => {
+                        console.error("Error while calculating metric");
+                        console.error(reason);
+                        return { metricName: "ERROR", metricValue: -1 };
+                    })
+                );
+            }
+
+            const resultsArray = await Promise.all(resultPromises);
+            for (const result of resultsArray) {
+                metricResults.set(result.metricName, result);
+            }
+
+            return [parseFile.filePath, metricResults];
+        } catch (e) {
+            console.error("Error while parsing file metrics");
+            console.error(e);
+            return [
+                parseFile.filePath,
+                new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
+            ];
+        }
     }
 }

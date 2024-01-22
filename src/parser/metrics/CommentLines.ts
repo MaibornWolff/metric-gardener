@@ -1,10 +1,9 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { grammars } from "../helper/Grammars";
-import { TreeParser } from "../helper/TreeParser";
+import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getExpressionsByCategory, getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
-import { SyntaxNode } from "tree-sitter";
+import Parser, { SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -21,16 +20,15 @@ export class CommentLines implements Metric {
         this.commentExpressions = getExpressionsByCategory(allNodeTypes, this.getName(), "comment");
     }
 
-    calculate(parseFile: ParseFile): MetricResult {
-        const tree = TreeParser.getParseTree(parseFile);
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         this.excludedFileHeaderComments = this.getExcludedFileHeaderComments(
             tree.rootNode.children
         );
 
         const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
+            fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
-            parseFile.language
+            parseFile.fileExtension
         );
         queryBuilder.setStatements(this.statementsSuperSet);
 

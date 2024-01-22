@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { ExpressionMetricMapping, ExpressionQueryStatement } from "./Model";
 import { ParseFile } from "../metrics/Metric";
+import { fileExtensionToGrammar } from "./FileExtensionToGrammar";
 
 export function formatCaptures(tree, captures) {
     return captures.map((c) => {
@@ -12,50 +13,76 @@ export function formatCaptures(tree, captures) {
     });
 }
 
-export function getParseFile(filePath: string): undefined | ParseFile {
-    const extension = filePath.split(".").pop();
-    if (extension !== undefined && extension.length > 0) {
-        return { language: extension.toLowerCase(), filePath: filePath };
+/**
+ * Checks whether the specified path represents a file with a file extension.
+ * If so, this function returns a corresponding {@link ParseFile}-object that includes the file extension.
+ * @param filePath Path that should be checked.
+ * @return A ParseFile-object if there is a file extension, undefined if there is no file extension present.
+ */
+export function checkAndGetFileExtension(filePath: string): undefined | ParseFile {
+    const splitted = filePath.split(".");
+    if (splitted.length >= 2) {
+        const fileExtension = splitted[splitted.length - 1].toLowerCase();
+        if (fileExtension.length > 0) {
+            return { fileExtension: fileExtension, filePath: filePath };
+        }
     }
 }
 
-export function findFilesRecursively(
-    dir: string,
-    supportedFileExtensions: string[] = [],
-    excludedFolders: string[] = [],
-    fileList: ParseFile[] = []
-): ParseFile[] {
-    if (fs.lstatSync(dir).isFile()) {
-        const parseFile = getParseFile(dir);
-        return parseFile !== undefined ? [parseFile] : [];
-    }
-
-    fs.readdirSync(dir).forEach((file) => {
-        const fileExtension = file.split(".").pop();
-
-        const currentPath = path.join(dir, file);
-        if (fs.statSync(currentPath).isDirectory()) {
-            const isPathExcluded = excludedFolders.some((folder) => {
-                return path.basename(currentPath) === folder;
-            });
-            if (isPathExcluded) {
-                return;
-            }
-            fileList = findFilesRecursively(
-                currentPath,
-                supportedFileExtensions,
-                excludedFolders,
-                fileList
-            );
-        } else if (fileExtension && supportedFileExtensions.includes(fileExtension.toLowerCase())) {
-            const parseFile = getParseFile(currentPath);
-            if (parseFile != undefined) {
-                fileList = fileList.concat(parseFile);
-            }
+/**
+ * Finds supported source code files recursively in all subdirectories.
+ *
+ * This is an asynchronous generator function using asynchronous I/O,
+ * which means it yields values when available.
+ *
+ * @param sourcePath Path under which to search for source code files.
+ * @param excludedFolders Subdirectories which should not be searched.
+ * @return AsyncGenerator yielding found source code files.
+ */
+export async function* findFilesAsync(
+    sourcePath: string,
+    excludedFolders: string[] = []
+): AsyncGenerator<ParseFile> {
+    // Handle special case: if the specified sourcePath is a single file, just yield the file.
+    if ((await fs.promises.lstat(sourcePath)).isFile()) {
+        const parseFile = checkAndGetFileExtension(sourcePath);
+        if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
+            yield parseFile;
         }
-    });
+    } else {
+        // sourcePath points to a directory, so use recursive function to find all files.
 
-    return fileList;
+        // Create set to improve lookup performance:
+        const excludedSet = new Set(excludedFolders);
+        // The folder at sourcePath itself cannot be excluded, so continue using delegating yield* generator call:
+        yield* findFilesAsyncRecursive(sourcePath, excludedSet);
+    }
+}
+
+async function* findFilesAsyncRecursive(
+    dir: string,
+    excludedFolders: Set<string>
+): AsyncGenerator<ParseFile> {
+    const openedDir = await fs.promises.opendir(dir);
+
+    for await (const currentEntry of openedDir) {
+        const currentPath = path.join(dir, currentEntry.name);
+
+        if (currentEntry.isDirectory()) {
+            const isPathExcluded = excludedFolders.has(currentEntry.name);
+            if (!isPathExcluded) {
+                // The current directory is not excluded, so recurse into subdirectory,
+                // using delegating yield* generator call:
+                yield* findFilesAsyncRecursive(currentPath, excludedFolders);
+            }
+        } // End of if (isDirectory)
+        else {
+            const parseFile = checkAndGetFileExtension(currentPath);
+            if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
+                yield parseFile;
+            }
+        } // End of else (isDirectory)
+    } // End of for await (directory entries)
 }
 
 export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {

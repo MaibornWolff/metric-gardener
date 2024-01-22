@@ -8,7 +8,7 @@ export class TreeParser {
 
     static getParseTree(parseFile: ParseFile): Tree {
         const cachedItem = TreeParser.cache.get(parseFile.filePath);
-        if (cachedItem !== undefined) {
+        if (cachedItem !== undefined && cachedItem.rootNode !== undefined) {
             return cachedItem;
         }
 
@@ -20,12 +20,17 @@ export class TreeParser {
 
         TreeParser.cache.set(parseFile.filePath, tree);
 
+        if (tree === undefined || tree.rootNode === undefined) {
+            console.error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
+            throw new Error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
+        }
+
         return tree;
     }
 
     static async getParseTreeAsync(parseFile: ParseFile): Promise<Tree> {
         const cachedItem = TreeParser.cache.get(parseFile.filePath);
-        if (cachedItem !== undefined) {
+        if (cachedItem !== undefined && cachedItem.rootNode !== undefined) {
             return cachedItem;
         }
 
@@ -36,6 +41,11 @@ export class TreeParser {
 
         const tree = parser.parse(sourceCode);
         TreeParser.cache.set(parseFile.filePath, tree);
+
+        if (tree === undefined || tree.rootNode === undefined) {
+            console.error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
+            throw new Error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
+        }
 
         return tree;
     }

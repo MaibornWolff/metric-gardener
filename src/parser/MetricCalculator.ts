@@ -9,6 +9,7 @@ import { Configuration } from "./Configuration";
 import { Metric, MetricResult, ParseFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { formatPrintPath } from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -72,7 +73,7 @@ export class MetricCalculator {
                 metricResults.set(result.metricName, result);
             }
 
-            return [parseFile.filePath, metricResults];
+            return [formatPrintPath(parseFile.filePath, this.config), metricResults];
         } catch (e) {
             console.error("Error while parsing file metrics");
             console.error(e);

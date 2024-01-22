@@ -8,6 +8,7 @@ describe("Configuration", () => {
                 "output/path",
                 false,
                 "folder1 , folder2",
+                false,
                 false
             );
 
@@ -16,7 +17,14 @@ describe("Configuration", () => {
             expect(config.exclusions[1]).toBe("folder2");
         });
         it("when one exclusion is given", () => {
-            const config = new Configuration("sourcesPath", "output/path", false, "folder1", false);
+            const config = new Configuration(
+                "sourcesPath",
+                "output/path",
+                false,
+                "folder1",
+                false,
+                false
+            );
 
             expect(config.exclusions.length).toBe(1);
             expect(config.exclusions[0]).toBe("folder1");

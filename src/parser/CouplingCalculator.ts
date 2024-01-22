@@ -34,6 +34,7 @@ export class CouplingCalculator {
 
         this.comprisingMetrics = [
             new Coupling(
+                this.config,
                 allNodeTypes,
                 this.namespaceCollector,
                 this.usageCollector,

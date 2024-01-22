@@ -6,18 +6,26 @@ import {
 } from "../../resolver/typeUsages/AbstractCollector";
 import { NamespaceCollector } from "../../resolver/NamespaceCollector";
 import { UsagesCollector } from "../../resolver/UsagesCollector";
-import { CouplingMetric, Relationship, ParseFile, CouplingMetrics } from "../Metric";
-import { checkAndGetFileExtension } from "../../helper/Helper";
+import {
+    CouplingMetric,
+    Relationship,
+    ParseFile,
+    CouplingMetrics,
+    CouplingResult,
+} from "../Metric";
+import { checkAndGetFileExtension, formatPrintPath } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { Configuration } from "../../Configuration";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export class Coupling implements CouplingMetric {
+    private config: Configuration;
     private namespaceCollector: NamespaceCollector;
     private publicAccessorCollector: PublicAccessorCollector;
     private usageCollector: UsagesCollector;
@@ -25,11 +33,13 @@ export class Coupling implements CouplingMetric {
     private alreadyAddedRelationships = new Set<string>();
 
     constructor(
+        config: Configuration,
         allNodeTypes: ExpressionMetricMapping[],
         namespaceCollector: NamespaceCollector,
         usageCollector: UsagesCollector,
         publicAccessorCollector: PublicAccessorCollector
     ) {
+        this.config = config;
         this.namespaceCollector = namespaceCollector;
         this.usageCollector = usageCollector;
         this.publicAccessorCollector = publicAccessorCollector;
@@ -95,10 +105,7 @@ export class Coupling implements CouplingMetric {
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
 
-        return {
-            relationships: relationships,
-            metrics: couplingMetrics,
-        };
+        return this.formatPrintedPaths(relationships, couplingMetrics);
     }
 
     private getRelationships(
@@ -245,6 +252,32 @@ export class Coupling implements CouplingMetric {
             coupling_between_objects: 0,
             instability: 0,
         };
+    }
+
+    /**
+     * If specified in the configuration, this replaces all file paths with the correctly formatted file paths
+     * for the json output.
+     * @param relationships Relationships to include in the output.
+     * @param couplingMetrics Coupling metrics to include in the output.
+     * @return A CouplingResult including the formatted relationships and coupling metrics.
+     * @private
+     */
+    private formatPrintedPaths(
+        relationships: Relationship[],
+        couplingMetrics: Map<string, CouplingMetrics>
+    ): CouplingResult {
+        if (this.config.needsPrintPathFormatting()) {
+            for (const relationship of relationships) {
+                relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
+                relationship.toSource = formatPrintPath(relationship.toSource, this.config);
+            }
+            const relCouplingMetrics = new Map();
+            for (const [absolutePath, metricValues] of couplingMetrics) {
+                relCouplingMetrics.set(formatPrintPath(absolutePath, this.config), metricValues);
+            }
+            couplingMetrics = relCouplingMetrics;
+        }
+        return { relationships: relationships, metrics: couplingMetrics };
     }
 
     getName(): string {

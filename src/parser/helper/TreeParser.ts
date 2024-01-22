@@ -33,8 +33,8 @@ export class TreeParser {
         parser.setLanguage(fileExtensionToGrammar.get(parseFile.fileExtension));
 
         const sourceCode = await fs.promises.readFile(parseFile.filePath, { encoding: "utf8" });
-        const tree = parser.parse(sourceCode);
 
+        const tree = parser.parse(sourceCode);
         TreeParser.cache.set(parseFile.filePath, tree);
 
         return tree;

@@ -1,7 +1,24 @@
 .idea
 node_modules
+<<<<<<< HEAD
+neo4j
+.clinic
+.DS_Store
+
+dist/*
+!dist/parser/
+dist/parser/*
+!dist/parser/__snapshots__/
+
+!dist/commands
+dist/commands/*
+!dist/commands/__snapshots__/
+
+./resources/output.json
+=======
 dist
 ./resources/output.json
 neo4j
 .clinic
 .DS_Store
+>>>>>>> main

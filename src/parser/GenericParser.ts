@@ -38,10 +38,7 @@ export class GenericParser {
         let couplingMetrics = {} as CouplingResult;
 
         try {
-            const parseFilesGenerator = findFilesAsync(
-                this.config.sourcesPath,
-                this.config.exclusions
-            );
+            const parseFilesGenerator = findFilesAsync(this.config);
 
             const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
             const parseFiles: ParseFile[] = [];

@@ -1,6 +1,8 @@
 import { GenericParser } from "./GenericParser";
 import fs from "fs";
 import { Configuration } from "./Configuration";
+import { strcmp } from "./helper/Helper";
+import { CouplingResult } from "./metrics/Metric";
 
 describe("GenericParser", () => {
     const phpTestResourcesPath = "./resources/php/";
@@ -8,8 +10,51 @@ describe("GenericParser", () => {
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
 
-    function getParserConfiguration(sourcesPath: string, parseDependencies = false) {
-        return new Configuration(sourcesPath, "invalid/output/path", parseDependencies, "", false);
+    /**
+     * Gets a parser configuration for the test cases.
+     * @param sourcesPath Path to the source files.
+     * @param parseDependencies Whether to enable parsing dependencies.
+     * @param formatFilePaths Whether to format the output file paths to be independent
+     * of project location and platform.
+     * When this is enabled, do not forget to also format the file path when accessing metric results from the output.
+     * You should use {@link formatPrintPath} for this, e.g.:
+     * <pre><code>
+     * results.fileMetrics.get(formatPrintPath(inputPath, config))
+     * </code></pre>
+     */
+    function getParserConfiguration(
+        sourcesPath: string,
+        parseDependencies = false,
+        formatFilePaths = false
+    ) {
+        return new Configuration(
+            sourcesPath,
+            "invalid/output/path",
+            parseDependencies,
+            "",
+            false,
+            formatFilePaths, // For project location-independent testing
+            formatFilePaths // For platform-independent testing
+        );
+    }
+
+    /**
+     * Sorts the contents of the specified {@link CouplingResult} in a deterministic way.
+     * This is necessary as there can be deviations concerning the order
+     * in which files are found on different platforms.
+     * @param couplingResult The CouplingResult whose contents should be sorted.
+     */
+    function sortCouplingResults(couplingResult: CouplingResult) {
+        // Sort the metrics in ascending order of the file paths
+        couplingResult.metrics = new Map(
+            [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0]))
+        );
+        couplingResult.relationships.sort((a, b) => {
+            // Unique ID for relationships adapted from metrics/coupling/Coupling.ts getRelationships(...)
+            const uniqueIdA = a.toNamespace + a.fromNamespace;
+            const uniqueIdB = b.toNamespace + b.fromNamespace;
+            return strcmp(uniqueIdA, uniqueIdB);
+        });
     }
 
     describe("parses PHP McCabeComplexity metric", () => {
@@ -401,20 +446,26 @@ describe("GenericParser", () => {
     describe("parsing PHP dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             const inputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
-            const parser = new GenericParser(getParserConfiguration(inputPath, true));
-            const results = await parser.calculateMetrics();
+            const parser = new GenericParser(getParserConfiguration(inputPath, true, true));
 
-            expect(results.couplingMetrics).toMatchSnapshot();
+            const results = await parser.calculateMetrics();
+            const couplingResult = results.couplingMetrics;
+            sortCouplingResults(couplingResult);
+
+            expect(couplingResult).toMatchSnapshot();
         });
     });
 
     describe("parsing C# dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             const inputPath = fs.realpathSync(csharpTestResourcesPath + "coupling-examples/");
-            const parser = new GenericParser(getParserConfiguration(inputPath, true));
-            const results = await parser.calculateMetrics();
+            const parser = new GenericParser(getParserConfiguration(inputPath, true, true));
 
-            expect(results.couplingMetrics).toMatchSnapshot();
+            const results = await parser.calculateMetrics();
+            const couplingResult = results.couplingMetrics;
+            sortCouplingResults(couplingResult);
+
+            expect(couplingResult).toMatchSnapshot();
         }, 10000);
     });
 });

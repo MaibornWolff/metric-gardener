@@ -9,7 +9,6 @@ interface OutputNode {
     metrics: {
         [key: string]: number;
     };
-    types: string[];
 }
 
 interface OutputRelationship {
@@ -63,7 +62,6 @@ function buildOutputObject(
             name: filePath,
             type: "File",
             metrics: metrics,
-            types: [],
         };
 
         outputNodeReferenceLookUp.set(filePath, outputNode);
@@ -83,7 +81,6 @@ function buildOutputObject(
                 name: filePath,
                 type: "File",
                 metrics: {},
-                types: [],
             };
 
             output.nodes.push(newOutputNode);

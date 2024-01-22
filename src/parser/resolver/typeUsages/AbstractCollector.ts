@@ -1,5 +1,5 @@
 import { QueryBuilder } from "../../queries/QueryBuilder";
-import { grammars } from "../../helper/Grammars";
+import { fileExtensionToGrammar } from "../../helper/FileExtensionToGrammar";
 import { formatCaptures } from "../../helper/Helper";
 import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
@@ -88,9 +88,9 @@ export abstract class AbstractCollector {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
+            fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
-            parseFile.language
+            parseFile.fileExtension
         );
         queryBuilder.setStatements([new SimpleQueryStatement(this.getImportsQuery())]);
 
@@ -155,9 +155,9 @@ export abstract class AbstractCollector {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
+            fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
-            parseFile.language
+            parseFile.fileExtension
         );
         queryBuilder.setStatements([new SimpleQueryStatement(this.getGroupedImportsQuery())]);
 
@@ -232,7 +232,7 @@ export abstract class AbstractCollector {
         const tree = TreeParser.getParseTree(parseFile);
 
         const queryBuilder = new QueryBuilder(
-            grammars.get(parseFile.language),
+            fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
             parseFile.filePath
         );

@@ -12,6 +12,6 @@ export class Factory {
     }
 
     getCollector(parseFile: ParseFile): AbstractCollector | undefined {
-        return this.collectors.get(parseFile.language);
+        return this.collectors.get(parseFile.fileExtension);
     }
 }

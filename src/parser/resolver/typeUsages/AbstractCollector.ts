@@ -229,7 +229,7 @@ export abstract class AbstractCollector {
     ) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(parseFile.filePath, tree);
+        const queryBuilder = new QueryBuilder(parseFile.fileExtension, tree);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getUsagesQuery())]);
 
         const usagesQuery = queryBuilder.build();

@@ -112,7 +112,7 @@ export class Changelog {
      * are currently calculated with the changed syntax node(s).
      * @return Promise that fulfills once the changelog has been written successfully.
      */
-    writeChangelog(oldMappings: Map<string, ExpressionMetricMapping>) {
+    writeChangelog(metricMappings: Map<string, ExpressionMetricMapping>) {
         return new Promise<void>((resolve, reject) => {
             const writeStream = fs.createWriteStream(pathToWriteChangelog);
 
@@ -156,7 +156,7 @@ export class Changelog {
 
             for (const entry of this.getAll().values()) {
                 if (entry.remainingLanguages.size + entry.addedLanguages.size === 0) {
-                    const mapping = oldMappings.get(entry.expression);
+                    const mapping = metricMappings.get(entry.expression);
                     if (mapping !== undefined) {
                         const activatedForLangOutput =
                             mapping.activated_for_languages === undefined
@@ -201,7 +201,7 @@ export class Changelog {
 
             for (const entry of this.getAll().values()) {
                 if (entry.remainingLanguages.size + entry.addedLanguages.size > 0) {
-                    const mapping = oldMappings.get(entry.expression);
+                    const mapping = metricMappings.get(entry.expression);
                     if (mapping !== undefined) {
                         const activatedForLangOutput =
                             mapping.activated_for_languages === undefined

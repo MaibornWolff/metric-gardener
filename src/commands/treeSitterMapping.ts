@@ -2,7 +2,6 @@ import { ExpressionMetricMapping } from "../parser/helper/Model";
 import fs from "fs";
 import nodeTypesConfig from "../parser/config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { EOL } from "os";
 import { Changelog } from "./Changelog";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -26,8 +25,6 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
 ]);
 
 export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";
-const pathToWriteChangelog = "./nodeTypeChanges.csv";
-const csvSeparator = ";";
 
 const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();
 const changelog: Changelog = new Changelog();
@@ -282,136 +279,6 @@ async function updateLanguage(
     return removedNodeTypes;
 }
 
-function escapeForCsv(s: string) {
-    const escaped = s.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/"/g, '""');
-    return '"' + escaped + '"';
-}
-
-/**
- * Writes the changelog.
- * @return Promise that fulfills once the changelog has been written successfully.
- */
-function writeChangelog() {
-    return new Promise<void>((resolve, reject) => {
-        const writeStream = fs.createWriteStream(pathToWriteChangelog);
-
-        writeStream.on("error", (err) => {
-            console.error("Error while writing the changelog:");
-            console.error(err);
-            reject();
-        });
-        writeStream.on("finish", () => {
-            console.log("####################################");
-            console.log('Saved overview of all changes to "' + pathToWriteChangelog + '".');
-            resolve();
-        });
-
-        writeStream.write("Changelog for updating the expression mappings" + EOL);
-        writeStream.write("New syntax nodes:" + EOL + EOL);
-        writeStream.write("Name:" + csvSeparator + "Added to language(s):" + EOL);
-
-        for (const entry of changelog.getAll().values()) {
-            if (entry.isNew) {
-                writeStream.write(
-                    escapeForCsv(entry.expression) +
-                        csvSeparator +
-                        Array.from(entry.addedLanguages) +
-                        EOL
-                );
-            }
-        }
-
-        writeStream.write(EOL + "Removed syntax nodes:" + EOL + EOL);
-        writeStream.write(
-            "Name:" +
-                csvSeparator +
-                "Removed from language(s):" +
-                csvSeparator +
-                "Used for calculating the metric(s):" +
-                csvSeparator +
-                "Was explicitly only activated for language(s):" +
-                EOL
-        );
-
-        for (const entry of changelog.getAll().values()) {
-            if (entry.remainingLanguages.size + entry.addedLanguages.size === 0) {
-                const mapping = expressionMappings.get(entry.expression);
-                if (mapping !== undefined) {
-                    const activatedForLangOutput =
-                        mapping.activated_for_languages === undefined
-                            ? ""
-                            : mapping.activated_for_languages;
-                    writeStream.write(
-                        escapeForCsv(entry.expression) +
-                            csvSeparator +
-                            Array.from(entry.removedLanguages) +
-                            csvSeparator +
-                            mapping.metrics +
-                            csvSeparator +
-                            activatedForLangOutput +
-                            EOL
-                    );
-                } else {
-                    console.error(
-                        "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
-                            entry.expression
-                    );
-                }
-            }
-        }
-
-        writeStream.write(
-            EOL + "Syntax nodes which were removed from or added to languages:" + EOL + EOL
-        );
-        writeStream.write(
-            "Name:" +
-                csvSeparator +
-                "Added to language(s):" +
-                csvSeparator +
-                "Removed from language(s):" +
-                csvSeparator +
-                "Remains in language(s):" +
-                csvSeparator +
-                "Used for calculating the metric(s):" +
-                csvSeparator +
-                "Was explicitly only activated for language(s):" +
-                EOL
-        );
-
-        for (const entry of changelog.getAll().values()) {
-            if (entry.remainingLanguages.size + entry.addedLanguages.size > 0) {
-                const mapping = expressionMappings.get(entry.expression);
-                if (mapping !== undefined) {
-                    const activatedForLangOutput =
-                        mapping.activated_for_languages === undefined
-                            ? ""
-                            : mapping.activated_for_languages;
-                    writeStream.write(
-                        escapeForCsv(entry.expression) +
-                            csvSeparator +
-                            Array.from(entry.addedLanguages) +
-                            csvSeparator +
-                            Array.from(entry.removedLanguages) +
-                            csvSeparator +
-                            Array.from(entry.remainingLanguages) +
-                            csvSeparator +
-                            mapping.metrics +
-                            csvSeparator +
-                            activatedForLangOutput +
-                            EOL
-                    );
-                } else {
-                    console.error(
-                        "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
-                            entry.expression
-                    );
-                }
-            }
-        }
-        writeStream.end();
-    });
-}
-
 async function applyRemovedNodeTypes(
     removedNodeTypesForLanguage: Map<string, Set<string>>
 ): Promise<void> {
@@ -458,7 +325,7 @@ async function applyRemovedNodeTypes(
 
     // Make sure to write the change information before deleting any metric mapping.
     // If there is an error, catch that in the updateNodeMappings() and cancel the whole update.
-    await writeChangelog();
+    await changelog.writeChangelog(expressionMappings);
 
     for (const nodeName of nodesToRemove) {
         const nodeType = expressionMappings.get(nodeName);

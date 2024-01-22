@@ -80,7 +80,7 @@ export class RealLinesOfCode implements Metric {
      * @private
      */
     private countEmptyLines(text: string) {
-        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ \t]*$/.test(entry)).length;
+        return text.split(/\r\n|\r|\n/g).filter((entry) => /^\s*$/.test(entry)).length;
     }
 
     getName(): string {

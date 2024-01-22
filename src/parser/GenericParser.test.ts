@@ -179,6 +179,22 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses PHP commentLines metric", () => {
+        it(
+            "should count number of comment lines correctly, including line with curly brackets and comment " +
+                "lines inside block comment",
+            async () => {
+                const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
+                const parser = new GenericParser(getParserConfiguration(inputPath));
+                const results = await parser.calculateMetrics();
+
+                expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(
+                    12
+                );
+            }
+        );
+    });
+
     describe("parses TypeScript McCabeComplexity metric", () => {
         it("should count if statements correctly", async () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "if-statements.ts");
@@ -260,12 +276,20 @@ describe("GenericParser", () => {
     });
 
     describe("parses TypeScript commentLines metric", () => {
-        it("should count properly and ignore file header, class description and doc block comment lines", async () => {
+        it("should count properly, also counting file header, class description and doc block tag comment lines", async () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "comments.ts");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = await parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(5);
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(14);
+        });
+
+        it("should count properly, also in the presence of multiple block comments in the same line", async () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "same-line-comment.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(4);
         });
     });
 
@@ -327,7 +351,7 @@ describe("GenericParser", () => {
             const results = await parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
-                2
+                3
             );
         });
     });
@@ -399,6 +423,30 @@ describe("GenericParser", () => {
             const results = await parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("functions")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses GO commentLines metric", () => {
+        it(
+            "should count number of comment lines correctly, including line with curly brackets, inline comments" +
+                " and lines of the block comment",
+            async () => {
+                const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
+                const parser = new GenericParser(getParserConfiguration(inputPath));
+                const results = await parser.calculateMetrics();
+
+                expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(
+                    6
+                );
+            }
+        );
+
+        it("should count number of comment lines correctly, including multiple successive comments", async () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "go-example-code.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(9);
         });
     });
 

@@ -1,30 +1,31 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
-import { getExpressionsByCategory, getQueryStatements } from "../helper/Helper";
+import { getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
-import Parser, { SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import Parser, { SyntaxNode } from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
+/**
+ * Calculates the number of comment lines.
+ * Includes also empty comment lines, etc.
+ */
 export class CommentLines implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
-    private readonly commentExpressions: string[] = [];
-    private excludedFileHeaderComments: SyntaxNode[] = [];
 
+    /**
+     * Constructor of the class {@link CommentLines}.
+     * @param allNodeTypes List of all configured syntax node types.
+     */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
-        this.commentExpressions = getExpressionsByCategory(allNodeTypes, this.getName(), "comment");
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        this.excludedFileHeaderComments = this.getExcludedFileHeaderComments(
-            tree.rootNode.children
-        );
-
         const queryBuilder = new QueryBuilder(
             fileExtensionToGrammar.get(parseFile.fileExtension),
             tree,
@@ -35,69 +36,26 @@ export class CommentLines implements Metric {
         const query = queryBuilder.build();
         const matches = query.matches(tree.rootNode);
 
-        const commentLines = matches.reduce((accumulator, match) => {
-            const captureNode = match.captures[0].node;
+        let numberOfLines = 0;
+        let lastCommitLine = -1;
 
-            if (
-                this.isFileHeaderComment(captureNode) ||
-                this.isCommentFollowedByClass(captureNode)
-            ) {
-                return accumulator;
-            }
-
-            const commentLinesWithText = this.findTextLines(captureNode.text).length;
-            const docBlockLines = this.findDocBlockLines(captureNode.text).length;
-
-            return accumulator + commentLinesWithText - docBlockLines;
-        }, 0);
-
-        dlog(this.getName() + " - " + commentLines);
-
-        return {
-            metricName: this.getName(),
-            metricValue: commentLines,
-        };
-    }
-
-    private isCommentFollowedByClass(node: SyntaxNode) {
-        // this is not language independent
-        return node.nextSibling?.type.includes("class");
-    }
-
-    private findTextLines(text: string) {
-        return text.split(/\r\n|\r|\n/g).filter((entry) => /[a-zA-Z0-9]+/g.test(entry));
-    }
-
-    private findDocBlockLines(text: string) {
-        return text.split(/\r\n|\r|\n/g).filter((entry) => /^[ *]*@[a-z]+/g.test(entry));
-    }
-
-    private isFileHeaderComment(captureNode: SyntaxNode) {
-        return this.excludedFileHeaderComments.some((excludedComment) => {
-            return (
-                excludedComment.startPosition.row === captureNode.startPosition.row &&
-                excludedComment.startPosition.column === captureNode.startPosition.column &&
-                excludedComment.endPosition.row === captureNode.endPosition.row &&
-                excludedComment.endPosition.column === captureNode.endPosition.column
-            );
-        });
-    }
-
-    private getExcludedFileHeaderComments(rootNodeChildren): SyntaxNode[] {
-        const excludedComments: SyntaxNode[] = [];
-        const clonedChildren = [...rootNodeChildren];
-
-        if (clonedChildren[0] && this.commentExpressions.includes(clonedChildren[0]?.type)) {
-            // The very first elements that are comments are assumed to belong to a licence/copyright comment
-            let hasFollowingComments = this.commentExpressions.includes(clonedChildren[0]?.type);
-
-            while (hasFollowingComments) {
-                excludedComments.push(clonedChildren.shift() as SyntaxNode);
-                hasFollowingComments = this.commentExpressions.includes(clonedChildren[0]?.type);
+        for (const match of matches) {
+            const captureNode: SyntaxNode = match.captures[0].node;
+            const startRow = captureNode.startPosition.row;
+            // If we have not already counted for a comment on the same line:
+            if (lastCommitLine != startRow) {
+                const endRow = captureNode.endPosition.row;
+                numberOfLines += endRow - startRow + 1;
+                lastCommitLine = endRow;
             }
         }
 
-        return excludedComments;
+        dlog(this.getName() + " - " + numberOfLines);
+
+        return {
+            metricName: this.getName(),
+            metricValue: numberOfLines,
+        };
     }
 
     getName(): string {

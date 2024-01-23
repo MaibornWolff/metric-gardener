@@ -60,12 +60,12 @@ describe("GenericParser", () => {
     }
 
     describe("parses PHP McCabeComplexity metric", () => {
-        it("should count if statements correctly", async () => {
+        it("should count branching statements correctly", async () => {
             const inputPath = fs.realpathSync(phpTestResourcesPath + "if-statements.php");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = await parser.calculateMetrics();
 
-            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(7);
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(8);
         });
 
         it("should count functions and methods correctly", async () => {

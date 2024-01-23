@@ -11,6 +11,7 @@ describe("GenericParser", () => {
     const goTestResourcesPath = "./resources/go/";
     const pythonTestResourcesPath = "./resources/python/";
     const unknownTestResourcesPath = "./resources/unknown/";
+    const javaTestResourcesPath = "./resources/java/";
 
     /**
      * Gets a parser configuration for the test cases.
@@ -57,6 +58,11 @@ describe("GenericParser", () => {
             const uniqueIdB = b.toNamespace + b.fromNamespace;
             return strcmp(uniqueIdA, uniqueIdB);
         });
+    }
+    function calculateMetricResult(inputPath: string, metric: string): number | undefined {
+        const realInputPath = fs.realpathSync(inputPath);
+        const parser = new GenericParser(getParserConfiguration(realInputPath));
+        return parser.calculateMetrics().fileMetrics.get(realInputPath)?.get(metric)?.metricValue;
     }
 
     describe("parses PHP McCabeComplexity metric", () => {
@@ -674,6 +680,155 @@ describe("GenericParser", () => {
 
             expect(couplingResult).toMatchSnapshot();
         }, 10000);
+    });
+
+    describe("parses Java classes metric", () => {
+        it("count classes with different access-modifier", () => {
+            expect(calculateMetricResult(javaTestResourcesPath + "Classes.java", "classes")).toBe(
+                2
+            );
+        });
+        it("count interface, abstract class, enum", () => {
+            expect(calculateMetricResult(javaTestResourcesPath + "Classlike.java", "classes")).toBe(
+                4
+            );
+        });
+        it("count nested classes", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "NestedClasses.java", "classes")
+            ).toBe(4);
+        });
+        it("count classes with one character as class name", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "SingleCharacterClassName.java",
+                    "classes"
+                )
+            ).toBe(2);
+        });
+        it("dont count the fields or methods of class", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "ClassWithFieldsAndMethods.java",
+                    "classes"
+                )
+            ).toBe(2);
+        });
+        it("count 0 for empty java file", () => {
+            expect(calculateMetricResult(javaTestResourcesPath + "Empty.java", "classes")).toBe(0);
+        });
+        it("count 0 for file with only comments", () => {
+            expect(calculateMetricResult(javaTestResourcesPath + "Comment.java", "classes")).toBe(
+                0
+            );
+        });
+    });
+
+    describe("parses Java lines of code metric", () => {
+        it("count lines of codes for non-empty file", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "ClassForLOC.java", "lines_of_code")
+            ).toBe(24);
+        });
+        it("count lines of codes for empty file ", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "Empty.java", "lines_of_code")
+            ).toBe(1);
+        });
+        it("count lines of codes for non-empty file starts and ends with line break ", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "Linebreak.java", "lines_of_code")
+            ).toBe(7);
+        });
+        it("count lines of codes for multiline code ", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "MultilineLineOfCode.java",
+                    "lines_of_code"
+                )
+            ).toBe(30);
+        });
+    });
+
+    describe("parses Java real lines of code metric", () => {
+        it("dont count comments", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "RealLineOfCodeAndComments.java",
+                    "real_lines_of_code"
+                )
+            ).toBe(23);
+        });
+        it("should count correctly if there is a comment in the same line as actual code ", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "InlineComment.java",
+                    "real_lines_of_code"
+                )
+            ).toBe(3);
+        });
+        it("should count correctly if there is multi-line code ", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "MultilineRealLineOfCode.java",
+                    "real_lines_of_code"
+                )
+            ).toBe(57);
+        });
+        it("should count the code lines in the initialization block ", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "InitializationBlock.java",
+                    "real_lines_of_code"
+                )
+            ).toBe(10);
+        });
+    });
+    describe("parses Java functions metric", () => {
+        it("count static and non-static function declaration", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "StaticFuntions.java", "functions")
+            ).toBe(5);
+        });
+        it("should count function declaration with different access-modifier ", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "FunctionAccessModifier.java",
+                    "functions"
+                )
+            ).toBe(4);
+        });
+        it("should count constructor as function declaration", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "Constructor.java", "functions")
+            ).toBe(11);
+        });
+        it("should count function declaration in interface  ", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "InterfaceFunction.java", "functions")
+            ).toBe(2);
+        });
+        it("should count function declaration in abstract class  ", () => {
+            expect(
+                calculateMetricResult(
+                    javaTestResourcesPath + "AbstractClassFunction.java",
+                    "functions"
+                )
+            ).toBe(2);
+        });
+    });
+
+    describe("parses Java McCabeComplexity metric", () => {
+        it("count 1 method declaration and its contained if statements ", () => {
+            expect(calculateMetricResult(javaTestResourcesPath + "IfStatement.java", "mcc")).toBe(
+                5
+            );
+        });
+        it("count 1 method declaration and its for and while statements ", () => {
+            expect(
+                calculateMetricResult(javaTestResourcesPath + "WhileAndForLoop.java", "mcc")
+            ).toBe(3);
+        });
     });
 
     describe("Include files with unknown or no file extension", () => {

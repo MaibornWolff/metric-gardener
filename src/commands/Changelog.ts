@@ -182,7 +182,10 @@ export class Changelog {
             }
 
             writeStream.write(
-                EOL + "Syntax nodes which were removed from or added to languages:" + EOL + EOL
+                EOL +
+                    "Already known and still used syntax nodes which were removed from or added to some language(s):" +
+                    EOL +
+                    EOL
             );
             writeStream.write(
                 "Name:" +
@@ -200,7 +203,10 @@ export class Changelog {
             );
 
             for (const entry of this.getAll().values()) {
-                if (entry.remainingLanguages.size + entry.addedLanguages.size > 0) {
+                if (
+                    entry.remainingLanguages.size > 0 ||
+                    (entry.addedLanguages.size > 0 && entry.removedLanguages.size > 0)
+                ) {
                     const mapping = metricMappings.get(entry.expression);
                     if (mapping !== undefined) {
                         const activatedForLangOutput =

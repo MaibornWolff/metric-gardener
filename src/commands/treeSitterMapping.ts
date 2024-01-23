@@ -172,8 +172,8 @@ async function updateLanguage(
                     const expression = expressionMappings.get(mapKey);
                     if (expression !== undefined) {
                         if (!expression.languages.includes(languageAbbr)) {
-                            expression.languages.push(languageAbbr);
                             changelog.addedNodeToLanguage(expression, languageAbbr);
+                            expression.languages.push(languageAbbr);
                             dlog(
                                 "Language " +
                                     languageAbbr +
@@ -210,8 +210,8 @@ async function updateLanguage(
         const expression = expressionMappings.get(nodeType.type);
         if (expression !== undefined) {
             if (!expression.languages.includes(languageAbbr)) {
-                expression.languages.push(languageAbbr);
                 changelog.addedNodeToLanguage(expression, languageAbbr);
+                expression.languages.push(languageAbbr);
                 dlog(
                     'Language "' +
                         languageAbbr +
@@ -245,8 +245,8 @@ async function updateLanguage(
                 const expression = expressionMappings.get(subNodeType.type);
                 if (expression !== undefined) {
                     if (!expression.languages.includes(languageAbbr)) {
-                        expression.languages.push(languageAbbr);
                         changelog.addedNodeToLanguage(expression, languageAbbr);
+                        expression.languages.push(languageAbbr);
                         dlog(
                             'Language "' +
                                 languageAbbr +

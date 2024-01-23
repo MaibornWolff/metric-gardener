@@ -7,7 +7,7 @@ describe("GenericParser", () => {
     const csharpTestResourcesPath = "./resources/c-sharp/";
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
-    const pythonTestRecourcesPath = "./resources/python/";
+    const pythonTestResourcesPath = "./resources/python/";
 
     function getParserConfiguration(sourcesPath: string, parseDependencies = false) {
         return new Configuration(sourcesPath, "invalid/output/path", parseDependencies, "", false);
@@ -452,9 +452,19 @@ describe("GenericParser", () => {
         });
     });
 
+    describe("parses Python McCabeComplexity metric", () => {
+        it("should count if statements correctly", () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "if.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
+        });
+    });
+
     describe("parses Python comment lines metric", () => {
         it("should count correctly, excluding inline and block comments", () => {
-            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "loops.py");
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "loops.py");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
@@ -464,7 +474,7 @@ describe("GenericParser", () => {
 
     describe("parses Python real lines of code metric", () => {
         it("should count correctly for a non-empty file with pythons non-C-syntax code blocks", () => {
-            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "blocks.py");
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "blocks.py");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
@@ -474,7 +484,7 @@ describe("GenericParser", () => {
         });
 
         it("should count correctly for a non-empty file with nested loops and comments", () => {
-            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "loops.py");
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "loops.py");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 
@@ -484,7 +494,7 @@ describe("GenericParser", () => {
         });
 
         it("should count correctly in the presence of block comments", () => {
-            const inputPath = fs.realpathSync(pythonTestRecourcesPath + "block-comment.py");
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "block-comment.py");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = parser.calculateMetrics();
 

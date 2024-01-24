@@ -195,6 +195,7 @@ export abstract class AbstractCollector {
                 const usedNamespace =
                     namespaceName + this.getNamespaceDelimiter() + nextUseItem.text;
 
+                // Why not just use nextUseItem.text here instead of split? It is set in the line directly above.
                 const namespaceSuffix = usedNamespace.split(this.getNamespaceDelimiter()).pop();
                 if (namespaceSuffix !== undefined) {
                     const importReferences: ImportReference = {

@@ -1,9 +1,9 @@
-import { TreeParser } from "../helper/TreeParser";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { TreeCursor } from "tree-sitter";
+import Parser, { TreeCursor } from "tree-sitter";
 import { getExpressionsByCategory } from "../helper/Helper";
+import { debuglog, DebugLoggerFunction } from "node:util";
+
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
@@ -55,9 +55,7 @@ export class RealLinesOfCode implements Metric {
         return sureCodeLines;
     }
 
-    calculate(parseFile: ParseFile): MetricResult {
-        const tree = TreeParser.getParseTree(parseFile);
-
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const cursor = tree.walk();
         // Assume the root node is always some kind of program/file/compilation_unit stuff
         cursor.gotoFirstChild();

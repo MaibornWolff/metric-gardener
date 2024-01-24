@@ -34,6 +34,7 @@ export class CouplingCalculator {
 
         this.comprisingMetrics = [
             new Coupling(
+                this.config,
                 allNodeTypes,
                 this.namespaceCollector,
                 this.usageCollector,
@@ -43,7 +44,7 @@ export class CouplingCalculator {
     }
 
     calculateMetrics(parseFiles: ParseFile[]) {
-        const sourcesRoot = fs.realpathSync(this.config.sourcesPath);
+        const sourcesRoot = this.config.sourcesPath;
 
         dlog("\n\n");
         dlog("----- Parsing Coupling of files in " + sourcesRoot + " recursively -----");

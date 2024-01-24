@@ -57,9 +57,9 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   mcc
 -   functions
 -   classes
--   lines_of_code - The number of lines inside a file
--   comment_lines (not unit tested)
--   real_lines_of_code (not unit tested) - The number of lines inside a file, not counting for comments and empty lines
+-   lines_of_code - The total number of lines of a file, including empty lines, comments, etc.
+-   comment_lines - The number of comment lines inside a file. Does count for any kind of comment (except for python's special block comments).
+-   real_lines_of_code (not unit tested) - The number of lines inside a file, not counting for comments and empty lines.
 
 ### Coupling Metrics (experimental)
 

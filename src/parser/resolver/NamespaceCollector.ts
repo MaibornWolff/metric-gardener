@@ -7,12 +7,12 @@ export class NamespaceCollector {
     private cache = new Map<string, Map<string, Map<string, FullyQTN>>>();
 
     getNamespaces(parseFile: ParseFile): Map<string, FullyQTN> {
-        let namespacesByLanguage = this.cache.get(parseFile.language);
+        let namespacesByLanguage = this.cache.get(parseFile.fileExtension);
         if (namespacesByLanguage === undefined) {
-            this.cache.set(parseFile.language, new Map());
+            this.cache.set(parseFile.fileExtension, new Map());
         }
 
-        namespacesByLanguage = this.cache.get(parseFile.language);
+        namespacesByLanguage = this.cache.get(parseFile.fileExtension);
         const fileNamespaces = namespacesByLanguage?.get(parseFile.filePath);
         if (fileNamespaces !== undefined) {
             return fileNamespaces;
@@ -24,7 +24,7 @@ export class NamespaceCollector {
                 ? collector.getFullyQTNs(parseFile)
                 : new Map<string, FullyQTN>();
 
-        this.cache.get(parseFile.language)?.set(parseFile.filePath, packages);
+        this.cache.get(parseFile.fileExtension)?.set(parseFile.filePath, packages);
 
         return packages;
     }

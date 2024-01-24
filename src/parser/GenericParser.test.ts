@@ -59,12 +59,6 @@ describe("GenericParser", () => {
             return strcmp(uniqueIdA, uniqueIdB);
         });
     }
-    async function testCalculateMetrics(inputPath: string, metric: string, expected: unknown) {
-        const realInputPath = fs.realpathSync(inputPath);
-        const parser = new GenericParser(getParserConfiguration(realInputPath));
-        const results = await parser.calculateMetrics();
-        expect(results.fileMetrics.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
-    }
 
     describe("parses PHP McCabeComplexity metric", () => {
         it("should count branching statements correctly", async () => {

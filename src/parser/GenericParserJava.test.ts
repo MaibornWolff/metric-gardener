@@ -106,6 +106,9 @@ describe("test GenericParser.calculateMetrics() for Java language.", () => {
                 2
             );
         });
+        it("should count overloading functions  ", () => {
+            testCalculateMetrics(javaTestResourcesPath + "OverloadFuntion.java", "functions", 3);
+        });
     });
     describe("parses McCabeComplexity metric", () => {
         it("count 1 method declaration and its contained if statements ", () => {

@@ -113,11 +113,13 @@ export class Coupling implements CouplingMetric {
         usagesCandidates: TypeUsageCandidate[]
     ): Relationship[] {
         return usagesCandidates.flatMap((usage) => {
-            const namespaceSource = namespaces.get(usage.usedNamespace);
+            const usedNamespaceSource = namespaces.get(usage.usedNamespace);
+            const fromNamespaceSource = namespaces.get(usage.fromNamespace);
             const uniqueId = usage.usedNamespace + usage.fromNamespace;
 
             if (
-                namespaceSource !== undefined &&
+                usedNamespaceSource !== undefined &&
+                fromNamespaceSource !== undefined &&
                 !this.alreadyAddedRelationships.has(uniqueId) &&
                 usage.fromNamespace !== usage.usedNamespace
             ) {
@@ -126,20 +128,19 @@ export class Coupling implements CouplingMetric {
                 // In C# we do not know if a base class is implemented or just extended
                 // But if class type is interface, then it must be implemented instead of extended
                 const fixedUsageType =
-                    usage.usageType === "implements" && namespaceSource.classType !== "interface"
+                    usage.usageType === "implements" &&
+                    usedNamespaceSource.classType !== "interface"
                         ? "extends"
                         : usage.usageType;
 
-                // TODO: fromClassName and toClassName are broken
-                //  I think they can be removed if we do not use them anymore.
                 return [
                     {
                         fromNamespace: usage.fromNamespace,
                         toNamespace: usage.usedNamespace,
                         fromSource: usage.sourceOfUsing,
-                        toSource: namespaceSource.source,
-                        fromClassName: namespaceSource.className,
-                        toClassName: namespaceSource.className,
+                        toSource: usedNamespaceSource.source,
+                        fromClassName: fromNamespaceSource.className,
+                        toClassName: usedNamespaceSource.className,
                         usageType: fixedUsageType,
                     },
                 ];

@@ -56,7 +56,7 @@ export class PHPCollector extends AbstractCollector {
                 )
             )
             (property_declaration
-                (_) (_ (name) @qualified_name)
+                type: (_) @qualified_name
             )
             (object_creation_expression
                 (qualified_name) @qualified_name

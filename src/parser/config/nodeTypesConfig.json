@@ -46,7 +46,7 @@
         "metrics": ["classes"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "ts"]
+        "languages": ["cs", "java", "ts", "php"]
     },
     {
         "expression": "event_declaration",
@@ -116,7 +116,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "java"]
     },
     {
         "expression": "struct_declaration",
@@ -270,7 +270,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "php", "ts", "py"]
+        "languages": ["cs"]
     },
     {
         "expression": "identifier",
@@ -459,14 +459,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "cpp"]
+        "languages": ["cs", "java", "cpp", "kt"]
     },
     {
         "expression": "switch_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "java"]
     },
     {
         "expression": "this_expression",
@@ -480,7 +480,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "php"]
     },
     {
         "expression": "tuple_expression",
@@ -564,7 +564,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "py", "cpp"]
+        "languages": ["cs", "java", "js", "php", "ts", "py", "cpp", "go"]
     },
     {
         "expression": "fixed_statement",
@@ -641,14 +641,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp"]
+        "languages": ["cs", "js", "php", "ts", "cpp"]
     },
     {
         "expression": "throw_statement",
         "metrics": ["mcc"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp"]
+        "languages": ["cs", "java", "js", "ts", "cpp"]
     },
     {
         "expression": "try_statement",
@@ -683,7 +683,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "java"]
     },
     {
         "expression": "_type",
@@ -774,7 +774,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "php"]
     },
     {
         "expression": "argument_list",
@@ -809,7 +809,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "py", "cpp"]
+        "languages": ["cs", "py", "cpp", "php"]
     },
     {
         "expression": "attribute_argument",
@@ -830,7 +830,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "php"]
     },
     {
         "expression": "attribute_target_specifier",
@@ -859,7 +859,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "%"
     },
     {
@@ -867,7 +867,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "&"
     },
     {
@@ -875,7 +875,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "&&"
     },
     {
@@ -883,7 +883,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "*"
     },
     {
@@ -891,7 +891,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "+"
     },
     {
@@ -899,7 +899,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "-"
     },
     {
@@ -907,7 +907,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "/"
     },
     {
@@ -915,7 +915,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "<"
     },
     {
@@ -923,7 +923,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "<<"
     },
     {
@@ -931,7 +931,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "<="
     },
     {
@@ -939,7 +939,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "=="
     },
     {
@@ -947,7 +947,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": ">"
     },
     {
@@ -955,7 +955,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": ">="
     },
     {
@@ -963,7 +963,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": ">>"
     },
     {
@@ -971,7 +971,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "js", "ts"],
+        "languages": ["cs", "js", "ts", "php"],
         "operator": "??"
     },
     {
@@ -979,7 +979,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "^"
     },
     {
@@ -987,7 +987,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "|"
     },
     {
@@ -995,15 +995,8 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "||"
-    },
-    {
-        "expression": "binary_pattern",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs"]
     },
     {
         "expression": "bracketed_argument_list",
@@ -1262,7 +1255,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go"]
+        "languages": ["go"]
     },
     {
         "expression": "let_clause",
@@ -1321,13 +1314,6 @@
         "languages": ["cs", "kt", "py"]
     },
     {
-        "expression": "parameter_array",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
         "expression": "parameter_list",
         "metrics": [],
         "type": "statement",
@@ -1357,13 +1343,6 @@
     },
     {
         "expression": "positional_pattern_clause",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "preprocessor_call",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -1479,7 +1458,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "kt", "ts"]
+        "languages": ["cs", "java", "kt", "ts", "py"]
     },
     {
         "expression": "type_parameter_constraint",
@@ -1500,14 +1479,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "go"]
     },
     {
         "expression": "type_pattern",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "java"]
     },
     {
         "expression": "var_pattern",
@@ -1552,595 +1531,35 @@
         "languages": ["cs"]
     },
     {
-        "expression": "!",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "!=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "\"",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "js", "kt", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "\"\"",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "cpp"]
-    },
-    {
-        "expression": "$\"",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "$@\"",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "%",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "%=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "&",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "&&",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "&=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "'",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "kt", "ts", "cpp"]
-    },
-    {
-        "expression": "(",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": ")",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "*",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "*=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "+",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "++",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "+=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": ",",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "-",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "--",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "-=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "->",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "php", "py", "cpp"]
-    },
-    {
-        "expression": ".",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "..",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "/",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "/=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": ":",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "::",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "php", "cpp"]
-    },
-    {
         "expression": ";",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "<",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "<<",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "<<=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "<=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "==",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "=>",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "php", "ts"]
-    },
-    {
-        "expression": ">",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": ">=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": ">>",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": ">>=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "?",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "??",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "php", "ts"]
-    },
-    {
-        "expression": "??=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "ts"]
-    },
-    {
-        "expression": "@$\"",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "Cdecl",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "Fastcall",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "Stdcall",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "Thiscall",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "[",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "]",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "^",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "^=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "__makeref",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "__reftype",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "__refvalue",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "abstract",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "php", "ts"]
-    },
-    {
-        "expression": "add",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "alias",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "and",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "php", "py"]
-    },
-    {
-        "expression": "as",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "kt", "php", "ts", "py"]
-    },
-    {
-        "expression": "ascending",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "assembly",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "async",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "ts", "py"]
+        "languages": ["java"]
     },
     {
         "expression": "await",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "js", "ts", "py"]
-    },
-    {
-        "expression": "base",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "break",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "by",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "case",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "catch",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "checked",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
+        "languages": ["py"]
     },
     {
         "expression": "class",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "comment",
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "const",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "continue",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "default",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "delegate",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "descending",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
     },
     {
         "expression": "discard",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "do",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "dynamic",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "else",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "enum",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "ts", "cpp"]
-    },
-    {
-        "expression": "equals",
         "metrics": [],
         "type": "keyword",
         "category": "",
@@ -2151,189 +1570,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "js", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "event",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "explicit",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "cpp"]
-    },
-    {
-        "expression": "extern",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "cpp"]
+        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php"]
     },
     {
         "expression": "false",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "field",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "finally",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py"]
-    },
-    {
-        "expression": "fixed",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "for",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "foreach",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "php"]
-    },
-    {
-        "expression": "from",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "php", "ts", "py"]
-    },
-    {
-        "expression": "get",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "kt", "ts"]
-    },
-    {
-        "expression": "goto",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "php", "cpp"]
-    },
-    {
-        "expression": "group",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "if",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "implicit",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "in",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "kt", "ts", "py"]
-    },
-    {
-        "expression": "init",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "interface",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "kt", "php", "ts"]
-    },
-    {
-        "expression": "internal",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "into",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "is",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt", "ts", "py"]
-    },
-    {
-        "expression": "join",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "let",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "ts"]
-    },
-    {
-        "expression": "lock",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "managed",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "method",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp"]
     },
     {
         "expression": "module",
@@ -2341,315 +1585,42 @@
         "type": "statement",
         "category": "start_rule",
         "activated_for_languages": ["py"],
-        "languages": ["cs", "java", "ts", "py"]
-    },
-    {
-        "expression": "nameof",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "namespace",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "new",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "not",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "py"]
-    },
-    {
-        "expression": "notnull",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "on",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "operator",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs", "kt", "cpp"]
-    },
-    {
-        "expression": "or",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "php", "py"]
-    },
-    {
-        "expression": "orderby",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "out",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "override",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt", "cpp"]
-    },
-    {
-        "expression": "param",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "params",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "partial",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "preprocessor_directive",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "private",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "property",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "protected",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "public",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "readonly",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "ts"]
-    },
-    {
-        "expression": "record",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "ref",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "remove",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "return",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "sealed",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "select",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go"]
+        "languages": ["ts", "py"]
     },
     {
         "expression": "set",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "js", "kt", "ts", "py"]
-    },
-    {
-        "expression": "sizeof",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "cpp"]
-    },
-    {
-        "expression": "stackalloc",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "static",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "struct",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "cpp"]
-    },
-    {
-        "expression": "switch",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"]
+        "languages": ["py"]
     },
     {
         "expression": "this",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "java", "js", "kt", "ts", "cpp"]
-    },
-    {
-        "expression": "throw",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "cpp"]
+        "languages": ["java", "js", "ts", "cpp"]
     },
     {
         "expression": "true",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "try",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp"]
     },
     {
         "expression": "type",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "go", "ts", "py"]
-    },
-    {
-        "expression": "typeof",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "js", "ts"]
-    },
-    {
-        "expression": "unchecked",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "unmanaged",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "unsafe",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
-        "expression": "using",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "cpp"]
-    },
-    {
-        "expression": "var",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "js", "kt", "ts"]
+        "languages": ["py"]
     },
     {
         "expression": "virtual",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "cpp"]
+        "languages": ["cpp"]
     },
     {
         "expression": "void_keyword",
@@ -2659,95 +1630,11 @@
         "languages": ["cs"]
     },
     {
-        "expression": "volatile",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "cpp"]
-    },
-    {
-        "expression": "when",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "where",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "kt"]
-    },
-    {
-        "expression": "while",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "with",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "ts", "py"]
-    },
-    {
         "expression": "yield",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["cs", "js", "php", "ts", "py"]
-    },
-    {
-        "expression": "{",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "{{",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "py"]
-    },
-    {
-        "expression": "|",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "|=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "||",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "cpp"]
-    },
-    {
-        "expression": "}",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
-    },
-    {
-        "expression": "~",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "py", "cpp"]
+        "languages": ["py"]
     },
     {
         "expression": "call_expression",
@@ -3073,13 +1960,6 @@
         "languages": ["go"]
     },
     {
-        "expression": "element",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
         "expression": "expression_case",
         "metrics": ["mcc"],
         "type": "statement",
@@ -3164,13 +2044,6 @@
         "languages": ["go"]
     },
     {
-        "expression": "method_spec_list",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
         "expression": "package_clause",
         "metrics": [],
         "type": "statement",
@@ -3248,72 +2121,9 @@
         "languages": ["go", "cpp"]
     },
     {
-        "expression": "\n",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go", "cpp"]
-    },
-    {
-        "expression": "&^",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "&^=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "...",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go", "java", "js", "php", "ts", "cpp"]
-    },
-    {
-        "expression": ":=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go", "py"]
-    },
-    {
-        "expression": "<-",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
         "expression": "blank_identifier",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "chan",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "defer",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "fallthrough",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["go"]
     },
@@ -3325,51 +2135,16 @@
         "languages": ["go", "cpp"]
     },
     {
-        "expression": "func",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "go",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
         "expression": "import",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["go", "java", "js", "kt", "ts", "py"]
-    },
-    {
-        "expression": "map",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "package",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["go", "java", "kt"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "package_identifier",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["go"]
-    },
-    {
-        "expression": "range",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["go"]
     },
@@ -3441,7 +2216,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["java", "ts"]
+        "languages": ["java", "ts", "go", "py"]
     },
     {
         "expression": "integral_type",
@@ -3795,13 +2570,6 @@
         "languages": ["java"]
     },
     {
-        "expression": "interface_type_list",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
         "expression": "marker_annotation",
         "metrics": [],
         "type": "statement",
@@ -3925,7 +2693,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["java", "kt", "ts"]
+        "languages": ["java", "kt", "ts", "go"]
     },
     {
         "expression": "type_bound",
@@ -3949,207 +2717,18 @@
         "languages": ["java"]
     },
     {
-        "expression": ">>>",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "js", "ts"]
-    },
-    {
-        "expression": ">>>=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "js", "ts"]
-    },
-    {
-        "expression": "@",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "js", "kt", "php", "ts", "py"]
-    },
-    {
-        "expression": "@interface",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "assert",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "py"]
-    },
-    {
-        "expression": "byte",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "char",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "double",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "php"]
-    },
-    {
-        "expression": "exports",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "extends",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "js", "php", "ts"]
-    },
-    {
-        "expression": "final",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "kt", "php", "cpp"]
-    },
-    {
         "expression": "float",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["java", "php", "py"]
-    },
-    {
-        "expression": "implements",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "php", "ts"]
-    },
-    {
-        "expression": "instanceof",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "js", "php", "ts"]
-    },
-    {
-        "expression": "int",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "php"]
-    },
-    {
-        "expression": "long",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "cpp"]
-    },
-    {
-        "expression": "native",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "open",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "kt"]
-    },
-    {
-        "expression": "opens",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "provides",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "requires",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "short",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java", "cpp"]
-    },
-    {
-        "expression": "strictfp",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
+        "languages": ["php", "py"]
     },
     {
         "expression": "super",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["java", "js", "kt", "ts"]
-    },
-    {
-        "expression": "synchronized",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "to",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "transient",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "transitive",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
-        "expression": "uses",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["java"]
+        "languages": ["java", "js", "ts"]
     },
     {
         "expression": "generator_function_declaration",
@@ -4174,13 +2753,6 @@
     },
     {
         "expression": "jsx_element",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "jsx_fragment",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -4212,7 +2784,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "py"]
+        "languages": ["js", "ts", "py", "java"]
     },
     {
         "expression": "array_pattern",
@@ -4240,21 +2812,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "arrow_function",
         "metrics": ["mcc", "functions"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts"]
+        "languages": ["js", "ts", "php"]
     },
     {
         "expression": "function",
         "metrics": ["mcc", "functions"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "generator_function",
@@ -4282,7 +2854,7 @@
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["js", "kt", "php", "ts", "cpp"]
+        "languages": ["js", "php", "ts", "cpp"]
     },
     {
         "expression": "number",
@@ -4296,7 +2868,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "kt", "php", "ts"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "regex",
@@ -4455,7 +3027,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "py"]
+        "languages": ["js", "php", "ts", "py", "cpp"]
     },
     {
         "expression": "export_clause",
@@ -4546,7 +3118,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts"]
+        "languages": ["ts"]
     },
     {
         "expression": "object_assignment_pattern",
@@ -4574,7 +3146,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts"]
+        "languages": ["ts"]
     },
     {
         "expression": "sequence_expression",
@@ -4612,83 +3184,6 @@
         "languages": ["js", "ts"]
     },
     {
-        "expression": "!==",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "kt", "php", "ts"]
-    },
-    {
-        "expression": "${",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "kt", "ts"]
-    },
-    {
-        "expression": "&&=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "**",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "php", "ts", "py"]
-    },
-    {
-        "expression": "**=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "php", "ts", "py"]
-    },
-    {
-        "expression": "===",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "kt", "php", "ts"]
-    },
-    {
-        "expression": "?.",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "`",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "debugger",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "delete",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts", "cpp"]
-    },
-    {
-        "expression": "export",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
         "expression": "hash_bang_line",
         "metrics": [],
         "type": "statement",
@@ -4699,13 +3194,6 @@
         "expression": "jsx_text",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "of",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["js", "ts"]
     },
@@ -4750,27 +3238,6 @@
         "type": "statement",
         "category": "",
         "languages": ["js", "ts", "cpp"]
-    },
-    {
-        "expression": "target",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
-    },
-    {
-        "expression": "void",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "php", "ts"]
-    },
-    {
-        "expression": "||=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["js", "ts"]
     },
     {
         "expression": "additive_expression",
@@ -4840,7 +3307,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["kt", "php"]
+        "languages": ["kt"]
     },
     {
         "expression": "class_parameter",
@@ -4997,13 +3464,6 @@
         "languages": ["kt"]
     },
     {
-        "expression": "equality_expression",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
         "expression": "if_expression",
         "metrics": ["mcc"],
         "type": "statement",
@@ -5088,13 +3548,6 @@
         "languages": ["kt", "py"]
     },
     {
-        "expression": "line_string_literal",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
         "expression": "long_literal",
         "metrics": [],
         "type": "statement",
@@ -5103,13 +3556,6 @@
     },
     {
         "expression": "member_modifier",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "multi_line_string_literal",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -5396,156 +3842,9 @@
         "languages": ["kt"]
     },
     {
-        "expression": "!!",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "!in",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "\"\"\"",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "#!",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "$",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt", "php"]
-    },
-    {
-        "expression": ".*",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "?:",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt", "ts"]
-    },
-    {
-        "expression": "L",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "\\",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt", "php"]
-    },
-    {
-        "expression": "actual",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "as?",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
         "expression": "bin_literal",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "break@",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "companion",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "constructor",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "continue@",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "crossinline",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "data",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "expect",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "external",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "file",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "fun",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["kt"]
     },
@@ -5557,44 +3856,9 @@
         "languages": ["kt"]
     },
     {
-        "expression": "infix",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "inline",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt", "cpp"]
-    },
-    {
-        "expression": "inner",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
         "expression": "label",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "lateinit",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "noinline",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["kt"]
     },
@@ -5606,86 +3870,9 @@
         "languages": ["kt"]
     },
     {
-        "expression": "receiver",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
         "expression": "reification_modifier",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "return@",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "setparam",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "super@",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "suspend",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "tailrec",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "this@",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "typealias",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "u",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "val",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["kt"]
-    },
-    {
-        "expression": "vararg",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["kt"]
     },
@@ -5750,7 +3937,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "ts"]
+        "languages": ["php"]
     },
     {
         "expression": "heredoc",
@@ -5935,13 +4122,6 @@
         "languages": ["php", "cpp"]
     },
     {
-        "expression": "type_name",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
         "expression": "anonymous_function_use_clause",
         "metrics": [],
         "type": "statement",
@@ -5975,7 +4155,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["php"],
+        "languages": ["php", "cpp"],
         "operator": "<=>"
     },
     {
@@ -5991,7 +4171,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["php"],
+        "languages": ["php", "cpp"],
         "operator": "and"
     },
     {
@@ -5999,7 +4179,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["php"],
+        "languages": ["php", "cpp"],
         "operator": "or"
     },
     {
@@ -6007,7 +4187,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["php"],
+        "languages": ["php", "cpp"],
         "operator": "xor"
     },
     {
@@ -6211,7 +4391,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php"]
+        "languages": ["php", "cpp"]
     },
     {
         "expression": "variadic_unpacking",
@@ -6221,172 +4401,11 @@
         "languages": ["php"]
     },
     {
-        "expression": ".=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "<=>",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "<>",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php", "py"]
-    },
-    {
-        "expression": "?>",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "binary",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "bool",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "callable",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "clone",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "declare",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php", "ts"]
-    },
-    {
-        "expression": "echo",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "elseif",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "encoding",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "enddeclare",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "endfor",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "endforeach",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "endif",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "endswitch",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "endwhile",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "include",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "include_once",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "insteadof",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "iterable",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
         "expression": "list",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["php", "py"]
-    },
-    {
-        "expression": "parent",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
+        "languages": ["py"]
     },
     {
         "expression": "php_tag",
@@ -6396,86 +4415,9 @@
         "languages": ["php"]
     },
     {
-        "expression": "print",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php", "py"]
-    },
-    {
-        "expression": "real",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "require",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php", "ts"]
-    },
-    {
-        "expression": "require_once",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "self",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "strict_types",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "ticks",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "trait",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "unset",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "use",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
         "expression": "var_modifier",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "xor",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["php"]
     },
@@ -6701,7 +4643,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["ts"]
+        "languages": ["ts", "php"]
     },
     {
         "expression": "mapped_type_clause",
@@ -6792,56 +4734,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "-?:",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "any",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "infer",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "keyof",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "symbol",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "{|",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
-        "expression": "|}",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["ts"]
+        "languages": ["ts", "go", "py", "php"]
     },
     {
         "expression": "_compound_statement",
@@ -6995,7 +4888,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["py"]
+        "languages": ["py", "cs"]
     },
     {
         "expression": "subscript",
@@ -7243,100 +5136,9 @@
         "languages": ["py"]
     },
     {
-        "expression": "//",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "//=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "@=",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "__future__",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "def",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "del",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "elif",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "except",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "exec",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "nonlocal",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "pass",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "raise",
-        "metrics": [],
-        "type": "keyword",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
         "expression": "type_conversion",
         "metrics": [],
         "type": "statement",
-        "category": "",
-        "languages": ["py"]
-    },
-    {
-        "expression": "}}",
-        "metrics": [],
-        "type": "keyword",
         "category": "",
         "languages": ["py"]
     },
@@ -7502,13 +5304,6 @@
         "languages": ["cpp"]
     },
     {
-        "expression": "nullptr",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
         "expression": "number_literal",
         "metrics": [],
         "type": "statement",
@@ -7646,7 +5441,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "ts"]
     },
     {
         "expression": "union_specifier",
@@ -7867,13 +5662,6 @@
     },
     {
         "expression": "namespace_alias_definition",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "namespace_definition_name",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -8118,259 +5906,7 @@
         "languages": ["cpp"]
     },
     {
-        "expression": "virtual_function_specifier",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
         "expression": "virtual_specifier",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#define",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#elif",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#else",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#endif",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#if",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#ifdef",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#ifndef",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "#include",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "()",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "->*",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "L\"",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "L'",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "U\"",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "U'",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "[[",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "[]",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "]]",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "_Atomic",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__attribute__",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__based",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__cdecl",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__clrcall",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__declspec",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__fastcall",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__stdcall",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__thiscall",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__unaligned",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "__vectorcall",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "_unaligned",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "co_await",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "co_return",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "co_yield",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "constexpr",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "defined",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "friend",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -8405,13 +5941,6 @@
         "languages": ["cpp"]
     },
     {
-        "expression": "mutable",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
         "expression": "namespace_identifier",
         "metrics": [],
         "type": "statement",
@@ -8433,34 +5962,6 @@
         "languages": ["cpp"]
     },
     {
-        "expression": "register",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "restrict",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "signed",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "static_assert",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
         "expression": "system_lib_string",
         "metrics": [],
         "type": "statement",
@@ -8468,70 +5969,1088 @@
         "languages": ["cpp"]
     },
     {
-        "expression": "template",
+        "expression": "iota",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["go"]
+    },
+    {
+        "expression": "negated_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["go"]
+    },
+    {
+        "expression": "literal_element",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["go"]
+    },
+    {
+        "expression": "struct_elem",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["go"]
+    },
+    {
+        "expression": "struct_term",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["go"]
+    },
+    {
+        "expression": "block_comment",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "line_comment",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java", "kt"]
+    },
+    {
+        "expression": "exports_module_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "opens_module_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "provides_module_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "requires_module_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "uses_module_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "template_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "compact_constructor_declaration",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "condition",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "guard",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "multiline_string_fragment",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "permits",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "record_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "record_pattern_body",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "record_pattern_component",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "string_interpolation",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "switch_block_statement_group",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "switch_rule",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "type_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java", "php"]
+    },
+    {
+        "expression": "string_fragment",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java", "js", "ts"]
+    },
+    {
+        "expression": "underscore_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["java"]
+    },
+    {
+        "expression": "glimmer_template",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "class_static_block",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "field_definition",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js"]
+    },
+    {
+        "expression": "glimmer_closing_tag",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "glimmer_opening_tag",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "namespace_export",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "optional_chain",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "private_property_identifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "record_struct_declaration",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "and_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "define_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "elif_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "else_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "endregion_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "error_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "expression_colon",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "file_scoped_namespace_declaration",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "if_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "line_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "nullable_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "or_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "pragma_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "region_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "slice_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "undef_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "warning_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "endif_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "preproc_integer_literal",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "preproc_message",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "preproc_string_literal",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cs"]
+    },
+    {
+        "expression": "match_statement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "type_alias_statement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "as_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "keyword_separator",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "positional_separator",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "case_clause",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "case_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "class_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "complex_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "constrained_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "dict_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "except_group_clause",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "keyword_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "member_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "splat_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "splat_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "string_content",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py", "cpp"]
+    },
+    {
+        "expression": "union_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "escape_interpolation",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "line_continuation",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "string_end",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "string_start",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["py"]
+    },
+    {
+        "expression": "match_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "reference_assignment_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "encapsed_string",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "nowdoc",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "nullsafe_member_access_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "nullsafe_member_call_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "abstract_modifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "attribute_group",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "by_ref",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "enum_case",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "enum_declaration_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "final_modifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "heredoc_body",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "match_block",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "match_condition_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "match_conditional_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "match_default_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "named_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "nowdoc_body",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "property_promotion_parameter",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "readonly_modifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "reference_modifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "variadic_placeholder",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "bottom_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "heredoc_end",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "heredoc_start",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "nowdoc_string",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "string_value",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "template_literal_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "this_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "instantiation_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "satisfies_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "asserts_annotation",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "extends_type_clause",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "override_modifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "character_escape_seq",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "function_value_parameters",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "getter",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "import_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "multi_variable_declaration",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "not_nullable_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "multiline_comment",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["kt"]
+    },
+    {
+        "expression": "alignof_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "thread_local",
+        "expression": "fold_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "typedef",
+        "expression": "generic_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "typename",
+        "expression": "gnu_asm_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "u\"",
+        "expression": "offsetof_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "u'",
+        "expression": "requires_clause",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "u8\"",
+        "expression": "requires_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "u8'",
+        "expression": "placeholder_type_specifier",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "union",
+        "expression": "alignas_specifier",
         "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
     },
     {
-        "expression": "unsigned",
+        "expression": "binary_expression_bitand",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["cpp"],
+        "operator": "bitand"
+    },
+    {
+        "expression": "binary_expression_bitor",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["cpp"],
+        "operator": "bitor"
+    },
+    {
+        "expression": "binary_expression_not_eq",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["cpp"],
+        "operator": "not_eq"
+    },
+    {
+        "expression": "compound_requirement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "concept_definition",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "constraint_conjunction",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "constraint_disjunction",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_clobber_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_goto_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_input_operand",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_input_operand_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_output_operand",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_output_operand_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "gnu_asm_qualifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "init_statement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "nested_namespace_specifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "pointer_type_declarator",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "preproc_elifdef",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "requirement_seq",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "simple_requirement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "subscript_argument_list",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "type_requirement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "character",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "raw_string_content",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "raw_string_delimiter",
         "metrics": [],
         "type": "statement",
         "category": "",

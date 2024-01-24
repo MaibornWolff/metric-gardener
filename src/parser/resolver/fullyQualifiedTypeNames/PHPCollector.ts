@@ -18,16 +18,16 @@ export class PHPCollector extends AbstractCollector {
                 [
                     (class_declaration
                         (name) @class_name
-                        (base_clause (qualified_name) @extended_class)?
+                        (base_clause (name) @extended_class)?
                         (class_interface_clause
-                            (qualified_name)+ @implemented_class ("," (qualified_name) @implemented_class)* 
+                            (name)+ @implemented_class ("," (name) @implemented_class)* 
                         )?
                     )
                     (interface_declaration
                         "interface" @class_type
                         (name) @class_name
                         (base_clause
-                            (qualified_name)+ @implemented_class ("," (qualified_name) @implemented_class)* 
+                            (name)+ @implemented_class ("," (name) @implemented_class)* 
                         )?
                     )
                 ]+

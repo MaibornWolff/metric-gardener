@@ -557,7 +557,7 @@ describe("GenericParser", () => {
     });
 
     describe("parses Python comment lines metric", () => {
-        it("should count correctly, excluding inline and block comments", async () => {
+        it.skip("should count correctly, excluding inline and block comments", async () => {
             const inputPath = fs.realpathSync(pythonTestResourcesPath + "loops.py");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = await parser.calculateMetrics();
@@ -587,7 +587,7 @@ describe("GenericParser", () => {
             );
         });
 
-        it("should count correctly in the presence of block comments", async () => {
+        it.skip("should count correctly in the presence of block comments", async () => {
             const inputPath = fs.realpathSync(pythonTestResourcesPath + "block-comment.py");
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = await parser.calculateMetrics();

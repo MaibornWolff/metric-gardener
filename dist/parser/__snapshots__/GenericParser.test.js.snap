@@ -54,7 +54,7 @@ Object {
   },
   "relationships": Array [
     Object {
-      "fromClassName": "FunctionCalls",
+      "fromClassName": "ParameterTypes",
       "fromNamespace": "App.CouplingExamples.Library.ParameterTypes",
       "fromSource": "Library\\\\ParameterTypes.cs",
       "toClassName": "FunctionCalls",
@@ -63,7 +63,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "FunctionCalls",
+      "fromClassName": "BlubControllerOne1",
       "fromNamespace": "App.CouplingExamplesOne.BlubControllerOne1",
       "fromSource": "BlubController.cs",
       "toClassName": "FunctionCalls",
@@ -72,7 +72,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "IAnotherParameterTypes",
+      "fromClassName": "IParameterTypes",
       "fromNamespace": "App.CouplingExamples.Library.IParameterTypes",
       "fromSource": "Library\\\\IParameterTypes.cs",
       "toClassName": "IAnotherParameterTypes",
@@ -81,7 +81,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "IParameterTypes",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "IParameterTypes",
@@ -90,7 +90,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "IParameterTypes",
+      "fromClassName": "ParameterTypesSpecialized",
       "fromNamespace": "App.CouplingExamples.Library.ParameterTypesSpecialized",
       "fromSource": "Library\\\\ParameterTypesSpecialized.cs",
       "toClassName": "IParameterTypes",
@@ -99,7 +99,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "MyCustomArgumentNullException",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "MyCustomArgumentNullException",
@@ -108,7 +108,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "ObjectCreations",
+      "fromClassName": "ParameterTypes",
       "fromNamespace": "App.CouplingExamples.Library.ParameterTypes",
       "fromSource": "Library\\\\ParameterTypes.cs",
       "toClassName": "ObjectCreations",
@@ -117,7 +117,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "ParameterTypes",
+      "fromClassName": "FunctionCalls",
       "fromNamespace": "App.CouplingExamples.Library.FunctionCalls",
       "fromSource": "Library\\\\FunctionCalls.cs",
       "toClassName": "ParameterTypes",
@@ -126,7 +126,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "ParameterTypes",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "ParameterTypes",
@@ -135,7 +135,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "ParameterTypes",
+      "fromClassName": "ParameterTypesSpecialized",
       "fromNamespace": "App.CouplingExamples.Library.ParameterTypesSpecialized",
       "fromSource": "Library\\\\ParameterTypesSpecialized.cs",
       "toClassName": "ParameterTypes",
@@ -144,7 +144,7 @@ Object {
       "usageType": "extends",
     },
     Object {
-      "fromClassName": "BlubControllerOne1",
+      "fromClassName": "FunctionCalls",
       "fromNamespace": "App.CouplingExamples.Library.FunctionCalls",
       "fromSource": "Library\\\\FunctionCalls.cs",
       "toClassName": "BlubControllerOne1",
@@ -153,7 +153,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "BlubControllerOne1",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "BlubControllerOne1",
@@ -162,7 +162,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "BlubControllerOne2",
+      "fromClassName": "FunctionCalls",
       "fromNamespace": "App.CouplingExamples.Library.FunctionCalls",
       "fromSource": "Library\\\\FunctionCalls.cs",
       "toClassName": "BlubControllerOne2",
@@ -171,7 +171,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "BlubControllerOne2",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "BlubControllerOne2",
@@ -180,7 +180,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "BlubControllerTwo1",
+      "fromClassName": "FunctionCalls",
       "fromNamespace": "App.CouplingExamples.Library.FunctionCalls",
       "fromSource": "Library\\\\FunctionCalls.cs",
       "toClassName": "BlubControllerTwo1",
@@ -189,7 +189,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "BlubControllerTwo1",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "BlubControllerTwo1",
@@ -198,7 +198,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "BlubControllerTwo2",
+      "fromClassName": "ObjectCreations",
       "fromNamespace": "App.CouplingExamples.Library.ObjectCreations",
       "fromSource": "Library\\\\ObjectCreations.cs",
       "toClassName": "BlubControllerTwo2",
@@ -258,7 +258,7 @@ Object {
   },
   "relationships": Array [
     Object {
-      "fromClassName": "AnotherControllerInterface",
+      "fromClassName": "FastControllerInterface",
       "fromNamespace": "App\\\\FastControllerInterface",
       "fromSource": "FastControllerInterface.php",
       "toClassName": "AnotherControllerInterface",
@@ -267,7 +267,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "ControllerInterface",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "ControllerInterface",
@@ -276,7 +276,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "ControllerInterface",
+      "fromClassName": "BlubControllerOne1",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\BlubControllerOne1",
       "fromSource": "BlubController.php",
       "toClassName": "ControllerInterface",
@@ -285,7 +285,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "ControllerInterface",
+      "fromClassName": "FastControllerInterface",
       "fromNamespace": "App\\\\FastControllerInterface",
       "fromSource": "FastControllerInterface.php",
       "toClassName": "ControllerInterface",
@@ -294,7 +294,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "BlubControllerOne1",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "BlubControllerOne1",
@@ -303,7 +303,7 @@ Object {
       "usageType": "extends",
     },
     Object {
-      "fromClassName": "BlubControllerOne1",
+      "fromClassName": "BlubControllerTwo1",
       "fromNamespace": "App\\\\CouplingExamplesTwo\\\\BlubControllerTwo1",
       "fromSource": "BlubController.php",
       "toClassName": "BlubControllerOne1",
@@ -312,7 +312,7 @@ Object {
       "usageType": "extends",
     },
     Object {
-      "fromClassName": "Helper",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "Helper",
@@ -321,7 +321,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "Helper",
+      "fromClassName": "BlubControllerOne1",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\BlubControllerOne1",
       "fromSource": "BlubController.php",
       "toClassName": "Helper",
@@ -330,7 +330,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "Helper",
+      "fromClassName": "HelperOutput",
       "fromNamespace": "App\\\\CouplingExamples\\\\Library\\\\HelperOutput",
       "fromSource": "Library\\\\HelperOutput.php",
       "toClassName": "Helper",
@@ -339,7 +339,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "HelperOutput",
+      "fromClassName": "Helper",
       "fromNamespace": "App\\\\CouplingExamples\\\\Library\\\\Helper",
       "fromSource": "Library\\\\Helper.php",
       "toClassName": "HelperOutput",
@@ -348,7 +348,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "FastControllerInterface",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "FastControllerInterface",

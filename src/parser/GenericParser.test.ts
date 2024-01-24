@@ -9,6 +9,7 @@ describe("GenericParser", () => {
     const csharpTestResourcesPath = "./resources/c-sharp/";
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
+    const pythonTestResourcesPath = "./resources/python/";
 
     /**
      * Gets a parser configuration for the test cases.
@@ -176,6 +177,28 @@ describe("GenericParser", () => {
             const results = await parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses PHP real lines of code metric", () => {
+        it("should count correctly for a non-empty file, ignoring comments and empty lines", async () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "php-example-code.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                43
+            );
+        });
+
+        it("should count correctly if there is a comment in the same line as actual code", async () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "same-line-comment.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                11
+            );
         });
     });
 
@@ -354,6 +377,16 @@ describe("GenericParser", () => {
                 3
             );
         });
+
+        it("should count weirdly formatted lines of code correctly", async () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "weird-lines.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                32
+            );
+        });
     });
 
     describe("parses GO McCabeComplexity metric", () => {
@@ -489,6 +522,80 @@ describe("GenericParser", () => {
             const results = await parser.calculateMetrics();
 
             expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(2);
+        });
+    });
+
+    describe("parses Go real lines of code metric", () => {
+        it("should count correctly for a non-empty file, ignoring comments,  inline comments and empty lines", async () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "go-example-code.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                32
+            );
+        });
+
+        it("should count correctly if there is a comment that includes code", async () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                19
+            );
+        });
+    });
+
+    describe("parses Python McCabeComplexity metric", () => {
+        it("should count if statements correctly", async () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "if.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("mcc")?.metricValue).toBe(4);
+        });
+    });
+
+    describe("parses Python comment lines metric", () => {
+        it.skip("should count correctly, excluding inline and block comments", async () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "loops.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("comment_lines")?.metricValue).toBe(5);
+        });
+    });
+
+    describe("parses Python real lines of code metric", () => {
+        it("should count correctly for a non-empty file with pythons non-C-syntax code blocks", async () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "blocks.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                9
+            );
+        });
+
+        it("should count correctly for a non-empty file with nested loops and comments", async () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "loops.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                4
+            );
+        });
+
+        it.skip("should count correctly in the presence of block comments", async () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "block-comment.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                3
+            );
         });
     });
 

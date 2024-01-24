@@ -1,13 +1,9 @@
-import { QueryBuilder } from "../queries/QueryBuilder";
-import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
-import {
-    ExpressionMetricMapping,
-    ExpressionQueryStatement,
-    QueryStatementInterface,
-} from "../helper/Model";
+import { ExpressionMetricMapping } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import Parser, { TreeCursor } from "tree-sitter";
+import { getExpressionsByCategory } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import Parser from "tree-sitter";
+
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
@@ -16,71 +12,65 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Counts the number of lines in a file, not counting for comments and empty lines.
  */
 export class RealLinesOfCode implements Metric {
-    private commentStatementsSuperSet: QueryStatementInterface[] = [];
+    private commentStatementsSet: Set<string>;
 
     /**
      * Constructs a new instance of {@link RealLinesOfCode}.
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        allNodeTypes.forEach((expressionMapping) => {
-            if (
-                expressionMapping.metrics.includes(this.getName()) &&
-                expressionMapping.type === "statement"
-            ) {
-                const { expression, activated_for_languages } = expressionMapping;
-                const queryStatement = new ExpressionQueryStatement(
-                    expression,
-                    activated_for_languages
-                );
-
-                if (expressionMapping.category === "comment") {
-                    this.commentStatementsSuperSet.push(queryStatement);
-                }
-            }
-        });
-    }
-
-    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        // Avoid off-by-one error:
-        // The number of the last row equals the number of lines in the file minus one,
-        // as it is counted from line 0. So add one to the result:
-        const loc = tree.rootNode.endPosition.row + 1;
-
-        const emptyLines = this.countEmptyLines(tree.rootNode.text);
-
-        const queryBuilder = new QueryBuilder(
-            fileExtensionToGrammar.get(parseFile.fileExtension),
-            tree,
-            parseFile.fileExtension
+        this.commentStatementsSet = new Set(
+            getExpressionsByCategory(allNodeTypes, this.getName(), "comment")
         );
-
-        queryBuilder.setStatements(this.commentStatementsSuperSet);
-
-        const commentQuery = queryBuilder.build();
-        const commentMatches = commentQuery.matches(tree.rootNode);
-
-        const commentLines = commentMatches.reduce((accumulator, match) => {
-            const captureNode = match.captures[0].node;
-            return accumulator + captureNode.endPosition.row - captureNode.startPosition.row + 1;
-        }, 0);
-
-        const realLinesOfCode = Math.max(0, loc - commentLines - emptyLines);
-        dlog(this.getName() + " - " + realLinesOfCode);
-
-        return {
-            metricName: this.getName(),
-            metricValue: realLinesOfCode,
-        };
     }
 
     /**
-     * Counts empty lines within the supplied text.
-     * @param text String for which empty lines should be counted.
-     * @private
+     * Waling through the tree in order to find actual code lines.
+     *
+     * Uses a {@link TreeCursor} for this, as according to the
+     * {@link https://tree-sitter.github.io/tree-sitter/using-parsers#walking-trees-with-tree-cursors|Tree-sitter documentation},
+     * this is the most efficient way to traverse a syntax tree.
+     * @param cursor A {@link TreeCursor} for the syntax tree.
+     * @param sureCodeLines A set in which the line numbers of the found code lines are stored.
      */
-    private countEmptyLines(text: string) {
-        return text.split(/\r\n|\r|\n/g).filter((entry) => /^\s*$/.test(entry)).length;
+    walkTree(cursor: TreeCursor, sureCodeLines = new Set<number>()) {
+        // This is not a comment syntax node, so assume it includes "real code".
+        if (!this.commentStatementsSet.has(cursor.currentNode.type)) {
+            // Assume that first and last line of whatever kind of node this is, is a real code line.
+            // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
+            sureCodeLines.add(cursor.startPosition.row);
+            // Adding the last line is not necessary, as every last line has to have some syntactical element,
+            // which is again expressed as another syntax node.
+        }
+        // Recurse, depth-first
+        if (cursor.gotoFirstChild()) {
+            this.walkTree(cursor, sureCodeLines);
+        }
+        if (cursor.gotoNextSibling()) {
+            this.walkTree(cursor, sureCodeLines);
+        } else {
+            // Completed searching this part of the tree, so go up now.
+            cursor.gotoParent();
+        }
+        return sureCodeLines;
+    }
+
+    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
+        const cursor = tree.walk();
+        // Assume the root node is always some kind of program/file/compilation_unit stuff
+        cursor.gotoFirstChild();
+        const sureCodeLines = this.walkTree(cursor);
+
+        dlog("Included lines for rloc: ", sureCodeLines);
+
+        const rloc = sureCodeLines.size;
+
+        dlog(this.getName() + " - " + rloc);
+
+        return {
+            metricName: this.getName(),
+            metricValue: rloc,
+        };
     }
 
     getName(): string {

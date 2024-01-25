@@ -56,14 +56,16 @@ export class RealLinesOfCode implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
+        let rloc = 0;
         const cursor = tree.walk();
-        // Assume the root node is always some kind of program/file/compilation_unit stuff
-        cursor.gotoFirstChild();
-        const sureCodeLines = this.walkTree(cursor);
 
-        dlog("Included lines for rloc: ", sureCodeLines);
-
-        const rloc = sureCodeLines.size;
+        // Assume the root node is always some kind of program/file/compilation_unit stuff.
+        // So if there are no child nodes, the file is empty.
+        if (cursor.gotoFirstChild()) {
+            const sureCodeLines = this.walkTree(cursor);
+            dlog("Included lines for rloc: ", sureCodeLines);
+            rloc = sureCodeLines.size;
+        }
 
         dlog(this.getName() + " - " + rloc);
 

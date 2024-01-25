@@ -110,26 +110,10 @@ export class OperatorQueryStatement implements QueryStatementInterface {
     }
 
     toQuery(): string {
-        return (
-            "(" +
-            this.category +
-            ' operator: "' +
-            this.operator +
-            '") @binary_expression_' +
-            binaryOperatorTranslations.get(this.operator)
-        );
+        return "(" + this.category + ' operator: "' + this.operator + '") @binary_expression';
     }
 
     applicableFor(language: Languages): boolean {
         return this.applicableForLanguages.has(language);
     }
 }
-
-export const binaryOperatorTranslations = new Map([
-    ["&&", "logical_and"],
-    ["||", "logical_or"],
-    ["??", "null_or_value"],
-    ["and", "and"],
-    ["or", "or"],
-    ["xor", "xor"],
-]);

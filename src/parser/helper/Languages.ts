@@ -22,7 +22,12 @@ export const enum Languages {
     PHP,
     TypeScript,
     Python,
-    Unsupported,
+    /**
+     * For files with unknown file extension. Could be a source code file written in language(s) for which
+     * no tree sitter grammar is installed, a missing entry in {@link fileExtensionToLanguage}
+     * or just a file that is no source code.
+     */
+    Unknown,
 }
 
 /**
@@ -44,7 +49,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Languages, string>(
         [Languages.PHP, "php"],
         [Languages.TypeScript, "ts"],
         [Languages.Python, "py"],
-        [Languages.Unsupported, "N/A"],
+        [Languages.Unknown, "N/A"],
     ])
 );
 

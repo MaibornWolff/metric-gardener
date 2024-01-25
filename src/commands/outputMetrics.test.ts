@@ -20,8 +20,10 @@ describe("outputMetrics", () => {
 
             const fileMetrics = new Map([
                 ["/file/path1.test", file1],
-                ["/file/path2.test", file1],
+                ["/file/path2.test", file2],
             ]);
+
+            const unknownFiles = ["/file/path3.unknown", "/file/noExtension"];
 
             const relationShipMetrics = {
                 relationships: [
@@ -50,18 +52,18 @@ describe("outputMetrics", () => {
                 expect(jsonString).toMatchSnapshot();
             });
 
-            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json", false);
+            outputAsJson(fileMetrics, unknownFiles, relationShipMetrics, "mocked-file.json", false);
         });
 
         it("when no metrics are present", () => {
             const fileMetrics = new Map();
             const relationShipMetrics = {} as CouplingResult;
 
-            outputAsJson(fileMetrics, relationShipMetrics, "mocked-file.json", false);
+            outputAsJson(fileMetrics, [], relationShipMetrics, "mocked-file.json", false);
 
             expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",
-                '{"nodes":[],"relationships":[]}'
+                '{"nodes":[],"info":[],"relationships":[]}'
             );
         });
     });

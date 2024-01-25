@@ -11,6 +11,12 @@ interface OutputNode {
     };
 }
 
+interface OutputInfoNode {
+    name: string;
+    type: "File";
+    info: string;
+}
+
 interface OutputRelationship {
     from: string;
     to: string;
@@ -19,13 +25,22 @@ interface OutputRelationship {
     };
 }
 
+/**
+ * Writes the passed metrics into a json file.
+ * @param fileMetrics Metrics calculated on single files.
+ * @param unknownFiles List of files that cannot be analyzed.
+ * @param relationshipMetrics Relationship metrics.
+ * @param outputFilePath Path to write the file to
+ * @param compress Whether the file should be compressed
+ */
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
+    unknownFiles: string[],
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean
 ) {
-    const output = buildOutputObject(fileMetrics, relationshipMetrics);
+    const output = buildOutputObject(fileMetrics, unknownFiles, relationshipMetrics);
     const outputString = JSON.stringify(output).toString();
 
     if (compress) {
@@ -42,10 +57,16 @@ export function outputAsJson(
 
 function buildOutputObject(
     fileMetrics: Map<string, Map<string, MetricResult>>,
+    unknownFiles: string[],
     relationshipMetrics: CouplingResult
 ) {
-    const output: { nodes: OutputNode[]; relationships: OutputRelationship[] } = {
+    const output: {
+        nodes: OutputNode[];
+        info: OutputInfoNode[];
+        relationships: OutputRelationship[];
+    } = {
         nodes: [],
+        info: [],
         relationships: [],
     };
 
@@ -66,6 +87,16 @@ function buildOutputObject(
 
         outputNodeReferenceLookUp.set(filePath, outputNode);
         output.nodes.push(outputNode);
+    }
+
+    for (const filePath of unknownFiles) {
+        const outputNode: OutputInfoNode = {
+            name: filePath,
+            type: "File",
+            info: "Unknown language or file extension",
+        };
+
+        output.info.push(outputNode);
     }
 
     // merge relationship metrics with existing nodes or add new node

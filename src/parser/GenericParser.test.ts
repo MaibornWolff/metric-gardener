@@ -10,6 +10,7 @@ describe("GenericParser", () => {
     const tsTestResourcesPath = "./resources/typescript/";
     const goTestResourcesPath = "./resources/go/";
     const pythonTestResourcesPath = "./resources/python/";
+    const unknownTestResourcesPath = "./resources/unknown/";
 
     /**
      * Gets a parser configuration for the test cases.
@@ -623,5 +624,34 @@ describe("GenericParser", () => {
 
             expect(couplingResult).toMatchSnapshot();
         }, 10000);
+    });
+
+    describe("Include files with unknown or no file extension", () => {
+        it("should list files with unknown file extension", async () => {
+            const inputPath = fs.realpathSync(unknownTestResourcesPath);
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            const filePath = fs.realpathSync(unknownTestResourcesPath + "example.unknownExtension");
+            expect(results.unknownFiles.includes(filePath)).toBe(true);
+        });
+
+        it("should list files with no file extension", async () => {
+            const inputPath = fs.realpathSync(unknownTestResourcesPath);
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            const filePath = fs.realpathSync(unknownTestResourcesPath + "example.unknownExtension");
+            expect(results.unknownFiles.includes(filePath)).toBe(true);
+        });
+
+        it("should still list files with known extension", async () => {
+            const inputPath = fs.realpathSync(unknownTestResourcesPath);
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            const filePath = fs.realpathSync(unknownTestResourcesPath + "known.java");
+            expect(results.fileMetrics.has(filePath)).toBe(true);
+        });
     });
 });

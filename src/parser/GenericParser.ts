@@ -36,7 +36,7 @@ export class GenericParser {
         console.time("Time to complete");
 
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
-        const unknownFileEntries = new Map<string, string>();
+        const unknownFiles: string[] = [];
         let couplingMetrics = {} as CouplingResult;
 
         try {
@@ -44,7 +44,7 @@ export class GenericParser {
 
             const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
             const parseFiles: ParseFile[] = [];
-            const unknownFiles: ParseFile[] = [];
+            const unknownParseFiles: ParseFile[] = [];
 
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator(this.config);
@@ -54,7 +54,7 @@ export class GenericParser {
                         fileMetricPromises.push(metricsParser.calculateMetrics(file));
                         parseFiles.push(file);
                     } else {
-                        unknownFiles.push(file);
+                        unknownParseFiles.push(file);
                     }
                 }
             }
@@ -64,7 +64,7 @@ export class GenericParser {
                     if (file.language !== Languages.Unknown) {
                         parseFiles.push(file);
                     } else {
-                        unknownFiles.push(file);
+                        unknownParseFiles.push(file);
                     }
                 }
             }
@@ -84,11 +84,8 @@ export class GenericParser {
                 fileMetrics.set(filepath, metricsMap);
             }
 
-            for (const file of unknownFiles) {
-                unknownFileEntries.set(
-                    formatPrintPath(file.filePath, this.config),
-                    "Unknown language or file extension"
-                );
+            for (const file of unknownParseFiles) {
+                unknownFiles.push(formatPrintPath(file.filePath, this.config));
             }
 
             console.log("#####################################");
@@ -98,7 +95,7 @@ export class GenericParser {
 
             return {
                 fileMetrics,
-                unknownFileEntries,
+                unknownFiles,
                 couplingMetrics,
             };
         } catch (e) {
@@ -109,7 +106,7 @@ export class GenericParser {
 
             return {
                 fileMetrics,
-                unknownFileEntries,
+                unknownFiles,
                 couplingMetrics,
             };
         }

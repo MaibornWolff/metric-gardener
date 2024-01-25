@@ -1049,9 +1049,9 @@
     },
     {
         "expression": "compilation_unit",
-        "metrics": ["lines_of_code", "real_lines_of_code"],
+        "metrics": [],
         "type": "statement",
-        "category": "start_rule",
+        "category": "",
         "languages": ["cs"]
     },
     {
@@ -1581,9 +1581,9 @@
     },
     {
         "expression": "module",
-        "metrics": ["lines_of_code", "real_lines_of_code"],
+        "metrics": [],
         "type": "statement",
-        "category": "start_rule",
+        "category": "",
         "activated_for_languages": ["py"],
         "languages": ["ts", "py"]
     },
@@ -2073,9 +2073,9 @@
     },
     {
         "expression": "source_file",
-        "metrics": ["lines_of_code", "real_lines_of_code"],
+        "metrics": [],
         "type": "statement",
-        "category": "start_rule",
+        "category": "",
         "languages": ["go", "kt"]
     },
     {
@@ -2599,9 +2599,9 @@
     },
     {
         "expression": "program",
-        "metrics": ["lines_of_code", "real_lines_of_code"],
+        "metrics": [],
         "type": "statement",
-        "category": "start_rule",
+        "category": "",
         "languages": ["java", "js", "php", "ts"]
     },
     {
@@ -5851,9 +5851,9 @@
     },
     {
         "expression": "translation_unit",
-        "metrics": ["lines_of_code", "real_lines_of_code"],
+        "metrics": [],
         "type": "statement",
-        "category": "start_rule",
+        "category": "",
         "languages": ["cpp"]
     },
     {
@@ -6005,16 +6005,16 @@
     },
     {
         "expression": "block_comment",
-        "metrics": [],
+        "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
-        "category": "",
+        "category": "comment",
         "languages": ["java"]
     },
     {
         "expression": "line_comment",
-        "metrics": [],
+        "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
-        "category": "",
+        "category": "comment",
         "languages": ["java", "kt"]
     },
     {
@@ -6810,9 +6810,9 @@
     },
     {
         "expression": "multiline_comment",
-        "metrics": [],
+        "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
-        "category": "",
+        "category": "comment",
         "languages": ["kt"]
     },
     {

@@ -9,7 +9,7 @@
     },
     "scripts": {
         "start": "tsc && node dist/app.js",
-        "test": "jest",
+        "test": "tsc && jest",
         "format": "prettier --write \"./**/*\"",
         "format:quick": "pretty-quick --staged",
         "lint": "eslint \"src/**/*.ts\"",

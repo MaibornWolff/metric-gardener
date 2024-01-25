@@ -31,28 +31,28 @@ export class RealLinesOfCode implements Metric {
      * {@link https://tree-sitter.github.io/tree-sitter/using-parsers#walking-trees-with-tree-cursors|Tree-sitter documentation},
      * this is the most efficient way to traverse a syntax tree.
      * @param cursor A {@link TreeCursor} for the syntax tree.
-     * @param sureCodeLines A set in which the line numbers of the found code lines are stored.
+     * @param realCodeLines A set in which the line numbers of the found code lines are stored.
      */
-    walkTree(cursor: TreeCursor, sureCodeLines = new Set<number>()) {
+    walkTree(cursor: TreeCursor, realCodeLines = new Set<number>()) {
         // This is not a comment syntax node, so assume it includes "real code".
         if (!this.commentStatementsSet.has(cursor.currentNode.type)) {
             // Assume that first and last line of whatever kind of node this is, is a real code line.
             // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
-            sureCodeLines.add(cursor.startPosition.row);
+            realCodeLines.add(cursor.startPosition.row);
             // Adding the last line is not necessary, as every last line has to have some syntactical element,
             // which is again expressed as another syntax node.
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {
-            this.walkTree(cursor, sureCodeLines);
+            this.walkTree(cursor, realCodeLines);
         }
         if (cursor.gotoNextSibling()) {
-            this.walkTree(cursor, sureCodeLines);
+            this.walkTree(cursor, realCodeLines);
         } else {
             // Completed searching this part of the tree, so go up now.
             cursor.gotoParent();
         }
-        return sureCodeLines;
+        return realCodeLines;
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
@@ -62,9 +62,9 @@ export class RealLinesOfCode implements Metric {
         // Assume the root node is always some kind of program/file/compilation_unit stuff.
         // So if there are no child nodes, the file is empty.
         if (cursor.gotoFirstChild()) {
-            const sureCodeLines = this.walkTree(cursor);
-            dlog("Included lines for rloc: ", sureCodeLines);
-            rloc = sureCodeLines.size;
+            const realCodeLines = this.walkTree(cursor);
+            dlog("Included lines for rloc: ", realCodeLines);
+            rloc = realCodeLines.size;
         }
 
         dlog(this.getName() + " - " + rloc);

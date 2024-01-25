@@ -1,6 +1,6 @@
 import fs from "fs";
-import { GenericParser } from "./GenericParser";
-import { Configuration } from "./Configuration";
+import { GenericParser } from "../../src/parser/GenericParser";
+import { Configuration } from "../../src/parser/Configuration";
 
 export async function testCalculateMetrics(inputPath: string, metric: string, expected: unknown) {
     const realInputPath = fs.realpathSync(inputPath);

@@ -1,8 +1,8 @@
-import { GenericParser } from "./GenericParser";
+import { GenericParser } from "../../src/parser/GenericParser";
 import fs from "fs";
-import { Configuration } from "./Configuration";
-import { strcmp } from "./helper/Helper";
-import { CouplingResult } from "./metrics/Metric";
+import { Configuration } from "../../src/parser/Configuration";
+import { strcmp } from "../../src/parser/helper/Helper";
+import { CouplingResult } from "../../src/parser/metrics/Metric";
 
 describe("GenericParser", () => {
     const phpTestResourcesPath = "./resources/php/";

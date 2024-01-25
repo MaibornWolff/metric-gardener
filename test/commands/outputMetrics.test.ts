@@ -1,6 +1,6 @@
-import { outputAsJson } from "./outputMetrics";
+import { outputAsJson } from "../../src/commands/outputMetrics";
 import fs from "fs";
-import { Relationship, MetricResult, CouplingResult } from "../parser/metrics/Metric";
+import { Relationship, MetricResult, CouplingResult } from "../../src/parser/metrics/Metric";
 
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {

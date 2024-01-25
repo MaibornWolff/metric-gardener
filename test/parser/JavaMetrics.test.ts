@@ -1,6 +1,6 @@
 import { testCalculateMetrics } from "./TestHelper";
 const javaTestResourcesPath = "./resources/java/";
-describe("test GenericParser.calculateMetrics() for Java language.", () => {
+describe("test metrics calculation for Java language.", () => {
     describe("parses classes metric", () => {
         it("count classes with different access-modifier", () => {
             testCalculateMetrics(javaTestResourcesPath + "Classes.java", "classes", 2);

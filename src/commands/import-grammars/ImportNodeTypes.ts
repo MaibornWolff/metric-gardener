@@ -36,13 +36,16 @@ const changelog: NodeTypesChangelog = new NodeTypesChangelog();
  * Removes all node types which are no longer present in the grammar.
  */
 export async function updateNodeTypesMappingFile() {
-    const presentNodeTypesForLanguage = importPresentMappings();
-    const removedNodeTypesForLanguage = new Map<string, Set<string>>();
+    expressionMappings.clear();
+    changelog.clear();
+
+    const languageToPresentNodeTypes = importPresentNodeTypeMappings();
+    const languageToRemovedNodeTypes = new Map<string, Set<string>>();
 
     const updatePromises: Promise<unknown>[] = [];
 
     for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
-        let presentNodeTypes = presentNodeTypesForLanguage.get(languageAbbr);
+        let presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr);
 
         if (presentNodeTypes === undefined) {
             presentNodeTypes = new Set();
@@ -52,7 +55,7 @@ export async function updateNodeTypesMappingFile() {
                 if (removed === null) {
                     return false;
                 }
-                removedNodeTypesForLanguage.set(languageAbbr, removed);
+                languageToRemovedNodeTypes.set(languageAbbr, removed);
                 return true;
             },
             (reason) => {
@@ -70,7 +73,7 @@ export async function updateNodeTypesMappingFile() {
             console.error("Error while updating the node mappings. Cancel update...");
             return;
         }
-        await applyRemovedNodeTypes(removedNodeTypesForLanguage);
+        await applyRemovedNodeTypes(languageToRemovedNodeTypes);
     } catch (e) {
         console.error("Error while updating the node mappings. Cancel update...");
         console.error(e);
@@ -100,16 +103,13 @@ export async function updateNodeTypesMappingFile() {
         );
 }
 
-function importPresentMappings(): Map<string, Set<string>> {
-    expressionMappings.clear();
-    changelog.clear();
-
+function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     const presentNodeTypesForLanguage: Map<string, Set<string>> = new Map();
     for (const langAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
         presentNodeTypesForLanguage.set(langAbbr, new Set());
     }
 
-    const allNodeTypes: ExpressionMetricMapping[] = nodeTypesConfig as ExpressionMetricMapping[];
+    const allNodeTypes = nodeTypesConfig as ExpressionMetricMapping[];
 
     for (const nodeType of allNodeTypes) {
         expressionMappings.set(nodeType.expression, nodeType);
@@ -164,120 +164,79 @@ async function updateLanguage(
         }
 
         if (nodeType.type === "binary_expression") {
-            if (nodeType?.fields?.operator?.types !== undefined) {
-                for (const binaryOperatorType of nodeType.fields.operator.types) {
-                    const { type: binaryOperator } = binaryOperatorType;
-                    const mapKey = nodeType.type + "_" + binaryOperator;
-                    removedNodeTypes.delete(mapKey);
-
-                    const expression = expressionMappings.get(mapKey);
-                    if (expression !== undefined) {
-                        if (!expression.languages.includes(languageAbbr)) {
-                            changelog.addedNodeToLanguage(expression, languageAbbr);
-                            expression.languages.push(languageAbbr);
-                            dlog(
-                                "Language " +
-                                    languageAbbr +
-                                    ' was added to node type "' +
-                                    mapKey +
-                                    '".'
-                            );
-                        }
-                    } else {
-                        expressionMappings.set(mapKey, {
-                            expression: mapKey,
-                            metrics: [],
-                            type: "statement",
-                            category: "binary_expression",
-                            languages: [languageAbbr],
-                            operator: binaryOperator,
-                        });
-                        changelog.addedNewNode(mapKey, languageAbbr);
-                        dlog(
-                            'New node type "' +
-                                mapKey +
-                                '" was added for language "' +
-                                languageAbbr +
-                                '".'
-                        );
-                    }
-                }
-            }
+            updateBinaryExpressions(languageAbbr, presentNodes, nodeType, removedNodeTypes);
             continue;
         }
 
         removedNodeTypes.delete(nodeType.type);
-
-        const expression = expressionMappings.get(nodeType.type);
-        if (expression !== undefined) {
-            if (!expression.languages.includes(languageAbbr)) {
-                changelog.addedNodeToLanguage(expression, languageAbbr);
-                expression.languages.push(languageAbbr);
-                dlog(
-                    'Language "' +
-                        languageAbbr +
-                        '" was added to node type "' +
-                        nodeType.type +
-                        '".'
-                );
-            }
-        } else {
-            expressionMappings.set(nodeType.type, {
-                expression: nodeType.type,
-                metrics: [],
-                type: "statement",
-                category: "",
-                languages: [languageAbbr],
-            });
-            changelog.addedNewNode(nodeType.type, languageAbbr);
-            dlog(
-                'New node type "' +
-                    nodeType.type +
-                    '" was added for language "' +
-                    languageAbbr +
-                    '".'
-            );
-        }
+        updateOrAddExpression(languageAbbr, nodeType.type);
 
         if (nodeType.subtypes !== undefined) {
             for (const subNodeType of nodeType.subtypes) {
                 removedNodeTypes.delete(subNodeType.type);
-
-                const expression = expressionMappings.get(subNodeType.type);
-                if (expression !== undefined) {
-                    if (!expression.languages.includes(languageAbbr)) {
-                        changelog.addedNodeToLanguage(expression, languageAbbr);
-                        expression.languages.push(languageAbbr);
-                        dlog(
-                            'Language "' +
-                                languageAbbr +
-                                '" was added to node type "' +
-                                nodeType.type +
-                                '".'
-                        );
-                    }
-                } else {
-                    expressionMappings.set(subNodeType.type, {
-                        expression: subNodeType.type,
-                        metrics: [],
-                        type: "statement",
-                        category: "",
-                        languages: [languageAbbr],
-                    });
-                    changelog.addedNewNode(subNodeType.type, languageAbbr);
-                    dlog(
-                        'New node type "' +
-                            nodeType.type +
-                            '" was added for language "' +
-                            languageAbbr +
-                            '".'
-                    );
-                }
+                updateOrAddExpression(languageAbbr, subNodeType.type);
             }
         }
     }
 
     return removedNodeTypes;
+}
+
+function updateBinaryExpressions(
+    languageAbbr: string,
+    presentNodes: Set<string>,
+    nodeType,
+    removedNodeTypes: Set<string>
+) {
+    if (nodeType?.fields?.operator?.types !== undefined) {
+        for (const binaryOperatorType of nodeType.fields.operator.types) {
+            const { type: binaryOperator } = binaryOperatorType;
+            const mapKey = nodeType.type + "_" + binaryOperator;
+            removedNodeTypes.delete(mapKey);
+
+            updateOrAddExpression(languageAbbr, mapKey, "binary_expression", binaryOperator);
+        }
+    }
+}
+
+/**
+ * Adds the expression to the specified language.
+ * Either updates an existing mapping for that expression or adds a new the expression to the expression mappings.
+ * @param languageAbbr Abbreviation of the language to add this expression to.
+ * @param expressionName Name of the expression.
+ * @param category Category of the expression to use if a new expression mapping is created.
+ * @param operator Operator of the expression to use if a new expression mapping is created.
+ */
+function updateOrAddExpression(
+    languageAbbr: string,
+    expressionName: string,
+    category = "",
+    operator?
+) {
+    const expression = expressionMappings.get(expressionName);
+
+    if (expression !== undefined) {
+        if (!expression.languages.includes(languageAbbr)) {
+            changelog.addedNodeToLanguage(expression, languageAbbr);
+            expression.languages.push(languageAbbr);
+            dlog(
+                'Language "' + languageAbbr + '" was added to node type "' + expressionName + '".'
+            );
+        }
+    } else {
+        expressionMappings.set(expressionName, {
+            expression: expressionName,
+            metrics: [],
+            type: "statement",
+            category: category,
+            languages: [languageAbbr],
+            operator: operator,
+        });
+        changelog.addedNewNode(expressionName, languageAbbr);
+        dlog(
+            'New node type "' + expressionName + '" was added for language "' + languageAbbr + '".'
+        );
+    }
 }
 
 async function applyRemovedNodeTypes(

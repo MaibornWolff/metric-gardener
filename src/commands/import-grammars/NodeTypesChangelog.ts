@@ -1,4 +1,4 @@
-import { ExpressionMetricMapping } from "../parser/helper/Model";
+import { ExpressionMetricMapping } from "../../parser/helper/Model";
 import fs from "fs";
 import { EOL } from "os";
 

@@ -195,23 +195,20 @@ export abstract class AbstractCollector {
                 const usedNamespace =
                     namespaceName + this.getNamespaceDelimiter() + nextUseItem.text;
 
-                // Why not just use nextUseItem.text here instead of split? It is set in the line directly above.
-                const namespaceSuffix = usedNamespace.split(this.getNamespaceDelimiter()).pop();
-                if (namespaceSuffix !== undefined) {
-                    const importReferences: ImportReference = {
-                        usedNamespace: usedNamespace,
-                        namespaceSuffix,
-                        sourceOfUsing: parseFile.filePath,
-                        alias: "",
-                        source: parseFile.filePath,
-                        usageType: "usage",
-                    };
+                const namespaceSuffix = nextUseItem.text;
+                const importReferences: ImportReference = {
+                    usedNamespace: usedNamespace,
+                    namespaceSuffix,
+                    sourceOfUsing: parseFile.filePath,
+                    alias: "",
+                    source: parseFile.filePath,
+                    usageType: "usage",
+                };
 
-                    importsOfFile.push(importReferences);
-                    this.importsBySuffixOrAlias
-                        .get(parseFile.filePath)
-                        ?.set(importReferences.namespaceSuffix, importReferences);
-                }
+                importsOfFile.push(importReferences);
+                this.importsBySuffixOrAlias
+                    .get(parseFile.filePath)
+                    ?.set(importReferences.namespaceSuffix, importReferences);
 
                 hasUseGroupItem =
                     importTextCaptures[groupItemIndex + 2]?.name === "namespace_use_item_name";

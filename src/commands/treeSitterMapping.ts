@@ -2,7 +2,7 @@ import { ExpressionMetricMapping } from "../parser/helper/Model";
 import fs from "fs";
 import nodeTypesConfig from "../parser/config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Changelog } from "./Changelog";
+import { NodeTypesChangelog } from "./NodeTypesChangelog";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -27,10 +27,10 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
 export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";
 
 const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();
-const changelog: Changelog = new Changelog();
+const changelog: NodeTypesChangelog = new NodeTypesChangelog();
 
 /**
- * Updates the node mappings for calculating metrics with the currently installed language grammars.
+ * Updates the node mappings for calculating metrics from the currently installed language grammars.
  * Keeps the present mappings if the corresponding node type is still present in that language.
  * Removes all node types which are no longer present in the grammar.
  */

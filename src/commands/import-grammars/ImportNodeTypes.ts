@@ -1,6 +1,6 @@
-import { ExpressionMetricMapping } from "../parser/helper/Model";
+import { ExpressionMetricMapping } from "../../parser/helper/Model";
 import fs from "fs";
-import nodeTypesConfig from "../parser/config/nodeTypesConfig.json";
+import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { NodeTypesChangelog } from "./NodeTypesChangelog";
 
@@ -30,11 +30,12 @@ const expressionMappings: Map<string, ExpressionMetricMapping> = new Map();
 const changelog: NodeTypesChangelog = new NodeTypesChangelog();
 
 /**
- * Updates the node mappings for calculating metrics from the currently installed language grammars.
+ * Updates the node mappings for calculating metrics by importing the node-types.json files of the currently
+ * installed language grammars.
  * Keeps the present mappings if the corresponding node type is still present in that language.
  * Removes all node types which are no longer present in the grammar.
  */
-export async function updateNodeMappings() {
+export async function updateNodeTypesMappingFile() {
     const presentNodeTypesForLanguage = importPresentMappings();
     const removedNodeTypesForLanguage = new Map<string, Set<string>>();
 

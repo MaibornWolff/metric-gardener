@@ -55,11 +55,11 @@ This is quite slow and can take up to one or two hours but can provide good resu
 ### Supported Metrics
 
 -   mcc
--   functions
--   classes
+-   functions - The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, etc.
+-   classes - The number of class definitions inside a file, also counting for enums and interfaces.
 -   lines_of_code - The total number of lines of a file, including empty lines, comments, etc.
 -   comment_lines - The number of comment lines inside a file. Does count for any kind of comment (except for python's special block comments).
--   real_lines_of_code (not unit tested) - The number of lines inside a file, not counting for comments and empty lines.
+-   real_lines_of_code - The number of lines inside a file that contain actual code of the programming language, not counting for comments, empty lines, etc.
 
 ### Coupling Metrics (experimental)
 

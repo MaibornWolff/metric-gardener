@@ -54,16 +54,14 @@ export class ExpressionQueryStatement implements QueryStatementInterface {
         activated_for_languages?: string[]
     ) {
         this.expression = expression;
-        this.applicableForLanguages = new Set();
-        languageToAbbreviation.mapAllKeysFunctional(applicable_for_languages, (key) =>
-            this.applicableForLanguages.add(key)
-        );
+        this.applicableForLanguages =
+            languageToAbbreviation.getKeysForAllValues(applicable_for_languages);
 
-        this.activatedForLanguages = new Set();
         if (activated_for_languages !== undefined) {
-            languageToAbbreviation.mapAllKeysFunctional(activated_for_languages, (key) =>
-                this.activatedForLanguages.add(key)
-            );
+            this.activatedForLanguages =
+                languageToAbbreviation.getKeysForAllValues(activated_for_languages);
+        } else {
+            this.activatedForLanguages = new Set();
         }
     }
 
@@ -96,16 +94,14 @@ export class OperatorQueryStatement implements QueryStatementInterface {
         this.category = category;
         this.operator = operator;
         this.expression = category + ' operator: "' + operator + '"';
-        this.applicableForLanguages = new Set();
-        languageToAbbreviation.mapAllKeysFunctional(applicableForLanguages, (key) =>
-            this.applicableForLanguages.add(key)
-        );
+        this.applicableForLanguages =
+            languageToAbbreviation.getKeysForAllValues(applicableForLanguages);
 
-        this.activatedForLanguages = new Set();
         if (activatedForLanguages !== undefined) {
-            languageToAbbreviation.mapAllKeysFunctional(activatedForLanguages, (key) =>
-                this.activatedForLanguages.add(key)
-            );
+            this.activatedForLanguages =
+                languageToAbbreviation.getKeysForAllValues(activatedForLanguages);
+        } else {
+            this.activatedForLanguages = new Set();
         }
     }
 

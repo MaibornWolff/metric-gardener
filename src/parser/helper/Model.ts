@@ -55,13 +55,13 @@ export class ExpressionQueryStatement implements QueryStatementInterface {
     ) {
         this.expression = expression;
         this.applicableForLanguages = new Set();
-        languageToAbbreviation.getAllKeysFunctional(applicable_for_languages, (key) =>
+        languageToAbbreviation.mapAllKeysFunctional(applicable_for_languages, (key) =>
             this.applicableForLanguages.add(key)
         );
 
         this.activatedForLanguages = new Set();
         if (activated_for_languages !== undefined) {
-            languageToAbbreviation.getAllKeysFunctional(activated_for_languages, (key) =>
+            languageToAbbreviation.mapAllKeysFunctional(activated_for_languages, (key) =>
                 this.activatedForLanguages.add(key)
             );
         }
@@ -97,13 +97,13 @@ export class OperatorQueryStatement implements QueryStatementInterface {
         this.operator = operator;
         this.expression = category + ' operator: "' + operator + '"';
         this.applicableForLanguages = new Set();
-        languageToAbbreviation.getAllKeysFunctional(applicableForLanguages, (key) =>
+        languageToAbbreviation.mapAllKeysFunctional(applicableForLanguages, (key) =>
             this.applicableForLanguages.add(key)
         );
 
         this.activatedForLanguages = new Set();
         if (activatedForLanguages !== undefined) {
-            languageToAbbreviation.getAllKeysFunctional(activatedForLanguages, (key) =>
+            languageToAbbreviation.mapAllKeysFunctional(activatedForLanguages, (key) =>
                 this.activatedForLanguages.add(key)
             );
         }

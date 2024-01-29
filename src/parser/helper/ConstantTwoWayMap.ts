@@ -22,10 +22,10 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
         }
     }
 
-    getValue(key: KeyType) {
+    getValueFor(key: KeyType) {
         return this.map.get(key);
     }
-    getKey(value: ValueType) {
+    getKeyFor(value: ValueType) {
         return this.reverseMap.get(value);
     }
 
@@ -33,13 +33,13 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
      * Maps each key of the specified iterable to the corresponding value stored in this two-way map.
      * Calls the passed function for all mapped values, skipping elements for which there is no value available in the map.
      * @param iterable Iterable of elements to map.
-     * @param insertFunction Function to call with the retrieved values.
+     * @param callback Function to call with each retrieved values.
      */
-    mapAllValuesFunctional(iterable: Iterable<KeyType>, insertFunction: (value: ValueType) => any) {
+    mapAllValuesFunctional(iterable: Iterable<KeyType>, callback: (value: ValueType) => any) {
         for (const key of iterable) {
-            const mapResult = this.getValue(key);
+            const mapResult = this.getValueFor(key);
             if (mapResult !== undefined) {
-                insertFunction(mapResult);
+                callback(mapResult);
             }
         }
     }
@@ -48,13 +48,13 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
      * Maps all values of the specified iterable to the corresponding key. Calls the passed function for all
      * reverse-mapped keys, skipping elements for which there is no key available in the map.
      * @param iterable Iterable of values to reverse-map.
-     * @param insertFunction Function to call with the retrieved keys.
+     * @param callback Function to call with each retrieved key.
      */
-    mapAllKeysFunctional(iterable: Iterable<ValueType>, insertFunction: (key: KeyType) => any) {
+    mapAllKeysFunctional(iterable: Iterable<ValueType>, callback: (key: KeyType) => any) {
         for (const value of iterable) {
-            const mapResult = this.getKey(value);
+            const mapResult = this.getKeyFor(value);
             if (mapResult !== undefined) {
-                insertFunction(mapResult);
+                callback(mapResult);
             }
         }
     }

@@ -192,6 +192,16 @@ describe("GenericParser", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            const inputPath = fs.realpathSync(phpTestResourcesPath + "empty.php");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                0
+            );
+        });
+
         it("should count correctly if there is a comment in the same line as actual code", async () => {
             const inputPath = fs.realpathSync(phpTestResourcesPath + "same-line-comment.php");
             const parser = new GenericParser(getParserConfiguration(inputPath));
@@ -369,6 +379,26 @@ describe("GenericParser", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "empty.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                0
+            );
+        });
+
+        it("should count correctly for a file with a single comment", async () => {
+            const inputPath = fs.realpathSync(tsTestResourcesPath + "single-comment.ts");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                0
+            );
+        });
+
         it("should count correctly if there is a comment in the same line as actual code", async () => {
             const inputPath = fs.realpathSync(tsTestResourcesPath + "same-line-comment.ts");
             const parser = new GenericParser(getParserConfiguration(inputPath));
@@ -537,6 +567,16 @@ describe("GenericParser", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            const inputPath = fs.realpathSync(goTestResourcesPath + "empty.go");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                0
+            );
+        });
+
         it("should count correctly if there is a comment that includes code", async () => {
             const inputPath = fs.realpathSync(goTestResourcesPath + "if-statements.go");
             const parser = new GenericParser(getParserConfiguration(inputPath));
@@ -576,6 +616,16 @@ describe("GenericParser", () => {
 
             expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
                 9
+            );
+        });
+
+        it("should count correctly for an empty file", async () => {
+            const inputPath = fs.realpathSync(pythonTestResourcesPath + "empty.py");
+            const parser = new GenericParser(getParserConfiguration(inputPath));
+            const results = await parser.calculateMetrics();
+
+            expect(results.fileMetrics.get(inputPath)?.get("real_lines_of_code")?.metricValue).toBe(
+                0
             );
         });
 

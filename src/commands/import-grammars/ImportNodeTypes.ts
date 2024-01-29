@@ -255,7 +255,6 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
 }
 
 async function removeAbandonedNodeTypes(): Promise<void> {
-    const toRemove: string[] = [];
     for (const [expressionName, expression] of expressionMappings) {
         if (expression.languages.length === 0) {
             if (expression.metrics.length > 0) {
@@ -267,16 +266,13 @@ async function removeAbandonedNodeTypes(): Promise<void> {
                         ". You may have to add a new node to the metric(s) in nodeTypesConfig.json. ####"
                 );
             }
-            toRemove.push(expressionName);
+            expressionMappings.delete(expressionName);
             dlog(
                 "Removed node type " +
                     expressionName +
                     " as it is no longer used in any language grammar"
             );
         }
-    }
-    for (const expressionName of toRemove) {
-        expressionMappings.delete(expressionName);
     }
 }
 

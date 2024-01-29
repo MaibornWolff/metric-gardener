@@ -1,4 +1,4 @@
-import { Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import Parser from "tree-sitter";
 
@@ -25,6 +25,6 @@ export class LinesOfCode implements Metric {
     }
 
     getName(): string {
-        return "lines_of_code";
+        return FileMetric.linesOfCode;
     }
 }

@@ -1,5 +1,0 @@
-class I {
-}
-class E {
-
-}

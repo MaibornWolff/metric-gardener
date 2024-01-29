@@ -1,9 +1,9 @@
 import { testFileMetrics } from "./TestHelper";
 
-describe("GO metric tests", () => {
+describe("Go metric tests", () => {
     const goTestResourcesPath = "./resources/go/";
 
-    describe("parses GO McCabeComplexity metric", () => {
+    describe("parses Go McCabeComplexity metric", () => {
         it("should count if statements correctly", async () => {
             await testFileMetrics(goTestResourcesPath + "if-statements.go", "mcc", 7);
         });
@@ -33,13 +33,13 @@ describe("GO metric tests", () => {
         });
     });
 
-    describe("parses GO functions metric", () => {
+    describe("parses Go functions metric", () => {
         it("should count functions and methods properly", async () => {
             await testFileMetrics(goTestResourcesPath + "functions-and-methods.go", "functions", 2);
         });
     });
 
-    describe("parses GO commentLines metric", () => {
+    describe("parses Go commentLines metric", () => {
         it(
             "should count number of comment lines correctly, including line with curly brackets, inline comments" +
                 " and lines of the block comment",
@@ -53,7 +53,7 @@ describe("GO metric tests", () => {
         });
     });
 
-    describe("parses GO lines of code metric", () => {
+    describe("parses Go lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file with empty last line", async () => {
             await testFileMetrics(goTestResourcesPath + "empty-last-line.go", "lines_of_code", 54);
         });

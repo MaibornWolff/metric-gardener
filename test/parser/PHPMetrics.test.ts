@@ -1,4 +1,4 @@
-import { testCouplingMetrics, testFileMetrics } from "./TestHelper";
+import { getCouplingMetrics, testFileMetrics } from "./TestHelper";
 
 describe("PHP metrics tests", () => {
     const phpTestResourcesPath = "./resources/php/";
@@ -117,7 +117,10 @@ describe("PHP metrics tests", () => {
 
     describe("parsing PHP dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
-            await testCouplingMetrics(phpTestResourcesPath + "coupling-examples/");
+            const couplingResult = await getCouplingMetrics(
+                phpTestResourcesPath + "coupling-examples/"
+            );
+            expect(couplingResult).toMatchSnapshot();
         });
     });
 });

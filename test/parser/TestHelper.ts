@@ -51,10 +51,10 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
 }
 
 /**
- * Testing if the coupling metric matches to the corresponding snapshot.
- * @param inputPath path to the testing source file
+ * Gets the coupling metrics for the specified path.
+ * @param inputPath Path to the test source files.
  */
-export async function testCouplingMetrics(inputPath: string) {
+export async function getCouplingMetrics(inputPath: string) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath, true, true));
 
@@ -62,16 +62,16 @@ export async function testCouplingMetrics(inputPath: string) {
     const couplingResult = results.couplingMetrics;
     sortCouplingResults(couplingResult);
 
-    expect(couplingResult).toMatchSnapshot();
+    return couplingResult;
 }
 
 /**
- * Tesing if the file metric (mmc, loc, rloc, comments, classes, functions) is calculated correctly.
- * @param inputPath path to testing source file
- * @param metric can be: mmc, loc, rloc, comments, classes or functions
- * @param expected expected test result
+ * Tests if the file metric is calculated correctly.
+ * @param inputPath Path to test source files.
+ * @param metric Name of the metric.
+ * @param expected Expected test result.
  * */
-export async function testFileMetrics(inputPath: string, metric: string, expected: unknown) {
+export async function testFileMetrics(inputPath: string, metric: string, expected: number) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath));
     const results = await parser.calculateMetrics();

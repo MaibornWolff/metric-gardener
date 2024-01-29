@@ -1,5 +1,5 @@
 import { ExpressionMetricMapping } from "../helper/Model";
-import { Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import Parser, { TreeCursor } from "tree-sitter";
 import { getExpressionsByCategory } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
@@ -82,6 +82,6 @@ export class RealLinesOfCode implements Metric {
     }
 
     getName(): string {
-        return "real_lines_of_code";
+        return FileMetric.realLinesOfCode;
     }
 }

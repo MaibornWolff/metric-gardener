@@ -521,6 +521,7 @@ describe("GenericParser", () => {
 
             expect(results.fileMetrics.get(inputPath)?.get("lines_of_code")?.metricValue).toBe(54);
         });
+
         it("should count number of lines correctly for a non-empty file with non-empty last line", async () => {
             const inputPath = fs.realpathSync(goTestResourcesPath + "go-example-code.go");
             const parser = new GenericParser(getParserConfiguration(inputPath));

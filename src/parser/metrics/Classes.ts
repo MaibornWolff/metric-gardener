@@ -1,9 +1,9 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -18,15 +18,14 @@ export class Classes implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(
-            fileExtensionToGrammar.get(parseFile.fileExtension),
-            tree,
-            parseFile.fileExtension
-        );
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();
-        const matches = query.matches(tree.rootNode);
+        let matches: QueryMatch[] = [];
+        if (query !== undefined) {
+            matches = query.matches(tree.rootNode);
+        }
 
         dlog(this.getName() + " - " + matches.length);
 

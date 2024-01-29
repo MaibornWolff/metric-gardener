@@ -1,10 +1,9 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { Metric, MetricResult, ParseFile } from "./Metric";
+import Parser, { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import Parser, { SyntaxNode } from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -26,15 +25,14 @@ export class CommentLines implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(
-            fileExtensionToGrammar.get(parseFile.fileExtension),
-            tree,
-            parseFile.fileExtension
-        );
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();
-        const matches = query.matches(tree.rootNode);
+        let matches: QueryMatch[] = [];
+        if (query !== undefined) {
+            matches = query.matches(tree.rootNode);
+        }
 
         let numberOfLines = 0;
         let lastCommitLine = -1;

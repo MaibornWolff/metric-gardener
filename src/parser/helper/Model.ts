@@ -1,3 +1,5 @@
+import { Languages, languageToAbbreviation } from "./Languages";
+
 export interface ExpressionMetricMapping {
     expression: string;
     metrics: string[];
@@ -9,7 +11,15 @@ export interface ExpressionMetricMapping {
 }
 
 export interface QueryStatementInterface {
-    activatedFor(fileExtension: string): boolean;
+    activatedFor(language: Languages): boolean;
+
+    /**
+     * Tests whether this query is grammatically applicable for the specified programming language.
+     * @param language The language to check.
+     * @return true if the query is applicable, false if not.
+     */
+    applicableFor(language: Languages): boolean;
+
     toQuery(): string;
 }
 
@@ -20,7 +30,11 @@ export class SimpleQueryStatement implements QueryStatementInterface {
         this.query = query;
     }
 
-    activatedFor(fileExtension: string): boolean {
+    activatedFor(language: Languages): boolean {
+        return true;
+    }
+
+    applicableFor(language: Languages): boolean {
         return true;
     }
 
@@ -30,19 +44,33 @@ export class SimpleQueryStatement implements QueryStatementInterface {
 }
 
 export class ExpressionQueryStatement implements QueryStatementInterface {
-    expression: string;
-    activatedForLanguages: string[];
+    private expression: string;
+    private activatedForLanguages: Set<Languages>;
+    private applicableForLanguages: Set<Languages>;
 
-    constructor(expression: string, activated_for_languages?: string[]) {
+    constructor(
+        expression: string,
+        applicable_for_languages: string[],
+        activated_for_languages?: string[]
+    ) {
         this.expression = expression;
-        this.activatedForLanguages = activated_for_languages ?? [];
+        this.applicableForLanguages =
+            languageToAbbreviation.getKeysForAllValues(applicable_for_languages);
+
+        if (activated_for_languages !== undefined) {
+            this.activatedForLanguages =
+                languageToAbbreviation.getKeysForAllValues(activated_for_languages);
+        } else {
+            this.activatedForLanguages = new Set();
+        }
     }
 
-    activatedFor(fileExtension: string): boolean {
-        return (
-            this.activatedForLanguages.length === 0 ||
-            this.activatedForLanguages.includes(fileExtension)
-        );
+    activatedFor(language: Languages): boolean {
+        return this.activatedForLanguages.size === 0 || this.activatedForLanguages.has(language);
+    }
+
+    applicableFor(language: Languages): boolean {
+        return this.applicableForLanguages.has(language);
     }
 
     toQuery(): string {
@@ -51,23 +79,34 @@ export class ExpressionQueryStatement implements QueryStatementInterface {
 }
 
 export class OperatorQueryStatement implements QueryStatementInterface {
-    private activatedForLanguages: string[];
+    private activatedForLanguages: Set<Languages>;
     private expression: string;
     private category: string;
     private operator: string;
+    private applicableForLanguages: Set<Languages>;
 
-    constructor(category: string, operator: string, activatedForLanguages?: string[]) {
+    constructor(
+        category: string,
+        operator: string,
+        applicableForLanguages: string[],
+        activatedForLanguages?: string[]
+    ) {
         this.category = category;
         this.operator = operator;
         this.expression = category + ' operator: "' + operator + '"';
-        this.activatedForLanguages = activatedForLanguages ?? [];
+        this.applicableForLanguages =
+            languageToAbbreviation.getKeysForAllValues(applicableForLanguages);
+
+        if (activatedForLanguages !== undefined) {
+            this.activatedForLanguages =
+                languageToAbbreviation.getKeysForAllValues(activatedForLanguages);
+        } else {
+            this.activatedForLanguages = new Set();
+        }
     }
 
-    activatedFor(fileExtension: string): boolean {
-        return (
-            this.activatedForLanguages.length === 0 ||
-            this.activatedForLanguages.includes(fileExtension)
-        );
+    activatedFor(language: Languages): boolean {
+        return this.activatedForLanguages.size === 0 || this.activatedForLanguages.has(language);
     }
 
     toQuery(): string {
@@ -79,6 +118,10 @@ export class OperatorQueryStatement implements QueryStatementInterface {
             '") @binary_expression_' +
             binaryOperatorTranslations.get(this.operator)
         );
+    }
+
+    applicableFor(language: Languages): boolean {
+        return this.applicableForLanguages.has(language);
     }
 }
 

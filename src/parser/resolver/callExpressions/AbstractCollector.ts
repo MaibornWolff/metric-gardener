@@ -1,11 +1,11 @@
 import { ParseFile } from "../../metrics/Metric";
 import { formatCaptures } from "../../helper/Helper";
 import { QueryBuilder } from "../../queries/QueryBuilder";
-import { fileExtensionToGrammar } from "../../helper/FileExtensionToGrammar";
 import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
 import { SimpleQueryStatement } from "../../helper/Model";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryCapture } from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -29,15 +29,16 @@ export abstract class AbstractCollector {
 
         if (this.getAccessorsQuery()) {
             const tree = TreeParser.getParseTree(parseFile);
-            const queryBuilder = new QueryBuilder(
-                fileExtensionToGrammar.get(parseFile.fileExtension),
-                tree,
-                parseFile.fileExtension
-            );
+
+            const queryBuilder = new QueryBuilder(parseFile, tree);
             queryBuilder.setStatements([new SimpleQueryStatement(this.getAccessorsQuery())]);
 
             const publicAccessorsQuery = queryBuilder.build();
-            const publicAccessorsCaptures = publicAccessorsQuery.captures(tree.rootNode);
+            let publicAccessorsCaptures: QueryCapture[] = [];
+            if (publicAccessorsQuery !== undefined) {
+                publicAccessorsCaptures = publicAccessorsQuery.captures(tree.rootNode);
+            }
+
             const accessorsTextCaptures: {
                 name: string;
                 text: string;

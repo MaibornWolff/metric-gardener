@@ -875,7 +875,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "&&"
     },
     {
@@ -995,7 +995,7 @@
         "metrics": ["mcc"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
         "operator": "||"
     },
     {
@@ -4254,7 +4254,7 @@
         "metrics": ["mcc", "functions"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "generator_function",

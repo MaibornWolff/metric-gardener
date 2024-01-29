@@ -1,11 +1,11 @@
 import { FullyQTN } from "../AbstractCollector";
 import { TreeParser } from "../../../helper/TreeParser";
 import { QueryBuilder } from "../../../queries/QueryBuilder";
-import { fileExtensionToGrammar } from "../../../helper/FileExtensionToGrammar";
 import { formatCaptures } from "../../../helper/Helper";
 import { ParseFile } from "../../../metrics/Metric";
 import { SimpleQueryStatement } from "../../../helper/Model";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryCapture } from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -24,15 +24,14 @@ export class QueryStrategy {
 
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(
-            fileExtensionToGrammar.get(parseFile.fileExtension),
-            tree,
-            parseFile.fileExtension
-        );
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
 
         const query = queryBuilder.build();
-        const captures = query.captures(tree.rootNode);
+        let captures: QueryCapture[] = [];
+        if (query !== undefined) {
+            captures = query.captures(tree.rootNode);
+        }
         const textCaptures = formatCaptures(tree, captures);
 
         dlog("namespace definitions", parseFile.filePath, textCaptures);

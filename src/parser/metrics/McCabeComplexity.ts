@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { fileExtensionToGrammar } from "../helper/FileExtensionToGrammar";
 import {
     ExpressionMetricMapping,
     ExpressionQueryStatement,
@@ -8,6 +7,7 @@ import {
 } from "../helper/Model";
 import { Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -21,16 +21,25 @@ export class McCabeComplexity implements Metric {
         allNodeTypes.forEach((expressionMapping) => {
             if (expressionMapping.metrics.includes(this.getName())) {
                 if (expressionMapping.type === "statement") {
-                    const { expression, category, operator, activated_for_languages } =
+                    const { expression, category, operator, activated_for_languages, languages } =
                         expressionMapping;
 
                     if (category === "binary_expression" && operator !== undefined) {
                         this.mccStatementsSuperSet.push(
-                            new OperatorQueryStatement(category, operator, activated_for_languages)
+                            new OperatorQueryStatement(
+                                category,
+                                operator,
+                                languages,
+                                activated_for_languages
+                            )
                         );
                     } else {
                         this.mccStatementsSuperSet.push(
-                            new ExpressionQueryStatement(expression, activated_for_languages)
+                            new ExpressionQueryStatement(
+                                expression,
+                                languages,
+                                activated_for_languages
+                            )
                         );
                     }
                 }
@@ -39,15 +48,14 @@ export class McCabeComplexity implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(
-            fileExtensionToGrammar.get(parseFile.fileExtension),
-            tree,
-            parseFile.fileExtension
-        );
+        const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.mccStatementsSuperSet);
 
         const query = queryBuilder.build();
-        const matches = query.matches(tree.rootNode);
+        let matches: QueryMatch[] = [];
+        if (query !== undefined) {
+            matches = query.matches(tree.rootNode);
+        }
 
         dlog(this.getName() + " - " + matches.length);
 

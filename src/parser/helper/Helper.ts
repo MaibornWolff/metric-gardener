@@ -2,8 +2,44 @@ import fs from "fs";
 import path from "path";
 import { ExpressionMetricMapping, ExpressionQueryStatement } from "./Model";
 import { ParseFile } from "../metrics/Metric";
-import { fileExtensionToGrammar } from "./FileExtensionToGrammar";
 import { Configuration } from "../Configuration";
+import { fileExtensionToLanguage } from "./Languages";
+
+/**
+ * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
+ * mapped values, skipping elements for which there is no value available in the map.
+ * @param iterator Iterable of elements to map.
+ * @param map Map to use for mapping.
+ * @param insertFunction Function to call with the retrieved values.
+ */
+export function mapAllFunctional<KeyType, ValueType>(
+    iterator: Iterable<KeyType>,
+    map: Map<KeyType, ValueType>,
+    insertFunction: (v: ValueType) => any
+) {
+    for (const key of iterator) {
+        const mapResult = map.get(key);
+        if (mapResult !== undefined) {
+            insertFunction(mapResult);
+        }
+    }
+}
+
+/**
+ * Maps all elements of the specified iterable using the specified map. Returns an array of all mapped values,
+ * skipping elements for which there is no value available in the map.
+ * @param iterator Iterable of elements to map.
+ * @param map Map to use for mapping.
+ * @return Array of the mapped elements.
+ */
+export function mapAllIntoArray<KeyType, ValueType>(
+    iterator: Iterable<KeyType>,
+    map: Map<KeyType, ValueType>
+): ValueType[] {
+    const result: ValueType[] = [];
+    mapAllFunctional(iterator, map, (value) => result.push(value));
+    return result;
+}
 
 export function formatCaptures(tree, captures) {
     return captures.map((c) => {
@@ -82,7 +118,7 @@ export async function* findFilesAsync(config: Configuration): AsyncGenerator<Par
     // Handle special case: if the specified sourcePath is a single file, just yield the file.
     if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
         const parseFile = checkAndGetFileExtension(config.sourcesPath);
-        if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
+        if (parseFile !== undefined && fileExtensionToLanguage.has(parseFile.fileExtension)) {
             yield parseFile;
         }
     } else {
@@ -114,7 +150,7 @@ async function* findFilesAsyncRecursive(
         } // End of if (isDirectory)
         else {
             const parseFile = checkAndGetFileExtension(currentPath);
-            if (parseFile !== undefined && fileExtensionToGrammar.has(parseFile.fileExtension)) {
+            if (parseFile !== undefined && fileExtensionToLanguage.has(parseFile.fileExtension)) {
                 yield parseFile;
             }
         } // End of else (isDirectory)
@@ -130,6 +166,7 @@ export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metr
         ) {
             const queryStatement = new ExpressionQueryStatement(
                 expressionMapping.expression,
+                expressionMapping.languages,
                 expressionMapping.activated_for_languages
             );
 

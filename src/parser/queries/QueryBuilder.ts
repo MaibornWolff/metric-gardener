@@ -1,21 +1,30 @@
 import Parser, { Query } from "tree-sitter";
 import { QueryStatementInterface } from "../helper/Model";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { fileExtensionToLanguage, Languages, languageToGrammar } from "../helper/Languages";
+import { ParseFile } from "../metrics/Metric";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export class QueryBuilder {
+    private readonly language: Languages;
     private readonly treeSitterLanguage: any;
     private tree: Parser.Tree;
-    private readonly fileExtension: string;
     private statements: QueryStatementInterface[] = [];
 
-    constructor(treeSitterLanguage: any, tree: Parser.Tree, fileExtension: string) {
-        this.treeSitterLanguage = treeSitterLanguage;
+    constructor(parseFile: ParseFile, tree: Parser.Tree) {
         this.tree = tree;
-        this.fileExtension = fileExtension;
+        const language = fileExtensionToLanguage.get(parseFile.fileExtension);
+
+        if (language === undefined) {
+            this.language = Languages.Unsupported;
+            console.log("Unsupported file extension: " + parseFile.fileExtension);
+        } else {
+            this.language = language;
+            this.treeSitterLanguage = languageToGrammar.get(language);
+        }
     }
 
     setStatements(statements: QueryStatementInterface[]) {
@@ -26,50 +35,39 @@ export class QueryBuilder {
         this.statements = [];
     }
 
-    build(): Query {
+    /**
+     * Builds the query for finding the currently set statements in code of the currently set language
+     * @return The query, or undefined if the file extension / language of the source file is not supported.
+     */
+    build(): Query | undefined {
         let queryString = "";
+        if (this.language !== Languages.Unsupported) {
+            if (this.statements.length > 0) {
+                queryString = this.getStatementsQuery();
+            }
 
-        if (this.statements.length > 0) {
-            queryString = this.getBruteForcedStatementsQuery();
+            dlog("------------- Start Query: --------------");
+            dlog(queryString);
+            dlog("-----------------------------------------");
+
+            return new Query(this.treeSitterLanguage, queryString);
         }
-
-        dlog("------------- Start Query: --------------");
-        dlog(queryString);
-        dlog("-----------------------------------------");
-
-        return new Query(this.treeSitterLanguage, queryString);
     }
 
-    // This is not necessary anymore
-    // due to the mapped node types (/resources/node-types-mapped.config)
-    // and the information per expressions
-    // in which language it is included
-    // Thus, we do not have to figure out
-    // if the expression is included in a language by query the expression
-    // and catch an exception if it is not included.
-    private getBruteForcedStatementsQuery() {
-        const availableStatements: string[] = [];
+    /**
+     * Generates a query string for finding the currently set statements in code of the currently set language.
+     * Returns an empty query if the language is not supported.
+     * @return A query string.
+     * @private
+     */
+    private getStatementsQuery() {
+        const statementQueries: string[] = [];
 
-        for (const statementCandidate of this.statements) {
-            if (!statementCandidate.activatedFor(this.fileExtension)) {
-                continue;
-            }
-
-            try {
-                const statementQuery = statementCandidate.toQuery();
-                const metricsQuery = new Query(
-                    this.treeSitterLanguage,
-                    statementCandidate.toQuery()
-                );
-                metricsQuery.matches(this.tree.rootNode);
-
-                availableStatements.push(statementQuery);
-            } catch (error) {
-                // This error can be ignored.
-                // The specific statement seems not to be available for current language
+        for (const statement of this.statements) {
+            if (statement.applicableFor(this.language) && statement.activatedFor(this.language)) {
+                statementQueries.push(statement.toQuery());
             }
         }
-
-        return availableStatements.join("\n");
+        return statementQueries.join("\n");
     }
 }

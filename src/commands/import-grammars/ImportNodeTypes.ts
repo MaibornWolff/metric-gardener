@@ -40,7 +40,6 @@ export async function updateNodeTypesMappingFile() {
     changelog.clear();
 
     const languageToPresentNodeTypes = importPresentNodeTypeMappings();
-    const languageToRemovedNodeTypes = new Map<string, Set<string>>();
 
     const updatePromises: Promise<unknown>[] = [];
 
@@ -52,11 +51,7 @@ export async function updateNodeTypesMappingFile() {
         }
         const promise = updateLanguage(languageAbbr, presentNodeTypes).then(
             (removed) => {
-                if (removed === null) {
-                    return false;
-                }
-                languageToRemovedNodeTypes.set(languageAbbr, removed);
-                return true;
+                return removed !== null;
             },
             (reason) => {
                 console.error(reason);
@@ -73,7 +68,11 @@ export async function updateNodeTypesMappingFile() {
             console.error("Error while updating the node mappings. Cancel update...");
             return;
         }
-        await applyRemovedNodeTypes(languageToRemovedNodeTypes);
+
+        // Make sure to write the change information before deleting any metric mapping.
+        // If there is an error, catch that in the updateNodeMappings() and cancel the whole update.
+        await changelog.writeChangelog(expressionMappings);
+        await removeAbandonedNodeTypes();
     } catch (e) {
         console.error("Error while updating the node mappings. Cancel update...");
         console.error(e);
@@ -122,10 +121,7 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     return presentNodeTypesForLanguage;
 }
 
-async function updateLanguage(
-    languageAbbr: string,
-    presentNodes: Set<string>
-): Promise<Set<string> | null> {
+async function updateLanguage(languageAbbr: string, presentNodes: Set<string>) {
     const fileLocation = languageAbbreviationToNodeTypeFiles.get(languageAbbr);
     if (fileLocation === undefined) {
         console.error("No file path found for language " + languageAbbr);
@@ -143,55 +139,61 @@ async function updateLanguage(
         return null;
     }
 
-    let nodeTypes;
+    let grammarNodeTypes;
     try {
-        nodeTypes = JSON.parse(nodeTypesJson);
+        grammarNodeTypes = JSON.parse(nodeTypesJson);
     } catch (e) {
         console.error("Error while parsing the json-file " + fileLocation);
         console.error(e);
         return null;
     }
 
-    const removedNodeTypes: Set<string> = new Set(presentNodes);
+    const toRemove: Set<string> = new Set(presentNodes);
 
-    for (const nodeType of nodeTypes) {
+    for (const grammarNodeType of grammarNodeTypes) {
         // Ignore all unnamed syntax nodes that are no binary expressions (as we require them) to get a "kind of"
         // abstract syntax tree by removing syntax details.
         // See also https://tree-sitter.github.io/tree-sitter/using-parsers#named-vs-anonymous-nodes
-        if (!nodeType.named) {
-            dlog("Excluded unnamed node type " + nodeType.type + " for language " + languageAbbr);
+        if (!grammarNodeType.named) {
+            dlog(
+                "Excluded unnamed node type " +
+                    grammarNodeType.type +
+                    " for language " +
+                    languageAbbr
+            );
             continue;
         }
 
-        if (nodeType.type === "binary_expression") {
-            updateBinaryExpressions(languageAbbr, presentNodes, nodeType, removedNodeTypes);
+        if (grammarNodeType.type === "binary_expression") {
+            updateBinaryExpressions(languageAbbr, presentNodes, grammarNodeType, toRemove);
             continue;
         }
 
-        removedNodeTypes.delete(nodeType.type);
-        updateOrAddExpression(languageAbbr, nodeType.type);
+        toRemove.delete(grammarNodeType.type);
+        updateOrAddExpression(languageAbbr, grammarNodeType.type);
 
-        if (nodeType.subtypes !== undefined) {
-            for (const subNodeType of nodeType.subtypes) {
-                removedNodeTypes.delete(subNodeType.type);
+        if (grammarNodeType.subtypes !== undefined) {
+            for (const subNodeType of grammarNodeType.subtypes) {
+                toRemove.delete(subNodeType.type);
                 updateOrAddExpression(languageAbbr, subNodeType.type);
             }
         }
     }
 
-    return removedNodeTypes;
+    removeNodeTypesForLanguage(languageAbbr, toRemove);
+    return true;
 }
 
 function updateBinaryExpressions(
     languageAbbr: string,
     presentNodes: Set<string>,
-    nodeType,
+    grammarNodeType,
     removedNodeTypes: Set<string>
 ) {
-    if (nodeType?.fields?.operator?.types !== undefined) {
-        for (const binaryOperatorType of nodeType.fields.operator.types) {
+    if (grammarNodeType?.fields?.operator?.types !== undefined) {
+        for (const binaryOperatorType of grammarNodeType.fields.operator.types) {
             const { type: binaryOperator } = binaryOperatorType;
-            const mapKey = nodeType.type + "_" + binaryOperator;
+            const mapKey = grammarNodeType.type + "_" + binaryOperator;
             removedNodeTypes.delete(mapKey);
 
             updateOrAddExpression(languageAbbr, mapKey, "binary_expression", binaryOperator);
@@ -239,66 +241,61 @@ function updateOrAddExpression(
     }
 }
 
-async function applyRemovedNodeTypes(
-    removedNodeTypesForLanguage: Map<string, Set<string>>
-): Promise<void> {
-    const nodesToRemove: string[] = [];
-
+function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<string>) {
     for (const [expressionName, expression] of expressionMappings) {
-        const updatedLanguages: string[] = [];
-        // Keep only languages for which the node type has not been removed from the language's grammar:
-        for (let i = 0; i < expression.languages.length; i++) {
-            const currentLangAbbr = expression.languages[i];
-            if (!removedNodeTypesForLanguage.get(currentLangAbbr)?.has(expressionName)) {
-                updatedLanguages.push(currentLangAbbr);
-            } else {
-                changelog.removedNodeFromLanguage(expression, currentLangAbbr);
-                dlog(
-                    'Expression "' +
+        if (removedNodeTypes.has(expressionName)) {
+            const index = expression.languages.indexOf(languageAbbr);
+            expression.languages.splice(index, 1);
+
+            changelog.removedNodeFromLanguage(expression, languageAbbr);
+            dlog(
+                'Expression "' +
+                    expressionName +
+                    '" was removed for language "' +
+                    languageAbbr +
+                    '".'
+            );
+            if (
+                expression.metrics.length > 0 &&
+                (expression.activated_for_languages === undefined ||
+                    expression.activated_for_languages.includes(languageAbbr))
+            ) {
+                console.warn(
+                    '## Attention required! Language "' +
+                        languageAbbr +
+                        '" no longer includes the node type "' +
                         expressionName +
-                        '" was removed for language "' +
-                        currentLangAbbr +
-                        '".'
+                        '", which was used for calculating the metric(s) ' +
+                        expression.metrics +
+                        ". You may have to add a new node of that language to the metric(s) in nodeTypesConfig.json. ##"
                 );
-                if (
-                    expression.metrics.length > 0 &&
-                    (expression.activated_for_languages === undefined ||
-                        expression.activated_for_languages.includes(currentLangAbbr))
-                ) {
-                    console.warn(
-                        '## Attention required! Language "' +
-                            currentLangAbbr +
-                            '" no longer includes the node type "' +
-                            expressionName +
-                            '", which was used for calculating the metric(s) ' +
-                            expression.metrics +
-                            ". You may have to add a new node of that language to the metric(s) in nodeTypesConfig.json. ##"
-                    );
-                }
             }
         }
-        if (updatedLanguages.length === 0) {
-            nodesToRemove.push(expressionName);
-        }
-        expression.languages = updatedLanguages;
     }
+}
 
-    // Make sure to write the change information before deleting any metric mapping.
-    // If there is an error, catch that in the updateNodeMappings() and cancel the whole update.
-    await changelog.writeChangelog(expressionMappings);
-
-    for (const nodeName of nodesToRemove) {
-        const nodeType = expressionMappings.get(nodeName);
-        if (nodeType !== undefined && nodeType.metrics.length > 0) {
-            console.warn(
-                '#### Intervention required! Removing the node type "' +
-                    nodeName +
-                    '", which was used for calculating the metric(s) ' +
-                    nodeType.metrics +
-                    ". You may have to add a new node to the metric(s) in nodeTypesConfig.json. ####"
+async function removeAbandonedNodeTypes(): Promise<void> {
+    const toRemove: string[] = [];
+    for (const [expressionName, expression] of expressionMappings) {
+        if (expression.languages.length === 0) {
+            if (expression.metrics.length > 0) {
+                console.warn(
+                    '#### Intervention required! Removing the node type "' +
+                        expressionName +
+                        '", which was used for calculating the metric(s) ' +
+                        expression.metrics +
+                        ". You may have to add a new node to the metric(s) in nodeTypesConfig.json. ####"
+                );
+            }
+            toRemove.push(expressionName);
+            dlog(
+                "Removed node type " +
+                    expressionName +
+                    " as it is no longer used in any language grammar"
             );
         }
-        expressionMappings.delete(nodeName);
-        dlog("Removed node type " + nodeName + " as it is no longer used in any language grammar");
+    }
+    for (const expressionName of toRemove) {
+        expressionMappings.delete(expressionName);
     }
 }

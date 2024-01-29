@@ -3,11 +3,11 @@
  * Does only work properly if values are also unique and defined.
  * Read-only.
  */
-export class ConstantTwoWayMap<Key, Value> {
-    private readonly map: Map<Key, Value>;
-    private readonly reverseMap: Map<Value, Key>;
+export class ConstantTwoWayMap<KeyType, ValueType> {
+    private readonly map: Map<KeyType, ValueType>;
+    private readonly reverseMap: Map<ValueType, KeyType>;
 
-    constructor(map: Map<Key, Value>) {
+    constructor(map: Map<KeyType, ValueType>) {
         this.map = map;
         this.reverseMap = new Map();
         for (const key of map.keys()) {
@@ -22,21 +22,21 @@ export class ConstantTwoWayMap<Key, Value> {
         }
     }
 
-    getValue(key: Key) {
+    getValue(key: KeyType) {
         return this.map.get(key);
     }
-    getKey(value: Value) {
+    getKey(value: ValueType) {
         return this.reverseMap.get(value);
     }
 
     /**
      * Maps each key of the specified iterable to the corresponding value stored in this two-way map.
      * Calls the passed function for all mapped values, skipping elements for which there is no value available in the map.
-     * @param iterator Iterable of elements to map.
+     * @param iterable Iterable of elements to map.
      * @param insertFunction Function to call with the retrieved values.
      */
-    mapAllValuesFunctional(iterator: Iterable<Key>, insertFunction: (value: Value) => any) {
-        for (const key of iterator) {
+    mapAllValuesFunctional(iterable: Iterable<KeyType>, insertFunction: (value: ValueType) => any) {
+        for (const key of iterable) {
             const mapResult = this.getValue(key);
             if (mapResult !== undefined) {
                 insertFunction(mapResult);
@@ -47,11 +47,11 @@ export class ConstantTwoWayMap<Key, Value> {
     /**
      * Maps all values of the specified iterable to the corresponding key. Calls the passed function for all
      * reverse-mapped keys, skipping elements for which there is no key available in the map.
-     * @param iterator Iterable of values to reverse-map.
+     * @param iterable Iterable of values to reverse-map.
      * @param insertFunction Function to call with the retrieved keys.
      */
-    mapAllKeysFunctional(iterator: Iterable<Value>, insertFunction: (key: Key) => any) {
-        for (const value of iterator) {
+    mapAllKeysFunctional(iterable: Iterable<ValueType>, insertFunction: (key: KeyType) => any) {
+        for (const value of iterable) {
             const mapResult = this.getKey(value);
             if (mapResult !== undefined) {
                 insertFunction(mapResult);

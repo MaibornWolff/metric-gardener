@@ -56,7 +56,7 @@ export class MetricCalculator {
 
             dlog(" ------------ Parsing File " + parseFile.filePath + ":  ------------ ");
 
-            const tree = TreeParser.getParseTree(parseFile);
+            const tree = await TreeParser.getParseTreeAsync(parseFile);
 
             for (const metric of this.fileMetrics) {
                 resultPromises.push(

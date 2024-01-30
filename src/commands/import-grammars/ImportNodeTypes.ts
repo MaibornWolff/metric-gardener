@@ -39,17 +39,28 @@ export async function updateNodeTypesMappingFile() {
     expressionMappings.clear();
     changelog.clear();
 
-    const languageToPresentNodeTypes = importPresentNodeTypeMappings();
-
     try {
+        const languageAbbrToNodeTypePromises = readNodeTypesJsons();
+        if (languageAbbrToNodeTypePromises === null) {
+            return; // Cancel whole update. Error message was already printed by readNodeTypesJsons()
+        }
+
+        const languageToPresentNodeTypes = importPresentNodeTypeMappings();
+
         for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
             let presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr);
 
             if (presentNodeTypes === undefined) {
                 presentNodeTypes = new Set();
             }
-            // This is synchronized on purpose to make the output comparable.
-            const success = await updateLanguage(languageAbbr, presentNodeTypes);
+
+            const nodeTypesPromise = languageAbbrToNodeTypePromises.get(languageAbbr);
+            let success = false;
+
+            if (nodeTypesPromise !== undefined) {
+                // This is synchronized on purpose to make the output comparable.
+                success = await updateLanguage(languageAbbr, presentNodeTypes, nodeTypesPromise);
+            }
 
             if (!success) {
                 console.error("Error while updating the node mappings. Cancel update...");
@@ -68,6 +79,28 @@ export async function updateNodeTypesMappingFile() {
     }
 
     writeNewNodeTypeMappings();
+}
+
+function readNodeTypesJsons(): Map<string, Promise<string | null>> | null {
+    const languageAbbrToNodeTypePromises = new Map<string, Promise<string | null>>();
+
+    for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
+        const fileLocation = languageAbbreviationToNodeTypeFiles.get(languageAbbr);
+        if (fileLocation === undefined) {
+            console.error("No file path found for language " + languageAbbr + ". Cancel update...");
+            return null; // Cancel whole update.
+        }
+
+        languageAbbrToNodeTypePromises.set(
+            languageAbbr,
+            fs.promises.readFile(fileLocation, "utf8").catch((reason) => {
+                console.error("Error while reading a node-types.json file from " + fileLocation);
+                console.error(reason);
+                return null; // To be handled when awaiting the result.
+            })
+        );
+    }
+    return languageAbbrToNodeTypePromises;
 }
 
 function importPresentNodeTypeMappings(): Map<string, Set<string>> {
@@ -89,19 +122,12 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     return presentNodeTypesForLanguage;
 }
 
-async function updateLanguage(languageAbbr: string, presentNodes: Set<string>) {
-    const fileLocation = languageAbbreviationToNodeTypeFiles.get(languageAbbr);
-    if (fileLocation === undefined) {
-        console.error("No file path found for language " + languageAbbr);
-        return false; // Cancel whole update.
-    }
-
-    const nodeTypesPromise = fs.promises.readFile(fileLocation, "utf8").catch((reason) => {
-        console.error("Error while reading a node-types.json file from " + fileLocation);
-        console.error(reason);
-        return null;
-    });
-
+async function updateLanguage(
+    languageAbbr: string,
+    presentNodes: Set<string>,
+    nodeTypesPromise: Promise<string | null>
+) {
+    // Await reading node-types.json for the language:
     const nodeTypesJson = await nodeTypesPromise;
     if (nodeTypesJson === null) {
         return false;
@@ -111,7 +137,7 @@ async function updateLanguage(languageAbbr: string, presentNodes: Set<string>) {
     try {
         grammarNodeTypes = JSON.parse(nodeTypesJson);
     } catch (e) {
-        console.error("Error while parsing the json-file " + fileLocation);
+        console.error("Error while parsing the node-types.json file for language " + languageAbbr);
         console.error(e);
         return false;
     }

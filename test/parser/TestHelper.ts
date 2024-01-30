@@ -51,21 +51,6 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
 }
 
 /**
- * Gets the coupling metrics for the specified path.
- * @param inputPath Path to the test source files.
- */
-export async function getCouplingMetrics(inputPath: string) {
-    const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getParserConfiguration(realInputPath, true, true));
-
-    const results = await parser.calculateMetrics();
-    const couplingResult = results.couplingMetrics;
-    sortCouplingResults(couplingResult);
-
-    return couplingResult;
-}
-
-/**
  * Tests if the file metric is calculated correctly.
  * @param inputPath Path to test source files.
  * @param metric Name of the metric.

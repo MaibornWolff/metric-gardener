@@ -1,4 +1,6 @@
-import { getCouplingMetrics, testFileMetrics } from "./TestHelper";
+import { getParserConfiguration, sortCouplingResults, testFileMetrics } from "./TestHelper";
+import fs from "fs";
+import { GenericParser } from "../../src/parser/GenericParser";
 
 describe("PHP metrics tests", () => {
     const phpTestResourcesPath = "./resources/php/";
@@ -117,9 +119,13 @@ describe("PHP metrics tests", () => {
 
     describe("parsing PHP dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
-            const couplingResult = await getCouplingMetrics(
-                phpTestResourcesPath + "coupling-examples/"
-            );
+            const realInputPath = fs.realpathSync(phpTestResourcesPath + "coupling-examples/");
+            const parser = new GenericParser(getParserConfiguration(realInputPath, true, true));
+
+            const results = await parser.calculateMetrics();
+            const couplingResult = results.couplingMetrics;
+            sortCouplingResults(couplingResult);
+
             expect(couplingResult).toMatchSnapshot();
         });
     });

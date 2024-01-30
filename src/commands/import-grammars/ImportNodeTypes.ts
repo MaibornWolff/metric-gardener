@@ -41,32 +41,20 @@ export async function updateNodeTypesMappingFile() {
 
     const languageToPresentNodeTypes = importPresentNodeTypeMappings();
 
-    const updatePromises: Promise<unknown>[] = [];
-
-    for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
-        let presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr);
-
-        if (presentNodeTypes === undefined) {
-            presentNodeTypes = new Set();
-        }
-        const promise = updateLanguage(languageAbbr, presentNodeTypes).then(
-            (success) => {
-                return success;
-            },
-            (reason) => {
-                console.error(reason);
-                return false;
-            }
-        );
-
-        updatePromises.push(promise);
-    }
-
     try {
-        const result = await Promise.all(updatePromises);
-        if (result.includes(false)) {
-            console.error("Error while updating the node mappings. Cancel update...");
-            return;
+        for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
+            let presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr);
+
+            if (presentNodeTypes === undefined) {
+                presentNodeTypes = new Set();
+            }
+            // This is synchronized on purpose to make the output comparable.
+            const success = await updateLanguage(languageAbbr, presentNodeTypes);
+
+            if (!success) {
+                console.error("Error while updating the node mappings. Cancel update...");
+                return;
+            }
         }
 
         // Make sure to write the change information before deleting any metric mapping.

@@ -62,3 +62,14 @@ export async function testFileMetrics(inputPath: string, metric: string, expecte
     const results = await parser.calculateMetrics();
     expect(results.fileMetrics.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
 }
+
+export async function getCouplingMetrics(inputPath: string) {
+    const realInputPath = fs.realpathSync(inputPath);
+    const parser = new GenericParser(getParserConfiguration(realInputPath, true, true));
+
+    const results = await parser.calculateMetrics();
+    const couplingResult = results.couplingMetrics;
+    sortCouplingResults(couplingResult);
+
+    return couplingResult;
+}

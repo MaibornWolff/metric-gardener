@@ -29,6 +29,14 @@ describe("Python metrics test", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "empty.py",
+                FileMetric.realLinesOfCode,
+                0
+            );
+        });
+
         it("should count correctly for a non-empty file with nested loops and comments", async () => {
             await testFileMetrics(
                 pythonTestResourcesPath + "loops.py",

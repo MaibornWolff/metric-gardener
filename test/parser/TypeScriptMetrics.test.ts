@@ -127,6 +127,18 @@ describe("TypeScript metrics tests", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            await testFileMetrics(tsTestResourcesPath + "empty.ts", FileMetric.realLinesOfCode, 0);
+        });
+
+        it("should count correctly for a file with a single comment", async () => {
+            await testFileMetrics(
+                tsTestResourcesPath + "single-comment.ts",
+                FileMetric.realLinesOfCode,
+                0
+            );
+        });
+
         it("should count correctly if there is a comment in the same line as actual code", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "same-line-comment.ts",

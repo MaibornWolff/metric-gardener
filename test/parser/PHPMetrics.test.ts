@@ -121,6 +121,14 @@ describe("PHP metrics tests", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            await testFileMetrics(
+                phpTestResourcesPath + "empty.php",
+                FileMetric.realLinesOfCode,
+                0
+            );
+        });
+
         it("should count correctly if there is a comment in the same line as actual code", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "same-line-comment.php",

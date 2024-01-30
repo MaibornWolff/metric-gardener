@@ -129,6 +129,10 @@ describe("Go metric tests", () => {
             );
         });
 
+        it("should count correctly for an empty file", async () => {
+            await testFileMetrics(goTestResourcesPath + "empty.go", FileMetric.realLinesOfCode, 0);
+        });
+
         it("should count correctly if there is a comment that includes code", async () => {
             await testFileMetrics(
                 goTestResourcesPath + "if-statements.go",

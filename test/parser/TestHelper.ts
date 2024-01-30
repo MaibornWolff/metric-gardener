@@ -63,6 +63,10 @@ export async function testFileMetrics(inputPath: string, metric: string, expecte
     expect(results.fileMetrics.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
 }
 
+/**
+ * Gets the coupling metrics for the specified path.
+ * @param inputPath Path to the test source files.
+ */
 export async function getCouplingMetrics(inputPath: string) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath, true, true));

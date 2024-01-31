@@ -60,11 +60,6 @@ export class TreeParser {
 
         TreeParser.cache.set(parseFile.filePath, tree);
 
-        if (tree === undefined || tree.rootNode === undefined) {
-            console.error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
-            throw new Error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
-        }
-
         return tree;
     }
 }

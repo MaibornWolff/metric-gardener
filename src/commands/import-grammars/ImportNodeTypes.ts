@@ -78,7 +78,7 @@ export async function updateNodeTypesMappingFile() {
         return;
     }
 
-    writeNewNodeTypeMappings();
+    await writeNewNodeTypeMappings();
 }
 
 function readNodeTypesJsons(): Map<string, Promise<string | null>> | null {
@@ -127,14 +127,14 @@ async function updateLanguage(
     presentNodes: Set<string>,
     nodeTypesPromise: Promise<string | null>
 ) {
-    // Await reading node-types.json for the language:
-    const nodeTypesJson = await nodeTypesPromise;
-    if (nodeTypesJson === null) {
-        return false;
-    }
-
     let grammarNodeTypes;
     try {
+        // Await reading node-types.json for the language:
+        const nodeTypesJson = await nodeTypesPromise;
+        if (nodeTypesJson === null) {
+            return false;
+        }
+
         grammarNodeTypes = JSON.parse(nodeTypesJson);
     } catch (e) {
         console.error("Error while parsing the node-types.json file for language " + languageAbbr);
@@ -290,26 +290,22 @@ async function removeAbandonedNodeTypes(): Promise<void> {
     }
 }
 
-function writeNewNodeTypeMappings() {
-    // Save the updated mappings:
-    fs.promises
-        .writeFile(
+async function writeNewNodeTypeMappings() {
+    try {
+        // Save the updated mappings:
+        await fs.promises.writeFile(
             pathToNodeTypesConfig,
             JSON.stringify(Array.from(expressionMappings.values()), null, 4)
-        )
-        .then(
-            () => {
-                console.log("####################################");
-                console.log(
-                    'Successfully updated node type mappings. File saved to "' +
-                        pathToNodeTypesConfig +
-                        '".'
-                );
-                console.log("####################################");
-            },
-            (reason) => {
-                console.error("Error while writing nodeTypesConfig.json");
-                console.error(reason);
-            }
         );
+        console.log("####################################");
+        console.log(
+            'Successfully updated node type mappings. File saved to "' +
+                pathToNodeTypesConfig +
+                '".'
+        );
+        console.log("####################################");
+    } catch (e) {
+        console.error("Error while writing nodeTypesConfig.json");
+        console.error(e);
+    }
 }

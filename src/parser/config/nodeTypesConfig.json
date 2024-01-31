@@ -1556,6 +1556,7 @@
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
+        "activated_for_languages": ["cs", "go", "js", "php", "ts", "py", "cpp"],
         "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
     },
     {

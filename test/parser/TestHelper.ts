@@ -64,6 +64,17 @@ export async function testFileMetrics(inputPath: string, metric: FileMetric, exp
 }
 
 /**
+ * Gets the metrics for the specified test source files.
+ * @param inputPath Path to the test source files.
+ * @return The calculated metrics.
+ */
+export async function getFileMetrics(inputPath: string) {
+    const realInputPath = fs.realpathSync(inputPath);
+    const parser = new GenericParser(getParserConfiguration(realInputPath));
+    return await parser.calculateMetrics();
+}
+
+/**
  * Gets the coupling metrics for the specified path.
  * @param inputPath Path to the test source files.
  */

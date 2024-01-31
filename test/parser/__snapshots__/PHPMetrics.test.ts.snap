@@ -48,7 +48,7 @@ Object {
   },
   "relationships": Array [
     Object {
-      "fromClassName": "AnotherControllerInterface",
+      "fromClassName": "FastControllerInterface",
       "fromNamespace": "App\\\\FastControllerInterface",
       "fromSource": "FastControllerInterface.php",
       "toClassName": "AnotherControllerInterface",
@@ -57,7 +57,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "ControllerInterface",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "ControllerInterface",
@@ -66,7 +66,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "ControllerInterface",
+      "fromClassName": "BlubControllerOne1",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\BlubControllerOne1",
       "fromSource": "BlubController.php",
       "toClassName": "ControllerInterface",
@@ -75,7 +75,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "ControllerInterface",
+      "fromClassName": "FastControllerInterface",
       "fromNamespace": "App\\\\FastControllerInterface",
       "fromSource": "FastControllerInterface.php",
       "toClassName": "ControllerInterface",
@@ -84,7 +84,7 @@ Object {
       "usageType": "implements",
     },
     Object {
-      "fromClassName": "BlubControllerOne1",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "BlubControllerOne1",
@@ -93,7 +93,7 @@ Object {
       "usageType": "extends",
     },
     Object {
-      "fromClassName": "BlubControllerOne1",
+      "fromClassName": "BlubControllerTwo1",
       "fromNamespace": "App\\\\CouplingExamplesTwo\\\\BlubControllerTwo1",
       "fromSource": "BlubController.php",
       "toClassName": "BlubControllerOne1",
@@ -102,7 +102,7 @@ Object {
       "usageType": "extends",
     },
     Object {
-      "fromClassName": "Helper",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "Helper",
@@ -111,7 +111,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "Helper",
+      "fromClassName": "BlubControllerOne1",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\BlubControllerOne1",
       "fromSource": "BlubController.php",
       "toClassName": "Helper",
@@ -120,7 +120,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "Helper",
+      "fromClassName": "HelperOutput",
       "fromNamespace": "App\\\\CouplingExamples\\\\Library\\\\HelperOutput",
       "fromSource": "Library\\\\HelperOutput.php",
       "toClassName": "Helper",
@@ -129,7 +129,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "HelperOutput",
+      "fromClassName": "Helper",
       "fromNamespace": "App\\\\CouplingExamples\\\\Library\\\\Helper",
       "fromSource": "Library\\\\Helper.php",
       "toClassName": "HelperOutput",
@@ -138,7 +138,7 @@ Object {
       "usageType": "usage",
     },
     Object {
-      "fromClassName": "FastControllerInterface",
+      "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\\\CouplingExamplesOne\\\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
       "toClassName": "FastControllerInterface",

@@ -5,11 +5,11 @@ describe("PHP metrics tests", () => {
     const phpTestResourcesPath = "./resources/php/";
 
     describe("parses PHP McCabeComplexity metric", () => {
-        it("should count if statements correctly", async () => {
+        it("should count branching statements correctly", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "if-statements.php",
                 FileMetric.mcCabeComplexity,
-                7
+                8
             );
         });
 

@@ -13,12 +13,13 @@ import {
     CouplingMetrics,
     CouplingResult,
 } from "../Metric";
-import { checkAndGetFileExtension, formatPrintPath } from "../../helper/Helper";
+import { getLanguageFromFileExtension, formatPrintPath } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Configuration } from "../../Configuration";
+import { Languages } from "../../helper/Languages";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -218,8 +219,8 @@ export class Coupling implements CouplingMetric {
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const parseFile = checkAndGetFileExtension(filePath);
-        if (parseFile === undefined) {
+        const parseFile = getLanguageFromFileExtension(filePath);
+        if (parseFile.language === Languages.Unknown) {
             return;
         }
 

@@ -1,9 +1,10 @@
-import { findFilesAsync } from "./helper/Helper";
+import { findFilesAsync, formatPrintPath } from "./helper/Helper";
 import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
 import { CouplingResult, MetricResult, ParseFile } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { Languages } from "./helper/Languages";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -35,6 +36,7 @@ export class GenericParser {
         console.time("Time to complete");
 
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
+        const unknownFiles: string[] = [];
         let couplingMetrics = {} as CouplingResult;
 
         try {
@@ -42,19 +44,28 @@ export class GenericParser {
 
             const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
             const parseFiles: ParseFile[] = [];
+            const unknownParseFiles: ParseFile[] = [];
 
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator(this.config);
 
                 for await (const file of parseFilesGenerator) {
-                    fileMetricPromises.push(metricsParser.calculateMetrics(file));
-                    parseFiles.push(file);
+                    if (file.language !== Languages.Unknown) {
+                        fileMetricPromises.push(metricsParser.calculateMetrics(file));
+                        parseFiles.push(file);
+                    } else {
+                        unknownParseFiles.push(file);
+                    }
                 }
             }
             // In case this.config.parseMetrics is false, as we need all files for the coupling metrics:
             else {
                 for await (const file of parseFilesGenerator) {
-                    parseFiles.push(file);
+                    if (file.language !== Languages.Unknown) {
+                        parseFiles.push(file);
+                    } else {
+                        unknownParseFiles.push(file);
+                    }
                 }
             }
 
@@ -73,6 +84,10 @@ export class GenericParser {
                 fileMetrics.set(filepath, metricsMap);
             }
 
+            for (const file of unknownParseFiles) {
+                unknownFiles.push(formatPrintPath(file.filePath, this.config));
+            }
+
             console.log("#####################################");
             console.log("#####################################");
             console.log("Metrics calculation finished.");
@@ -80,6 +95,7 @@ export class GenericParser {
 
             return {
                 fileMetrics,
+                unknownFiles,
                 couplingMetrics,
             };
         } catch (e) {
@@ -90,6 +106,7 @@ export class GenericParser {
 
             return {
                 fileMetrics,
+                unknownFiles,
                 couplingMetrics,
             };
         }

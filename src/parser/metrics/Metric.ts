@@ -1,4 +1,5 @@
 import Parser from "tree-sitter";
+import { Languages } from "../helper/Languages";
 
 /**
  * Interface for carrying the result of a metric calculation.
@@ -74,4 +75,9 @@ export interface ParseFile {
      * Path to the file.
      */
     filePath: string;
+
+    /**
+     * Programming language of the file.
+     */
+    language: Languages;
 }

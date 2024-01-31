@@ -1,18 +1,19 @@
 import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector";
 import { Factory as NamespaceCollectorFactory } from "./fullyQualifiedTypeNames/Factory";
 import { ParseFile } from "../metrics/Metric";
+import { Languages } from "../helper/Languages";
 
 export class NamespaceCollector {
     private namespaceCollectorFactory = new NamespaceCollectorFactory();
-    private cache = new Map<string, Map<string, Map<string, FullyQTN>>>();
+    private cache = new Map<Languages, Map<string, Map<string, FullyQTN>>>();
 
     getNamespaces(parseFile: ParseFile): Map<string, FullyQTN> {
-        let namespacesByLanguage = this.cache.get(parseFile.fileExtension);
+        let namespacesByLanguage = this.cache.get(parseFile.language);
         if (namespacesByLanguage === undefined) {
-            this.cache.set(parseFile.fileExtension, new Map());
+            this.cache.set(parseFile.language, new Map());
         }
 
-        namespacesByLanguage = this.cache.get(parseFile.fileExtension);
+        namespacesByLanguage = this.cache.get(parseFile.language);
         const fileNamespaces = namespacesByLanguage?.get(parseFile.filePath);
         if (fileNamespaces !== undefined) {
             return fileNamespaces;
@@ -24,7 +25,7 @@ export class NamespaceCollector {
                 ? collector.getFullyQTNs(parseFile)
                 : new Map<string, FullyQTN>();
 
-        this.cache.get(parseFile.fileExtension)?.set(parseFile.filePath, packages);
+        this.cache.get(parseFile.language)?.set(parseFile.filePath, packages);
 
         return packages;
     }

@@ -3,7 +3,7 @@ import path from "path";
 import { ExpressionMetricMapping, ExpressionQueryStatement } from "./Model";
 import { ParseFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
-import { fileExtensionToLanguage } from "./Languages";
+import { fileExtensionToLanguage, Languages } from "./Languages";
 
 /**
  * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
@@ -90,19 +90,28 @@ export function formatPrintPath(filePath: string, config: Configuration): string
 }
 
 /**
- * Checks whether the specified path represents a file with a file extension.
- * If so, this function returns a corresponding {@link ParseFile}-object that includes the file extension.
+ * Checks if the file extension of the specified path is a known file extension of a programming language.
+ * If so, this function returns a corresponding {@link ParseFile}-object that includes the language and file extension.
+ * Otherwise, the language is set to {@link Languages.Unknown}. The same applies if there is no file extension found,
+ * in which case the file extension is set to an empty string.
+ *
  * @param filePath Path that should be checked.
- * @return A ParseFile-object if there is a file extension, undefined if there is no file extension present.
+ * @return A ParseFile-object.
  */
-export function checkAndGetFileExtension(filePath: string): undefined | ParseFile {
+export function getLanguageFromFileExtension(filePath: string): ParseFile {
     const splitted = filePath.split(".");
     if (splitted.length >= 2) {
         const fileExtension = splitted[splitted.length - 1].toLowerCase();
+
         if (fileExtension.length > 0) {
-            return { fileExtension: fileExtension, filePath: filePath };
+            let language = fileExtensionToLanguage.get(fileExtension);
+            if (language === undefined) {
+                language = Languages.Unknown;
+            }
+            return { fileExtension: fileExtension, filePath: filePath, language: language };
         }
     }
+    return { fileExtension: "", filePath: filePath, language: Languages.Unknown };
 }
 
 /**
@@ -117,10 +126,8 @@ export function checkAndGetFileExtension(filePath: string): undefined | ParseFil
 export async function* findFilesAsync(config: Configuration): AsyncGenerator<ParseFile> {
     // Handle special case: if the specified sourcePath is a single file, just yield the file.
     if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
-        const parseFile = checkAndGetFileExtension(config.sourcesPath);
-        if (parseFile !== undefined && fileExtensionToLanguage.has(parseFile.fileExtension)) {
-            yield parseFile;
-        }
+        const parseFile = getLanguageFromFileExtension(config.sourcesPath);
+        yield parseFile;
     } else {
         // sourcePath points to a directory, so use recursive function to find all files.
 
@@ -149,10 +156,8 @@ async function* findFilesAsyncRecursive(
             }
         } // End of if (isDirectory)
         else {
-            const parseFile = checkAndGetFileExtension(currentPath);
-            if (parseFile !== undefined && fileExtensionToLanguage.has(parseFile.fileExtension)) {
-                yield parseFile;
-            }
+            const parseFile = getLanguageFromFileExtension(currentPath);
+            yield parseFile;
         } // End of else (isDirectory)
     } // End of for await (directory entries)
 }

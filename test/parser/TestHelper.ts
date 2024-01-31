@@ -1,7 +1,7 @@
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
 import { Configuration } from "../../src/parser/Configuration";
-import { CouplingResult } from "../../src/parser/metrics/Metric";
+import { CouplingResult, FileMetric } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
 
 /**
@@ -56,7 +56,7 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
  * @param metric Name of the metric.
  * @param expected Expected test result.
  * */
-export async function testFileMetrics(inputPath: string, metric: string, expected: number) {
+export async function testFileMetrics(inputPath: string, metric: FileMetric, expected: number) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath));
     const results = await parser.calculateMetrics();

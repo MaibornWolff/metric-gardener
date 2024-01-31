@@ -691,7 +691,7 @@ describe("GenericParser", () => {
             const parser = new GenericParser(getParserConfiguration(inputPath));
             const results = await parser.calculateMetrics();
 
-            const filePath = fs.realpathSync(unknownTestResourcesPath + "example.unknownExtension");
+            const filePath = fs.realpathSync(unknownTestResourcesPath + "ExampleWithoutExtension");
             expect(results.unknownFiles.includes(filePath)).toBe(true);
         });
 

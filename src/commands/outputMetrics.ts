@@ -14,7 +14,7 @@ interface OutputNode {
 interface OutputInfoNode {
     name: string;
     type: "File";
-    info: string;
+    message: string;
 }
 
 interface OutputRelationship {
@@ -93,7 +93,7 @@ function buildOutputObject(
         const outputNode: OutputInfoNode = {
             name: filePath,
             type: "File",
-            info: "Unknown language or file extension",
+            message: "Unknown language or file extension",
         };
 
         output.info.push(outputNode);

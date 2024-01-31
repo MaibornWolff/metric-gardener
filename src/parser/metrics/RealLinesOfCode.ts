@@ -39,8 +39,14 @@ export class RealLinesOfCode implements Metric {
             // Assume that first and last line of whatever kind of node this is, is a real code line.
             // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
             realLinesOfCode.add(cursor.startPosition.row);
-            // Adding the last line is not necessary, as every last line has to have some syntactical element,
-            // which is again expressed as another syntax node.
+
+            // This is a leaf node, so add further lines if this single token of actual code
+            // spans over multiple lines and is no line ending:
+            if (cursor.currentNode.childCount == 0 && !"\r\n".includes(cursor.currentNode.type)) {
+                for (let i = cursor.startPosition.row + 1; i <= cursor.endPosition.row; i++) {
+                    realLinesOfCode.add(i);
+                }
+            }
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {

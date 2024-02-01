@@ -3,15 +3,6 @@ node_modules
 .clinic
 .DS_Store
 
-dist/*
-!dist/test/
-dist/test/*
-!dist/test/parser/
-dist/test/parser/*
-!dist/test/parser/__snapshots__/
-
-!dist/test/commands/
-dist/test/commands/*
-!dist/test/commands/__snapshots__/
+dist
 
 ./resources/output.json

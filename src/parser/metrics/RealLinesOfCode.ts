@@ -31,29 +31,38 @@ export class RealLinesOfCode implements Metric {
      * {@link https://tree-sitter.github.io/tree-sitter/using-parsers#walking-trees-with-tree-cursors|Tree-sitter documentation},
      * this is the most efficient way to traverse a syntax tree.
      * @param cursor A {@link TreeCursor} for the syntax tree.
-     * @param realLinesOfCode A set in which the line numbers of the found code lines are stored.
+     * @param lastRealLineOfCode Last actual line of code encountered.
      */
-    walkTree(cursor: TreeCursor, realLinesOfCode = new Set<number>()) {
+    walkTree(cursor: TreeCursor, lastRealLineOfCode = -1): number {
+        let realLinesOfCode = 0;
         // This is not a comment syntax node, so assume it includes "real code".
         if (!this.commentStatementsSet.has(cursor.currentNode.type)) {
-            // Assume that first and last line of whatever kind of node this is, is a real code line.
-            // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
-            realLinesOfCode.add(cursor.startPosition.row);
+            if (cursor.startPosition.row > lastRealLineOfCode) {
+                // Assume that first and last line of whatever kind of node this is, is a real code line.
+                // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
+                realLinesOfCode++;
+                lastRealLineOfCode = cursor.startPosition.row;
+            }
 
-            // This is a leaf node, so add further lines if this single token of actual code
+            // If is a leaf node, add further lines if this single token of actual code
             // spans over multiple lines and is no line ending:
-            if (cursor.currentNode.childCount == 0 && !"\r\n".includes(cursor.currentNode.type)) {
+            if (
+                cursor.endPosition.row > lastRealLineOfCode &&
+                cursor.currentNode.childCount == 0 &&
+                !"\r\n".includes(cursor.currentNode.type)
+            ) {
                 for (let i = cursor.startPosition.row + 1; i <= cursor.endPosition.row; i++) {
-                    realLinesOfCode.add(i);
+                    realLinesOfCode++;
                 }
+                lastRealLineOfCode = cursor.endPosition.row;
             }
         }
         // Recurse, depth-first
         if (cursor.gotoFirstChild()) {
-            this.walkTree(cursor, realLinesOfCode);
+            realLinesOfCode += this.walkTree(cursor, lastRealLineOfCode);
         }
         if (cursor.gotoNextSibling()) {
-            this.walkTree(cursor, realLinesOfCode);
+            realLinesOfCode += this.walkTree(cursor, lastRealLineOfCode);
         } else {
             // Completed searching this part of the tree, so go up now.
             cursor.gotoParent();
@@ -68,9 +77,7 @@ export class RealLinesOfCode implements Metric {
         // Assume the root node is always some kind of program/file/compilation_unit stuff.
         // So if there are no child nodes, the file is empty.
         if (cursor.gotoFirstChild()) {
-            const realLinesOfCode = this.walkTree(cursor);
-            dlog("Included lines for rloc: ", realLinesOfCode);
-            rloc = realLinesOfCode.size;
+            rloc = this.walkTree(cursor);
         }
 
         dlog(this.getName() + " - " + rloc);

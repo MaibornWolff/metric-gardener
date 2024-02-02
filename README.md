@@ -43,23 +43,34 @@ This is quite slow and can take up to one or two hours but can provide good resu
     -   Go
     -   PHP
     -   TypeScript
+    -   Java
 
 -   Unstable (missing or incomplete unit tests)
     -   C#
+    -   Python
     -   C++
-    -   Java
     -   JavaScript
     -   Kotlin
-    -   Python
 
-### Supported Metrics
+### Supported File Metrics
 
--   mcc
--   functions - The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, etc.
--   classes - The number of class definitions inside a file, also counting for enums and interfaces.
--   lines_of_code - The total number of lines of a file, including empty lines, comments, etc.
--   comment_lines - The number of comment lines inside a file. Does count for any kind of comment (except for python's special block comments).
--   real_lines_of_code - The number of lines inside a file that contain actual code of the programming language, not counting for comments, empty lines, etc.
+**complexity**<br>
+Counts expressions that branch the control flow (if-statements, loops, etc. - but no else/default statements) and other expressions that are considered to increase the complexity of the code inside a file (function declarations and logical operations, like AND and OR).
+
+**functions**<br>
+The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, etc.
+
+**classes**<br>
+The number of class definitions inside a file, also counting for enums and interfaces.
+
+**lines_of_code**<br>
+The total number of lines of a file, including empty lines, comments, etc.
+
+**comment_lines**<br>
+The number of comment lines inside a file. Does count for any kind of comment (except for python's special block comments).
+
+**real_lines_of_code**<br>
+The number of lines inside a file that contain actual code of the programming language, not counting for comments, empty lines, etc.
 
 ### Coupling Metrics (experimental)
 

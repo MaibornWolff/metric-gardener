@@ -7,6 +7,12 @@ int outOfScope() {
     return 3;
 }
 
+Action<string> greet = name =>
+{
+    string greeting = $"Hello {name}!";
+    Console.WriteLine(greeting);
+};
+
 public class FunctionsAndMethods {
 
     private string hello;

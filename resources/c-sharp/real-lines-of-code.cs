@@ -13,7 +13,7 @@ public class Example {
      * Indeed.
      * @input Some input string.
      */
-    exampleMethod(string input) {
+    void exampleMethod(string input) {
         // A comment
         // I have a comment about this.
         int a = 2;

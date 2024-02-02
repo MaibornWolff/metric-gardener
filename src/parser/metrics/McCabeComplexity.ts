@@ -5,7 +5,7 @@ import {
     OperatorQueryStatement,
     QueryStatementInterface,
 } from "../helper/Model";
-import { Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
@@ -66,6 +66,6 @@ export class McCabeComplexity implements Metric {
     }
 
     getName(): string {
-        return "mcc";
+        return FileMetric.mcCabeComplexity;
     }
 }

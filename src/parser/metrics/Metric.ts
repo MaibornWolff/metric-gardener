@@ -2,6 +2,18 @@ import Parser from "tree-sitter";
 import { Languages } from "../helper/Languages";
 
 /**
+ * Names of all available file metrics.
+ */
+export enum FileMetric {
+    classes = "classes",
+    commentLines = "comment_lines",
+    functions = "functions",
+    linesOfCode = "lines_of_code",
+    mcCabeComplexity = "mcc",
+    realLinesOfCode = "real_lines_of_code",
+}
+
+/**
  * Interface for carrying the result of a metric calculation.
  */
 export interface MetricResult {

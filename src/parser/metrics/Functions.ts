@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
-import { Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
@@ -36,6 +36,6 @@ export class Functions implements Metric {
     }
 
     getName(): string {
-        return "functions";
+        return FileMetric.functions;
     }
 }

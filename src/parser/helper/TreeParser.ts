@@ -18,6 +18,15 @@ export class TreeParser {
         const sourceCode = fs.readFileSync(parseFile.filePath, { encoding: "utf8" });
         const tree = parser.parse(sourceCode);
 
+        if (tree === undefined) {
+            throw new Error("Syntax tree for file " + parseFile.filePath + " is undefined!");
+        }
+        if (tree.rootNode === undefined) {
+            throw new Error(
+                "Root node of syntax tree for file " + parseFile.filePath + " is undefined!"
+            );
+        }
+
         TreeParser.cache.set(parseFile.filePath, tree);
 
         if (tree === undefined || tree.rootNode === undefined) {
@@ -38,14 +47,18 @@ export class TreeParser {
         parser.setLanguage(languageToGrammar.get(parseFile.language));
 
         const sourceCode = await fs.promises.readFile(parseFile.filePath, { encoding: "utf8" });
-
         const tree = parser.parse(sourceCode);
-        TreeParser.cache.set(parseFile.filePath, tree);
 
-        if (tree === undefined || tree.rootNode === undefined) {
-            console.error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
-            throw new Error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
+        if (tree === undefined) {
+            throw new Error("Syntax tree for file " + parseFile.filePath + " is undefined!");
         }
+        if (tree.rootNode === undefined) {
+            throw new Error(
+                "Root node of syntax tree for file " + parseFile.filePath + " is undefined!"
+            );
+        }
+
+        TreeParser.cache.set(parseFile.filePath, tree);
 
         return tree;
     }

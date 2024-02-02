@@ -191,11 +191,18 @@ describe("Java metrics tests.", () => {
             );
         });
 
-        it("should count one method declaration and its for and while-statements correctly", async () => {
+        it("should count one method declaration, the number of for- and while-statements and the containing logical operators correctly", async () => {
             await testFileMetrics(
                 javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/WhileAndForLoop.java",
                 FileMetric.mcCabeComplexity,
-                3
+                10
+            );
+        });
+        it("should count one method declaration, the number of switch-case-statements and the containing logical operators correctly", async () => {
+            await testFileMetrics(
+                javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/SwitchStatement.java",
+                FileMetric.mcCabeComplexity,
+                15
             );
         });
     });

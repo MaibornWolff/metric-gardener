@@ -86,6 +86,14 @@ describe("TypeScript metrics tests", () => {
                 4
             );
         });
+
+        it("should count properly, also counting multiline block comments starting in the same line as another comment", async () => {
+            await testFileMetrics(
+                tsTestResourcesPath + "consecutive-comments.ts",
+                FileMetric.commentLines,
+                6
+            );
+        });
     });
 
     describe("parses TypeScript lines of code metric", () => {

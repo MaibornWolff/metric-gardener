@@ -35,16 +35,21 @@ export class CommentLines implements Metric {
         }
 
         let numberOfLines = 0;
-        let lastCommitLine = -1;
+        let lastCommentLine = -1;
 
         for (const match of matches) {
             const captureNode: SyntaxNode = match.captures[0].node;
             const startRow = captureNode.startPosition.row;
+            const endRow = captureNode.endPosition.row;
             // If we have not already counted for a comment on the same line:
-            if (lastCommitLine != startRow) {
-                const endRow = captureNode.endPosition.row;
+            if (lastCommentLine !== startRow) {
                 numberOfLines += endRow - startRow + 1;
-                lastCommitLine = endRow;
+                lastCommentLine = endRow;
+            }
+            // If the comment starts on the same line as the last one, but does span over more lines than that:
+            else if (lastCommentLine < endRow) {
+                numberOfLines += endRow - startRow;
+                lastCommentLine = endRow;
             }
         }
 

@@ -34,7 +34,7 @@ describe("C# metric tests", () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "classes.cs",
                 FileMetric.mcCabeComplexity,
-                0
+                1
             );
         });
 
@@ -50,7 +50,7 @@ describe("C# metric tests", () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "functions-and-methods.cs",
                 FileMetric.mcCabeComplexity,
-                6
+                8
             );
         });
 

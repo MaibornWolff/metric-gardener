@@ -123,6 +123,7 @@ describe("Java metrics tests.", () => {
                 10
             );
         });
+
         it("should count zero real lines of code for an empty file", async () => {
             await testFileMetrics(
                 javaTestResourcesPath + "Empty.java",
@@ -191,14 +192,23 @@ describe("Java metrics tests.", () => {
             );
         });
 
-        it("should count one method declaration and its for and while-statements correctly", async () => {
+        it("should count one method declaration, the number of for- and while-statements and the containing logical operators correctly", async () => {
             await testFileMetrics(
                 javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/WhileAndForLoop.java",
                 FileMetric.mcCabeComplexity,
-                3
+                10
+            );
+        });
+
+        it.skip("should count one method declaration, the number of switch-case-statements and the contained logical operators correctly", async () => {
+            await testFileMetrics(
+                javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/SwitchStatement.java",
+                FileMetric.mcCabeComplexity,
+                13
             );
         });
     });
+
     describe("parses comment-lines metric", () => {
         it("should count the lines that contain inline, multi-line and single-line comments.", async () => {
             await testFileMetrics(

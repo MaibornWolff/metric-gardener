@@ -15,7 +15,7 @@
     },
     {
         "expression": "constructor_declaration",
-        "metrics": ["functions"],
+        "metrics": ["mcc", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java"]

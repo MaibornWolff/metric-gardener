@@ -337,7 +337,7 @@
     },
     {
         "expression": "is_pattern_expression",
-        "metrics": ["mcc"],
+        "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
@@ -5978,7 +5978,7 @@
     },
     {
         "expression": "and_pattern",
-        "metrics": [],
+        "metrics": ["mcc"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
@@ -6055,7 +6055,7 @@
     },
     {
         "expression": "or_pattern",
-        "metrics": [],
+        "metrics": ["mcc"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]

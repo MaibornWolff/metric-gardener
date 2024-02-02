@@ -1,7 +1,7 @@
 <?php
 
 /**
- * McCabeComplexity test resource file
+ * Complexity test resource file
  */
 
 if ($x > $b) {

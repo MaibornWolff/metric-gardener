@@ -4,13 +4,9 @@ import { FileMetric } from "../../src/parser/metrics/Metric";
 describe("Python metrics test", () => {
     const pythonTestResourcesPath = "./resources/python/";
 
-    describe("parses Python McCabeComplexity metric", () => {
+    describe("parses Python Complexity metric", () => {
         it("should count if statements correctly", async () => {
-            await testFileMetrics(
-                pythonTestResourcesPath + "if.py",
-                FileMetric.mcCabeComplexity,
-                4
-            );
+            await testFileMetrics(pythonTestResourcesPath + "if.py", FileMetric.complexity, 4);
         });
     });
 

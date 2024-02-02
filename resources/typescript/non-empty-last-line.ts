@@ -130,7 +130,7 @@ export class ArtificialIntelligenceController
         this.clearRiskProfile();
 
         if (mainProgrammingLanguage !== undefined) {
-            this.calculateRiskProfile(this.fileState, mainProgrammingLanguage, "mcc");
+            this.calculateRiskProfile(this.fileState, mainProgrammingLanguage, "complexity");
             this.createCustomConfigSuggestions(this.fileState, mainProgrammingLanguage);
         }
     }

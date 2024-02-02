@@ -9,7 +9,7 @@ export enum FileMetric {
     commentLines = "comment_lines",
     functions = "functions",
     linesOfCode = "lines_of_code",
-    mcCabeComplexity = "mcc",
+    complexity = "complexity",
     realLinesOfCode = "real_lines_of_code",
 }
 

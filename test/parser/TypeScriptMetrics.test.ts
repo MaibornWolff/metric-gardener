@@ -4,11 +4,11 @@ import { FileMetric } from "../../src/parser/metrics/Metric";
 describe("TypeScript metrics tests", () => {
     const tsTestResourcesPath = "./resources/typescript/";
 
-    describe("parses TypeScript McCabeComplexity metric", () => {
+    describe("parses TypeScript Complexity metric", () => {
         it("should count if statements correctly", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "if-statements.ts",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 8
             );
         });
@@ -16,7 +16,7 @@ describe("TypeScript metrics tests", () => {
         it("should count functions and methods correctly", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "functions-and-methods.ts",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 9
             );
         });
@@ -24,23 +24,19 @@ describe("TypeScript metrics tests", () => {
         it("should not count multiple return statements within functions and methods correctly", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "multiple-return-statements.ts",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(
-                tsTestResourcesPath + "classes.ts",
-                FileMetric.mcCabeComplexity,
-                0
-            );
+            await testFileMetrics(tsTestResourcesPath + "classes.ts", FileMetric.complexity, 0);
         });
 
         it("should count case but no default statements correctly", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "case-statements.ts",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
@@ -48,13 +44,13 @@ describe("TypeScript metrics tests", () => {
         it("should count try-catch-finally properly", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "throw-try-catch-finally.ts",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 2
             );
         });
 
         it("should count loops properly", async () => {
-            await testFileMetrics(tsTestResourcesPath + "loops.ts", FileMetric.mcCabeComplexity, 3);
+            await testFileMetrics(tsTestResourcesPath + "loops.ts", FileMetric.complexity, 3);
         });
     });
 

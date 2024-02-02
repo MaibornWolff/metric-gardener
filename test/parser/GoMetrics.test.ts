@@ -4,11 +4,11 @@ import { FileMetric } from "../../src/parser/metrics/Metric";
 describe("Go metric tests", () => {
     const goTestResourcesPath = "./resources/go/";
 
-    describe("parses Go McCabeComplexity metric", () => {
+    describe("parses Go Complexity metric", () => {
         it("should count if statements correctly", async () => {
             await testFileMetrics(
                 goTestResourcesPath + "if-statements.go",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 7
             );
         });
@@ -16,7 +16,7 @@ describe("Go metric tests", () => {
         it("should count functions and methods correctly", async () => {
             await testFileMetrics(
                 goTestResourcesPath + "functions-and-methods.go",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 2
             );
         });
@@ -24,23 +24,19 @@ describe("Go metric tests", () => {
         it("should not count multiple return statements within functions and methods correctly", async () => {
             await testFileMetrics(
                 goTestResourcesPath + "multiple-return-statements.go",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(
-                goTestResourcesPath + "classes.go",
-                FileMetric.mcCabeComplexity,
-                0
-            );
+            await testFileMetrics(goTestResourcesPath + "classes.go", FileMetric.complexity, 0);
         });
 
         it("should count case statements correctly", async () => {
             await testFileMetrics(
                 goTestResourcesPath + "case-statements.go",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
@@ -48,13 +44,13 @@ describe("Go metric tests", () => {
         it("should count try-catch-finally properly", async () => {
             await testFileMetrics(
                 goTestResourcesPath + "throw-try-catch-finally.go",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 0
             );
         });
 
         it("should count loops properly", async () => {
-            await testFileMetrics(goTestResourcesPath + "loops.go", FileMetric.mcCabeComplexity, 4);
+            await testFileMetrics(goTestResourcesPath + "loops.go", FileMetric.complexity, 4);
         });
     });
 

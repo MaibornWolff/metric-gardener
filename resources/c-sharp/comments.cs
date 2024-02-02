@@ -1,22 +1,22 @@
-// Some License example file header comment here (not counted)
-// Some License example file header comment here (not counted)
-// Some License example file header comment here (not counted)
+// Some License example file header comment here
+// Some License example file header comment here
+// Some License example file header comment here
 
 using System;
 
-// a class description comment not counted
+// a class description comment
 public class Example {
     /*
      * This line should be counted
-     * This either
-     * @input Some Input String (not counted line)
+     * This too
+     * @input Some Input String also counted
      */
     public void exampleMethod(string input) {
-        // this comment should be conted
-        // this either
+        // this comment should be counted
+        // this too
 
         /*
-            Start and end comment should be ignored, only one line to be counted here
+            Start and end comment are also counted
          */
 
         Console.Write(input);

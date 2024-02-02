@@ -344,7 +344,7 @@
     },
     {
         "expression": "lambda_expression",
-        "metrics": ["mcc"],
+        "metrics": ["mcc", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "cpp"]

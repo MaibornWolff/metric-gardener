@@ -163,10 +163,11 @@ async function updateLanguage(
             continue;
         }
 
-        toRemove.delete(grammarNodeType.type);
-        updateOrAddExpression(languageAbbr, grammarNodeType.type);
-
-        if (grammarNodeType.subtypes !== undefined) {
+        if (grammarNodeType.subtypes === undefined) {
+            toRemove.delete(grammarNodeType.type);
+            updateOrAddExpression(languageAbbr, grammarNodeType.type);
+        } else {
+            // Do only include the (concrete) subtypes of a node-type
             for (const subNodeType of grammarNodeType.subtypes) {
                 toRemove.delete(subNodeType.type);
                 updateOrAddExpression(languageAbbr, subNodeType.type);

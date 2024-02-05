@@ -1,12 +1,5 @@
 [
     {
-        "expression": "_declaration",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs"]
-    },
-    {
         "expression": "class_declaration",
         "metrics": ["classes"],
         "type": "statement",
@@ -131,13 +124,6 @@
         "type": "statement",
         "category": "",
         "languages": ["cs"]
-    },
-    {
-        "expression": "_expression",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs", "go", "php", "cpp"]
     },
     {
         "expression": "anonymous_method_expression",
@@ -511,13 +497,6 @@
         "languages": ["cs"]
     },
     {
-        "expression": "_statement",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs", "go", "php", "cpp"]
-    },
-    {
         "expression": "block",
         "metrics": [],
         "type": "statement",
@@ -684,13 +663,6 @@
         "type": "statement",
         "category": "",
         "languages": ["cs", "java"]
-    },
-    {
-        "expression": "_type",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cs", "go", "java", "php"]
     },
     {
         "expression": "alias_qualified_name",
@@ -1311,7 +1283,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "kt", "py"]
+        "languages": ["cs", "kt"]
     },
     {
         "expression": "parameter_list",
@@ -1557,7 +1529,7 @@
         "type": "statement",
         "category": "comment",
         "activated_for_languages": ["cs", "go", "js", "php", "ts", "py", "cpp"],
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
+        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp"]
     },
     {
         "expression": "discard",
@@ -1754,7 +1726,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "py"]
+        "languages": ["go"]
     },
     {
         "expression": "assignment_statement",
@@ -2283,13 +2255,6 @@
         "languages": ["java"]
     },
     {
-        "expression": "expression",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["java", "js", "ts", "py"]
-    },
-    {
         "expression": "instanceof_expression",
         "metrics": [],
         "type": "statement",
@@ -2351,13 +2316,6 @@
         "type": "statement",
         "category": "",
         "languages": ["java"]
-    },
-    {
-        "expression": "statement",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["java", "js", "ts"]
     },
     {
         "expression": "assert_statement",
@@ -2592,13 +2550,6 @@
         "languages": ["java"]
     },
     {
-        "expression": "module_directive",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["java"]
-    },
-    {
         "expression": "program",
         "metrics": [],
         "type": "statement",
@@ -2785,7 +2736,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "py", "java"]
+        "languages": ["java"]
     },
     {
         "expression": "array_pattern",
@@ -4423,13 +4374,6 @@
         "languages": ["php"]
     },
     {
-        "expression": "_primary_type",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["ts"]
-    },
-    {
         "expression": "conditional_type",
         "metrics": ["mcc"],
         "type": "statement",
@@ -4736,13 +4680,6 @@
         "type": "statement",
         "category": "",
         "languages": ["ts", "go", "php", "py"]
-    },
-    {
-        "expression": "_compound_statement",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["py"]
     },
     {
         "expression": "class_definition",
@@ -5144,13 +5081,6 @@
         "languages": ["py"]
     },
     {
-        "expression": "_abstract_declarator",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
         "expression": "abstract_array_declarator",
         "metrics": [],
         "type": "statement",
@@ -5180,13 +5110,6 @@
     },
     {
         "expression": "abstract_reference_declarator",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "_declarator",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -5340,13 +5263,6 @@
         "languages": ["cpp"]
     },
     {
-        "expression": "_field_declarator",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
         "expression": "template_method",
         "metrics": [],
         "type": "statement",
@@ -5369,20 +5285,6 @@
     },
     {
         "expression": "for_range_loop",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "_type_declarator",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["cpp"]
-    },
-    {
-        "expression": "_type_specifier",
         "metrics": [],
         "type": "statement",
         "category": "",

@@ -167,7 +167,9 @@ async function updateLanguage(
             toRemove.delete(grammarNodeType.type);
             updateOrAddExpression(languageAbbr, grammarNodeType.type);
         } else {
-            // Do only include the (concrete) subtypes of a node-type
+            // Do only include the (concrete) subtypes of a supertype node (types that have subtypes),
+            // as supertypes represent abstract categories of syntax nodes
+            // (see https://tree-sitter.github.io/tree-sitter/using-parsers).
             for (const subNodeType of grammarNodeType.subtypes) {
                 toRemove.delete(subNodeType.type);
                 updateOrAddExpression(languageAbbr, subNodeType.type);

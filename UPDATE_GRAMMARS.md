@@ -15,7 +15,7 @@ If you want to support a completely new programming language, you have to perfor
 
 -   Add the language, the file extension(s) of the source code files used by that language and an appropriate shortcut for that language to the enum and the maps inside `./src/helper/Languages.ts`.
 -   You also have to add the path to the `node-types.json` of the tree-sitter grammar for that language to `./src/commands/ImportNodeTypes.ts`.
--   After these steps, you can run the import script via `npm run start -- import-grammars` as mentioned above
+-   After these steps, you can run the import script via `npm run start -- import-grammars` as mentioned above.
 -   You can now run metric-gardener on source code of that newly added language.
 
 **Note:**

@@ -75,19 +75,7 @@ Activate dependency analysis by passing `--parseDependencies`
 
 -   Multiple, nested Namespace Declarations within one .cs file are not covered so far and are ignored during the calculation of coupling.
 
-<<<<<<< Updated upstream
-
-### Maintenance of tree-sitter grammars
-
-=======
-
-### For contributors
-
-Check out our contribution guidelines in the file CONTRIBUTING.md.
-
 ### Updating tree-sitter grammars and adding support for more languages
-
-> > > > > > > Stashed changes
 
 Take a look at UPDATE_GRAMMARS.md for further information on what to do if you have updated the tree-sitter grammars installed as dependency of this project. You also find information about adding support for an additional programming language there.
 

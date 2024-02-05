@@ -23,7 +23,6 @@
     },
     "dependencies": {
         "copyfiles": "^2.4.1",
-        "javascript-lp-solver": "^0.4.24",
         "tree-sitter": "^0.20.6",
         "tree-sitter-c-sharp": "^0.20.0",
         "tree-sitter-cpp": "^0.20.3",

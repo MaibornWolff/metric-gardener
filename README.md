@@ -11,8 +11,9 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 ### Main Issues with MetricGardener
 
--   It is not very well tested.
--   The performance is very bad currently.
+1.  It is not very well tested
+2.  Because of 1., there might be some issues for certain languages
+3.  The list of supported languages is still rather limited
 
 ### Usage
 
@@ -78,6 +79,10 @@ Activate dependency analysis by passing `--parseDependencies`
 ### Updating tree-sitter grammars and adding support for more languages
 
 Take a look at UPDATE_GRAMMARS.md for further information on what to do if you have updated the tree-sitter grammars installed as dependency of this project. You also find information about adding support for an additional programming language there.
+
+### For contributors
+
+Check out our contribution guidelines in the file CONTRIBUTING.md.
 
 ### Enable debug prints
 

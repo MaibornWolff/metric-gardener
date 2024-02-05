@@ -2,20 +2,20 @@
     "name": "metric-gardener",
     "version": "0.1.1",
     "description": "A tool to calculate metrics for imperative and object-oriented languages",
-    "main": "dist/app.js",
-    "bin": "dist/app.js",
+    "main": "dist/src/app.js",
+    "bin": "dist/src/app.js",
     "engines": {
         "node": ">=18"
     },
     "scripts": {
-        "start": "tsc && node dist/app.js",
+        "start": "tsc && node dist/src/app.js",
         "test": "tsc && jest --maxWorkers=24",
         "format": "prettier --write \"./**/*\"",
         "format:quick": "pretty-quick --staged",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "npm run lint -- --fix",
         "lint:quick": "npm run precommit",
-        "prepare": "tsc && copyfiles /src/parser/config/nodeTypesConfig.json dist/parser/config/nodeTypesConfig.json && husky install",
+        "prepare": "tsc && copyfiles /src/parser/config/nodeTypesConfig.json dist/src/parser/config/nodeTypesConfig.json && husky install",
         "precommit": "lint-staged"
     },
     "lint-staged": {

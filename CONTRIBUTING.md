@@ -35,6 +35,8 @@ Branch names should follow the following structure: `<type>/<issue-id>/<name>`
 | `revert`    | Revert of some commit                  |
 | `style`     | Code style improvements                |
 | `refactor`  | Major refactorings                     |
+| `test`      | Adding or improving test cases         |
+| `perf`      | Performance optimizations              |
 | `tech`      | Other kinds of technical changes       |
 
 Examples:
@@ -46,13 +48,14 @@ Examples:
 
 Commit messages should follow the [Conventional Commits standard](https://www.conventionalcommits.org/en/v1.0.0/) with the following additional rules:
 
--   The first line MUST end with the id of the corresponding issue on GitHub
--   The type MUST be one of the types in the table "allowed change types" above
+-   The first line MUST end with the id of the corresponding issue on GitHub.
+-   The type MUST be one of the types in the table "allowed change types" above.
+-   Breaking changes MUST be indicated in the type/scope prefix of a commit by adding an exclamation mark `!` before the colon `:`.
 
 This results in the following structure for commit messages:
 
 ```
-<type>[optional scope]: <description> #<issue-id>
+<type>[optional scope][!]: <description> #<issue-id>
 
 [optional body]
 

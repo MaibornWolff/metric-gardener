@@ -15,8 +15,12 @@ describe("Python metrics test", () => {
     });
 
     describe("parses Python comment lines metric", () => {
-        it.skip("should count correctly, excluding inline and block comments", async () => {
-            await testFileMetrics(pythonTestResourcesPath + "loops.py", FileMetric.commentLines, 5);
+        it("should count correctly, excluding inline and block comments", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "block-comment.py",
+                FileMetric.commentLines,
+                7
+            );
         });
     });
 
@@ -45,7 +49,7 @@ describe("Python metrics test", () => {
             );
         });
 
-        it.skip("should count correctly in the presence of block comments", async () => {
+        it("should count correctly in the presence of block comments", async () => {
             await testFileMetrics(
                 pythonTestResourcesPath + "block-comment.py",
                 FileMetric.realLinesOfCode,

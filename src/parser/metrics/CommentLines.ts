@@ -1,9 +1,14 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
+import {
+    ExpressionMetricMapping,
+    QueryStatementInterface,
+    SimpleQueryStatement,
+} from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import Parser, { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
+import { Languages } from "../helper/Languages";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -25,6 +30,16 @@ export class CommentLines implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
+        switch (parseFile.language) {
+            case Languages.Python:
+                this.statementsSuperSet.push(
+                    new SimpleQueryStatement(
+                        "(expression_statement (string)) @python_multiline_comment"
+                    )
+                );
+                break;
+        }
+
         const queryBuilder = new QueryBuilder(parseFile, tree);
         queryBuilder.setStatements(this.statementsSuperSet);
 

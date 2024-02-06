@@ -82,7 +82,7 @@ Take a look at UPDATE_GRAMMARS.md for further information on what to do if you h
 
 ### For contributors
 
-Check out our contribution guidelines in the file CONTRIBUTING.md.
+Check out our contribution guidelines in the file [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Enable debug prints
 

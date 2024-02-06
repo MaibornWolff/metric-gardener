@@ -41,11 +41,11 @@ describe("PHP metrics tests", () => {
             );
         });
 
-        it("should count try-catch-finally properly", async () => {
+        it("should count try-catch-finally properly by only counting the catch-block", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "throw-try-catch-finally.php",
                 FileMetric.complexity,
-                2
+                1
             );
         });
 

@@ -41,11 +41,11 @@ describe("TypeScript metrics tests", () => {
             );
         });
 
-        it("should count try-catch-finally properly", async () => {
+        it("should count try-catch-finally properly by only counting the catch-block", async () => {
             await testFileMetrics(
                 tsTestResourcesPath + "throw-try-catch-finally.ts",
                 FileMetric.complexity,
-                2
+                1
             );
         });
 

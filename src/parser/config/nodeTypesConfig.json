@@ -463,7 +463,7 @@
     },
     {
         "expression": "throw_expression",
-        "metrics": ["complexity"],
+        "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cs", "php"]
@@ -568,7 +568,7 @@
     },
     {
         "expression": "goto_statement",
-        "metrics": ["complexity"],
+        "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cs", "go", "php", "cpp"]
@@ -624,7 +624,7 @@
     },
     {
         "expression": "throw_statement",
-        "metrics": ["complexity"],
+        "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "js", "ts", "cpp"]

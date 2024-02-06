@@ -27,17 +27,19 @@ Branch names should follow the following structure: `<type>/<issue-id>/<name>`
 
 ### Allowed Change Types
 
-| Change Type | Description                            |
-| ----------- | -------------------------------------- |
-| `feat`      | Added new or expanded existing feature |
-| `fix`       | Bugfixes                               |
-| `docs`      | Updated documentation only             |
-| `revert`    | Revert of some commit                  |
-| `style`     | Code style improvements                |
-| `refactor`  | Major refactorings                     |
-| `test`      | Adding or improving test cases         |
-| `perf`      | Performance optimizations              |
-| `tech`      | Other kinds of technical changes       |
+| Change Type | Description                                    |
+| ----------- | ---------------------------------------------- |
+| `feat`      | Adds a new or expands an existing feature      |
+| `fix`       | Fixes a bug                                    |
+| `docs`      | Updates documentation only                     |
+| `style`     | Code style improvements, no logic changes      |
+| `refactor`  | Refactorings (neither "feat" nor "fix")        |
+| `perf`      | Performance optimizations                      |
+| `test`      | Adds or improves test cases                    |
+| `build`     | Build system or external dependency changes    |
+| `ci`        | Changes to the CI configuration or scripts     |
+| `chore`     | Other changes, do not modify src or test files |
+| `revert`    | Reverts a previous commit                      |
 
 Examples:
 

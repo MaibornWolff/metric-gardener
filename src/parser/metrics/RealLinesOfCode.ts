@@ -69,13 +69,15 @@ export class RealLinesOfCode implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        let isCommentFunction: (node: Parser.SyntaxNode) => boolean = (node: Parser.SyntaxNode) =>
-            this.commentStatementsSet.has(node.type);
+        let isCommentFunction: (node: Parser.SyntaxNode) => boolean;
 
         switch (parseFile.language) {
             case Languages.Python:
                 isCommentFunction = (node: Parser.SyntaxNode) => this.isPythonComment(node);
                 break;
+            default:
+                isCommentFunction = (node: Parser.SyntaxNode) =>
+                    this.commentStatementsSet.has(node.type);
         }
 
         let rloc = 0;

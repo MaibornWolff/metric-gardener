@@ -85,7 +85,7 @@
     },
     {
         "expression": "method_declaration",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "go", "java", "php"]
@@ -232,7 +232,7 @@
     },
     {
         "expression": "conditional_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "php", "py", "cpp"]
@@ -330,21 +330,21 @@
     },
     {
         "expression": "is_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
     },
     {
         "expression": "is_pattern_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
     },
     {
         "expression": "lambda_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "cpp"]
@@ -477,7 +477,7 @@
     },
     {
         "expression": "throw_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "php"]
@@ -547,7 +547,7 @@
     },
     {
         "expression": "do_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "js", "php", "ts", "cpp"]
@@ -575,28 +575,28 @@
     },
     {
         "expression": "for_each_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
     },
     {
         "expression": "for_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp"]
     },
     {
         "expression": "goto_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "go", "php", "cpp"]
     },
     {
         "expression": "if_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp"]
@@ -617,7 +617,7 @@
     },
     {
         "expression": "local_function_statement",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
@@ -645,7 +645,7 @@
     },
     {
         "expression": "throw_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "js", "ts", "cpp"]
@@ -673,7 +673,7 @@
     },
     {
         "expression": "while_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp"]
@@ -757,7 +757,7 @@
     },
     {
         "expression": "accessor_declaration",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
@@ -872,7 +872,7 @@
     },
     {
         "expression": "binary_expression_&&",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
         "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
@@ -968,7 +968,7 @@
     },
     {
         "expression": "binary_expression_??",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
         "languages": ["cs", "js", "ts", "php"],
@@ -992,7 +992,7 @@
     },
     {
         "expression": "binary_expression_||",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
         "languages": ["cs", "go", "java", "js", "php", "ts", "cpp"],
@@ -1014,21 +1014,21 @@
     },
     {
         "expression": "case_pattern_switch_label",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
     },
     {
         "expression": "case_switch_label",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
     },
     {
         "expression": "catch_clause",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java", "js", "php", "ts", "cpp"]
@@ -1413,7 +1413,7 @@
     },
     {
         "expression": "switch_expression_arm",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
@@ -1933,7 +1933,7 @@
     },
     {
         "expression": "communication_case",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["go"]
@@ -1961,7 +1961,7 @@
     },
     {
         "expression": "expression_case",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["go"]
@@ -1989,7 +1989,7 @@
     },
     {
         "expression": "function_declaration",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["go", "js", "kt", "ts"]
@@ -2087,7 +2087,7 @@
     },
     {
         "expression": "type_case",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["go"]
@@ -2304,7 +2304,7 @@
     },
     {
         "expression": "ternary_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["java", "js", "ts"]
@@ -2367,7 +2367,7 @@
     },
     {
         "expression": "enhanced_for_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["java"]
@@ -2676,7 +2676,7 @@
     },
     {
         "expression": "switch_label",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["java"]
@@ -2732,7 +2732,7 @@
     },
     {
         "expression": "generator_function_declaration",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
@@ -2816,21 +2816,21 @@
     },
     {
         "expression": "arrow_function",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts", "php"]
     },
     {
         "expression": "function",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
     },
     {
         "expression": "generator_function",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
@@ -2921,7 +2921,7 @@
     },
     {
         "expression": "for_in_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
@@ -3094,7 +3094,7 @@
     },
     {
         "expression": "method_definition",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
@@ -3164,7 +3164,7 @@
     },
     {
         "expression": "switch_case",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
@@ -3290,7 +3290,7 @@
     },
     {
         "expression": "catch_block",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3339,7 +3339,7 @@
     },
     {
         "expression": "conjunction_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3381,21 +3381,21 @@
     },
     {
         "expression": "disjunction_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
     },
     {
         "expression": "do_while_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
     },
     {
         "expression": "elvis_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3465,7 +3465,7 @@
     },
     {
         "expression": "if_expression",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3822,7 +3822,7 @@
     },
     {
         "expression": "when_entry",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3955,7 +3955,7 @@
     },
     {
         "expression": "anonymous_function_creation_expression",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["php"]
@@ -4046,21 +4046,21 @@
     },
     {
         "expression": "foreach_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["php"]
     },
     {
         "expression": "function_definition",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["php", "py", "cpp"]
     },
     {
         "expression": "function_static_declaration",
-        "metrics": ["mcc", "functions"],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["php"]
@@ -4168,7 +4168,7 @@
     },
     {
         "expression": "binary_expression_and",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
         "languages": ["php", "cpp"],
@@ -4176,7 +4176,7 @@
     },
     {
         "expression": "binary_expression_or",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
         "languages": ["php", "cpp"],
@@ -4184,7 +4184,7 @@
     },
     {
         "expression": "binary_expression_xor",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
         "languages": ["php", "cpp"],
@@ -4192,7 +4192,7 @@
     },
     {
         "expression": "case_statement",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["php", "cpp"]
@@ -4241,7 +4241,7 @@
     },
     {
         "expression": "else_if_clause",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["php"]
@@ -4430,7 +4430,7 @@
     },
     {
         "expression": "conditional_type",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["ts"]
@@ -4815,7 +4815,7 @@
     },
     {
         "expression": "boolean_operator",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["py"]
@@ -5018,7 +5018,7 @@
     },
     {
         "expression": "elif_clause",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["py"]
@@ -5032,7 +5032,7 @@
     },
     {
         "expression": "for_in_clause",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["py"]
@@ -5053,7 +5053,7 @@
     },
     {
         "expression": "if_clause",
-        "metrics": ["mcc"],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["py"]

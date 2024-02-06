@@ -183,27 +183,27 @@ describe("Java metrics tests.", () => {
         });
     });
 
-    describe("parses McCabeComplexity metric", () => {
+    describe("parses Complexity metric", () => {
         it("should count one method declaration and its contained if-statements and logical operations correctly", async () => {
             await testFileMetrics(
-                javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/IfStatements.java",
-                FileMetric.mcCabeComplexity,
+                javaTestResourcesPath + "/" + FileMetric.complexity + "/IfStatements.java",
+                FileMetric.complexity,
                 8
             );
         });
 
         it("should count one method declaration, the number of for- and while-statements and the containing logical operators correctly", async () => {
             await testFileMetrics(
-                javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/WhileAndForLoop.java",
-                FileMetric.mcCabeComplexity,
+                javaTestResourcesPath + "/" + FileMetric.complexity + "/WhileAndForLoop.java",
+                FileMetric.complexity,
                 10
             );
         });
 
         it.skip("should count one method declaration, the number of switch-case-statements and the contained logical operators correctly", async () => {
             await testFileMetrics(
-                javaTestResourcesPath + "/" + FileMetric.mcCabeComplexity + "/SwitchStatement.java",
-                FileMetric.mcCabeComplexity,
+                javaTestResourcesPath + "/" + FileMetric.complexity + "/SwitchStatement.java",
+                FileMetric.complexity,
                 13
             );
         });

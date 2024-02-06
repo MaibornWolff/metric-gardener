@@ -1,4 +1,4 @@
-import { McCabeComplexity } from "./metrics/McCabeComplexity";
+import { Complexity } from "./metrics/Complexity";
 import { Functions } from "./metrics/Functions";
 import { Classes } from "./metrics/Classes";
 import { LinesOfCode } from "./metrics/LinesOfCode";
@@ -34,7 +34,7 @@ export class MetricCalculator {
             nodeTypesConfig as ExpressionMetricMapping[];
 
         this.fileMetrics = [
-            new McCabeComplexity(allNodeTypes),
+            new Complexity(allNodeTypes),
             new Functions(allNodeTypes),
             new Classes(allNodeTypes),
             new LinesOfCode(),

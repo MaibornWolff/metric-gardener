@@ -4,11 +4,11 @@ import { FileMetric } from "../../src/parser/metrics/Metric";
 describe("PHP metrics tests", () => {
     const phpTestResourcesPath = "./resources/php/";
 
-    describe("parses PHP McCabeComplexity metric", () => {
+    describe("parses PHP Complexity metric", () => {
         it("should count branching statements correctly", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "if-statements.php",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 8
             );
         });
@@ -16,7 +16,7 @@ describe("PHP metrics tests", () => {
         it("should count functions and methods correctly", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "functions-and-methods.php",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 7
             );
         });
@@ -24,41 +24,33 @@ describe("PHP metrics tests", () => {
         it("should not count multiple return statements within functions and methods like sonar", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "multiple-return-statements.php",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(
-                phpTestResourcesPath + "classes.php",
-                FileMetric.mcCabeComplexity,
-                0
-            );
+            await testFileMetrics(phpTestResourcesPath + "classes.php", FileMetric.complexity, 0);
         });
 
         it("should count case statements correctly", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "case-statements.php",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
 
-        it("should count try-catch-finally properly", async () => {
+        it("should count try-catch-finally properly by only counting the catch-block", async () => {
             await testFileMetrics(
                 phpTestResourcesPath + "throw-try-catch-finally.php",
-                FileMetric.mcCabeComplexity,
-                2
+                FileMetric.complexity,
+                1
             );
         });
 
         it("should count loops properly", async () => {
-            await testFileMetrics(
-                phpTestResourcesPath + "loops.php",
-                FileMetric.mcCabeComplexity,
-                4
-            );
+            await testFileMetrics(phpTestResourcesPath + "loops.php", FileMetric.complexity, 4);
         });
     });
 

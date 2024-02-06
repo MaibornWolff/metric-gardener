@@ -14,7 +14,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
-export class McCabeComplexity implements Metric {
+export class Complexity implements Metric {
     private mccStatementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
@@ -66,6 +66,6 @@ export class McCabeComplexity implements Metric {
     }
 
     getName(): string {
-        return FileMetric.mcCabeComplexity;
+        return FileMetric.complexity;
     }
 }

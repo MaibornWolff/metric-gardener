@@ -71,13 +71,11 @@ export class RealLinesOfCode implements Metric {
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         let isCommentFunction: (node: Parser.SyntaxNode) => boolean;
 
-        switch (parseFile.language) {
-            case Languages.Python:
-                isCommentFunction = (node: Parser.SyntaxNode) => this.isPythonComment(node);
-                break;
-            default:
-                isCommentFunction = (node: Parser.SyntaxNode) =>
-                    this.commentStatementsSet.has(node.type);
+        if (parseFile.language == Languages.Python) {
+            // Special treatment for python multiline comments:
+            isCommentFunction = (node: Parser.SyntaxNode) => this.isPythonComment(node);
+        } else {
+            isCommentFunction = (node: Parser.SyntaxNode) => this.isComment(node);
         }
 
         let rloc = 0;
@@ -99,14 +97,21 @@ export class RealLinesOfCode implements Metric {
         };
     }
 
+    isComment(node: Parser.SyntaxNode) {
+        return this.commentStatementsSet.has(node.type);
+    }
+
     /**
-     * Checks whether the node should count as a comment in python. Special handling for python multiline comments.
-     * @param node The node to check.
-     * @return Whether the node is a comment.
+     * Checks whether the node should count as a comment in python.
+     *
+     * Adds special handling for python multiline comments:
+     * Multiline comments in python are (multiline) strings that are
+     * neither assigned to a variable nor used as call parameter.
      */
     isPythonComment(node: Parser.SyntaxNode) {
         return (
-            this.commentStatementsSet.has(node.type) ||
+            this.isComment(node) ||
+            // Special handling for multiline comments:
             (node.type === "expression_statement" &&
                 node.childCount === 1 &&
                 node.child(0)?.type === "string")

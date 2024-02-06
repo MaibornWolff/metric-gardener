@@ -13,43 +13,35 @@ describe("C# metric tests", () => {
         }, 10000);
     });
 
-    describe("parses C# McCabeComplexity metric", () => {
+    describe("parses C# complexity metric", () => {
         it("should count loops properly", async () => {
-            await testFileMetrics(
-                csharpTestResourcesPath + "loops.cs",
-                FileMetric.mcCabeComplexity,
-                4
-            );
+            await testFileMetrics(csharpTestResourcesPath + "loops.cs", FileMetric.complexity, 4);
         });
 
         it("should count if statements correctly", async () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "if-statements.cs",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 11
             );
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(
-                csharpTestResourcesPath + "classes.cs",
-                FileMetric.mcCabeComplexity,
-                1
-            );
+            await testFileMetrics(csharpTestResourcesPath + "classes.cs", FileMetric.complexity, 1);
         });
 
         it("should count case but no default statements correctly", async () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "case-statements.cs",
-                FileMetric.mcCabeComplexity,
-                5
+                FileMetric.complexity,
+                4
             );
         });
 
         it("should count functions and methods correctly", async () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "functions-and-methods.cs",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 8
             );
         });
@@ -57,16 +49,16 @@ describe("C# metric tests", () => {
         it("should not count multiple return statements within functions and methods correctly", async () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "multiple-return-statements.cs",
-                FileMetric.mcCabeComplexity,
+                FileMetric.complexity,
                 3
             );
         });
 
-        it("should count try-catch-finally properly", async () => {
+        it("should count try-catch-finally properly by only counting the catch-block", async () => {
             await testFileMetrics(
                 csharpTestResourcesPath + "throw-try-catch-finally.cs",
-                FileMetric.mcCabeComplexity,
-                2
+                FileMetric.complexity,
+                1
             );
         });
     });

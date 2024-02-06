@@ -106,7 +106,7 @@ export class RealLinesOfCode implements Metric {
 
     isPythonMultilineComment(node: Parser.SyntaxNode) {
         // Multiline comments in python are (multiline) strings that are
-        // neither assigned to a variable nor used as call parameter.
+        // neither assigned to a variable nor used as a call parameter.
         return (
             node.type === "expression_statement" &&
             node.childCount === 1 &&

@@ -92,7 +92,7 @@ Activate dependency analysis by passing `--parseDependencies`
 
 ### Updating tree-sitter grammars and adding support for more languages
 
-Take a look at UPDATE_GRAMMARS.md for further information on what to do if you have updated the tree-sitter grammars installed as dependency of this project. You also find information about adding support for an additional programming language there.
+Take a look at [UPDATE_GRAMMARS.md](UPDATE_GRAMMARS.md) for further information on what to do if you have updated the tree-sitter grammars installed as dependency of this project. You also find information about adding support for an additional programming language there.
 
 ### For contributors
 

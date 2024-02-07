@@ -45,11 +45,11 @@ This is quite slow and can take up to one or two hours but can provide good resu
     -   PHP
     -   TypeScript
     -   Java
+    -   C#
+    -   C++
 
 -   Unstable (missing or incomplete unit tests)
-    -   C#
     -   Python
-    -   C++
     -   JavaScript
     -   Kotlin
 

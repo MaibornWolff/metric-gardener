@@ -28,8 +28,8 @@ if (myBool is true or false) {
     Console.Write("hello");
 }
 
-myBool = (x is 1);
-myBool = (x is 1 and 5);
+myBool = (x is 1); // this should not increase complexity
+myBool = (x is 1 and 5); // this should
 
 int? x = (x > 100) ? 12 : null;
 

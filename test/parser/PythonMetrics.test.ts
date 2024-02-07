@@ -5,17 +5,85 @@ describe("Python metrics test", () => {
     const pythonTestResourcesPath = "./resources/python/";
 
     describe("parses Python Complexity metric", () => {
+        it("should count loops properly", async () => {
+            await testFileMetrics(pythonTestResourcesPath + "loops.py", FileMetric.complexity, 4);
+        });
+
         it("should count if statements correctly", async () => {
-            await testFileMetrics(pythonTestResourcesPath + "if.py", FileMetric.complexity, 4);
+            await testFileMetrics(
+                pythonTestResourcesPath + "if-statements.py",
+                FileMetric.complexity,
+                6
+            );
+        });
+
+        it("should not count any class declaration", async () => {
+            await testFileMetrics(pythonTestResourcesPath + "classes.py", FileMetric.complexity, 1);
+        });
+
+        it.skip("should count case but no default statements correctly", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "case-statements.py",
+                FileMetric.complexity,
+                3
+            );
+        });
+
+        it("should count functions and methods correctly", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "functions-and-methods.py",
+                FileMetric.complexity,
+                6
+            );
+        });
+
+        it("should not count multiple return statements within functions and methods correctly", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "multiple-return-statements.py",
+                FileMetric.complexity,
+                3
+            );
+        });
+
+        it("should count try-catch-finally properly by only counting the catch-block", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "throw-try-catch-finally.py",
+                FileMetric.complexity,
+                1
+            );
+        });
+    });
+
+    describe("parses Python classes metric", () => {
+        it("should count class declarations", async () => {
+            await testFileMetrics(pythonTestResourcesPath + "classes.py", FileMetric.classes, 4);
+        });
+    });
+
+    describe("parses Python functions metric", () => {
+        it("should count functions and methods properly", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "functions-and-methods.py",
+                FileMetric.functions,
+                6
+            );
         });
     });
 
     describe("parses Python comment lines metric", () => {
-        it("should count correctly, excluding inline and block comments", async () => {
+        it("should count correctly, including inline and block comments", async () => {
             await testFileMetrics(
                 pythonTestResourcesPath + "block-comment.py",
                 FileMetric.commentLines,
                 7
+            );
+        });
+
+        it("should count properly, also counting file header, class description and doc block tag comment lines", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "comments.py",
+                FileMetric.commentLines,
+                11
             );
         });
     });
@@ -41,7 +109,7 @@ describe("Python metrics test", () => {
             await testFileMetrics(
                 pythonTestResourcesPath + "loops.py",
                 FileMetric.realLinesOfCode,
-                4
+                8
             );
         });
 

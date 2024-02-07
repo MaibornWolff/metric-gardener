@@ -181,6 +181,13 @@ describe("Java metrics tests.", () => {
                 3
             );
         });
+        it("should count all function declarations and lambda functions", async () => {
+            await testFileMetrics(
+                javaTestResourcesPath + "/" + FileMetric.functions + "/LambdaExpression.java",
+                FileMetric.functions,
+                5
+            );
+        });
     });
 
     describe("parses Complexity metric", () => {

@@ -5,6 +5,8 @@
 #include <string>
 #include <memory>
 
+#include "library/client.h"
+
 /**
  * @brief Some abstract superclass.
  */
@@ -26,7 +28,7 @@ class Super_Class
     Super_Class(std::shared_ptr<library::client> client);
 
     // Abstract function
-    virtual void send_message(const size_t number, const int retry) = 0;
+    virtual void send_message(const size_t number, const int retry) const = 0;
     
 };
 
@@ -53,15 +55,15 @@ class Concrete_Class final : public Super_Class
     Concrete_Class(std::shared_ptr<library::client> client);
 
 
-    void send_message(const size_t number, const int retry) override;
+    virtual void send_message(const size_t number, const int retry) const override;
 
-    std::chrono::steady_clock::duration Concrete_Class::send_timed_message(const size_t number, const int retry);
+    std::chrono::steady_clock::duration send_timed_message(const size_t number, const int retry);
 
     void set_address(std::string address);
     void set_port(int port);
 
-    void get_address(std::string address);
-    void get_port(int port);
+    std::string get_address();
+    int get_port();
 
 };
 

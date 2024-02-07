@@ -59,7 +59,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 Counts expressions that branch the control flow (if-statements, loops, catch-blocks, etc. - but no else/default/finally statements) and other expressions that are considered to increase the complexity of the code inside a file:
 
 -   function declarations (including lambda expressions)
--   logical operations (like AND and OR)
+-   binary logical operations (like AND and OR)
 
 **functions**<br>
 The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, etc.

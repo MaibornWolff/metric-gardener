@@ -1,7 +1,6 @@
 #include "cpp_example_header.hpp"
 
-#include <library/client.h>
-#include "help_templates.h"
+#include "library/client.h"
 
 /*
  * Implementation of a abstract superclass.
@@ -56,12 +55,12 @@ void Concrete_Class::set_port(int port)
     this->port = port;
 }
 
-void Concrete_Class::get_address(std::string address)
+std::string Concrete_Class::get_address()
 {
     return this->address;
 }
 
-void Concrete_Class::get_port(int port)
+int Concrete_Class::get_port()
 {
     return this->port;
 }

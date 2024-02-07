@@ -22,5 +22,8 @@ public class IfStatementsExample {
         } else {
             System.out.println(value + " is equal to 0");
         }
+        for (;;) {
+            // Code for an infinite loop
+        }
     }
 }

@@ -5284,7 +5284,7 @@
     },
     {
         "expression": "for_range_loop",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]

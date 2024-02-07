@@ -70,7 +70,7 @@ describe("TypeScript metrics tests", () => {
         });
     });
 
-    describe("parses TypeScript commentLines metric", () => {
+    describe("parses TypeScript comment lines metric", () => {
         it("should count properly, also counting file header, class description and doc block tag comment lines", async () => {
             await testFileMetrics(tsTestResourcesPath + "comments.ts", FileMetric.commentLines, 14);
         });

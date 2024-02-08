@@ -3,7 +3,7 @@
 
 validate_branch_name() {
   local branch=$(git rev-parse --abbrev-ref HEAD)
-  local regex="^main|(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)\/[0-9]+\/[a-z0-9-]+$"
+  local regex="^(main|(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)\/[0-9]+\/[a-z0-9-]+)$"
   if ! [[ $branch =~ $regex ]]; then
     echo "Your push was rejected due to a violation of our naming conventions for branches"
     echo "Examples: feat/1234/add-my-feature, see CONTRIBUTING.md for details"

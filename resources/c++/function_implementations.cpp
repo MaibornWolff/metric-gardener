@@ -15,6 +15,14 @@ void example_class::member_function (int c, char* chars, std::string &str) {
 
 int example_class::member_function (int d, std::unique_ptr<std::string> str_ptr)
 {
-    str_ptr->append("number: " + std::to_string(d));
+    auto lambda = [=](int d) {
+        return std::to_string(d);
+    };
+
+    auto lambdaTwo = [=](std::string s) {
+            return std::stoi(s);
+    };
+
+    str_ptr->append("number: " + lambda(d));
     return str_ptr->size();
 }

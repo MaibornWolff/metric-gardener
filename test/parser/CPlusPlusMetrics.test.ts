@@ -53,7 +53,7 @@ describe("C++ metrics tests", () => {
             await testFileMetric(
                 cppTestResourcesPath + "function_implementations.cpp",
                 FileMetric.complexity,
-                4
+                6
             );
         });
     });
@@ -89,11 +89,11 @@ describe("C++ metrics tests", () => {
     });
 
     describe("parses C++ functions metric", () => {
-        it("should count function implementations", async () => {
+        it("should count function implementations, including lambda functions", async () => {
             await testFileMetric(
                 cppTestResourcesPath + "function_implementations.cpp",
                 FileMetric.functions,
-                4
+                6
             );
         });
 

@@ -1,4 +1,4 @@
-import { testFileMetrics } from "./TestHelper";
+import { testFileMetric } from "./TestHelper";
 import { FileMetric } from "../../src/parser/metrics/Metric";
 
 describe("Go metric tests", () => {
@@ -6,7 +6,7 @@ describe("Go metric tests", () => {
 
     describe("parses Go Complexity metric", () => {
         it("should count if statements correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "if-statements.go",
                 FileMetric.complexity,
                 7
@@ -14,7 +14,7 @@ describe("Go metric tests", () => {
         });
 
         it("should count functions and methods correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "functions-and-methods.go",
                 FileMetric.complexity,
                 2
@@ -22,7 +22,7 @@ describe("Go metric tests", () => {
         });
 
         it("should not count multiple return statements within functions and methods correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "multiple-return-statements.go",
                 FileMetric.complexity,
                 3
@@ -30,11 +30,11 @@ describe("Go metric tests", () => {
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(goTestResourcesPath + "classes.go", FileMetric.complexity, 0);
+            await testFileMetric(goTestResourcesPath + "classes.go", FileMetric.complexity, 0);
         });
 
         it("should count case statements correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "case-statements.go",
                 FileMetric.complexity,
                 3
@@ -42,7 +42,7 @@ describe("Go metric tests", () => {
         });
 
         it("should count try-catch-finally properly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "throw-try-catch-finally.go",
                 FileMetric.complexity,
                 0
@@ -50,13 +50,13 @@ describe("Go metric tests", () => {
         });
 
         it("should count loops properly", async () => {
-            await testFileMetrics(goTestResourcesPath + "loops.go", FileMetric.complexity, 4);
+            await testFileMetric(goTestResourcesPath + "loops.go", FileMetric.complexity, 4);
         });
     });
 
     describe("parses Go functions metric", () => {
         it("should count functions and methods properly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "functions-and-methods.go",
                 FileMetric.functions,
                 2
@@ -69,7 +69,7 @@ describe("Go metric tests", () => {
             "should count number of comment lines correctly, including line with curly brackets, inline comments" +
                 " and lines of the block comment",
             async () => {
-                await testFileMetrics(
+                await testFileMetric(
                     goTestResourcesPath + "if-statements.go",
                     FileMetric.commentLines,
                     6
@@ -78,7 +78,7 @@ describe("Go metric tests", () => {
         );
 
         it("should count number of comment lines correctly, including multiple successive comments", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "go-example-code.go",
                 FileMetric.commentLines,
                 9
@@ -88,7 +88,7 @@ describe("Go metric tests", () => {
 
     describe("parses Go lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file with empty last line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "empty-last-line.go",
                 FileMetric.linesOfCode,
                 54
@@ -96,7 +96,7 @@ describe("Go metric tests", () => {
         });
 
         it("should count number of lines correctly for a non-empty file with non-empty last line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "go-example-code.go",
                 FileMetric.linesOfCode,
                 53
@@ -104,21 +104,21 @@ describe("Go metric tests", () => {
         });
 
         it("should count number of lines correctly for an empty file", async () => {
-            await testFileMetrics(goTestResourcesPath + "empty.go", FileMetric.linesOfCode, 1);
+            await testFileMetric(goTestResourcesPath + "empty.go", FileMetric.linesOfCode, 1);
         });
 
         it("should count number of lines correctly for an file with one non-empty line", async () => {
-            await testFileMetrics(goTestResourcesPath + "one-line.go", FileMetric.linesOfCode, 1);
+            await testFileMetric(goTestResourcesPath + "one-line.go", FileMetric.linesOfCode, 1);
         });
 
         it("should count number of lines correctly for an file with just a line break", async () => {
-            await testFileMetrics(goTestResourcesPath + "line-break.go", FileMetric.linesOfCode, 2);
+            await testFileMetric(goTestResourcesPath + "line-break.go", FileMetric.linesOfCode, 2);
         });
     });
 
     describe("parses Go real lines of code metric", () => {
         it("should count correctly for a non-empty file, ignoring comments,  inline comments and empty lines", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "go-example-code.go",
                 FileMetric.realLinesOfCode,
                 32
@@ -126,11 +126,11 @@ describe("Go metric tests", () => {
         });
 
         it("should count correctly for an empty file", async () => {
-            await testFileMetrics(goTestResourcesPath + "empty.go", FileMetric.realLinesOfCode, 0);
+            await testFileMetric(goTestResourcesPath + "empty.go", FileMetric.realLinesOfCode, 0);
         });
 
         it("should count correctly if there is a comment that includes code", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 goTestResourcesPath + "if-statements.go",
                 FileMetric.realLinesOfCode,
                 19

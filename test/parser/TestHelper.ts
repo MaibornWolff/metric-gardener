@@ -1,7 +1,7 @@
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
 import { Configuration } from "../../src/parser/Configuration";
-import { CouplingResult, FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
+import { CouplingResult, FileMetric } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
 
 /**
@@ -72,24 +72,6 @@ export async function getFileMetrics(inputPath: string) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath));
     return await parser.calculateMetrics();
-}
-
-/**
- * Tests if a specific metric for a specific source file has been calculated correctly.
- * @param results The actual results of the metric calculation.
- * Assumes that this map uses the absolute paths to the source files.
- * @param inputPath Relative or absolute path to test source file.
- * @param metric Name of the metric.
- * @param expected Expected metric value.
- * */
-export function expectFileMetric(
-    results: Map<string, Map<string, MetricResult>>,
-    inputPath: string,
-    metric: FileMetric,
-    expected: number
-) {
-    const realInputPath = fs.realpathSync(inputPath);
-    expect(results.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
 }
 
 /**

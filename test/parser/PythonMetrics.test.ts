@@ -88,6 +88,36 @@ describe("Python metrics test", () => {
         });
     });
 
+    describe("parses Python lines of code metric", () => {
+        it("should count number of lines correctly for a non-empty file with non-empty last line", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "classes.py",
+                FileMetric.linesOfCode,
+                19
+            );
+        });
+
+        it("should count number of lines correctly for an empty file", async () => {
+            await testFileMetrics(pythonTestResourcesPath + "empty.py", FileMetric.linesOfCode, 1);
+        });
+
+        it("should count number of lines correctly for an file with one non-empty line", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "one-line.py",
+                FileMetric.linesOfCode,
+                1
+            );
+        });
+
+        it("should count number of lines correctly for an file with just a line break", async () => {
+            await testFileMetrics(
+                pythonTestResourcesPath + "line-break.py",
+                FileMetric.linesOfCode,
+                2
+            );
+        });
+    });
+
     describe("parses Python real lines of code metric", () => {
         it("should count correctly for a non-empty file with pythons non-C-syntax code blocks", async () => {
             await testFileMetrics(

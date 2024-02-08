@@ -33,6 +33,10 @@ describe("C++ metrics tests", () => {
             await testFileMetric(cppTestResourcesPath + "branches.cpp", FileMetric.complexity, 12);
         });
 
+        it("should count catch-statements and no return statements", async () => {
+            await testFileMetric(cppTestResourcesPath + "try_catch.cxx", FileMetric.complexity, 8);
+        });
+
         it("should not count class declarations", async () => {
             await testFileMetric(cppTestResourcesPath + "classes.hpp", FileMetric.complexity, 0);
         });

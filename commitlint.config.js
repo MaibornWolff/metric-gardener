@@ -5,22 +5,23 @@ module.exports = {
         "body-max-line-length": [2, "always", 72],
         "header-max-length": [2, "always", 72],
         "footer-max-length": [2, "always", 52],
-        "type-enum": [
-            2,
-            "always",
-            [
-                "chore",
-                "ci",
-                "docs",
-                "feat",
-                "fix",
-                "perf",
-                "refactor",
-                "security",
-                "style",
-                "test",
-                "release",
-            ],
-        ],
+        "type-enum": [2, "always", getTypes()],
     },
 };
+function getTypes() {
+    const baseTypes = [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert",
+    ];
+    baseTypes.push(...baseTypes.map((type) => `${type}!`));
+    return baseTypes.map((type) => `${type}!`);
+}

@@ -17,10 +17,16 @@
         "lint:fix": "npm run lint -- --fix",
         "lint:quick": "npm run precommit",
         "prepare": "tsc && copyfiles /src/parser/config/nodeTypesConfig.json dist/src/parser/config/nodeTypesConfig.json && husky install",
-        "precommit": "lint-staged"
+        "precommit": "lint-staged",
+        "commitmsg": "commitlint -E HUSKY_GIT_PARAMS"
     },
     "lint-staged": {
         "src/**/*.ts": "eslint --fix"
+    },
+    "husky": {
+        "hooks": {
+            "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+        }
     },
     "dependencies": {
         "copyfiles": "^2.4.1",

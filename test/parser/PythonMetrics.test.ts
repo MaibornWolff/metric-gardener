@@ -49,7 +49,7 @@ describe("Python metrics test", () => {
             await testFileMetrics(
                 pythonTestResourcesPath + "throw-try-catch-finally.py",
                 FileMetric.complexity,
-                1
+                2
             );
         });
     });

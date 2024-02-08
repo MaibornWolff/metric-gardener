@@ -6,7 +6,9 @@ module.exports = {
         "header-max-length": [2, "always", 72],
         "footer-max-length": [2, "always", 52],
         "type-enum": [2, "always", getTypes()],
+        "issue-id-required": [2, "always"],
     },
+    plugins: ["issue-id-required"],
 };
 function getTypes() {
     const baseTypes = [

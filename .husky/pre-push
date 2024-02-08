@@ -1,0 +1,14 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+validate_branch_name() {
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  local regex="^main|((feat|fix|refactor|perf|tech|docs|renovate|ci|security|style|test|chore)\/([0-9]+)|(feat|fix|refactor|perf|tech|docs|renovate|ci|security|style|test|chore)\/([0-9]+\/)?([a-z0-9-]+)|(release|hotfix)\/([0-9.]+))$"
+  if ! [[ $branch =~ $regex ]]; then
+    echo "Your commit was rejected due to branching name"
+    echo "Examples: feat/1234/add-my-feature, feat/1234, feat/add-my-feature"
+    exit 1
+  fi
+}
+
+validate_branch_name

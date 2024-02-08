@@ -30,9 +30,10 @@ export class CommentLines implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
+        const additionalStatements: QueryStatementInterface[] = [];
         switch (parseFile.language) {
             case Languages.Python:
-                this.statementsSuperSet.push(
+                additionalStatements.push(
                     new SimpleQueryStatement(
                         "(expression_statement (string)) @python_multiline_comment"
                     )
@@ -41,7 +42,13 @@ export class CommentLines implements Metric {
         }
 
         const queryBuilder = new QueryBuilder(parseFile, tree);
-        queryBuilder.setStatements(this.statementsSuperSet);
+
+        if (additionalStatements.length === 0) {
+            queryBuilder.setStatements(this.statementsSuperSet);
+        } else {
+            // Important to use concat() here, because we do not want to change this.statementSuperSet:
+            queryBuilder.setStatements(this.statementsSuperSet.concat(additionalStatements));
+        }
 
         const query = queryBuilder.build();
         let matches: QueryMatch[] = [];

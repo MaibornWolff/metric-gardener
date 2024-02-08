@@ -1,4 +1,4 @@
-import { getCouplingMetrics, testFileMetrics } from "./TestHelper";
+import { getCouplingMetrics, testFileMetric } from "./TestHelper";
 import { FileMetric } from "../../src/parser/metrics/Metric";
 
 describe("C# metric tests", () => {
@@ -15,11 +15,11 @@ describe("C# metric tests", () => {
 
     describe("parses C# complexity metric", () => {
         it("should count loops properly", async () => {
-            await testFileMetrics(csharpTestResourcesPath + "loops.cs", FileMetric.complexity, 4);
+            await testFileMetric(csharpTestResourcesPath + "loops.cs", FileMetric.complexity, 4);
         });
 
         it("should count if statements correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "if-statements.cs",
                 FileMetric.complexity,
                 11
@@ -27,11 +27,11 @@ describe("C# metric tests", () => {
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(csharpTestResourcesPath + "classes.cs", FileMetric.complexity, 1);
+            await testFileMetric(csharpTestResourcesPath + "classes.cs", FileMetric.complexity, 1);
         });
 
         it("should count case but no default statements correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "case-statements.cs",
                 FileMetric.complexity,
                 4
@@ -39,7 +39,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count functions and methods correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "functions-and-methods.cs",
                 FileMetric.complexity,
                 8
@@ -47,7 +47,7 @@ describe("C# metric tests", () => {
         });
 
         it("should not count multiple return statements within functions and methods correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "multiple-return-statements.cs",
                 FileMetric.complexity,
                 3
@@ -55,7 +55,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count try-catch-finally properly by only counting the catch-block", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "throw-try-catch-finally.cs",
                 FileMetric.complexity,
                 1
@@ -65,13 +65,13 @@ describe("C# metric tests", () => {
 
     describe("parses C# classes metric", () => {
         it("should count class declarations", async () => {
-            await testFileMetrics(csharpTestResourcesPath + "classes.cs", FileMetric.classes, 6);
+            await testFileMetric(csharpTestResourcesPath + "classes.cs", FileMetric.classes, 6);
         });
     });
 
     describe("parses C# functions metric", () => {
         it("should count functions and methods properly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "functions-and-methods.cs",
                 FileMetric.functions,
                 8
@@ -81,7 +81,7 @@ describe("C# metric tests", () => {
 
     describe("parses C# commentLines metric", () => {
         it("should count properly, also counting file header, class description and doc block tag comment lines", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "comments.cs",
                 FileMetric.commentLines,
                 14
@@ -89,7 +89,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count properly, also in the presence of multiple block comments in the same line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "same-line-comment.cs",
                 FileMetric.commentLines,
                 4
@@ -99,7 +99,7 @@ describe("C# metric tests", () => {
 
     describe("parses C# lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file with empty last line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "c-sharp-example-code.cs",
                 FileMetric.linesOfCode,
                 28
@@ -107,7 +107,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count number of lines correctly for a non-empty file with non-empty last line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "non-empty-last-line.cs",
                 FileMetric.linesOfCode,
                 27
@@ -115,11 +115,11 @@ describe("C# metric tests", () => {
         });
 
         it("should count number of lines correctly for an empty file", async () => {
-            await testFileMetrics(csharpTestResourcesPath + "empty.cs", FileMetric.linesOfCode, 1);
+            await testFileMetric(csharpTestResourcesPath + "empty.cs", FileMetric.linesOfCode, 1);
         });
 
         it("should count number of lines correctly for an file with one non-empty line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "one-line.cs",
                 FileMetric.linesOfCode,
                 1
@@ -127,7 +127,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count number of lines correctly for an file with just a line break", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "line-break.cs",
                 FileMetric.linesOfCode,
                 2
@@ -137,7 +137,7 @@ describe("C# metric tests", () => {
 
     describe("parses C# real lines of code metric", () => {
         it("should count correctly for a non-empty file, ignoring comments and empty lines", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "real-lines-of-code.cs",
                 FileMetric.realLinesOfCode,
                 8
@@ -145,7 +145,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count correctly for an empty file", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "empty.cs",
                 FileMetric.realLinesOfCode,
                 0
@@ -153,7 +153,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count correctly for a file with a single comment", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "single-comment.cs",
                 FileMetric.realLinesOfCode,
                 0
@@ -161,7 +161,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count correctly if there is a comment in the same line as actual code", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "same-line-comment.cs",
                 FileMetric.realLinesOfCode,
                 3
@@ -169,7 +169,7 @@ describe("C# metric tests", () => {
         });
 
         it("should count weirdly formatted lines of code correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 csharpTestResourcesPath + "weird-lines.cs",
                 FileMetric.realLinesOfCode,
                 32

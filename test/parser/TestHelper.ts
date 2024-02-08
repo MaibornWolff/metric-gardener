@@ -56,7 +56,7 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
  * @param metric Name of the metric.
  * @param expected Expected test result.
  * */
-export async function testFileMetrics(inputPath: string, metric: FileMetric, expected: number) {
+export async function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath));
     const results = await parser.calculateMetrics();

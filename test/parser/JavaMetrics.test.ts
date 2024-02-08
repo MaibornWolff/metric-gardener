@@ -228,11 +228,11 @@ describe("Java metrics tests.", () => {
                 2
             );
         });
-        it.skip("should count all method declarations (incl. lambda expressions) and for-loops.", async () => {
+        it("should count all method declarations (incl. lambda expressions) and for-loops, but not method references.", async () => {
             await testFileMetrics(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/DifferentFunctions.java",
                 FileMetric.complexity,
-                10
+                5
             );
         });
         it("should count logical operators and function declarations.", async () => {

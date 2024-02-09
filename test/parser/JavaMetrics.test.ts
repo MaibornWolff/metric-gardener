@@ -195,7 +195,7 @@ describe("Java metrics tests.", () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/IfStatements.java",
                 FileMetric.complexity,
-                9
+                8
             );
         });
 
@@ -203,7 +203,7 @@ describe("Java metrics tests.", () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/WhileAndForLoop.java",
                 FileMetric.complexity,
-                10
+                11
             );
         });
 

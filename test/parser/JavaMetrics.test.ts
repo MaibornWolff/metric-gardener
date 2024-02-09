@@ -50,6 +50,13 @@ describe("Java metrics tests.", () => {
                 0
             );
         });
+        it("should count all records.cs as classes", async () => {
+            await testFileMetric(
+                javaTestResourcesPath + "/" + FileMetric.classes + "/Records.java",
+                FileMetric.classes,
+                3
+            );
+        });
     });
 
     describe("parses lines of code metric", () => {
@@ -181,11 +188,20 @@ describe("Java metrics tests.", () => {
                 3
             );
         });
+
         it("should count all function declarations and lambda expression", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/LambdaExpression.java",
                 FileMetric.functions,
                 6
+            );
+        });
+
+        it("should count all record-constructors", async () => {
+            await testFileMetric(
+                javaTestResourcesPath + "/" + FileMetric.functions + "/RecordMethods.java",
+                FileMetric.functions,
+                3
             );
         });
     });

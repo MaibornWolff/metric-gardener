@@ -182,7 +182,7 @@ describe("Java metrics tests.", () => {
             );
         });
         it("should count all function declarations and lambda expression", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/LambdaExpression.java",
                 FileMetric.functions,
                 6
@@ -215,28 +215,28 @@ describe("Java metrics tests.", () => {
             );
         });
         it("should count all method declarations, if-statements and catch blocks, but not throw and finally blocks.", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/TryCatchFinally.java",
                 FileMetric.complexity,
                 8
             );
         });
         it("should count all method declarations and ternary operations", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/TernaryOperation.java",
                 FileMetric.complexity,
                 2
             );
         });
         it("should count all method declarations (incl. lambda expressions) and for-loops, but not method references.", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/DifferentFunctions.java",
                 FileMetric.complexity,
                 5
             );
         });
         it("should count logical operators and function declarations.", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/LogicalOperator.java",
                 FileMetric.complexity,
                 6

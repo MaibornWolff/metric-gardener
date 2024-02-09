@@ -1,7 +1,5 @@
-import { getFileMetrics, testFileMetric } from "./TestHelper";
-import { FileMetric } from "../../src/parser/metrics/Metric";
+import { getFileMetrics } from "./TestHelper";
 import fs from "fs";
-import { GenericParser } from "../../src/parser/GenericParser";
 
 describe("Test for handling files with unknown or no file extension", () => {
     const unknownTestResourcesPath = "./resources/unknown/";

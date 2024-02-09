@@ -12,6 +12,7 @@
         "test": "tsc && jest --maxWorkers=24",
         "format": "prettier --write \"./**/*\"",
         "format:quick": "pretty-quick --staged",
+        "format:check": "prettier --check \"./**/*\"",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "npm run lint -- --fix",
         "lint:quick": "npm run precommit",

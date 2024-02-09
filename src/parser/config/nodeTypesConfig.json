@@ -4766,7 +4766,7 @@
     },
     {
         "expression": "lambda",
-        "metrics": [],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["py"]
@@ -4962,7 +4962,7 @@
     },
     {
         "expression": "except_clause",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["py"]
@@ -5284,7 +5284,7 @@
     },
     {
         "expression": "for_range_loop",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
@@ -6600,7 +6600,7 @@
     },
     {
         "expression": "case_clause",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "statement",
         "category": "",
         "languages": ["py"]

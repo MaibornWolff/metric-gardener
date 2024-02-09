@@ -1,4 +1,4 @@
-import { getFileMetrics, testFileMetrics } from "./TestHelper";
+import { getFileMetrics, testFileMetric } from "./TestHelper";
 import { FileMetric } from "../../src/parser/metrics/Metric";
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";

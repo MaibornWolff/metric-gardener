@@ -1,4 +1,4 @@
-import { getCouplingMetrics, testFileMetrics } from "./TestHelper";
+import { getCouplingMetrics, testFileMetric } from "./TestHelper";
 import { FileMetric } from "../../src/parser/metrics/Metric";
 
 describe("PHP metrics tests", () => {
@@ -6,7 +6,7 @@ describe("PHP metrics tests", () => {
 
     describe("parses PHP Complexity metric", () => {
         it("should count branching statements correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "if-statements.php",
                 FileMetric.complexity,
                 8
@@ -14,7 +14,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count functions and methods correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "functions-and-methods.php",
                 FileMetric.complexity,
                 7
@@ -22,7 +22,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should not count multiple return statements within functions and methods like sonar", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "multiple-return-statements.php",
                 FileMetric.complexity,
                 3
@@ -30,11 +30,11 @@ describe("PHP metrics tests", () => {
         });
 
         it("should not count any class declaration", async () => {
-            await testFileMetrics(phpTestResourcesPath + "classes.php", FileMetric.complexity, 0);
+            await testFileMetric(phpTestResourcesPath + "classes.php", FileMetric.complexity, 0);
         });
 
         it("should count case statements correctly", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "case-statements.php",
                 FileMetric.complexity,
                 3
@@ -42,7 +42,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count try-catch-finally properly by only counting the catch-block", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "throw-try-catch-finally.php",
                 FileMetric.complexity,
                 1
@@ -50,19 +50,19 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count loops properly", async () => {
-            await testFileMetrics(phpTestResourcesPath + "loops.php", FileMetric.complexity, 4);
+            await testFileMetric(phpTestResourcesPath + "loops.php", FileMetric.complexity, 4);
         });
     });
 
     describe("parses PHP classes metric", () => {
         it("should count class declarations", async () => {
-            await testFileMetrics(phpTestResourcesPath + "classes.php", FileMetric.classes, 3);
+            await testFileMetric(phpTestResourcesPath + "classes.php", FileMetric.classes, 3);
         });
     });
 
     describe("parses PHP functions metric", () => {
         it("should count function declarations", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "functions-and-methods.php",
                 FileMetric.functions,
                 7
@@ -72,7 +72,7 @@ describe("PHP metrics tests", () => {
 
     describe("parses PHP lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file with empty last line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "empty-last-line.php",
                 FileMetric.linesOfCode,
                 66
@@ -80,7 +80,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count number of lines correctly for a non-empty file with non-empty last line", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "php-example-code.php",
                 FileMetric.linesOfCode,
                 65
@@ -88,15 +88,15 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count number of lines correctly for an empty file", async () => {
-            await testFileMetrics(phpTestResourcesPath + "empty.php", FileMetric.linesOfCode, 1);
+            await testFileMetric(phpTestResourcesPath + "empty.php", FileMetric.linesOfCode, 1);
         });
 
         it("should count number of lines correctly for an file with one non-empty line", async () => {
-            await testFileMetrics(phpTestResourcesPath + "one-line.php", FileMetric.linesOfCode, 1);
+            await testFileMetric(phpTestResourcesPath + "one-line.php", FileMetric.linesOfCode, 1);
         });
 
         it("should count number of lines correctly for an file with just a line break", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "line-break.php",
                 FileMetric.linesOfCode,
                 2
@@ -106,7 +106,7 @@ describe("PHP metrics tests", () => {
 
     describe("parses PHP real lines of code metric", () => {
         it("should count correctly for a non-empty file, ignoring comments and empty lines", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "php-example-code.php",
                 FileMetric.realLinesOfCode,
                 43
@@ -114,15 +114,11 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count correctly for an empty file", async () => {
-            await testFileMetrics(
-                phpTestResourcesPath + "empty.php",
-                FileMetric.realLinesOfCode,
-                0
-            );
+            await testFileMetric(phpTestResourcesPath + "empty.php", FileMetric.realLinesOfCode, 0);
         });
 
         it("should count correctly if there is a comment in the same line as actual code", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 phpTestResourcesPath + "same-line-comment.php",
                 FileMetric.realLinesOfCode,
                 11
@@ -135,7 +131,7 @@ describe("PHP metrics tests", () => {
             "should count number of comment lines correctly, including line with curly brackets and comment " +
                 "lines inside block comment",
             async () => {
-                await testFileMetrics(
+                await testFileMetric(
                     phpTestResourcesPath + "php-example-code.php",
                     FileMetric.commentLines,
                     12

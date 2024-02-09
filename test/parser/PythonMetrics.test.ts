@@ -1,4 +1,4 @@
-import { testFileMetrics } from "./TestHelper";
+import { testFileMetric } from "./TestHelper";
 import { FileMetric } from "../../src/parser/metrics/Metric";
 
 describe("Python metrics test", () => {
@@ -6,13 +6,13 @@ describe("Python metrics test", () => {
 
     describe("parses Python Complexity metric", () => {
         it("should count if statements correctly", async () => {
-            await testFileMetrics(pythonTestResourcesPath + "if.py", FileMetric.complexity, 4);
+            await testFileMetric(pythonTestResourcesPath + "if.py", FileMetric.complexity, 4);
         });
     });
 
     describe("parses Python comment lines metric", () => {
         it("should count correctly, excluding inline and block comments", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 pythonTestResourcesPath + "block-comment.py",
                 FileMetric.commentLines,
                 7
@@ -22,7 +22,7 @@ describe("Python metrics test", () => {
 
     describe("parses Python real lines of code metric", () => {
         it("should count correctly for a non-empty file with pythons non-C-syntax code blocks", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 pythonTestResourcesPath + "blocks.py",
                 FileMetric.realLinesOfCode,
                 9
@@ -30,7 +30,7 @@ describe("Python metrics test", () => {
         });
 
         it("should count correctly for an empty file", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 pythonTestResourcesPath + "empty.py",
                 FileMetric.realLinesOfCode,
                 0
@@ -38,7 +38,7 @@ describe("Python metrics test", () => {
         });
 
         it("should count correctly for a non-empty file with nested loops and comments", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 pythonTestResourcesPath + "loops.py",
                 FileMetric.realLinesOfCode,
                 4
@@ -46,7 +46,7 @@ describe("Python metrics test", () => {
         });
 
         it("should count correctly in the presence of block comments", async () => {
-            await testFileMetrics(
+            await testFileMetric(
                 pythonTestResourcesPath + "block-comment.py",
                 FileMetric.realLinesOfCode,
                 3

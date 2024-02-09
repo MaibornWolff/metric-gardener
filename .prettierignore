@@ -3,3 +3,4 @@
 resources
 .*
 dist
+__snapshots__

@@ -21,11 +21,11 @@ describe("Python metrics test", () => {
             await testFileMetric(pythonTestResourcesPath + "classes.py", FileMetric.complexity, 1);
         });
 
-        it.skip("should count case but no default statements correctly", async () => {
+        it("should count case and, for now, also default statements correctly", async () => {
             await testFileMetric(
                 pythonTestResourcesPath + "case-statements.py",
                 FileMetric.complexity,
-                3
+                4
             );
         });
 

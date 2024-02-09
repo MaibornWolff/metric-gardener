@@ -67,6 +67,9 @@ describe("C# metric tests", () => {
         it("should count class declarations", async () => {
             await testFileMetric(csharpTestResourcesPath + "classes.cs", FileMetric.classes, 6);
         });
+        it("should count record declarations", async () => {
+            await testFileMetric(csharpTestResourcesPath + "records.cs", FileMetric.classes, 4);
+        });
     });
 
     describe("parses C# functions metric", () => {

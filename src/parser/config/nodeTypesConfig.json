@@ -106,7 +106,7 @@
     },
     {
         "expression": "record_declaration",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["cs", "java"]
@@ -5872,7 +5872,7 @@
     },
     {
         "expression": "record_struct_declaration",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["cs"]
@@ -6117,7 +6117,7 @@
     },
     {
         "expression": "compact_constructor_declaration",
-        "metrics": [],
+        "metrics": ["functions", "complexity"],
         "type": "statement",
         "category": "",
         "languages": ["java"]

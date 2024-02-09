@@ -8,7 +8,19 @@ module.exports = {
         "type-enum": [2, "always", getTypes()],
         "issue-id-required": [2, "always"],
     },
-    plugins: ["issue-id-required"],
+    plugins: [
+        {
+            rules: {
+                "issue-id-required": ({ subject }) => {
+                    const issueIdRegex = /\s#(\d+)$/;
+                    if (!issueIdRegex.test(subject)) {
+                        return [false, "Issue ID is required at the end of the commit message"];
+                    }
+                    return [true];
+                },
+            },
+        },
+    ],
 };
 function getTypes() {
     const baseTypes = [
@@ -25,5 +37,5 @@ function getTypes() {
         "revert",
     ];
     baseTypes.push(...baseTypes.map((type) => `${type}!`));
-    return baseTypes.map((type) => `${type}!`);
+    return baseTypes;
 }

@@ -24,5 +24,8 @@ class Loop {
             System.out.println("You entered: " + userInput);
 
         } while (userInput == 0 || userInput > 0 && userInput == 2);
+        for (;;) {
+            // Code for an infinite loop
+        }
     }
 }

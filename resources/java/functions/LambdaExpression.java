@@ -18,4 +18,8 @@ public class SampleFunctions {
     interface MyFunctionalInterface {
         int performOperation(int value);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 442e08f (test: add deleted lambda test (Java) #70)

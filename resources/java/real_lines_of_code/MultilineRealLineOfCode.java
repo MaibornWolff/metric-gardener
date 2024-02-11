@@ -5,7 +5,7 @@ class MultiLine {
     String multiLineString = "This is a multi-line \n"
             + "string using escape characters.";
 
-    String multiLineString = """
+    String multiLineString2 = """
             This is a multi-line
             string using text blocks.
             """;

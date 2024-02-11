@@ -5,14 +5,13 @@ public class ExampleClass {
     public static void incrementStaticVariable() {
         staticVariable++;
     }
-    public static int returnStaticMessage() {
+    public static String returnStaticMessage() {
         return "Hello";
     }
     public void incrementInstanceVariable() {
         instanceVariable++;
     }
     public void returnMessage() {
-        return this.message;
     }
     public static void main(String[] args) {
         ExampleClass obj1 = new ExampleClass(5);

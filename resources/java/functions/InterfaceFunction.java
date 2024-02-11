@@ -6,3 +6,4 @@ public interface MyInterface {
     default void defaultMethod() {
         System.out.println("Default implementation in MyInterface");
     }
+}

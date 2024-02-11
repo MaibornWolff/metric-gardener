@@ -9,7 +9,7 @@ class MultiLine {
             + "string using escape characters.";
 
 
-    String multiLineString = """
+    String multiLineString2 = """
             This is a multi-line
             string using text blocks.
             """;

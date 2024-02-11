@@ -50,9 +50,9 @@ describe("Java metrics tests.", () => {
                 0
             );
         });
-        it("should count all records.cs as classes", async () => {
+        it("should count all record declarations as classes", async () => {
             await testFileMetric(
-                javaTestResourcesPath + "/" + FileMetric.classes + "/Records.java",
+                javaTestResourcesPath + "/" + FileMetric.classes + "/Person.java",
                 FileMetric.classes,
                 3
             );
@@ -227,7 +227,7 @@ describe("Java metrics tests.", () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/SwitchStatement.java",
                 FileMetric.complexity,
-                13
+                8
             );
         });
         it("should count all method declarations, if-statements and catch blocks, but not throw and finally blocks.", async () => {

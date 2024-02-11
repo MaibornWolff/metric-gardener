@@ -11,3 +11,4 @@ public record struct Circle
     public double Y { get; init; }
 
 }
+public record class Ocean(string Address);

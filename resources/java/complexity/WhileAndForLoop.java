@@ -16,9 +16,9 @@ class Loop {
             System.out.println("Iteration " + (counter + 1));
             counter++;
         }
+        int userInput=0;
         do {
             System.out.print("Enter a number (0 to exit): ");
-            userInput = scanner.nextInt();
 
             // Your code inside the loop goes here
             System.out.println("You entered: " + userInput);

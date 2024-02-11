@@ -1,5 +1,5 @@
-public record House (String name, String address) {
-    public House(String name) {
+record House (String name, String address) {
+    House(String name) {
         this(name, "Unknown");
     }
 }

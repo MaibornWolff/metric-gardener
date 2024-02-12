@@ -1,14 +1,11 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import {
-    ExpressionMetricMapping,
-    QueryStatementInterface,
-    SimpleQueryStatement,
-} from "../helper/Model";
+import { ExpressionMetricMapping } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import Parser, { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Languages } from "../helper/Languages";
+import { QueryStatementInterface, SimpleQueryStatement } from "../helper/QueryStatements";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

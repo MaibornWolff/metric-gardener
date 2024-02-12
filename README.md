@@ -61,12 +61,11 @@ Counts expressions that branch the control flow (if-statements, loops, catch-blo
 -   function declarations (including lambda expressions)
 -   binary logical operations (like AND and OR)
 
-Note: In Java, the default label in a switch statement is counted for complexity metric.
 **functions**<br>
 The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, etc.
 
 **classes**<br>
-The number of class definitions inside a file, also counting for enums and interfaces.
+The number of class definitions inside a file, also counting for enums, interfaces, structs and records.
 
 **lines_of_code**<br>
 The total number of lines of a file, including empty lines, comments, etc.

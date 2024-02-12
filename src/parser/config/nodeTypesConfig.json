@@ -3213,7 +3213,7 @@
     },
     {
         "expression": "anonymous_initializer",
-        "metrics": [],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3486,7 +3486,7 @@
     },
     {
         "expression": "lambda_literal",
-        "metrics": [],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]
@@ -3619,7 +3619,7 @@
     },
     {
         "expression": "secondary_constructor",
-        "metrics": [],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["kt"]

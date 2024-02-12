@@ -231,11 +231,11 @@ describe("Java metrics tests.", () => {
             );
         });
 
-        it("should count one method declaration and all case- and default-labels", async () => {
+        it("should count one method declaration and all case labels, but no default-labels", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/SwitchStatement.java",
                 FileMetric.complexity,
-                9
+                8
             );
         });
 

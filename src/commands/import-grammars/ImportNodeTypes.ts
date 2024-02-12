@@ -1,4 +1,4 @@
-import { ExpressionMetricMapping } from "../../parser/helper/Model";
+import { ExpressionMetricMapping, NodeTypeCategory } from "../../parser/helper/Model";
 import fs from "fs";
 import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
@@ -193,7 +193,12 @@ function updateBinaryExpressions(
             const mapKey = grammarNodeType.type + "_" + binaryOperator;
             removedNodeTypes.delete(mapKey);
 
-            updateOrAddExpression(languageAbbr, mapKey, "binary_expression", binaryOperator);
+            updateOrAddExpression(
+                languageAbbr,
+                mapKey,
+                NodeTypeCategory.BinaryExpression,
+                binaryOperator
+            );
         }
     }
 }
@@ -209,7 +214,7 @@ function updateBinaryExpressions(
 function updateOrAddExpression(
     languageAbbr: string,
     expressionName: string,
-    category = "",
+    category: NodeTypeCategory = NodeTypeCategory.Other,
     operator?
 ) {
     const expression = expressionMappings.get(expressionName);

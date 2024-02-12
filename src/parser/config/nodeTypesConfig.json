@@ -988,14 +988,14 @@
         "expression": "case_pattern_switch_label",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["cs"]
     },
     {
         "expression": "case_switch_label",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["cs"]
     },
     {
@@ -1072,7 +1072,7 @@
         "expression": "default_switch_label",
         "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "default_label",
         "languages": ["cs"]
     },
     {
@@ -1907,7 +1907,7 @@
         "expression": "communication_case",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["go"]
     },
     {
@@ -1921,7 +1921,7 @@
         "expression": "default_case",
         "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "default_label",
         "languages": ["go"]
     },
     {
@@ -1935,7 +1935,7 @@
         "expression": "expression_case",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["go"]
     },
     {
@@ -2061,7 +2061,7 @@
         "expression": "type_case",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["go"]
     },
     {
@@ -2629,7 +2629,7 @@
         "expression": "switch_label",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["java"]
     },
     {
@@ -3110,14 +3110,14 @@
         "expression": "switch_case",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["js", "ts"]
     },
     {
         "expression": "switch_default",
         "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "default_label",
         "languages": ["js", "ts"]
     },
     {
@@ -3768,7 +3768,7 @@
         "expression": "when_entry",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["kt"]
     },
     {
@@ -4138,7 +4138,7 @@
         "expression": "case_statement",
         "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["php", "cpp"]
     },
     {
@@ -4180,7 +4180,7 @@
         "expression": "default_statement",
         "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "default_label",
         "languages": ["php"]
     },
     {
@@ -6593,16 +6593,16 @@
     },
     {
         "expression": "case_clause",
-        "metrics": ["complexity"],
+        "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["py"]
     },
     {
         "expression": "case_pattern",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["py"]
     },
     {

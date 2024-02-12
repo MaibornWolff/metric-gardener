@@ -30,7 +30,7 @@ describe("C# metric tests", () => {
             await testFileMetric(csharpTestResourcesPath + "classes.cs", FileMetric.complexity, 1);
         });
 
-        it("should count case but no default statements correctly", async () => {
+        it("should count switch case labels, but no default labels", async () => {
             await testFileMetric(
                 csharpTestResourcesPath + "case-statements.cs",
                 FileMetric.complexity,

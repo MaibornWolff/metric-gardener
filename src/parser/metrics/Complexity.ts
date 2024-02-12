@@ -1,16 +1,14 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import {
-    ExpressionMetricMapping,
-    ExpressionQueryStatement,
-    NodeTypeCategory,
-    OperatorQueryStatement,
-    QueryStatementInterface,
-    SimpleQueryStatement,
-    SimpleLanguageSpecificQueryStatement
-} from "../helper/Model";
+import { ExpressionMetricMapping, NodeTypeCategory } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import Parser, { QueryMatch } from "tree-sitter";
+import {
+    ExpressionQueryStatement,
+    OperatorQueryStatement,
+    QueryStatementInterface,
+    SimpleLanguageSpecificQueryStatement, SimpleQueryStatement
+} from "../helper/QueryStatements";
 import { Languages } from "../helper/Languages";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -60,8 +58,10 @@ export class Complexity implements Metric {
         const caseNodeTypes = new Set<ExpressionMetricMapping>();
 
         for (const nodeType of allNodeTypes) {
-
-            if (nodeType.category === NodeTypeCategory.CaseLabel && nodeType.metrics.includes(this.getName())) {
+            if (
+                nodeType.category === NodeTypeCategory.CaseLabel &&
+                nodeType.metrics.includes(this.getName())
+            ) {
                 caseNodeTypes.add(nodeType);
             } else if (nodeType.category === NodeTypeCategory.DefaultLabel) {
                 for (const language of nodeType.languages) {
@@ -118,7 +118,10 @@ export class Complexity implements Metric {
                     // Check if the node has a named child. If so, it is a case label and not a default label:
                     this.complexityStatementsSuperSet.push(
                         new SimpleLanguageSpecificQueryStatement(
-                            "(" + caseNodeType.expression + " (_) @named_child) @" + caseNodeType.expression,
+                            "(" +
+                                caseNodeType.expression +
+                                " (_) @named_child) @" +
+                                caseNodeType.expression,
                             haveNoDefaultNodeType,
                             caseNodeType.activated_for_languages
                         )
@@ -152,7 +155,7 @@ export class Complexity implements Metric {
 
         return {
             metricName: this.getName(),
-            metricValue: matches.length
+            metricValue: matches.length,
         };
     }
 

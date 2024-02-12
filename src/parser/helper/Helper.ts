@@ -1,9 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { ExpressionMetricMapping, ExpressionQueryStatement } from "./Model";
+import { ExpressionMetricMapping } from "./Model";
 import { ParseFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
 import { fileExtensionToLanguage, Languages } from "./Languages";
+import { ExpressionQueryStatement } from "./QueryStatements";
 
 /**
  * Maps all elements of the specified iterable using the specified map. Calls the specified function for all

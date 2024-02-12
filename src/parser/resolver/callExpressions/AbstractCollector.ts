@@ -3,9 +3,9 @@ import { formatCaptures } from "../../helper/Helper";
 import { QueryBuilder } from "../../queries/QueryBuilder";
 import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
-import { SimpleQueryStatement } from "../../helper/Model";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
+import { SimpleQueryStatement } from "../../helper/QueryStatements";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

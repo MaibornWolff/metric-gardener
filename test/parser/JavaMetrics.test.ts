@@ -223,11 +223,11 @@ describe("Java metrics tests.", () => {
             );
         });
 
-        it.skip("should count one method declaration, the number of switch-case-statements and the contained logical operators correctly", async () => {
+        it("should count one method declaration, the number of switch-case-statements and the contained logical operators correctly", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/SwitchStatement.java",
                 FileMetric.complexity,
-                8
+                9
             );
         });
         it("should count all method declarations, if-statements and catch blocks, but not throw and finally blocks.", async () => {

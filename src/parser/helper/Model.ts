@@ -6,8 +6,28 @@ export interface ExpressionMetricMapping {
     type: "statement" | "keyword";
     activated_for_languages?: string[];
     languages: string[];
-    category: string;
+    category: NodeTypeCategory;
     operator?: string;
+}
+
+export enum NodeTypeCategory {
+    /**
+     * Node types with no explicit category.
+     */
+    Other = "",
+    /**
+     * Node types that represent a binary expression.
+     */
+    BinaryExpression = "binary_expression",
+    /**
+     * Node types that are used for case labels in a switch-case-block.
+     * May also be used for default labels by some language grammar(s).
+     */
+    CaseLabel = "case_label",
+    /**
+     * Node types that are exclusively used for default labels in a switch-case-block.
+     */
+    DefaultLabel = "default_label",
 }
 
 export interface QueryStatementInterface {
@@ -43,17 +63,11 @@ export class SimpleQueryStatement implements QueryStatementInterface {
     }
 }
 
-export class ExpressionQueryStatement implements QueryStatementInterface {
-    private expression: string;
-    private activatedForLanguages: Set<Languages>;
-    private applicableForLanguages: Set<Languages>;
+abstract class LanguageSpecificQueryStatement implements QueryStatementInterface {
+    protected activatedForLanguages: Set<Languages>;
+    protected applicableForLanguages: Set<Languages>;
 
-    constructor(
-        expression: string,
-        applicable_for_languages: string[],
-        activated_for_languages?: string[]
-    ) {
-        this.expression = expression;
+    protected constructor(applicable_for_languages: string[], activated_for_languages?: string[]) {
         this.applicableForLanguages =
             languageToAbbreviation.getKeysForAllValues(applicable_for_languages);
 
@@ -73,17 +87,30 @@ export class ExpressionQueryStatement implements QueryStatementInterface {
         return this.applicableForLanguages.has(language);
     }
 
-    toQuery(): string {
+    abstract toQuery(): string;
+}
+
+export class ExpressionQueryStatement extends LanguageSpecificQueryStatement {
+    private readonly expression: string;
+
+    constructor(
+        expression: string,
+        applicable_for_languages: string[],
+        activated_for_languages?: string[]
+    ) {
+        super(applicable_for_languages, activated_for_languages);
+        this.expression = expression;
+    }
+
+    override toQuery(): string {
         return "(" + this.expression + ") @" + this.expression;
     }
 }
 
-export class OperatorQueryStatement implements QueryStatementInterface {
-    private activatedForLanguages: Set<Languages>;
-    private expression: string;
-    private category: string;
-    private operator: string;
-    private applicableForLanguages: Set<Languages>;
+export class OperatorQueryStatement extends LanguageSpecificQueryStatement {
+    private readonly expression: string;
+    private readonly category: string;
+    private readonly operator: string;
 
     constructor(
         category: string,
@@ -91,29 +118,30 @@ export class OperatorQueryStatement implements QueryStatementInterface {
         applicableForLanguages: string[],
         activatedForLanguages?: string[]
     ) {
+        super(applicableForLanguages, activatedForLanguages);
         this.category = category;
         this.operator = operator;
         this.expression = category + ' operator: "' + operator + '"';
-        this.applicableForLanguages =
-            languageToAbbreviation.getKeysForAllValues(applicableForLanguages);
-
-        if (activatedForLanguages !== undefined) {
-            this.activatedForLanguages =
-                languageToAbbreviation.getKeysForAllValues(activatedForLanguages);
-        } else {
-            this.activatedForLanguages = new Set();
-        }
     }
 
-    activatedFor(language: Languages): boolean {
-        return this.activatedForLanguages.size === 0 || this.activatedForLanguages.has(language);
+    override toQuery(): string {
+        return "(" + this.category + ' operator: "' + this.operator + '") @operator_expression';
+    }
+}
+
+export class SimpleLanguageSpecificQueryStatement extends LanguageSpecificQueryStatement {
+    private readonly query: string;
+
+    constructor(
+        query: string,
+        applicable_for_languages: string[],
+        activated_for_languages?: string[]
+    ) {
+        super(applicable_for_languages, activated_for_languages);
+        this.query = query;
     }
 
-    toQuery(): string {
-        return "(" + this.category + ' operator: "' + this.operator + '") @binary_expression';
-    }
-
-    applicableFor(language: Languages): boolean {
-        return this.applicableForLanguages.has(language);
+    override toQuery(): string {
+        return this.query;
     }
 }

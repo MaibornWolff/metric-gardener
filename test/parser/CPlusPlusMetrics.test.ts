@@ -33,11 +33,11 @@ describe("C++ metrics tests", () => {
             await testFileMetric(cppTestResourcesPath + "branches.cpp", FileMetric.complexity, 12);
         });
 
-        it("should count for two switch case labels and a function, for now also for the default label", async () => {
+        it("should count for two switch case labels and a function, but not for the default label", async () => {
             await testFileMetric(
                 cppTestResourcesPath + "switch_case.cpp",
                 FileMetric.complexity,
-                4
+                3
             );
         });
 

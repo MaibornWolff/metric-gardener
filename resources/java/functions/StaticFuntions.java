@@ -11,7 +11,8 @@ public class ExampleClass {
     public void incrementInstanceVariable() {
         instanceVariable++;
     }
-    public void returnMessage() {
+    public String returnMessage() {
+        return this.message;
     }
     public static void main(String[] args) {
         ExampleClass obj1 = new ExampleClass(5);

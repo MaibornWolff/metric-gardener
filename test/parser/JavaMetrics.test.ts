@@ -50,6 +50,7 @@ describe("Java metrics tests.", () => {
                 0
             );
         });
+
         it("should count all record declarations as classes", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/Person.java",
@@ -223,13 +224,14 @@ describe("Java metrics tests.", () => {
             );
         });
 
-        it("should count one method declaration, the number of switch-case-statements and the contained logical operators correctly", async () => {
+        it("should count one method declaration, all logical operators and all case- and default-labels", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/SwitchStatement.java",
                 FileMetric.complexity,
                 9
             );
         });
+
         it("should count all method declarations, if-statements and catch blocks, but not throw and finally blocks.", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/TryCatchFinally.java",
@@ -237,6 +239,7 @@ describe("Java metrics tests.", () => {
                 8
             );
         });
+
         it("should count all method declarations and ternary operations", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/TernaryOperation.java",
@@ -244,6 +247,7 @@ describe("Java metrics tests.", () => {
                 2
             );
         });
+
         it("should count all method declarations (incl. lambda expressions) and for-loops, but not method references.", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/DifferentFunctions.java",
@@ -251,6 +255,7 @@ describe("Java metrics tests.", () => {
                 5
             );
         });
+
         it("should count logical operators and function declarations.", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/LogicalOperator.java",

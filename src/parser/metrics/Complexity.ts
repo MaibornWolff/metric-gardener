@@ -75,6 +75,9 @@ export class Complexity implements Metric {
             console.log(langAbbr);
         }
 
+        /**
+         * Add queries for each case label syntax node
+         */
         for (const caseNodeType of caseNodeTypes) {
             const haveDefaultNodeType: string[] = [];
             const haveNoDefaultNodeType: string[] = [];
@@ -118,10 +121,7 @@ export class Complexity implements Metric {
                     // Check if the node has a named child. If so, it is a case label and not a default label:
                     this.complexityStatementsSuperSet.push(
                         new SimpleLanguageSpecificQueryStatement(
-                            "(" +
-                                caseNodeType.expression +
-                                " (_) @named_child) @" +
-                                caseNodeType.expression,
+                            "(" + caseNodeType.expression + " (_)) @" + caseNodeType.expression,
                             haveNoDefaultNodeType,
                             caseNodeType.activated_for_languages
                         )

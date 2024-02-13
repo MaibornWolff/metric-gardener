@@ -29,7 +29,7 @@ describe("Kotlin metric tests", () => {
             );
         });
 
-        it("should count functions and methods correctly", async () => {
+        it("should count all function declarations and one init block correctly", async () => {
             await testFileMetric(
                 kotlinTestResourcesPath + "functions-and-methods.kt",
                 FileMetric.complexity,

@@ -4,11 +4,13 @@ import {
     ExpressionQueryStatement,
     OperatorQueryStatement,
     QueryStatementInterface,
+    SimpleQueryStatement,
 } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
+import { Languages } from "../helper/Languages";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -49,7 +51,17 @@ export class Complexity implements Metric {
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const queryBuilder = new QueryBuilder(parseFile, tree);
-        queryBuilder.setStatements(this.mccStatementsSuperSet);
+        switch (parseFile.language) {
+            case Languages.Java:
+                queryBuilder.setStatements(
+                    this.mccStatementsSuperSet.concat(
+                        new SimpleQueryStatement("(class_body (block)) @initBlock")
+                    )
+                );
+                break;
+            default:
+                queryBuilder.setStatements(this.mccStatementsSuperSet);
+        }
 
         const query = queryBuilder.build();
         let matches: QueryMatch[] = [];

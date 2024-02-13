@@ -2599,7 +2599,7 @@
     },
     {
         "expression": "static_initializer",
-        "metrics": [],
+        "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
         "languages": ["java"]

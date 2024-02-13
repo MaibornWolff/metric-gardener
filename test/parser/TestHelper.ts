@@ -51,12 +51,17 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
 }
 
 /**
+ * Invokes the calculation of the file metrics for the specified file.
  * Tests if the file metric is calculated correctly.
- * @param inputPath Path to test source files.
+ * @param inputPath Path to test source file.
  * @param metric Name of the metric.
  * @param expected Expected test result.
  * */
-export async function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
+export async function parseAndTestFileMetric(
+    inputPath: string,
+    metric: FileMetric,
+    expected: number
+) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath));
     const results = await parser.calculateMetrics();

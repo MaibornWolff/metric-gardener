@@ -1518,8 +1518,8 @@
     },
     {
         "expression": "class",
-        "metrics": [],
-        "type": "keyword",
+        "metrics": ["classes"],
+        "type": "statement",
         "category": "",
         "languages": ["js", "ts"]
     },

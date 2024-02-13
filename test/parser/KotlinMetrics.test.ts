@@ -9,7 +9,7 @@ describe("Kotlin metric tests", () => {
             await testFileMetric(kotlinTestResourcesPath + "loops.kt", FileMetric.complexity, 5);
         });
 
-        it("should count if statements correctly", async () => {
+        it("should count if statements and logical operations (&& and ||) correctly", async () => {
             await testFileMetric(
                 kotlinTestResourcesPath + "if-statements.kt",
                 FileMetric.complexity,
@@ -21,7 +21,7 @@ describe("Kotlin metric tests", () => {
             await testFileMetric(kotlinTestResourcesPath + "classes.kt", FileMetric.complexity, 4);
         });
 
-        it("should count case but no default statements correctly", async () => {
+        it("should count case statements correctly", async () => {
             await testFileMetric(
                 kotlinTestResourcesPath + "case-statements.kt",
                 FileMetric.complexity,
@@ -37,7 +37,7 @@ describe("Kotlin metric tests", () => {
             );
         });
 
-        it("should not count multiple return statements within functions and methods correctly", async () => {
+        it("should not count multiple return statements within functions and methods", async () => {
             await testFileMetric(
                 kotlinTestResourcesPath + "multiple-return-statements.kt",
                 FileMetric.complexity,

@@ -1,10 +1,15 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { ExpressionMetricMapping, QueryStatementInterface } from "../helper/Model";
+import {
+    ExpressionMetricMapping,
+    QueryStatementInterface,
+    SimpleQueryStatement,
+} from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
+import { Languages } from "../helper/Languages";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -19,7 +24,17 @@ export class Functions implements Metric {
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const queryBuilder = new QueryBuilder(parseFile, tree);
-        queryBuilder.setStatements(this.statementsSuperSet);
+        switch (parseFile.language) {
+            case Languages.Java:
+                queryBuilder.setStatements(
+                    this.statementsSuperSet.concat(
+                        new SimpleQueryStatement("(class_body (block)) @initBlock")
+                    )
+                );
+                break;
+            default:
+                queryBuilder.setStatements(this.statementsSuperSet);
+        }
 
         const query = queryBuilder.build();
         let matches: QueryMatch[] = [];

@@ -205,6 +205,13 @@ describe("Java metrics tests.", () => {
                 3
             );
         });
+        it("should count all initialization blocks as function declarations", async () => {
+            await testFileMetric(
+                javaTestResourcesPath + "/InitializationBlock.java",
+                FileMetric.functions,
+                2
+            );
+        });
     });
 
     describe("parses Complexity metric", () => {
@@ -261,6 +268,13 @@ describe("Java metrics tests.", () => {
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/LogicalOperator.java",
                 FileMetric.complexity,
                 6
+            );
+        });
+        it("should count all initialization blocks", async () => {
+            await testFileMetric(
+                javaTestResourcesPath + "/InitializationBlock.java",
+                FileMetric.complexity,
+                2
             );
         });
     });

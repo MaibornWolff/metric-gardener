@@ -1,20 +1,11 @@
-import {
-    expectFileMetric,
-    getFileMetrics,
-    getParserConfiguration,
-    parseAllFileMetrics,
-} from "./TestHelper";
+import { expectFileMetric, getParserConfiguration } from "./TestHelper";
 import fs from "fs";
-import { MetricResult } from "../../src/parser/metrics/Metric";
 import { GenericParser } from "../../src/parser/GenericParser";
 
 describe("Test for handling files with unknown or no file extension", () => {
     const unknownTestResourcesPath = "./resources/unknown/";
 
     let results;
-
-    const testFileMetric = (inputPath, metric, expected) =>
-        expectFileMetric(results, inputPath, metric, expected);
 
     beforeAll(async () => {
         const realInputPath = fs.realpathSync(unknownTestResourcesPath);

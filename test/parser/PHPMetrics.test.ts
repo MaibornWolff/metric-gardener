@@ -1,9 +1,4 @@
-import {
-    expectFileMetric,
-    getCouplingMetrics,
-    parseAllFileMetrics,
-    testFileMetric,
-} from "./TestHelper";
+import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper";
 import { FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
 
 describe("PHP metrics tests", () => {

@@ -1,4 +1,4 @@
-import { expectFileMetric, parseAllFileMetrics, testFileMetric } from "./TestHelper";
+import { expectFileMetric, parseAllFileMetrics } from "./TestHelper";
 import { FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
 
 describe("Go metric tests", () => {

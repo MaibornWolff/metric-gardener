@@ -46,10 +46,10 @@ export class Complexity implements Metric {
                 }
             }
         }
-        this.createCaseQueryStatements(allNodeTypes);
+        this.addCaseLabelQueryStatements(allNodeTypes);
     }
 
-    createCaseQueryStatements(allNodeTypes: ExpressionMetricMapping[]) {
+    addCaseLabelQueryStatements(allNodeTypes: ExpressionMetricMapping[]) {
         /*
          * Determine for which languages there is an explicit default label node type in the grammar.
          * Handle case label node types differently based upon this.
@@ -101,33 +101,62 @@ export class Complexity implements Metric {
                 );
             }
 
-            // Special treatment for languages which have no explicit default node type:
+            // Special query for languages which have no explicit default node type:
             if (haveNoDefaultNodeType.length > 0) {
-                if (caseNodeType.expression == "case_statement") {
-                    // Special treatment for "case_statement" which can have more than one child,
-                    // because it also has the content of the case block as child(s).
-                    //
-                    // In this case, a case label can be differentiated from a default label by
-                    // checking if there is a child with the field name "value":
-                    this.complexityStatementsSuperSet.push(
-                        new SimpleLanguageSpecificQueryStatement(
-                            "(case_statement value: _ ) @case_statement",
-                            haveNoDefaultNodeType,
-                            caseNodeType.activated_for_languages
-                        )
-                    );
-                } else {
-                    // Default treatment for case-label syntax nodes that are also used for default labels.
-                    // Check if the node has a named child. If so, it is a case label and not a default label:
-                    this.complexityStatementsSuperSet.push(
-                        new SimpleLanguageSpecificQueryStatement(
-                            "(" + caseNodeType.expression + " (_)) @" + caseNodeType.expression,
-                            haveNoDefaultNodeType,
-                            caseNodeType.activated_for_languages
-                        )
-                    );
-                }
+                this.addCaseDefaultDifferentiatingQuery(haveNoDefaultNodeType, caseNodeType);
             }
+        }
+    }
+
+    /**
+     * Adds a query statement that differentiates if the syntax node type is used as case or default label.
+     * For node types which are used for both case labels and default labels.
+     * @param nonDefaultLangAbbrs Abbreviations of the languages which use the node type as case label and
+     * have no explicit default label.
+     * @param caseDefaultNodeType The syntax node type.
+     */
+    addCaseDefaultDifferentiatingQuery(
+        noDefaultLangAbbrs: string[],
+        caseDefaultNodeType: ExpressionMetricMapping
+    ) {
+        if (caseDefaultNodeType.expression == "case_statement") {
+            // Special treatment for "case_statement" used by at least C++ and PHP.
+            // This syntax node can have more than one child,
+            // because it also has the content of the case block as child(s).
+            //
+            // In this case, a case label can be differentiated from a default label by
+            // checking if there is a child with the field name "value":
+            this.complexityStatementsSuperSet.push(
+                new SimpleLanguageSpecificQueryStatement(
+                    "(case_statement value: _ ) @case_statement",
+                    noDefaultLangAbbrs,
+                    caseDefaultNodeType.activated_for_languages
+                )
+            );
+        } else if (caseDefaultNodeType.expression == "when_entry") {
+            // Special treatment for the "when_entry" used by Kotlin. Can also have more than one child.
+            //
+            // A conditional when_entry can be differentiated from an else when_entry by checking
+            // if the first child ist a "when_condition":
+            this.complexityStatementsSuperSet.push(
+                new SimpleLanguageSpecificQueryStatement(
+                    "(when_entry (when_condition)) @when_entry",
+                    noDefaultLangAbbrs,
+                    caseDefaultNodeType.activated_for_languages
+                )
+            );
+        } else {
+            // Standard treatment: check if the case label node has a named child:
+            this.complexityStatementsSuperSet.push(
+                new SimpleLanguageSpecificQueryStatement(
+                    "(" +
+                        caseDefaultNodeType.expression +
+                        " (_)) @" +
+                        caseDefaultNodeType.expression,
+                    noDefaultLangAbbrs,
+                    caseDefaultNodeType.activated_for_languages
+                )
+            );
         }
     }
 

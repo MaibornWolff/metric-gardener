@@ -57,8 +57,6 @@ Counts expressions that branch the control flow, like if-statements, loops, catc
 -   function declarations (see functions metric below)
 -   binary logical operations (like AND and OR)
 
-NOTE: for now, the metric also counts default statements in switch-case-blocks for these languages: Java, C++, Python and Kotlin.
-
 **functions**<br>
 The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, constructors, init blocks, etc.
 

@@ -54,13 +54,13 @@ This is quite slow and can take up to one or two hours but can provide good resu
 **complexity**<br>
 Counts expressions that branch the control flow, like if-statements, loops, catch-blocks, etc. - but no else/default/finally statements. Also counts the following other expressions that are considered to increase the complexity of the code inside a file:
 
--   function declarations (including lambda expressions and init blocks)
+-   function declarations (see functions metric below)
 -   binary logical operations (like AND and OR)
 
 NOTE: for now, the metric also counts default statements in switch-case-blocks for these languages: Java, C++, Python and Kotlin.
 
 **functions**<br>
-The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, init blocks, etc.
+The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, constructors, init blocks, etc.
 
 **classes**<br>
 The number of class definitions inside a file, also counting for enums, interfaces, structs and records.

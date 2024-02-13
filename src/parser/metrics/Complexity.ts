@@ -19,71 +19,69 @@ export class Complexity implements Metric {
     private complexityStatementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        for (const expressionMapping of allNodeTypes) {
-            if (expressionMapping.metrics.includes(this.getName())) {
-                if (expressionMapping.type === "statement") {
-                    const { expression, category, operator, activated_for_languages, languages } =
-                        expressionMapping;
-
-                    if (category === NodeTypeCategory.BinaryExpression && operator !== undefined) {
-                        this.complexityStatementsSuperSet.push(
-                            new OperatorQueryStatement(
-                                category,
-                                operator,
-                                languages,
-                                activated_for_languages
-                            )
-                        );
-                    } else if (category === NodeTypeCategory.Other) {
-                        this.complexityStatementsSuperSet.push(
-                            new ExpressionQueryStatement(
-                                expression,
-                                languages,
-                                activated_for_languages
-                            )
-                        );
-                    }
-                }
-            }
-        }
-        this.addCaseLabelQueryStatements(allNodeTypes);
-    }
-
-    addCaseLabelQueryStatements(allNodeTypes: ExpressionMetricMapping[]) {
-        /*
-         * Determine for which languages there is an explicit default label node type in the grammar.
-         * Handle case label node types differently based upon this.
-         */
         const withDefaultLabelNodeType = new Set<string>();
-        const caseNodeTypes = new Set<ExpressionMetricMapping>();
+        const caseNodeTypes: ExpressionMetricMapping[] = [];
 
         for (const nodeType of allNodeTypes) {
-            if (
-                nodeType.category === NodeTypeCategory.CaseLabel &&
-                nodeType.metrics.includes(this.getName())
-            ) {
-                caseNodeTypes.add(nodeType);
-            } else if (nodeType.category === NodeTypeCategory.DefaultLabel) {
+            /*
+             * Determine for which languages there is an explicit default label node type in the grammar.
+             * Handle case label node types differently based upon this.
+             */
+            if (nodeType.category === NodeTypeCategory.DefaultLabel) {
                 for (const language of nodeType.languages) {
                     withDefaultLabelNodeType.add(language);
                 }
             }
-        }
 
-        console.log("Language grammars with explicit default label node type: ");
-        for (const langAbbr of withDefaultLabelNodeType) {
-            console.log(langAbbr);
+            if (nodeType.metrics.includes(this.getName())) {
+                if (nodeType.category === NodeTypeCategory.CaseLabel) {
+                    caseNodeTypes.push(nodeType);
+                } else if (nodeType.category === NodeTypeCategory.BinaryExpression) {
+                    this.addBinaryExpressionQueryStatement(nodeType);
+                } else if (nodeType.category === NodeTypeCategory.Other) {
+                    this.addExpressionQueryStatement(nodeType);
+                }
+            }
         }
+        this.addCaseLabelQueryStatements(caseNodeTypes, withDefaultLabelNodeType);
+    }
 
-        /**
-         * Add queries for each case label syntax node
-         */
+    addBinaryExpressionQueryStatement(nodeType: ExpressionMetricMapping) {
+        if (nodeType.operator !== undefined) {
+            this.complexityStatementsSuperSet.push(
+                new OperatorQueryStatement(
+                    nodeType.category,
+                    nodeType.operator,
+                    nodeType.languages,
+                    nodeType.activated_for_languages
+                )
+            );
+        }
+    }
+
+    addExpressionQueryStatement(nodeType: ExpressionMetricMapping) {
+        this.complexityStatementsSuperSet.push(
+            new ExpressionQueryStatement(
+                nodeType.expression,
+                nodeType.languages,
+                nodeType.activated_for_languages
+            )
+        );
+    }
+
+    /**
+     * Add queries for each case label syntax node type.
+     */
+    addCaseLabelQueryStatements(
+        caseNodeTypes: ExpressionMetricMapping[],
+        languagesWithDefaultLabelAbbr: Set<string>
+    ) {
         for (const caseNodeType of caseNodeTypes) {
             const haveDefaultNodeType: string[] = [];
             const haveNoDefaultNodeType: string[] = [];
 
             for (const languageAbbr of caseNodeType.languages) {
-                if (withDefaultLabelNodeType.has(languageAbbr)) {
+                if (languagesWithDefaultLabelAbbr.has(languageAbbr)) {
                     haveDefaultNodeType.push(languageAbbr);
                 } else {
                     haveNoDefaultNodeType.push(languageAbbr);

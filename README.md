@@ -39,32 +39,28 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 ### Supported Languages
 
--   Stable
-
-    -   Go
-    -   PHP
-    -   TypeScript
-    -   Java
-    -   C#
-    -   C++
-
--   Unstable (missing or incomplete unit tests)
-    -   Python
-    -   JavaScript
-    -   Kotlin
+-   Go
+-   PHP
+-   TypeScript
+-   Java
+-   C#
+-   C++
+-   Python
+-   JavaScript
+-   Kotlin
 
 ### Supported File Metrics
 
 **complexity**<br>
 Counts expressions that branch the control flow, like if-statements, loops, catch-blocks, etc. - but no else/default/finally statements. Also counts the following other expressions that are considered to increase the complexity of the code inside a file:
 
--   function declarations (including lambda expressions)
+-   function declarations (including lambda expressions and init blocks)
 -   binary logical operations (like AND and OR)
 
 NOTE: for now, the metric also counts default statements in switch-case-blocks for these languages: Java, C++, Python and Kotlin.
 
 **functions**<br>
-The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, etc.
+The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, init blocks, etc.
 
 **classes**<br>
 The number of class definitions inside a file, also counting for enums, interfaces, structs and records.
@@ -110,7 +106,6 @@ environment variable `NODE_DEBUG` to `metric-gardener`.
 Next Steps:
 
 -   Apply new activated_for_languages flag in node-types-mapped.config for conflicting expressions.
--   Write Unit tests for basic metrics for other supported languages
 -   Documentation, e.g.: Document the used Query Captures to be able to implement new languages as a developer
 -   Configurable language specifics (has heavy candidate building, has generics, etc.)
 

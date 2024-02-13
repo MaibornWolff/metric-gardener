@@ -21,11 +21,11 @@ describe("Kotlin metric tests", () => {
             await testFileMetric(kotlinTestResourcesPath + "classes.kt", FileMetric.complexity, 4);
         });
 
-        it("should count case statements correctly", async () => {
+        it("should count when case statements correctly, but not else statements", async () => {
             await testFileMetric(
                 kotlinTestResourcesPath + "case-statements.kt",
                 FileMetric.complexity,
-                5
+                4
             );
         });
 

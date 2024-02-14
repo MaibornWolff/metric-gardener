@@ -1,5 +1,5 @@
 import fs from "fs";
-import { languageToGrammar } from "./Language";
+import { Language, languageToGrammar } from "./Language";
 import Parser, { Tree } from "tree-sitter";
 import { ParseFile } from "../metrics/Metric";
 
@@ -12,29 +12,9 @@ export class TreeParser {
             return cachedItem;
         }
 
-        const parser = new Parser();
-        parser.setLanguage(languageToGrammar.get(parseFile.language));
-
         const sourceCode = fs.readFileSync(parseFile.filePath, { encoding: "utf8" });
-        const tree = parser.parse(sourceCode);
 
-        if (tree === undefined) {
-            throw new Error("Syntax tree for file " + parseFile.filePath + " is undefined!");
-        }
-        if (tree.rootNode === undefined) {
-            throw new Error(
-                "Root node of syntax tree for file " + parseFile.filePath + " is undefined!"
-            );
-        }
-
-        TreeParser.cache.set(parseFile.filePath, tree);
-
-        if (tree === undefined || tree.rootNode === undefined) {
-            console.error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
-            throw new Error("Error: syntax tree for file " + parseFile.filePath + " is empty!");
-        }
-
-        return tree;
+        return TreeParser.parse(sourceCode, parseFile);
     }
 
     static async getParseTreeAsync(parseFile: ParseFile): Promise<Tree> {
@@ -43,10 +23,27 @@ export class TreeParser {
             return cachedItem;
         }
 
+        const sourceCode = await fs.promises.readFile(parseFile.filePath, { encoding: "utf8" });
+
+        return TreeParser.parse(sourceCode, parseFile);
+    }
+
+    private static parse(sourceCode: string, parseFile: ParseFile) {
+        let grammarLanguage = parseFile.language;
+
+        if (grammarLanguage === Language.JavaScript) {
+            // Check if this is actually flow-annotated code instead of plain JavaScript. Use the TSX-grammar then.
+            // See https://flow.org/en/docs/usage/#toc-prepare-your-code-for-flow on how to identify them.
+            // See https://github.com/tree-sitter/tree-sitter-typescript/tree/v0.20.5 on using the TSX-grammar
+            // for flow-annotated files.
+            if (sourceCode.match(/^.*@flow/) !== null) {
+                grammarLanguage = Language.TSX;
+            }
+        }
+
         const parser = new Parser();
         parser.setLanguage(languageToGrammar.get(parseFile.language));
 
-        const sourceCode = await fs.promises.readFile(parseFile.filePath, { encoding: "utf8" });
         const tree = parser.parse(sourceCode);
 
         if (tree === undefined) {

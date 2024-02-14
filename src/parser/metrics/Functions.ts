@@ -5,8 +5,8 @@ import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import Parser from "tree-sitter";
-import { Languages } from "../helper/Languages";
-import { QueryStatementInterface, SimpleQueryStatement } from "../helper/QueryStatements";
+import { Language } from "../helper/Language";
+import { QueryStatementInterface, SimpleQueryStatement } from "../queries/QueryStatements";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -20,8 +20,8 @@ export class Functions implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(parseFile, tree);
-        if (parseFile.language === Languages.Java) {
+        const queryBuilder = new QueryBuilder(parseFile.language);
+        if (parseFile.language === Language.Java) {
             //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.statementsSuperSet.concat(

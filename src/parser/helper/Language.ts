@@ -12,7 +12,7 @@ import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 /**
  * Enum of all supported programming languages.
  */
-export const enum Languages {
+export const enum Language {
     CSharp,
     CPlusPlus,
     Go,
@@ -38,18 +38,18 @@ export const enum Languages {
  * as there can be multiple file extensions for one language. Use {@link fileExtensionToLanguage}
  * or {@link fileExtensionToGrammar} for mapping file extensions.
  */
-export const languageToAbbreviation = new ConstantTwoWayMap<Languages, string>(
+export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
     new Map([
-        [Languages.CSharp, "cs"],
-        [Languages.CPlusPlus, "cpp"],
-        [Languages.Go, "go"],
-        [Languages.Java, "java"],
-        [Languages.JavaScript, "js"],
-        [Languages.Kotlin, "kt"],
-        [Languages.PHP, "php"],
-        [Languages.TypeScript, "ts"],
-        [Languages.Python, "py"],
-        [Languages.Unknown, "N/A"],
+        [Language.CSharp, "cs"],
+        [Language.CPlusPlus, "cpp"],
+        [Language.Go, "go"],
+        [Language.Java, "java"],
+        [Language.JavaScript, "js"],
+        [Language.Kotlin, "kt"],
+        [Language.PHP, "php"],
+        [Language.TypeScript, "ts"],
+        [Language.Python, "py"],
+        [Language.Unknown, "N/A"],
     ])
 );
 
@@ -57,37 +57,37 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Languages, string>(
  * Maps from a language to the corresponding tree-sitter grammar.
  */
 export const languageToGrammar = new Map([
-    [Languages.CSharp, CSharp],
-    [Languages.CPlusPlus, CPlusPlus],
-    [Languages.Go, GO],
-    [Languages.Java, Java],
-    [Languages.JavaScript, JavaScript],
-    [Languages.Kotlin, Kotlin],
-    [Languages.PHP, PHP],
-    [Languages.TypeScript, TypeScript.typescript],
-    [Languages.Python, Python],
+    [Language.CSharp, CSharp],
+    [Language.CPlusPlus, CPlusPlus],
+    [Language.Go, GO],
+    [Language.Java, Java],
+    [Language.JavaScript, JavaScript],
+    [Language.Kotlin, Kotlin],
+    [Language.PHP, PHP],
+    [Language.TypeScript, TypeScript.typescript],
+    [Language.Python, Python],
 ]);
 
 /**
  * Maps supported file extensions to the corresponding programming languages.
  */
 export const fileExtensionToLanguage = new Map([
-    ["cs", Languages.CSharp],
-    ["cpp", Languages.CPlusPlus],
-    ["cp", Languages.CPlusPlus],
-    ["cxx", Languages.CPlusPlus],
-    ["cc", Languages.CPlusPlus],
-    ["h", Languages.CPlusPlus],
-    ["hpp", Languages.CPlusPlus],
-    ["hxx", Languages.CPlusPlus],
-    ["hh", Languages.CPlusPlus],
-    ["go", Languages.Go],
-    ["java", Languages.Java],
-    ["js", Languages.JavaScript],
-    ["kt", Languages.Kotlin],
-    ["php", Languages.PHP],
-    ["ts", Languages.TypeScript],
-    ["py", Languages.Python],
+    ["cs", Language.CSharp],
+    ["cpp", Language.CPlusPlus],
+    ["cp", Language.CPlusPlus],
+    ["cxx", Language.CPlusPlus],
+    ["cc", Language.CPlusPlus],
+    ["h", Language.CPlusPlus],
+    ["hpp", Language.CPlusPlus],
+    ["hxx", Language.CPlusPlus],
+    ["hh", Language.CPlusPlus],
+    ["go", Language.Go],
+    ["java", Language.Java],
+    ["js", Language.JavaScript],
+    ["kt", Language.Kotlin],
+    ["php", Language.PHP],
+    ["ts", Language.TypeScript],
+    ["py", Language.Python],
 ]);
 
 /**

@@ -5,7 +5,7 @@ import { NamespaceCollector } from "../NamespaceCollector";
 import { ParseFile } from "../../metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
-import { SimpleQueryStatement } from "../../helper/QueryStatements";
+import { SimpleQueryStatement } from "../../queries/QueryStatements";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -87,7 +87,7 @@ export abstract class AbstractCollector {
     ): ImportReference[] {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(parseFile, tree);
+        const queryBuilder = new QueryBuilder(parseFile.language);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getImportsQuery())]);
 
         const importsQuery = queryBuilder.build();
@@ -153,7 +153,7 @@ export abstract class AbstractCollector {
     private getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(parseFile, tree);
+        const queryBuilder = new QueryBuilder(parseFile.language);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getGroupedImportsQuery())]);
 
         const groupedImportsQuery = queryBuilder.build();
@@ -227,7 +227,7 @@ export abstract class AbstractCollector {
     ) {
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(parseFile, tree);
+        const queryBuilder = new QueryBuilder(parseFile.language);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getUsagesQuery())]);
 
         const usagesQuery = queryBuilder.build();

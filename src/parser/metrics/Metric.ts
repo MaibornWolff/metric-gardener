@@ -1,5 +1,5 @@
 import Parser from "tree-sitter";
-import { Languages } from "../helper/Languages";
+import { Language } from "../helper/Language";
 
 /**
  * Names of all available file metrics.
@@ -91,5 +91,5 @@ export interface ParseFile {
     /**
      * Programming language of the file.
      */
-    language: Languages;
+    language: Language;
 }

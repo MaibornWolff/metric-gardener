@@ -1,5 +1,5 @@
 import fs from "fs";
-import { languageToGrammar } from "./Languages";
+import { languageToGrammar } from "./Language";
 import Parser, { Tree } from "tree-sitter";
 import { ParseFile } from "../metrics/Metric";
 

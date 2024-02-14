@@ -3,8 +3,8 @@ import path from "path";
 import { ExpressionMetricMapping } from "./Model";
 import { ParseFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
-import { fileExtensionToLanguage, Languages } from "./Languages";
-import { ExpressionQueryStatement } from "./QueryStatements";
+import { fileExtensionToLanguage, Language } from "./Language";
+import { ExpressionQueryStatement } from "../queries/QueryStatements";
 
 /**
  * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
@@ -93,7 +93,7 @@ export function formatPrintPath(filePath: string, config: Configuration): string
 /**
  * Checks if the file extension of the specified path is a known file extension of a programming language.
  * If so, this function returns a corresponding {@link ParseFile}-object that includes the language and file extension.
- * Otherwise, the language is set to {@link Languages.Unknown}. The same applies if there is no file extension found,
+ * Otherwise, the language is set to {@link Language.Unknown}. The same applies if there is no file extension found,
  * in which case the file extension is set to an empty string.
  *
  * @param filePath Path that should be checked.
@@ -107,12 +107,12 @@ export function getLanguageFromFileExtension(filePath: string): ParseFile {
         if (fileExtension.length > 0) {
             let language = fileExtensionToLanguage.get(fileExtension);
             if (language === undefined) {
-                language = Languages.Unknown;
+                language = Language.Unknown;
             }
             return { fileExtension: fileExtension, filePath: filePath, language: language };
         }
     }
-    return { fileExtension: "", filePath: filePath, language: Languages.Unknown };
+    return { fileExtension: "", filePath: filePath, language: Language.Unknown };
 }
 
 /**

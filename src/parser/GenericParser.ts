@@ -4,7 +4,7 @@ import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
 import { CouplingResult, MetricResult, ParseFile } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Languages } from "./helper/Languages";
+import { Language } from "./helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -50,7 +50,7 @@ export class GenericParser {
                 const metricsParser = new MetricCalculator(this.config);
 
                 for await (const file of parseFilesGenerator) {
-                    if (file.language !== Languages.Unknown) {
+                    if (file.language !== Language.Unknown) {
                         fileMetricPromises.push(metricsParser.calculateMetrics(file));
                         parseFiles.push(file);
                     } else {
@@ -61,7 +61,7 @@ export class GenericParser {
             // In case this.config.parseMetrics is false, as we need all files for the coupling metrics:
             else {
                 for await (const file of parseFilesGenerator) {
-                    if (file.language !== Languages.Unknown) {
+                    if (file.language !== Language.Unknown) {
                         parseFiles.push(file);
                     } else {
                         unknownParseFiles.push(file);

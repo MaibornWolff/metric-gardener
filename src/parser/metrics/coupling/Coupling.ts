@@ -19,7 +19,7 @@ import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Configuration } from "../../Configuration";
-import { Languages } from "../../helper/Languages";
+import { Language } from "../../helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -221,7 +221,7 @@ export class Coupling implements CouplingMetric {
         }
 
         const parseFile = getLanguageFromFileExtension(filePath);
-        if (parseFile.language === Languages.Unknown) {
+        if (parseFile.language === Language.Unknown) {
             return;
         }
 

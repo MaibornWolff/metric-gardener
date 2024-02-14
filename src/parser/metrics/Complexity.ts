@@ -7,9 +7,10 @@ import {
     ExpressionQueryStatement,
     OperatorQueryStatement,
     QueryStatementInterface,
-    SimpleLanguageSpecificQueryStatement, SimpleQueryStatement
-} from "../helper/QueryStatements";
-import { Languages } from "../helper/Languages";
+    SimpleLanguageSpecificQueryStatement,
+    SimpleQueryStatement,
+} from "../queries/QueryStatements";
+import { Language } from "../helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -159,9 +160,9 @@ export class Complexity implements Metric {
     }
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(parseFile, tree);
+        const queryBuilder = new QueryBuilder(parseFile.language);
 
-        if (parseFile.language === Languages.Java) {
+        if (parseFile.language === Language.Java) {
             //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.complexityStatementsSuperSet.concat(

@@ -19,7 +19,7 @@ export class Complexity implements Metric {
     private complexityStatementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        const withDefaultLabelNodeType = new Set<string>();
+        const languagesWithDefaultLabelAbbr = new Set<string>();
         const caseNodeTypes: ExpressionMetricMapping[] = [];
 
         for (const nodeType of allNodeTypes) {
@@ -29,7 +29,7 @@ export class Complexity implements Metric {
              */
             if (nodeType.category === NodeTypeCategory.DefaultLabel) {
                 for (const language of nodeType.languages) {
-                    withDefaultLabelNodeType.add(language);
+                    languagesWithDefaultLabelAbbr.add(language);
                 }
             }
 
@@ -43,7 +43,7 @@ export class Complexity implements Metric {
                 }
             }
         }
-        this.addCaseLabelQueryStatements(caseNodeTypes, withDefaultLabelNodeType);
+        this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
     }
 
     addBinaryExpressionQueryStatement(nodeType: ExpressionMetricMapping) {

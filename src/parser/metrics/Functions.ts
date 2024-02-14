@@ -25,6 +25,7 @@ export class Functions implements Metric {
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const queryBuilder = new QueryBuilder(parseFile, tree);
         if (parseFile.language === Languages.Java) {
+            //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.statementsSuperSet.concat(
                     new SimpleQueryStatement("(class_body (block)) @initBlock")

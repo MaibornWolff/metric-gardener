@@ -34,7 +34,7 @@
         "tree-sitter-kotlin": "0.3.1",
         "tree-sitter-php": "0.20.0",
         "tree-sitter-python": "0.20.4",
-        "tree-sitter-typescript": "0.20.3",
+        "tree-sitter-typescript": "0.20.5",
         "yargs": "17.2.1",
         "zlib": "1.0.5"
     },

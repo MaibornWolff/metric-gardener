@@ -1,11 +1,11 @@
 import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector";
 import { Factory as NamespaceCollectorFactory } from "./fullyQualifiedTypeNames/Factory";
 import { ParseFile } from "../metrics/Metric";
-import { Languages } from "../helper/Languages";
+import { Language } from "../helper/Language";
 
 export class NamespaceCollector {
     private namespaceCollectorFactory = new NamespaceCollectorFactory();
-    private cache = new Map<Languages, Map<string, Map<string, FullyQTN>>>();
+    private cache = new Map<Language, Map<string, Map<string, FullyQTN>>>();
 
     getNamespaces(parseFile: ParseFile): Map<string, FullyQTN> {
         let namespacesByLanguage = this.cache.get(parseFile.language);

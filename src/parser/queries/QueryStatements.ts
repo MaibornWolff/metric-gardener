@@ -1,41 +1,41 @@
-import { Languages, languageToAbbreviation } from "./Languages";
+import { Language, languageToAbbreviation } from "../helper/Language";
 
 export interface QueryStatementInterface {
-    activatedFor(language: Languages): boolean;
+    activatedFor(language: Language): boolean;
 
     /**
      * Tests whether this query is grammatically applicable for the specified programming language.
      * @param language The language to check.
      * @return true if the query is applicable, false if not.
      */
-    applicableFor(language: Languages): boolean;
+    applicableFor(language: Language): boolean;
 
-    toQuery(): string;
+    toString(): string;
 }
 
 export class SimpleQueryStatement implements QueryStatementInterface {
-    query: string;
+    #query: string;
 
     constructor(query: string) {
-        this.query = query;
+        this.#query = query;
     }
 
-    activatedFor(language: Languages): boolean {
+    activatedFor(language: Language): boolean {
         return true;
     }
 
-    applicableFor(language: Languages): boolean {
+    applicableFor(language: Language): boolean {
         return true;
     }
 
-    toQuery(): string {
-        return this.query;
+    toString(): string {
+        return this.#query;
     }
 }
 
 export abstract class LanguageSpecificQueryStatement implements QueryStatementInterface {
-    protected activatedForLanguages: Set<Languages>;
-    protected applicableForLanguages: Set<Languages>;
+    protected readonly activatedForLanguages: Set<Language>;
+    protected readonly applicableForLanguages: Set<Language>;
 
     protected constructor(applicable_for_languages: string[], activated_for_languages?: string[]) {
         this.applicableForLanguages =
@@ -49,19 +49,19 @@ export abstract class LanguageSpecificQueryStatement implements QueryStatementIn
         }
     }
 
-    activatedFor(language: Languages): boolean {
+    activatedFor(language: Language): boolean {
         return this.activatedForLanguages.size === 0 || this.activatedForLanguages.has(language);
     }
 
-    applicableFor(language: Languages): boolean {
+    applicableFor(language: Language): boolean {
         return this.applicableForLanguages.has(language);
     }
 
-    abstract toQuery(): string;
+    abstract toString(): string;
 }
 
 export class ExpressionQueryStatement extends LanguageSpecificQueryStatement {
-    private readonly expression: string;
+    readonly #expression: string;
 
     constructor(
         expression: string,
@@ -69,18 +69,17 @@ export class ExpressionQueryStatement extends LanguageSpecificQueryStatement {
         activated_for_languages?: string[]
     ) {
         super(applicable_for_languages, activated_for_languages);
-        this.expression = expression;
+        this.#expression = expression;
     }
 
-    override toQuery(): string {
-        return "(" + this.expression + ") @" + this.expression;
+    override toString(): string {
+        return "(" + this.#expression + ") @" + this.#expression;
     }
 }
 
 export class OperatorQueryStatement extends LanguageSpecificQueryStatement {
-    private readonly expression: string;
-    private readonly category: string;
-    private readonly operator: string;
+    readonly #category: string;
+    readonly #operator: string;
 
     constructor(
         category: string,
@@ -89,18 +88,17 @@ export class OperatorQueryStatement extends LanguageSpecificQueryStatement {
         activatedForLanguages?: string[]
     ) {
         super(applicableForLanguages, activatedForLanguages);
-        this.category = category;
-        this.operator = operator;
-        this.expression = category + ' operator: "' + operator + '"';
+        this.#category = category;
+        this.#operator = operator;
     }
 
-    override toQuery(): string {
-        return "(" + this.category + ' operator: "' + this.operator + '") @operator_expression';
+    override toString(): string {
+        return "(" + this.#category + ' operator: "' + this.#operator + '") @operator_expression';
     }
 }
 
 export class SimpleLanguageSpecificQueryStatement extends LanguageSpecificQueryStatement {
-    private readonly query: string;
+    readonly #query: string;
 
     constructor(
         query: string,
@@ -108,10 +106,10 @@ export class SimpleLanguageSpecificQueryStatement extends LanguageSpecificQueryS
         activated_for_languages?: string[]
     ) {
         super(applicable_for_languages, activated_for_languages);
-        this.query = query;
+        this.#query = query;
     }
 
-    override toQuery(): string {
-        return this.query;
+    override toString(): string {
+        return this.#query;
     }
 }

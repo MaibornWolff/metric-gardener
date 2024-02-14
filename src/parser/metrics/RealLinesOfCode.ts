@@ -3,7 +3,7 @@ import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
 import Parser, { TreeCursor } from "tree-sitter";
 import { getExpressionsByCategory } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Languages } from "../helper/Languages";
+import { Language } from "../helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -71,7 +71,7 @@ export class RealLinesOfCode implements Metric {
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         let isCommentFunction: (node: Parser.SyntaxNode) => boolean;
 
-        if (parseFile.language == Languages.Python) {
+        if (parseFile.language == Language.Python) {
             isCommentFunction = (node: Parser.SyntaxNode) => this.isPythonComment(node);
         } else {
             isCommentFunction = (node: Parser.SyntaxNode) => this.isComment(node);

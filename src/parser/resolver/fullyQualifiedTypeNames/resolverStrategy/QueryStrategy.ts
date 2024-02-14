@@ -5,7 +5,7 @@ import { formatCaptures } from "../../../helper/Helper";
 import { ParseFile } from "../../../metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
-import { SimpleQueryStatement } from "../../../helper/QueryStatements";
+import { SimpleQueryStatement } from "../../../queries/QueryStatements";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -24,7 +24,7 @@ export class QueryStrategy {
 
         const tree = TreeParser.getParseTree(parseFile);
 
-        const queryBuilder = new QueryBuilder(parseFile, tree);
+        const queryBuilder = new QueryBuilder(parseFile.language);
         queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
 
         const query = queryBuilder.build();

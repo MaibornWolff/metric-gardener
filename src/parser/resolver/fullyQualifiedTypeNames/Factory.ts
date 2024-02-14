@@ -2,14 +2,14 @@ import { AbstractCollector } from "./AbstractCollector";
 import { PHPCollector } from "./PHPCollector";
 import { CSharpCollector } from "./CSharpCollector";
 import { ParseFile } from "../../metrics/Metric";
-import { Languages } from "../../helper/Languages";
+import { Language } from "../../helper/Language";
 
 export class Factory {
-    private collectors = new Map<Languages, AbstractCollector>();
+    private collectors = new Map<Language, AbstractCollector>();
 
     constructor() {
-        this.collectors.set(Languages.CSharp, new CSharpCollector());
-        this.collectors.set(Languages.PHP, new PHPCollector());
+        this.collectors.set(Language.CSharp, new CSharpCollector());
+        this.collectors.set(Language.PHP, new PHPCollector());
     }
 
     getCollector(parseFile: ParseFile): AbstractCollector | undefined {

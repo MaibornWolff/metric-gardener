@@ -5,7 +5,7 @@ import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
-import { SimpleQueryStatement } from "../../helper/QueryStatements";
+import { SimpleQueryStatement } from "../../queries/QueryStatements";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -30,7 +30,7 @@ export abstract class AbstractCollector {
         if (this.getAccessorsQuery()) {
             const tree = TreeParser.getParseTree(parseFile);
 
-            const queryBuilder = new QueryBuilder(parseFile, tree);
+            const queryBuilder = new QueryBuilder(parseFile.language);
             queryBuilder.setStatements([new SimpleQueryStatement(this.getAccessorsQuery())]);
 
             const publicAccessorsQuery = queryBuilder.build();

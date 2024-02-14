@@ -21,6 +21,7 @@ export const enum Language {
     Kotlin,
     PHP,
     TypeScript,
+    TSX,
     Python,
     /**
      * For files with unknown file extension. Could be a source code file written in language(s) for which
@@ -48,6 +49,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Kotlin, "kt"],
         [Language.PHP, "php"],
         [Language.TypeScript, "ts"],
+        [Language.TSX, "tsx"],
         [Language.Python, "py"],
         [Language.Unknown, "N/A"],
     ])
@@ -65,6 +67,7 @@ export const languageToGrammar = new Map([
     [Language.Kotlin, Kotlin],
     [Language.PHP, PHP],
     [Language.TypeScript, TypeScript.typescript],
+    [Language.TSX, TypeScript.tsx],
     [Language.Python, Python],
 ]);
 
@@ -87,6 +90,7 @@ export const fileExtensionToLanguage = new Map([
     ["kt", Language.Kotlin],
     ["php", Language.PHP],
     ["ts", Language.TypeScript],
+    ["tsx", Language.TSX],
     ["py", Language.Python],
 ]);
 

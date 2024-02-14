@@ -72,7 +72,7 @@ describe("JavaScript metrics tests", () => {
 
     describe("parses JavaScript comment lines metric", () => {
         it("should count comments properly, also counting file header, class description and doc block tag comment lines", async () => {
-            await testFileMetric(jsTestResourcesPath + "comments.js", FileMetric.commentLines, 17);
+            await testFileMetric(jsTestResourcesPath + "comments.js", FileMetric.commentLines, 18);
         });
 
         it("should count comments properly, also in the presence of multiple block comments in the same line", async () => {

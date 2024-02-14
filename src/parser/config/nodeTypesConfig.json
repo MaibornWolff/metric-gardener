@@ -2777,7 +2777,7 @@
         "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts"]
+        "languages": ["ts"]
     },
     {
         "expression": "generator_function",
@@ -6957,5 +6957,33 @@
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
+    },
+    {
+        "expression": "function_expression",
+        "metrics": ["complexity", "functions"],
+        "type": "statement",
+        "category": "",
+        "languages": ["js"]
+    },
+    {
+        "expression": "import_attribute",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js"]
+    },
+    {
+        "expression": "html_character_reference",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["js"]
+    },
+    {
+        "expression": "html_comment",
+        "metrics": ["comment_lines", "real_lines_of_code"],
+        "type": "statement",
+        "category": "comment",
+        "languages": ["js"]
     }
 ]

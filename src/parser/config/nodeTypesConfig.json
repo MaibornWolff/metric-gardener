@@ -2525,7 +2525,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["java"]
+        "languages": ["java", "ts"]
     },
     {
         "expression": "marker_annotation",
@@ -2771,13 +2771,6 @@
         "type": "statement",
         "category": "",
         "languages": ["js", "ts", "php"]
-    },
-    {
-        "expression": "function",
-        "metrics": ["complexity", "functions"],
-        "type": "statement",
-        "category": "",
-        "languages": ["ts"]
     },
     {
         "expression": "generator_function",
@@ -6963,27 +6956,41 @@
         "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
-        "languages": ["js"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "import_attribute",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "html_character_reference",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js"]
+        "languages": ["js", "ts"]
     },
     {
         "expression": "html_comment",
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["js"]
+        "languages": ["js", "ts"]
+    },
+    {
+        "expression": "const",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
+    },
+    {
+        "expression": "adding_type_annotation",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["ts"]
     }
 ]

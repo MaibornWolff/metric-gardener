@@ -24,16 +24,14 @@ export class Functions implements Metric {
 
     async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
         const queryBuilder = new QueryBuilder(parseFile, tree);
-        switch (parseFile.language) {
-            case Languages.Java:
-                queryBuilder.setStatements(
-                    this.statementsSuperSet.concat(
-                        new SimpleQueryStatement("(class_body (block)) @initBlock")
-                    )
-                );
-                break;
-            default:
-                queryBuilder.setStatements(this.statementsSuperSet);
+        if (parseFile.language === Languages.Java) {
+            queryBuilder.setStatements(
+                this.statementsSuperSet.concat(
+                    new SimpleQueryStatement("(class_body (block)) @initBlock")
+                )
+            );
+        } else {
+            queryBuilder.setStatements(this.statementsSuperSet);
         }
 
         const query = queryBuilder.build();

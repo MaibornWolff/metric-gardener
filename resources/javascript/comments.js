@@ -14,6 +14,7 @@ class Example {
     exampleMethod(input) {
         // A comment
         // I have a comment about this.
+        <!-- this is a html comment -->
         let a = 2;
         let b = 3;
 

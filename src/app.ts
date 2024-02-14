@@ -74,8 +74,14 @@ async function parseSourceCode(argv) {
         argv["print-relative-paths"]
     );
 
+    console.time("Time to complete");
+
     const parser = new GenericParser(configuration);
     const results = await parser.calculateMetrics();
+
+    console.log("#####################################");
+    console.log("Metrics calculation finished.");
+    console.timeEnd("Time to complete");
 
     outputAsJson(
         results.fileMetrics,

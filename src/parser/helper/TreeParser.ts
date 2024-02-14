@@ -36,13 +36,13 @@ export class TreeParser {
             // See https://flow.org/en/docs/usage/#toc-prepare-your-code-for-flow on how to identify them.
             // See https://github.com/tree-sitter/tree-sitter-typescript/tree/v0.20.5 on using the TSX-grammar
             // for flow-annotated files.
-            if (sourceCode.match(/^.*@flow/) !== null) {
+            if (sourceCode.match(/^(\/\*[\s*]*@flow)|(\/\/\s*@flow)/) !== null) {
                 grammarLanguage = Language.TSX;
             }
         }
 
         const parser = new Parser();
-        parser.setLanguage(languageToGrammar.get(parseFile.language));
+        parser.setLanguage(languageToGrammar.get(grammarLanguage));
 
         const tree = parser.parse(sourceCode);
 

@@ -33,8 +33,6 @@ export class GenericParser {
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
     async calculateMetrics() {
-        console.time("Time to complete");
-
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
         const unknownFiles: string[] = [];
         let couplingMetrics = {} as CouplingResult;
@@ -87,11 +85,6 @@ export class GenericParser {
             for (const file of unknownParseFiles) {
                 unknownFiles.push(formatPrintPath(file.filePath, this.config));
             }
-
-            console.log("#####################################");
-            console.log("#####################################");
-            console.log("Metrics calculation finished.");
-            console.timeEnd("Time to complete");
 
             return {
                 fileMetrics,

@@ -35,7 +35,7 @@
         "tree-sitter-php": "0.20.0",
         "tree-sitter-python": "0.20.4",
         "tree-sitter-typescript": "0.20.5",
-        "yargs": "17.2.1",
+        "yargs": "17.7.2",
         "zlib": "1.0.5"
     },
     "devDependencies": {
@@ -44,7 +44,7 @@
         "@babel/preset-typescript": "7.23.3",
         "@types/jest": "27.5.2",
         "@types/node": "16.18.80",
-        "@types/yargs": "17.0.5",
+        "@types/yargs": "17.0.32",
         "@typescript-eslint/eslint-plugin": "5.62.0",
         "@typescript-eslint/parser": "5.62.0",
         "babel-jest": "27.5.1",

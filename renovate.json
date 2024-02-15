@@ -3,6 +3,11 @@
     "extends": ["config:js-app", ":semanticCommits"],
     "packageRules": [
         {
+            "matchPaths": [".github/workflows"],
+            "groupName": "github actions dependencies",
+            "enabled": true
+        },
+        {
             "matchPaths": ["package.json"],
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
             "excludePackagePatterns": ["^tree-sitter-.*"],

@@ -6992,5 +6992,40 @@
         "type": "statement",
         "category": "",
         "languages": ["ts"]
+    },
+    {
+        "expression": "seh_leave_statement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "seh_try_statement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "seh_except_clause",
+        "metrics": ["complexity"],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "seh_finally_clause",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
+    },
+    {
+        "expression": "subscript_range_designator",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["cpp"]
     }
 ]

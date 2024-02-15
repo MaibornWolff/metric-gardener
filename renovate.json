@@ -1,5 +1,21 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": ["config:js-app", ":semanticCommits"],
-    "timezone": "Europe/Berlin"
+    "packageRules": [
+        {
+            "matchPaths": ["package.json"],
+            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+            "excludePackagePatterns": ["^tree-sitter-.*"],
+            "groupName": "npm dependencies without major updates",
+            "enabled": true
+        },
+        {
+            "matchPaths": ["package.json"],
+            "matchUpdateTypes": ["major"],
+            "labels": ["UPDATE-MAJOR"],
+            "enabled": true
+        }
+    ],
+    "timezone": "Europe/Berlin",
+    "schedule": ["every weekend"]
 }

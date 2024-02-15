@@ -18,7 +18,7 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
     ["java", "./node_modules/tree-sitter-java/src/node-types.json"],
     ["js", "./node_modules/tree-sitter-javascript/src/node-types.json"],
     ["kt", "./node_modules/tree-sitter-kotlin/src/node-types.json"],
-    ["php", "./node_modules/tree-sitter-php/src/node-types.json"],
+    ["php", "./node_modules/tree-sitter-php/php/src/node-types.json"],
     ["ts", "./node_modules/tree-sitter-typescript/typescript/src/node-types.json"],
     ["tsx", "./node_modules/tree-sitter-typescript/tsx/src/node-types.json"],
     ["py", "./node_modules/tree-sitter-python/src/node-types.json"],

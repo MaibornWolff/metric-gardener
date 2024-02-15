@@ -2918,7 +2918,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["js", "ts", "tsx"],
+        "languages": ["js", "ts", "tsx", "php"],
         "operator": "**"
     },
     {
@@ -3829,13 +3829,6 @@
     },
     {
         "expression": "clone_expression",
-        "metrics": [],
-        "type": "statement",
-        "category": "",
-        "languages": ["php"]
-    },
-    {
-        "expression": "exponentiation_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
@@ -7027,5 +7020,19 @@
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
+    },
+    {
+        "expression": "error_suppression_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
+    },
+    {
+        "expression": "disjunctive_normal_form_type",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["php"]
     }
 ]

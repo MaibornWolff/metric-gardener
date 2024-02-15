@@ -34,12 +34,8 @@ describe("C++ metrics tests", () => {
             testFileMetric(cppTestResourcesPath + "branches.cpp", FileMetric.complexity, 12);
         });
 
-        it("should count for two switch case labels and a function, but not for the default label",  () => {
-            testFileMetric(
-                cppTestResourcesPath + "switch_case.cpp",
-                FileMetric.complexity,
-                3
-            );
+        it("should count for two switch case labels and a function, but not for the default label", () => {
+            testFileMetric(cppTestResourcesPath + "switch_case.cpp", FileMetric.complexity, 3);
         });
 
         it("should count catch-statements and no return statements", () => {

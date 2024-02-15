@@ -65,7 +65,7 @@ export const languageToGrammar = new Map([
     [Language.Java, Java],
     [Language.JavaScript, JavaScript],
     [Language.Kotlin, Kotlin],
-    [Language.PHP, PHP],
+    [Language.PHP, PHP.php],
     [Language.TypeScript, TypeScript.typescript],
     [Language.TSX, TypeScript.tsx],
     [Language.Python, Python],

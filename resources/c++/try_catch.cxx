@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <string>
 #include <iostream>
+#include <cstring>
 
 /**
  * Some try-catch-structures
@@ -12,7 +13,7 @@ int main(int argc, char* argv[]) {
             throw std::invalid_argument("Not enough arguments provided!");
         }
         if(strcmp(argv[0], "bestprogram") != 0) {
-            throw new std::domain_error("HOW DARE YOU TO RENAME MY PROGRAM!!!!!");
+            throw std::domain_error("HOW DARE YOU TO RENAME MY PROGRAM!!!!!");
         }
     }
     catch(const std::invalid_argument &ia){

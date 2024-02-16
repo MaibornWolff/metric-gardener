@@ -50,11 +50,11 @@ describe("C++ metrics tests", () => {
             testFileMetric(cppTestResourcesPath + "classes.hpp", FileMetric.complexity, 0);
         });
 
-        it("should not count function declarations", () => {
+        it("should count function declarations", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_declarations.hpp",
                 FileMetric.complexity,
-                0
+                4
             );
         });
 
@@ -98,11 +98,11 @@ describe("C++ metrics tests", () => {
             );
         });
 
-        it("should not count function declarations", () => {
+        it("should count function declarations", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_declarations.hpp",
                 FileMetric.functions,
-                0
+                4
             );
         });
 

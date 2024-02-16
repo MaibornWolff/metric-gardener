@@ -333,6 +333,7 @@
         "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
+        "activated_for_languages": ["cs", "java"],
         "languages": ["cs", "java", "cpp"]
     },
     {
@@ -3993,6 +3994,7 @@
         "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
+        "activated_for_languages": ["php", "py"],
         "languages": ["php", "py", "cpp"]
     },
     {
@@ -5074,7 +5076,7 @@
     },
     {
         "expression": "abstract_function_declarator",
-        "metrics": [],
+        "metrics": ["functions", "complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
@@ -5123,7 +5125,7 @@
     },
     {
         "expression": "function_declarator",
-        "metrics": [],
+        "metrics": ["functions", "complexity"],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]

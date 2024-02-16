@@ -58,7 +58,7 @@ Counts expressions that branch the control flow, like if-statements, loops, catc
 -   binary logical operations (like AND and OR)
 
 **functions**<br>
-The number of function definitions inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, constructors, init blocks, etc.
+The number of function declarations inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, abstract functions, constructors, init blocks, etc.
 
 **classes**<br>
 The number of class definitions inside a file, also counting for enums, interfaces, structs and records.

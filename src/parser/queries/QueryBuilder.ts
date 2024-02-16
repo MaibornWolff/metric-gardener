@@ -7,28 +7,12 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
-const treeSitterQueryCache = new Map<any, Map<string, Query>>();
+const treeSitterQueryCache = new Map<Language, Map<string, CachedQuery>>();
 
-/**
- * Tries to retrieve the tree-sitter query from the cache. If there is no matching query,
- * calls the constructor of tree-sitter.Parser.Query, which is a very performance-heavy operation.
- */
-function retrieveTreeSitterQuery(treeSitterGrammar: any, queryString: string) {
-    let cachedQueriesForLanguage = treeSitterQueryCache.get(treeSitterGrammar);
-
-    if (cachedQueriesForLanguage !== undefined) {
-        const cachedQuery = cachedQueriesForLanguage.get(queryString);
-        if (cachedQuery !== undefined) {
-            return cachedQuery;
-        }
-    }
-    const newQuery = new Query(treeSitterGrammar, queryString);
-
-    if (cachedQueriesForLanguage === undefined) {
-        cachedQueriesForLanguage = new Map<string, Query>();
-        treeSitterQueryCache.set(treeSitterGrammar, cachedQueriesForLanguage);
-    }
-    treeSitterQueryCache.get(treeSitterGrammar)?.set(queryString, newQuery);
+interface CachedQuery {
+    language: Language;
+    queryString: string;
+    query: Query;
 }
 
 export class QueryBuilder {
@@ -67,8 +51,39 @@ export class QueryBuilder {
             dlog(queryString);
             dlog("-----------------------------------------");
 
-            return retrieveTreeSitterQuery(this.treeSitterGrammar, queryString);
+            return this.#retrieveTreeSitterQuery(queryString);
         }
+    }
+
+    /**
+     * Tries to retrieve the tree-sitter query from the cache. If there is no matching query,
+     * calls the constructor of tree-sitter.Parser.Query, which is a very performance-heavy operation.
+     */
+    #retrieveTreeSitterQuery(queryString: string) {
+        let cachedQueriesForLanguage = treeSitterQueryCache.get(this.#language);
+
+        if (cachedQueriesForLanguage !== undefined) {
+            const cachedQuery = cachedQueriesForLanguage.get(queryString);
+            if (
+                cachedQuery !== undefined &&
+                cachedQuery.queryString === queryString &&
+                cachedQuery.language === this.#language
+            ) {
+                console.log("Reused query for " + queryString);
+                return cachedQuery.query;
+            }
+        }
+        const newQuery = new Query(languageToGrammar.get(this.#language), queryString);
+
+        if (cachedQueriesForLanguage === undefined) {
+            cachedQueriesForLanguage = new Map<string, CachedQuery>();
+            treeSitterQueryCache.set(this.#language, cachedQueriesForLanguage);
+        }
+        treeSitterQueryCache.get(this.#language)?.set(queryString, {
+            language: this.#language,
+            queryString: queryString,
+            query: newQuery,
+        });
     }
 
     /**

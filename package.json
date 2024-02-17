@@ -45,7 +45,7 @@
         "@babel/preset-env": "7.23.9",
         "@babel/preset-typescript": "7.23.3",
         "@types/jest": "27.5.2",
-        "@types/node": "16.18.81",
+        "@types/node": "16.18.82",
         "@types/yargs": "17.0.32",
         "@typescript-eslint/eslint-plugin": "5.62.0",
         "@typescript-eslint/parser": "5.62.0",

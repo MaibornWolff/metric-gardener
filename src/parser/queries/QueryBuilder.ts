@@ -17,12 +17,10 @@ interface CachedQuery {
 
 export class QueryBuilder {
     readonly #language: Language;
-    readonly treeSitterGrammar: any;
     #statements: QueryStatementInterface[] = [];
 
     constructor(language: Language) {
         this.#language = language;
-        this.treeSitterGrammar = languageToGrammar.get(language);
     }
 
     setStatements(statements: QueryStatementInterface[]) {

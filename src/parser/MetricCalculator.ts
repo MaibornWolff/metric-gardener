@@ -19,8 +19,8 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Arranges the calculation of all basic single file metrics on multiple files.
  */
 export class MetricCalculator {
-    private readonly fileMetrics: Metric[] = [];
-    private config: Configuration;
+    readonly #fileMetrics: Metric[] = [];
+    readonly #config: Configuration;
 
     /**
      * Constructs a new instance of {@link MetricCalculator} for arranging the calculation of all
@@ -28,11 +28,11 @@ export class MetricCalculator {
      * @param configuration Configuration that should be applied for this new instance.
      */
     constructor(configuration: Configuration) {
-        this.config = configuration;
+        this.#config = configuration;
         const allNodeTypes: ExpressionMetricMapping[] =
             nodeTypesConfig as ExpressionMetricMapping[];
 
-        this.fileMetrics = [
+        this.#fileMetrics = [
             new Complexity(allNodeTypes),
             new Functions(allNodeTypes),
             new Classes(allNodeTypes),
@@ -68,7 +68,7 @@ export class MetricCalculator {
         const metricResults = new Map<string, MetricResult>();
         const resultPromises: Promise<MetricResult>[] = [];
 
-        for (const metric of this.fileMetrics) {
+        for (const metric of this.#fileMetrics) {
             resultPromises.push(
                 metric.calculate(parsedFile).catch((reason) => {
                     console.error("Error while calculating metric");
@@ -83,6 +83,6 @@ export class MetricCalculator {
             metricResults.set(result.metricName, result);
         }
 
-        return [formatPrintPath(parsedFile.filePath, this.config), metricResults];
+        return [formatPrintPath(parsedFile.filePath, this.#config), metricResults];
     }
 }

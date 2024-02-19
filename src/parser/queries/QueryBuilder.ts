@@ -59,7 +59,7 @@ export class QueryBuilder {
      * Tries to retrieve the tree-sitter query from the cache. If there is no matching query,
      * calls the constructor of tree-sitter.Parser.Query, which is a very performance-heavy operation.
      */
-    #retrieveTreeSitterQuery(queryString: string) {
+    #retrieveTreeSitterQuery(queryString: string): Query {
         let cachedQueriesForLanguage = treeSitterQueryCache.get(this.#language);
 
         if (cachedQueriesForLanguage !== undefined) {
@@ -69,7 +69,6 @@ export class QueryBuilder {
                 cachedQuery.queryString === queryString &&
                 cachedQuery.language === this.#language
             ) {
-                console.log("Reused query for " + queryString);
                 return cachedQuery.query;
             }
         }
@@ -84,6 +83,8 @@ export class QueryBuilder {
             queryString: queryString,
             query: newQuery,
         });
+
+        return newQuery;
     }
 
     /**

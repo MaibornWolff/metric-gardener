@@ -1,4 +1,4 @@
-import Parser from "tree-sitter";
+import { Tree } from "tree-sitter";
 import { Language } from "../helper/Language";
 
 /**
@@ -56,11 +56,10 @@ export interface CouplingResult {
 export interface Metric {
     /**
      * Calculates the metric value for the specified file.
-     * @param parseFile Source code file for which the metric value should be calculated.
-     * @param tree Syntax tree for the file.
+     * @param parsedFile Parsed source code file for which the metric value should be calculated.
      * @return A MetricResult containing the calculated metric value.
      */
-    calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult>;
+    calculate(parsedFile: ParsedFile): Promise<MetricResult>;
 
     /**
      * Returns the name of this metric.
@@ -70,14 +69,33 @@ export interface Metric {
 }
 
 export interface CouplingMetric {
-    calculate(files: ParseFile[]): CouplingResult;
+    calculate(files: ParsedFile[]): CouplingResult;
     getName(): string;
 }
 
 /**
- * Represents a file to be parsed, including its path and the file extension.
+ * Represents a file to be analyzed for metrics, including its path, file extension, language and parsed syntax tree.
  */
-export interface ParseFile {
+export interface ParsedFile extends SimpleFile {
+    /**
+     * Programming language of the file.
+     */
+    language: Language;
+
+    /**
+     * Parsed syntax tree of the file.
+     */
+    tree: Tree;
+}
+
+export function isParsedFile(file: SimpleFile): file is ParsedFile {
+    return (file as ParsedFile).language !== undefined && (file as ParsedFile).tree !== undefined;
+}
+
+/**
+ * Represents a file.
+ */
+export interface SimpleFile {
     /**
      * File extension of the file.
      */
@@ -87,9 +105,4 @@ export interface ParseFile {
      * Path to the file.
      */
     filePath: string;
-
-    /**
-     * Programming language of the file.
-     */
-    language: Language;
 }

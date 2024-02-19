@@ -1,5 +1,5 @@
 import { ExpressionMetricMapping } from "../helper/Model";
-import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import Parser, { TreeCursor } from "tree-sitter";
 import { getExpressionsByCategory } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
@@ -70,10 +70,11 @@ export class RealLinesOfCode implements Metric {
         return realLinesOfCode;
     }
 
-    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
+    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+        const { language, tree } = parsedFile;
         let isCommentFunction: (node: Parser.SyntaxNode) => boolean;
 
-        if (parseFile.language == Language.Python) {
+        if (language == Language.Python) {
             isCommentFunction = (node: Parser.SyntaxNode) => this.isPythonComment(node);
         } else {
             isCommentFunction = (node: Parser.SyntaxNode) => this.isComment(node);

@@ -2,9 +2,16 @@ import { findFilesAsync, formatPrintPath } from "./helper/Helper";
 import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
-import { CouplingResult, MetricResult, ParseFile } from "./metrics/Metric";
+import {
+    CouplingResult,
+    isParsedFile,
+    MetricResult,
+    ParsedFile,
+    SimpleFile,
+} from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Language } from "./helper/Language";
+import { fileExtensionToLanguage } from "./helper/Language";
+import { TreeParser } from "./helper/TreeParser";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -38,40 +45,68 @@ export class GenericParser {
         let couplingMetrics = {} as CouplingResult;
 
         try {
-            const parseFilesGenerator = findFilesAsync(this.config);
+            const filePathGenerator = findFilesAsync(this.config);
+
+            const parsePromises = new Map<string, Promise<ParsedFile | SimpleFile>>();
 
             const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
-            const parseFiles: ParseFile[] = [];
-            const unknownParseFiles: ParseFile[] = [];
+
+            for await (const file of filePathGenerator) {
+                const fileExtensionLanguage = fileExtensionToLanguage.get(file.fileExtension);
+                if (fileExtensionLanguage !== undefined) {
+                    parsePromises.set(
+                        file.filePath,
+                        TreeParser.parse(file, fileExtensionLanguage).catch((reason) => {
+                            console.error(
+                                "Error while parsing a tree for the file " + file.filePath
+                            );
+                            console.error(reason);
+                            return file;
+                        })
+                    );
+                } else {
+                    unknownFiles.push(file.filePath);
+                }
+            }
 
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator(this.config);
 
-                for await (const file of parseFilesGenerator) {
-                    if (file.language !== Language.Unknown) {
-                        fileMetricPromises.push(metricsParser.calculateMetrics(file));
-                        parseFiles.push(file);
-                    } else {
-                        unknownParseFiles.push(file);
-                    }
-                }
-            }
-            // In case this.config.parseMetrics is false, as we need all files for the coupling metrics:
-            else {
-                for await (const file of parseFilesGenerator) {
-                    if (file.language !== Language.Unknown) {
-                        parseFiles.push(file);
-                    } else {
-                        unknownParseFiles.push(file);
-                    }
+                for (const [filePath, parsePromise] of parsePromises) {
+                    fileMetricPromises.push(
+                        metricsParser.calculateMetrics(parsePromise).catch((reason) => {
+                            console.error("Error while parsing file metrics");
+                            console.error(reason);
+                            return [
+                                filePath,
+                                new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
+                            ];
+                        })
+                    );
                 }
             }
 
-            dlog(" --- " + parseFiles.length + " files detected", "\n\n");
+            // We need to ensure that all trees have been parsed before calculating the coupling metrics,
+            // as we need to know the language of the file for that:
+            const filesForCouplingMetrics: ParsedFile[] = [];
+            const treeParseResults = await Promise.all(parsePromises.values());
+
+            for (const file of treeParseResults) {
+                // Do not try to parse the syntax tree of the file again
+                // for the coupling metrics if that already failed once:
+                if (isParsedFile(file)) {
+                    filesForCouplingMetrics.push(file);
+                }
+            }
+
+            dlog(
+                " --- " + (treeParseResults.length + unknownFiles.length) + " files detected",
+                "\n\n"
+            );
 
             if (this.config.parseDependencies) {
                 const couplingParser = new CouplingCalculator(this.config);
-                couplingMetrics = couplingParser.calculateMetrics(parseFiles);
+                couplingMetrics = couplingParser.calculateMetrics(filesForCouplingMetrics);
             }
 
             dlog("Final Coupling Metrics", couplingMetrics);
@@ -82,8 +117,8 @@ export class GenericParser {
                 fileMetrics.set(filepath, metricsMap);
             }
 
-            for (const file of unknownParseFiles) {
-                unknownFiles.push(formatPrintPath(file.filePath, this.config));
+            for (let i = 0; i < unknownFiles.length; i++) {
+                unknownFiles[i] = formatPrintPath(unknownFiles[i], this.config);
             }
 
             return {

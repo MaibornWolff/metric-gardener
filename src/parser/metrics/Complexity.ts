@@ -1,8 +1,8 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { ExpressionMetricMapping, NodeTypeCategory } from "../helper/Model";
-import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import Parser, { QueryMatch } from "tree-sitter";
+import { QueryMatch } from "tree-sitter";
 import {
     ExpressionQueryStatement,
     OperatorQueryStatement,
@@ -171,10 +171,11 @@ export class Complexity implements Metric {
         }
     }
 
-    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(parseFile.language);
+    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+        const { language, tree } = parsedFile;
+        const queryBuilder = new QueryBuilder(language);
 
-        if (parseFile.language === Language.Java) {
+        if (language === Language.Java) {
             //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.complexityStatementsSuperSet.concat(

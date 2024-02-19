@@ -1,14 +1,14 @@
 import { Factory as UsageCollectorFactory } from "./typeUsages/Factory";
 import { NamespaceCollector } from "./NamespaceCollector";
-import { ParseFile } from "../metrics/Metric";
+import { ParsedFile } from "../metrics/Metric";
 
 export class UsagesCollector {
     private usageCollectorFactory = new UsageCollectorFactory();
 
-    getUsageCandidates(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
-        const collector = this.usageCollectorFactory.getCollector(parseFile);
+    getUsageCandidates(parsedFile: ParsedFile, namespaceCollector: NamespaceCollector) {
+        const collector = this.usageCollectorFactory.getCollector(parsedFile);
         return collector !== undefined
-            ? collector.getUsageCandidates(parseFile, namespaceCollector)
+            ? collector.getUsageCandidates(parsedFile, namespaceCollector)
             : { candidates: [], unresolvedCallExpressions: [] };
     }
 }

@@ -1,8 +1,8 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
-import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
-import Parser, { QueryMatch, SyntaxNode } from "tree-sitter";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
+import { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Language } from "../helper/Language";
 import { QueryStatementInterface, SimpleQueryStatement } from "../queries/QueryStatements";
@@ -26,9 +26,10 @@ export class CommentLines implements Metric {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
     }
 
-    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
+    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+        const { language, tree } = parsedFile;
         const additionalStatements: QueryStatementInterface[] = [];
-        switch (parseFile.language) {
+        switch (language) {
             case Language.Python:
                 additionalStatements.push(
                     new SimpleQueryStatement(
@@ -38,7 +39,7 @@ export class CommentLines implements Metric {
                 break;
         }
 
-        const queryBuilder = new QueryBuilder(parseFile.language);
+        const queryBuilder = new QueryBuilder(language);
 
         if (additionalStatements.length === 0) {
             queryBuilder.setStatements(this.statementsSuperSet);

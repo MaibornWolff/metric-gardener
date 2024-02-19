@@ -1,7 +1,6 @@
-import { ParseFile } from "../../metrics/Metric";
+import { ParsedFile } from "../../metrics/Metric";
 import { formatCaptures } from "../../helper/Helper";
 import { QueryBuilder } from "../../queries/QueryBuilder";
-import { TreeParser } from "../../helper/TreeParser";
 import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
@@ -22,15 +21,15 @@ export abstract class AbstractCollector {
     protected abstract getAccessorsQuery(): string;
 
     getAccessors(
-        parseFile: ParseFile,
+        parsedFile: ParsedFile,
         namespacesOfFile: Map<string, FullyQTN>
     ): Map<string, Accessor[]> {
         const publicAccessors = new Map<string, Accessor[]>();
 
         if (this.getAccessorsQuery()) {
-            const tree = TreeParser.getParseTree(parseFile);
+            const { filePath, language, tree } = parsedFile;
 
-            const queryBuilder = new QueryBuilder(parseFile.language);
+            const queryBuilder = new QueryBuilder(language);
             queryBuilder.setStatements([new SimpleQueryStatement(this.getAccessorsQuery())]);
 
             const publicAccessorsQuery = queryBuilder.build();
@@ -54,7 +53,7 @@ export abstract class AbstractCollector {
                 const publicAccessor: Accessor = {
                     name: "",
                     namespaces: Array.from(namespacesOfFile.values()),
-                    filePath: parseFile.filePath,
+                    filePath: filePath,
                     returnType: accessorsTextCaptures[index].text,
                 };
 

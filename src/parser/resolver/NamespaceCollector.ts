@@ -1,31 +1,32 @@
 import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector";
 import { Factory as NamespaceCollectorFactory } from "./fullyQualifiedTypeNames/Factory";
-import { ParseFile } from "../metrics/Metric";
+import { ParsedFile } from "../metrics/Metric";
 import { Language } from "../helper/Language";
 
 export class NamespaceCollector {
     private namespaceCollectorFactory = new NamespaceCollectorFactory();
     private cache = new Map<Language, Map<string, Map<string, FullyQTN>>>();
 
-    getNamespaces(parseFile: ParseFile): Map<string, FullyQTN> {
-        let namespacesByLanguage = this.cache.get(parseFile.language);
+    getNamespaces(parsedFile: ParsedFile): Map<string, FullyQTN> {
+        const { filePath, language, tree } = parsedFile;
+        let namespacesByLanguage = this.cache.get(language);
         if (namespacesByLanguage === undefined) {
-            this.cache.set(parseFile.language, new Map());
+            this.cache.set(parsedFile.language, new Map());
         }
 
-        namespacesByLanguage = this.cache.get(parseFile.language);
-        const fileNamespaces = namespacesByLanguage?.get(parseFile.filePath);
+        namespacesByLanguage = this.cache.get(language);
+        const fileNamespaces = namespacesByLanguage?.get(filePath);
         if (fileNamespaces !== undefined) {
             return fileNamespaces;
         }
 
-        const collector = this.namespaceCollectorFactory.getCollector(parseFile);
+        const collector = this.namespaceCollectorFactory.getCollector(parsedFile);
         const packages =
             collector !== undefined
-                ? collector.getFullyQTNs(parseFile)
+                ? collector.getFullyQTNs(parsedFile)
                 : new Map<string, FullyQTN>();
 
-        this.cache.get(parseFile.language)?.set(parseFile.filePath, packages);
+        this.cache.get(language)?.set(filePath, packages);
 
         return packages;
     }

@@ -1,8 +1,7 @@
 import { FullyQTN } from "../AbstractCollector";
-import { TreeParser } from "../../../helper/TreeParser";
 import { QueryBuilder } from "../../../queries/QueryBuilder";
 import { formatCaptures } from "../../../helper/Helper";
-import { ParseFile } from "../../../metrics/Metric";
+import { ParsedFile } from "../../../metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
 import { SimpleQueryStatement } from "../../../queries/QueryStatements";
@@ -14,17 +13,21 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class QueryStrategy {
     protected cache: Map<string, Map<string, FullyQTN>> = new Map();
 
-    getFullyQTNs(parseFile: ParseFile, namespaceDelimiter, namespacesQuery): Map<string, FullyQTN> {
-        const cachedItem = this.cache.get(parseFile.filePath);
+    getFullyQTNs(
+        parsedFile: ParsedFile,
+        namespaceDelimiter,
+        namespacesQuery
+    ): Map<string, FullyQTN> {
+        const { filePath, language, tree } = parsedFile;
+
+        const cachedItem = this.cache.get(filePath);
         if (cachedItem !== undefined) {
             return cachedItem;
         }
 
         const namespaceDeclarations: Map<string, FullyQTN> = new Map();
 
-        const tree = TreeParser.getParseTree(parseFile);
-
-        const queryBuilder = new QueryBuilder(parseFile.language);
+        const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
 
         const query = queryBuilder.build();
@@ -34,7 +37,7 @@ export class QueryStrategy {
         }
         const textCaptures = formatCaptures(tree, captures);
 
-        dlog("namespace definitions", parseFile.filePath, textCaptures);
+        dlog("namespace definitions", filePath, textCaptures);
 
         for (let index = 0; index < textCaptures.length; index += 1) {
             const namespaceName = textCaptures[index].text;
@@ -56,7 +59,7 @@ export class QueryStrategy {
                     namespace: namespaceName,
                     className: className,
                     classType: isInterface ? "interface" : "class",
-                    source: parseFile.filePath,
+                    source: parsedFile.filePath,
                     namespaceDelimiter: namespaceDelimiter,
                     implementedClasses: [],
                 };
@@ -114,7 +117,7 @@ export class QueryStrategy {
             }
         }
 
-        this.cache.set(parseFile.filePath, namespaceDeclarations);
+        this.cache.set(filePath, namespaceDeclarations);
 
         return namespaceDeclarations;
     }

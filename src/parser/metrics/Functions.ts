@@ -1,10 +1,9 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { ExpressionMetricMapping } from "../helper/Model";
 import { getQueryStatements } from "../helper/Helper";
-import { FileMetric, Metric, MetricResult, ParseFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
-import Parser from "tree-sitter";
 import { Language } from "../helper/Language";
 import { QueryStatementInterface, SimpleQueryStatement } from "../queries/QueryStatements";
 
@@ -19,9 +18,10 @@ export class Functions implements Metric {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
     }
 
-    async calculate(parseFile: ParseFile, tree: Parser.Tree): Promise<MetricResult> {
-        const queryBuilder = new QueryBuilder(parseFile.language);
-        if (parseFile.language === Language.Java) {
+    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+        const { language, tree } = parsedFile;
+        const queryBuilder = new QueryBuilder(language);
+        if (language === Language.Java) {
             //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.statementsSuperSet.concat(

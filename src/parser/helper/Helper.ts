@@ -1,9 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { ExpressionMetricMapping } from "./Model";
-import { ParseFile } from "../metrics/Metric";
+import { SimpleFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
-import { fileExtensionToLanguage, Language } from "./Language";
 import { ExpressionQueryStatement } from "../queries/QueryStatements";
 
 /**
@@ -91,44 +90,33 @@ export function formatPrintPath(filePath: string, config: Configuration): string
 }
 
 /**
- * Checks if the file extension of the specified path is a known file extension of a programming language.
- * If so, this function returns a corresponding {@link ParseFile}-object that includes the language and file extension.
- * Otherwise, the language is set to {@link Language.Unknown}. The same applies if there is no file extension found,
- * in which case the file extension is set to an empty string.
+ * Checks if there is a file extension in the specified path.
+ * If so, this function returns the file extension.
  *
  * @param filePath Path that should be checked.
- * @return A ParseFile-object.
+ * @return The file extension (or empty string).
  */
-export function getLanguageFromFileExtension(filePath: string): ParseFile {
+export function getFileExtension(filePath: string): string {
     const splitted = filePath.split(".");
     if (splitted.length >= 2) {
-        const fileExtension = splitted[splitted.length - 1].toLowerCase();
-
-        if (fileExtension.length > 0) {
-            let language = fileExtensionToLanguage.get(fileExtension);
-            if (language === undefined) {
-                language = Language.Unknown;
-            }
-            return { fileExtension: fileExtension, filePath: filePath, language: language };
-        }
+        return splitted[splitted.length - 1].toLowerCase();
     }
-    return { fileExtension: "", filePath: filePath, language: Language.Unknown };
+    return "";
 }
 
 /**
- * Finds supported source code files recursively in all subdirectories.
+ * Finds files recursively in all subdirectories.
  *
  * This is an asynchronous generator function using asynchronous I/O,
  * which means it yields values when available.
  *
  * @param config Configuration of this parser run.
- * @return AsyncGenerator yielding found source code files.
+ * @return AsyncGenerator yielding found paths to single files.
  */
-export async function* findFilesAsync(config: Configuration): AsyncGenerator<ParseFile> {
+export async function* findFilesAsync(config: Configuration): AsyncGenerator<SimpleFile> {
     // Handle special case: if the specified sourcePath is a single file, just yield the file.
     if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
-        const parseFile = getLanguageFromFileExtension(config.sourcesPath);
-        yield parseFile;
+        yield { filePath: config.sourcesPath, fileExtension: getFileExtension(config.sourcesPath) };
     } else {
         // sourcePath points to a directory, so use recursive function to find all files.
 
@@ -142,7 +130,7 @@ export async function* findFilesAsync(config: Configuration): AsyncGenerator<Par
 async function* findFilesAsyncRecursive(
     dir: string,
     excludedFolders: Set<string>
-): AsyncGenerator<ParseFile> {
+): AsyncGenerator<SimpleFile> {
     const openedDir = await fs.promises.opendir(dir);
 
     for await (const currentEntry of openedDir) {
@@ -157,8 +145,7 @@ async function* findFilesAsyncRecursive(
             }
         } // End of if (isDirectory)
         else {
-            const parseFile = getLanguageFromFileExtension(currentPath);
-            yield parseFile;
+            yield { filePath: currentPath, fileExtension: getFileExtension(currentPath) };
         } // End of else (isDirectory)
     } // End of for await (directory entries)
 }

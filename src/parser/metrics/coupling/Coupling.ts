@@ -9,17 +9,18 @@ import { UsagesCollector } from "../../resolver/UsagesCollector";
 import {
     CouplingMetric,
     Relationship,
-    ParseFile,
+    ParsedFile,
     CouplingMetrics,
     CouplingResult,
 } from "../Metric";
-import { getLanguageFromFileExtension, formatPrintPath } from "../../helper/Helper";
+import { formatPrintPath, getFileExtension } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Configuration } from "../../Configuration";
-import { Language } from "../../helper/Language";
+import { TreeParser } from "../../helper/TreeParser";
+import { fileExtensionToLanguage } from "../../helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -30,7 +31,7 @@ export class Coupling implements CouplingMetric {
     private namespaceCollector: NamespaceCollector;
     private publicAccessorCollector: PublicAccessorCollector;
     private usageCollector: UsagesCollector;
-    private filesWithMultipleNamespaces: ParseFile[] = [];
+    private filesWithMultipleNamespaces: ParsedFile[] = [];
     private alreadyAddedRelationships = new Set<string>();
 
     constructor(
@@ -46,7 +47,7 @@ export class Coupling implements CouplingMetric {
         this.publicAccessorCollector = publicAccessorCollector;
     }
 
-    calculate(parseFiles: ParseFile[]) {
+    calculate(parseFiles: ParsedFile[]) {
         let namespaces: Map<string, FullyQTN> = new Map();
         const publicAccessors = new Map<string, Accessor[]>();
         let usagesCandidates: TypeUsageCandidate[] = [];
@@ -220,14 +221,16 @@ export class Coupling implements CouplingMetric {
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const parseFile = getLanguageFromFileExtension(filePath);
-        if (parseFile.language === Language.Unknown) {
+        const fileExtension = getFileExtension(filePath);
+        const assumedLanguage = fileExtensionToLanguage.get(getFileExtension(filePath));
+        if (assumedLanguage === undefined) {
             return;
         }
+        const parsedFile = TreeParser.parseSync({ filePath, fileExtension }, assumedLanguage);
 
-        const namespaces = this.namespaceCollector.getNamespaces(parseFile);
+        const namespaces = this.namespaceCollector.getNamespaces(parsedFile);
         if (namespaces.size > 1) {
-            this.filesWithMultipleNamespaces.push(parseFile);
+            this.filesWithMultipleNamespaces.push(parsedFile);
         }
 
         couplingMetrics[

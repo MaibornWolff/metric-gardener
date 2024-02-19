@@ -1,8 +1,7 @@
 import { QueryBuilder } from "../../queries/QueryBuilder";
 import { formatCaptures } from "../../helper/Helper";
-import { TreeParser } from "../../helper/TreeParser";
 import { NamespaceCollector } from "../NamespaceCollector";
-import { ParseFile } from "../../metrics/Metric";
+import { ParsedFile } from "../../metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
 import { SimpleQueryStatement } from "../../queries/QueryStatements";
@@ -53,27 +52,28 @@ export abstract class AbstractCollector {
 
     private processedPublicAccessors = new Set<string>();
 
-    getUsageCandidates(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
-        this.importsBySuffixOrAlias.set(parseFile.filePath, new Map());
+    getUsageCandidates(parsedFile: ParsedFile, namespaceCollector: NamespaceCollector) {
+        const { filePath, language, tree } = parsedFile;
+        this.importsBySuffixOrAlias.set(filePath, new Map());
 
-        let importReferences: ImportReference[] = this.getImports(parseFile, namespaceCollector);
+        let importReferences: ImportReference[] = this.getImports(parsedFile, namespaceCollector);
         if (this.getGroupedImportsQuery().length > 0) {
             importReferences = importReferences.concat(
-                this.getGroupedImports(parseFile, namespaceCollector)
+                this.getGroupedImports(parsedFile, namespaceCollector)
             );
         }
 
         this.processedPublicAccessors = new Set();
 
-        dlog("Alias Map:", parseFile.filePath, this.importsBySuffixOrAlias);
-        dlog("Import References", parseFile.filePath, importReferences);
+        dlog("Alias Map:", filePath, this.importsBySuffixOrAlias);
+        dlog("Import References", filePath, importReferences);
 
         const { candidates, unresolvedCallExpressions } = this.getUsages(
-            parseFile,
+            parsedFile,
             namespaceCollector,
             importReferences
         );
-        dlog("UsagesAndCandidates", parseFile.filePath, candidates);
+        dlog("UsagesAndCandidates", filePath, candidates);
 
         return {
             candidates,
@@ -82,12 +82,12 @@ export abstract class AbstractCollector {
     }
 
     private getImports(
-        parseFile: ParseFile,
+        parsedFile: ParsedFile,
         namespaceCollector: NamespaceCollector
     ): ImportReference[] {
-        const tree = TreeParser.getParseTree(parseFile);
+        const { filePath, language, tree } = parsedFile;
 
-        const queryBuilder = new QueryBuilder(parseFile.language);
+        const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getImportsQuery())]);
 
         const importsQuery = queryBuilder.build();
@@ -111,11 +111,9 @@ export abstract class AbstractCollector {
                 const matchingUsage = importsOfFile[importsOfFile.length - 1];
                 matchingUsage.alias = importTextCapture.text;
 
+                this.importsBySuffixOrAlias.get(filePath)?.delete(matchingUsage.namespaceSuffix);
                 this.importsBySuffixOrAlias
-                    .get(parseFile.filePath)
-                    ?.delete(matchingUsage.namespaceSuffix);
-                this.importsBySuffixOrAlias
-                    .get(parseFile.filePath)
+                    .get(filePath)
                     ?.set(importTextCapture.text, matchingUsage);
 
                 continue;
@@ -126,15 +124,15 @@ export abstract class AbstractCollector {
             const importReference: ImportReference = {
                 usedNamespace,
                 namespaceSuffix: usedNamespace.split(this.getNamespaceDelimiter()).pop(),
-                sourceOfUsing: parseFile.filePath,
+                sourceOfUsing: filePath,
                 alias: usageAliasPrefix,
-                source: parseFile.filePath,
+                source: filePath,
                 usageType: "usage",
             };
 
             importsOfFile.push(importReference);
             this.importsBySuffixOrAlias
-                .get(parseFile.filePath)
+                .get(filePath)
                 ?.set(
                     usageAliasPrefix.length > 0
                         ? importReference.alias
@@ -150,10 +148,10 @@ export abstract class AbstractCollector {
         return importsOfFile;
     }
 
-    private getGroupedImports(parseFile: ParseFile, namespaceCollector: NamespaceCollector) {
-        const tree = TreeParser.getParseTree(parseFile);
+    private getGroupedImports(parsedFile: ParsedFile, namespaceCollector: NamespaceCollector) {
+        const { filePath, language, tree } = parsedFile;
 
-        const queryBuilder = new QueryBuilder(parseFile.language);
+        const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getGroupedImportsQuery())]);
 
         const groupedImportsQuery = queryBuilder.build();
@@ -174,12 +172,10 @@ export abstract class AbstractCollector {
                 // it seems to be not possible to query the alias part only
                 const alias = importTextCaptures[index].text.split(" ").pop();
 
-                this.importsBySuffixOrAlias
-                    .get(parseFile.filePath)
-                    ?.delete(matchingUsage.namespaceSuffix);
+                this.importsBySuffixOrAlias.get(filePath)?.delete(matchingUsage.namespaceSuffix);
                 if (alias.length > 0) {
                     matchingUsage.alias = alias;
-                    this.importsBySuffixOrAlias.get(parseFile.filePath)?.set(alias, matchingUsage);
+                    this.importsBySuffixOrAlias.get(filePath)?.set(alias, matchingUsage);
                 }
                 continue;
             }
@@ -199,15 +195,15 @@ export abstract class AbstractCollector {
                 const importReferences: ImportReference = {
                     usedNamespace: usedNamespace,
                     namespaceSuffix,
-                    sourceOfUsing: parseFile.filePath,
+                    sourceOfUsing: filePath,
                     alias: "",
-                    source: parseFile.filePath,
+                    source: filePath,
                     usageType: "usage",
                 };
 
                 importsOfFile.push(importReferences);
                 this.importsBySuffixOrAlias
-                    .get(parseFile.filePath)
+                    .get(filePath)
                     ?.set(importReferences.namespaceSuffix, importReferences);
 
                 hasUseGroupItem =
@@ -221,13 +217,13 @@ export abstract class AbstractCollector {
     }
 
     private getUsages(
-        parseFile: ParseFile,
+        parsedFile: ParsedFile,
         namespaceCollector: NamespaceCollector,
         importReferences: ImportReference[]
     ) {
-        const tree = TreeParser.getParseTree(parseFile);
+        const { filePath, language, tree } = parsedFile;
 
-        const queryBuilder = new QueryBuilder(parseFile.language);
+        const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(this.getUsagesQuery())]);
 
         const usagesQuery = queryBuilder.build();
@@ -251,7 +247,7 @@ export abstract class AbstractCollector {
         // add implemented and extended classes as usages
         // to consider the coupling of those
         for (const [fullyQualifiedName, namespaceReference] of namespaceCollector.getNamespaces(
-            parseFile
+            parsedFile
         )) {
             if (namespaceReference.implementedClasses.length > 0) {
                 for (const implementedClass of namespaceReference.implementedClasses) {
@@ -311,10 +307,10 @@ export abstract class AbstractCollector {
             }
 
             const resolvedImport = this.importsBySuffixOrAlias
-                .get(parseFile.filePath)
+                .get(filePath)
                 ?.get(qualifiedNamePrefix);
 
-            let fromNamespace = namespaceCollector.getNamespaces(parseFile).values().next().value;
+            let fromNamespace = namespaceCollector.getNamespaces(parsedFile).values().next().value;
             if (!fromNamespace) {
                 // no namespace found in current file
                 break;
@@ -323,7 +319,7 @@ export abstract class AbstractCollector {
             // Resolve the right entity/class/namespace in a file with multiple ones
             if (source !== undefined) {
                 for (const [tempKey, tempValue] of namespaceCollector
-                    .getNamespaces(parseFile)
+                    .getNamespaces(parsedFile)
                     .entries()) {
                     if (tempKey === source) {
                         fromNamespace = tempValue;
@@ -367,7 +363,7 @@ export abstract class AbstractCollector {
                         fromNamespace.namespace +
                         fromNamespace.namespaceDelimiter +
                         fromNamespace.className,
-                    sourceOfUsing: parseFile.filePath,
+                    sourceOfUsing: filePath,
                     usageType: usageType !== undefined ? usageType : "usage",
                 };
                 usagesAndCandidates.push(usageCandidate);
@@ -390,7 +386,7 @@ export abstract class AbstractCollector {
                                     fromNamespace.namespace +
                                     fromNamespace.namespaceDelimiter +
                                     fromNamespace.className,
-                                sourceOfUsing: parseFile.filePath,
+                                sourceOfUsing: filePath,
                                 usageType: usageType !== undefined ? usageType : "usage",
                             };
                             usagesAndCandidates.push(usageCandidate);
@@ -488,7 +484,7 @@ export abstract class AbstractCollector {
                             fromNamespace.namespace +
                             fromNamespace.namespaceDelimiter +
                             fromNamespace.className,
-                        sourceOfUsing: parseFile.filePath,
+                        sourceOfUsing: filePath,
                         usageType: usageType !== undefined ? usageType : "usage",
                     };
                     // TODO prevent duplicate adds in current file

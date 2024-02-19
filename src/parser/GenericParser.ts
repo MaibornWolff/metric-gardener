@@ -46,10 +46,7 @@ export class GenericParser {
 
         try {
             const filePathGenerator = findFilesAsync(this.config);
-
             const parsePromises = new Map<string, Promise<ParsedFile | SimpleFile>>();
-
-            const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
 
             for await (const file of filePathGenerator) {
                 const fileExtensionLanguage = fileExtensionToLanguage.get(file.fileExtension);
@@ -68,6 +65,8 @@ export class GenericParser {
                     unknownFiles.push(file.filePath);
                 }
             }
+
+            const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
 
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator(this.config);

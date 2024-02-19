@@ -110,7 +110,7 @@ export class Complexity implements Metric {
     /**
      * Adds a query statement that differentiates if the syntax node type is used as case or default label.
      * For node types which are used for both case labels and default labels.
-     * @param nonDefaultLangAbbrs Abbreviations of the languages which use the node type as case label and
+     * @param noDefaultLangAbbrs Abbreviations of the languages which use the node type as case label and
      * have no explicit default label.
      * @param caseDefaultNodeType The syntax node type.
      */
@@ -140,6 +140,18 @@ export class Complexity implements Metric {
             this.complexityStatementsSuperSet.push(
                 new SimpleLanguageSpecificQueryStatement(
                     "(when_entry (when_condition)) @when_entry",
+                    noDefaultLangAbbrs,
+                    caseDefaultNodeType.activated_for_languages
+                )
+            );
+        } else if (caseDefaultNodeType.expression == "match_arm") {
+            // Special treatment for the "match_arm" used by Rust.
+            //
+            // A conditional match_arm can be differentiated from a default label by checking
+            // if the match_pattern child node has a child
+            this.complexityStatementsSuperSet.push(
+                new SimpleLanguageSpecificQueryStatement(
+                    "(match_arm pattern: (match_pattern (_))) @match_arm",
                     noDefaultLangAbbrs,
                     caseDefaultNodeType.activated_for_languages
                 )

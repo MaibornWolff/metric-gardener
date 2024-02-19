@@ -49,6 +49,11 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   JavaScript
 -   Kotlin
 
+#### Basic support with missing or incomplete unit tests:
+
+-   Ruby
+-   Rust
+
 ### Supported File Metrics
 
 **complexity**<br>
@@ -58,10 +63,10 @@ Counts expressions that branch the control flow, like if-statements, loops, catc
 -   binary logical operations (like AND and OR)
 
 **functions**<br>
-The number of function declarations inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, abstract functions, constructors, init blocks, etc.
+The number of function declarations inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, abstract functions, constructors, init blocks, closures, etc.
 
 **classes**<br>
-The number of class definitions inside a file, also counting for enums, interfaces, structs and records.
+The number of class definitions inside a file, also counting for enums, interfaces, structs, traits and records.
 
 **lines_of_code**<br>
 The total number of lines of a file, including empty lines, comments, etc.

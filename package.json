@@ -36,6 +36,8 @@
         "tree-sitter-python": "0.20.4",
         "tree-sitter-typescript": "0.20.5",
         "yargs": "17.7.2",
+        "tree-sitter-ruby": "0.20.1",
+        "tree-sitter-rust": "0.20.4",
         "zlib": "1.0.5"
     },
     "devDependencies": {

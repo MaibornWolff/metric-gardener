@@ -7,6 +7,8 @@ import Kotlin from "tree-sitter-kotlin";
 import PHP from "tree-sitter-php";
 import Python from "tree-sitter-python";
 import TypeScript from "tree-sitter-typescript";
+import Ruby from "tree-sitter-ruby";
+import Rust from "tree-sitter-rust";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 
 /**
@@ -23,6 +25,8 @@ export const enum Language {
     TypeScript,
     TSX,
     Python,
+    Ruby,
+    Rust,
     /**
      * For files with unknown file extension. Could be a source code file written in language(s) for which
      * no tree sitter grammar is installed, a missing entry in {@link fileExtensionToLanguage}
@@ -51,6 +55,8 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.TypeScript, "ts"],
         [Language.TSX, "tsx"],
         [Language.Python, "py"],
+        [Language.Ruby, "rb"],
+        [Language.Rust, "rs"],
         [Language.Unknown, "N/A"],
     ])
 );
@@ -69,6 +75,8 @@ export const languageToGrammar = new Map([
     [Language.TypeScript, TypeScript.typescript],
     [Language.TSX, TypeScript.tsx],
     [Language.Python, Python],
+    [Language.Ruby, Ruby],
+    [Language.Rust, Rust],
 ]);
 
 /**
@@ -92,6 +100,8 @@ export const fileExtensionToLanguage = new Map([
     ["ts", Language.TypeScript],
     ["tsx", Language.TSX],
     ["py", Language.Python],
+    ["rb", Language.Ruby],
+    ["rs", Language.Rust],
 ]);
 
 /**

@@ -7,13 +7,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
-const treeSitterQueryCache = new Map<Language, Map<string, CachedQuery>>();
-
-interface CachedQuery {
-    language: Language;
-    queryString: string;
-    query: Query;
-}
+const treeSitterQueryCache = new Map<Language, Map<string, Query>>();
 
 export class QueryBuilder {
     readonly #language: Language;
@@ -58,29 +52,19 @@ export class QueryBuilder {
      * calls the constructor of tree-sitter.Parser.Query, which is a very performance-heavy operation.
      */
     #retrieveTreeSitterQuery(queryString: string): Query {
-        let cachedQueriesForLanguage = treeSitterQueryCache.get(this.#language);
+        const cachedQueriesForLanguage = treeSitterQueryCache.get(this.#language);
 
         if (cachedQueriesForLanguage !== undefined) {
             const cachedQuery = cachedQueriesForLanguage.get(queryString);
-            if (
-                cachedQuery !== undefined &&
-                cachedQuery.queryString === queryString &&
-                cachedQuery.language === this.#language
-            ) {
-                return cachedQuery.query;
+            if (cachedQuery !== undefined) {
+                return cachedQuery;
             }
+        } else {
+            treeSitterQueryCache.set(this.#language, new Map<string, Query>());
         }
-        const newQuery = new Query(languageToGrammar.get(this.#language), queryString);
 
-        if (cachedQueriesForLanguage === undefined) {
-            cachedQueriesForLanguage = new Map<string, CachedQuery>();
-            treeSitterQueryCache.set(this.#language, cachedQueriesForLanguage);
-        }
-        treeSitterQueryCache.get(this.#language)?.set(queryString, {
-            language: this.#language,
-            queryString: queryString,
-            query: newQuery,
-        });
+        const newQuery = new Query(languageToGrammar.get(this.#language), queryString);
+        treeSitterQueryCache.get(this.#language)?.set(queryString, newQuery);
 
         return newQuery;
     }

@@ -34,17 +34,15 @@ export class QueryBuilder {
     build(): Query | undefined {
         let queryString = "";
 
-        if (this.#language !== Language.Unknown) {
-            if (this.#statements.length > 0) {
-                queryString = this.#getStatementsQuery();
-            }
-
-            dlog("------------- Start Query: --------------");
-            dlog(queryString);
-            dlog("-----------------------------------------");
-
-            return this.#retrieveTreeSitterQuery(queryString);
+        if (this.#statements.length > 0) {
+            queryString = this.#getStatementsQuery();
         }
+
+        dlog("------------- Start Query: --------------");
+        dlog(queryString);
+        dlog("-----------------------------------------");
+
+        return this.#retrieveTreeSitterQuery(queryString);
     }
 
     /**

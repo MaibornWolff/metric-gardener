@@ -27,12 +27,6 @@ export const enum Language {
     Python,
     Ruby,
     Rust,
-    /**
-     * For files with unknown file extension. Could be a source code file written in language(s) for which
-     * no tree sitter grammar is installed, a missing entry in {@link fileExtensionToLanguage}
-     * or just a file that is no source code.
-     */
-    Unknown,
 }
 
 /**
@@ -57,7 +51,6 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Python, "py"],
         [Language.Ruby, "rb"],
         [Language.Rust, "rs"],
-        [Language.Unknown, "N/A"],
     ])
 );
 

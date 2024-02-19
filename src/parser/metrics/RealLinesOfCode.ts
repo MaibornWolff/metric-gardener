@@ -40,25 +40,33 @@ export class RealLinesOfCode implements Metric {
         isComment: (node: Parser.SyntaxNode) => boolean,
         realLinesOfCode = new Set<number>()
     ) {
+        const currentNode = cursor.currentNode;
         // This is not a comment syntax node, so assume it includes "real code".
-        if (!isComment(cursor.currentNode)) {
+        if (!isComment(currentNode)) {
             // Assume that first and last line of whatever kind of node this is, is a real code line.
             // This assumption should hold for all kinds of block/composed statements in (hopefully) all languages.
-            realLinesOfCode.add(cursor.startPosition.row);
+            realLinesOfCode.add(currentNode.startPosition.row);
 
             // This is a leaf node, so add further lines if this single token of actual code
             // spans over multiple lines and is no line ending:
-            if (cursor.currentNode.childCount == 0 && !"\r\n".includes(cursor.currentNode.type)) {
-                for (let i = cursor.startPosition.row + 1; i <= cursor.endPosition.row; i++) {
+            if (currentNode.childCount === 0 && !"\r\n".includes(currentNode.type)) {
+                for (
+                    let i = currentNode.startPosition.row + 1;
+                    i <= currentNode.endPosition.row;
+                    i++
+                ) {
                     realLinesOfCode.add(i);
                 }
             }
-
-            // Recurse, depth-first
-            if (cursor.gotoFirstChild()) {
-                this.walkTree(cursor, isComment, realLinesOfCode);
+            // Optimization: only go down the tree if we have not already covered all lines under this node:
+            else if (currentNode.endPosition.row > currentNode.startPosition.row) {
+                // Recurse, depth-first
+                if (cursor.gotoFirstChild()) {
+                    this.walkTree(cursor, isComment, realLinesOfCode);
+                }
             }
         }
+
         if (cursor.gotoNextSibling()) {
             this.walkTree(cursor, isComment, realLinesOfCode);
         } else {

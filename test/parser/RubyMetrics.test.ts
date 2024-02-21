@@ -17,6 +17,10 @@ describe("Ruby metrics tests", () => {
         it("should calculate complexity correctly", () => {
             testFileMetric(rbTestResourcesPath + "ruby-example-code.rb", FileMetric.complexity, 16);
         });
+
+        it("should count singleton method definitions", () => {
+            testFileMetric(rbTestResourcesPath + "singleton-method.rb", FileMetric.complexity, 3);
+        });
     });
 
     describe("parses Ruby classes metric", () => {

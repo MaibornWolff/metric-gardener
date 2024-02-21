@@ -23,6 +23,20 @@ describe("Ruby metrics tests", () => {
         it("should count class declarations", () => {
             testFileMetric(rbTestResourcesPath + "ruby-example-code.rb", FileMetric.classes, 1);
         });
+
+        it("should count singleton class declarations", () => {
+            testFileMetric(rbTestResourcesPath + "singleton-class.rb", FileMetric.classes, 2);
+        });
+    });
+
+    describe("parse Ruby functions metric", () => {
+        it("should count method definitions", () => {
+            testFileMetric(rbTestResourcesPath + "ruby-example-code.rb", FileMetric.functions, 4);
+        });
+
+        it("should count singleton method definitions", () => {
+            testFileMetric(rbTestResourcesPath + "singleton-method.rb", FileMetric.functions, 3);
+        });
     });
 
     describe("parses Ruby comment lines metric", () => {

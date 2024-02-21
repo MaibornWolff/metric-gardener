@@ -1,0 +1,7 @@
+{
+  "a": "asd",
+  "b": {
+    "foo": "bar",
+    "some": ["list", "with", "elements"]
+  }
+}

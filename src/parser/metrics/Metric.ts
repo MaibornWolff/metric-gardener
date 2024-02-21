@@ -11,6 +11,7 @@ export enum FileMetric {
     linesOfCode = "lines_of_code",
     complexity = "complexity",
     realLinesOfCode = "real_lines_of_code",
+    nestingLevel = "nesting_level",
 }
 
 /**

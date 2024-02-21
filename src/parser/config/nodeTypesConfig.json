@@ -1543,7 +1543,7 @@
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh", "c"]
+        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh", "c", "json"]
     },
     {
         "expression": "discard",
@@ -1557,14 +1557,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs", "c"]
+        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs", "c", "json"]
     },
     {
         "expression": "false",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c", "json"]
     },
     {
         "expression": "module",
@@ -1593,7 +1593,7 @@
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c", "json"]
     },
     {
         "expression": "type",
@@ -2775,10 +2775,10 @@
     },
     {
         "expression": "array",
-        "metrics": [],
+        "metrics": ["nesting_level"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "tsx", "rb", "sh"]
+        "languages": ["js", "ts", "tsx", "rb", "sh", "json"]
     },
     {
         "expression": "arrow_function",
@@ -2813,21 +2813,21 @@
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["js", "php", "ts", "cpp", "tsx", "c"]
+        "languages": ["js", "php", "ts", "cpp", "tsx", "c", "json"]
     },
     {
         "expression": "number",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "tsx", "sh"]
+        "languages": ["js", "ts", "tsx", "sh", "json"]
     },
     {
         "expression": "object",
-        "metrics": [],
+        "metrics": ["nesting_level"],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "tsx"]
+        "languages": ["js", "ts", "tsx", "json"]
     },
     {
         "expression": "regex",
@@ -2841,7 +2841,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "py", "tsx", "rb", "sh"]
+        "languages": ["js", "php", "ts", "py", "tsx", "rb", "sh", "json"]
     },
     {
         "expression": "subscript_expression",
@@ -3091,7 +3091,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "py", "tsx", "rb"]
+        "languages": ["js", "php", "ts", "py", "tsx", "rb", "json"]
     },
     {
         "expression": "pair_pattern",
@@ -6684,7 +6684,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["py", "cpp", "rb", "sh", "c"]
+        "languages": ["py", "cpp", "rb", "sh", "c", "json"]
     },
     {
         "expression": "union_pattern",
@@ -8832,5 +8832,12 @@
         "type": "statement",
         "category": "",
         "languages": ["c"]
+    },
+    {
+        "expression": "document",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["json"]
     }
 ]

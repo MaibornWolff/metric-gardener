@@ -10,6 +10,7 @@ import { isParsedFile, Metric, MetricResult, SourceFile } from "./metrics/Metric
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
+import { NestingLevel } from "./metrics/NestingLevel";
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
 import fs from "fs";
 
@@ -41,6 +42,7 @@ export class MetricCalculator {
             new LinesOfCode(),
             new CommentLines(allNodeTypes),
             new RealLinesOfCode(allNodeTypes),
+            new NestingLevel(allNodeTypes),
         ];
     }
 

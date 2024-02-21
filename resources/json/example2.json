@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Hans",
+    "age": 37,
+    "birthday": "1963-12-01",
+    "address": {
+      "street": "some street",
+      "city": "München",
+      "postal_code": "1235"
+    },
+    "favorite_movies": [
+      {
+        "director": "Martin Scorsese",
+        "name": "Shutter Island",
+        "year": 2010
+      },
+      {
+        "director": "Quentin Tarantino",
+        "name": "Django Unchained",
+        "year": 2012
+      }
+    ]
+  },
+  {
+    "name": "Anna",
+    "age": 25,
+    "birthday": "1996-06-15",
+    "address": {
+      "street": "another street",
+      "city": "Berlin",
+      "postal_code": "5678"
+    },
+    "favorite_movies": [
+      {
+        "director": "Christopher Nolan",
+        "name": "Inception",
+        "year": 2010
+      },
+      {
+        "director": "Steven Spielberg",
+        "name": "Jurassic Park",
+        "year": 1993
+      }
+    ]
+  },
+  {
+    "name": "John",
+    "age": 40,
+    "birthday": "1981-07-20",
+    "address": {
+      "street": "third street",
+      "city": "Hamburg",
+      "postal_code": "9012"
+    },
+    "favorite_movies": [
+      {
+        "director": "James Cameron",
+        "name": "Avatar",
+        "year": 2009
+      },
+      {
+        "director": "George Lucas",
+        "name": "Star Wars: Episode IV – A New Hope",
+        "year": 1977
+      }
+    ]
+  }
+]

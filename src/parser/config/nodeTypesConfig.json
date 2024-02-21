@@ -7438,7 +7438,7 @@
     },
     {
         "expression": "singleton_method",
-        "metrics": [],
+        "metrics": ["functions"],
         "type": "statement",
         "category": "",
         "languages": ["rb"]

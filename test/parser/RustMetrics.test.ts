@@ -25,6 +25,12 @@ describe("Rust metrics tests", () => {
         });
     });
 
+    describe("parses Rust functions metric", () => {
+        it("should count function declarations correctly", () => {
+            testFileMetric(rsTestResourcesPath + "rust-example-code.rs", FileMetric.functions, 6);
+        });
+    });
+
     describe("parses Rust comment lines metric", () => {
         it("should count properly, also counting file header, class description and doc block tag comment lines", () => {
             testFileMetric(

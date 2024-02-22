@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:js-app", ":semanticCommits"],
+    "extends": ["config:js-app", "packages:eslint", ":semanticCommits"],
     "packageRules": [
         {
             "matchFileNames": [".github/workflows/*"],

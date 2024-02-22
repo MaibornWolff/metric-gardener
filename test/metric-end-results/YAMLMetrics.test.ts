@@ -15,7 +15,15 @@ describe("YAML metrics tests", () => {
 
     describe("parses YAML nesting level metric", () => {
         it("should calculate nesting level", () => {
-            testFileMetric(yamlTestResourcesPath + "example.yaml", FileMetric.nestingLevel, 4);
+            testFileMetric(yamlTestResourcesPath + "example.yaml", FileMetric.nestingLevel, 3);
+        });
+
+        it("should correctly calculate nesting level of a more complex yaml", () => {
+            testFileMetric(yamlTestResourcesPath + "tests.yml", FileMetric.nestingLevel, 6);
+        });
+
+        it("should correctly calculate nesting level of a yaml file with only one line", () => {
+            testFileMetric(yamlTestResourcesPath + "oneline.yaml", FileMetric.nestingLevel, 0);
         });
     });
 });

@@ -61,6 +61,8 @@ export class NestingLevel implements Metric {
 
         if (cursor.gotoFirstChild()) {
             nestingLevel = this.walkTree(cursor);
+            // -1 for top level
+            nestingLevel = nestingLevel - 1 < 0 ? 0 : nestingLevel - 1;
         }
 
         dlog(this.getName() + " - " + nestingLevel);

@@ -34,8 +34,8 @@ describe("Go metric tests", () => {
             );
         });
 
-        it("should not count any class declaration", () => {
-            testFileMetric(goTestResourcesPath + "classes.go", FileMetric.complexity, 0);
+        it("should not count any struct or interface declarations", () => {
+            testFileMetric(goTestResourcesPath + "structs-interfaces.go", FileMetric.complexity, 5);
         });
 
         it("should count case statements correctly", () => {
@@ -62,6 +62,12 @@ describe("Go metric tests", () => {
                 FileMetric.functions,
                 2
             );
+        });
+    });
+
+    describe("parses Go classes metric", () => {
+        it("should count structs and interfaces for the classes metric", () => {
+            testFileMetric(goTestResourcesPath + "structs-interfaces.go", FileMetric.classes, 3);
         });
     });
 

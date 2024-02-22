@@ -1948,7 +1948,7 @@
     },
     {
         "expression": "field_declaration_list",
-        "metrics": ["classes"],
+        "metrics": [],
         "type": "statement",
         "category": "",
         "languages": ["go", "cpp"]
@@ -5286,7 +5286,7 @@
     },
     {
         "expression": "class_specifier",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]
@@ -5321,7 +5321,7 @@
     },
     {
         "expression": "struct_specifier",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["cpp"]

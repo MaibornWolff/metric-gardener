@@ -12,6 +12,7 @@ import Rust from "tree-sitter-rust";
 import Bash from "tree-sitter-bash";
 import C from "tree-sitter-c";
 import JSON from "tree-sitter-json";
+import YAML from "tree-sitter-yaml";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 import { Configuration } from "../Configuration";
 import { getFileExtension, lookupLowerCase, replaceForwardWithBackwardSlashes } from "./Helper";
@@ -36,6 +37,7 @@ export const enum Language {
     Bash,
     C,
     JSON,
+    YAML,
 }
 
 /**
@@ -63,6 +65,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Bash, "sh"],
         [Language.C, "c"],
         [Language.JSON, "json"],
+        [Language.YAML, "yaml"],
     ])
 );
 
@@ -85,6 +88,7 @@ export const languageToGrammar = new Map([
     [Language.Bash, Bash],
     [Language.C, C],
     [Language.JSON, JSON],
+    [Language.YAML, YAML],
 ]);
 
 /**
@@ -112,6 +116,8 @@ const fileExtensionToLanguage = new Map([
     ["rs", Language.Rust],
     ["sh", Language.Bash],
     ["json", Language.JSON],
+    ["yaml", Language.YAML],
+    ["yml", Language.YAML],
 ]);
 
 /**

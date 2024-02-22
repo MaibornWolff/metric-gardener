@@ -3,21 +3,26 @@
     "extends": ["config:js-app", ":semanticCommits"],
     "packageRules": [
         {
-            "matchPaths": [".github/workflows"],
+            "matchFileNames": [".github/workflows/*"],
             "groupName": "github actions dependencies",
             "enabled": true
         },
         {
-            "matchPaths": ["package.json"],
+            "matchFileNames": ["package.json"],
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "excludePackagePatterns": ["^tree-sitter-.*"],
+            "excludePackagePatterns": ["^tree-sitter-.*", "^prettier", "^pretty-quick"],
             "groupName": "npm dependencies without major updates",
             "enabled": true
         },
         {
-            "matchPaths": ["package.json"],
+            "matchFileNames": ["package.json"],
             "matchUpdateTypes": ["major"],
             "labels": ["UPDATE-MAJOR"],
+            "enabled": true
+        },
+        {
+            "matchPackagePatterns": ["^prettier", "^pretty-quick"],
+            "groupName": "prettier & pretty-quick dependency updates",
             "enabled": true
         }
     ],

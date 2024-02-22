@@ -37,12 +37,12 @@ export class NestingLevel implements Metric {
         let maxChildHeight = 0;
 
         if (cursor.gotoFirstChild()) {
-            while (cursor.gotoNextSibling()) {
+            do {
                 const childHeight = this.walkTree(cursor);
                 if (childHeight > maxChildHeight) {
                     maxChildHeight = childHeight;
                 }
-            }
+            } while (cursor.gotoNextSibling());
             cursor.gotoParent();
         }
 

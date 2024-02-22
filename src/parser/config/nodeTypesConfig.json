@@ -1543,7 +1543,7 @@
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh", "c", "json"]
+        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh", "c", "json", "yaml"]
     },
     {
         "expression": "discard",
@@ -1557,7 +1557,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs", "c", "json"]
+        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs", "c", "json", "yaml"]
     },
     {
         "expression": "false",
@@ -8838,6 +8838,230 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["json"]
+        "languages": ["json", "yaml"]
+    },
+    {
+        "expression": "alias",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "anchor",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "block_mapping",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "block_mapping_pair",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "block_node",
+        "metrics": ["nesting_level"],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "block_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "block_sequence",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "block_sequence_item",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "double_quote_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "flow_mapping",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "flow_node",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "flow_pair",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "flow_sequence",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "plain_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "reserved_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "single_quote_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "stream",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "tag_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "yaml_directive",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "alias_name",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "anchor_name",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "boolean_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "directive_name",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "directive_parameter",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "float_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "integer_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "null_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "string_scalar",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "tag",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "tag_handle",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "tag_prefix",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
+    },
+    {
+        "expression": "yaml_version",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["yaml"]
     }
 ]

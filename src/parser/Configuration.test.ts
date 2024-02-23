@@ -1,4 +1,4 @@
-import { Configuration } from "../../src/parser/Configuration";
+import { Configuration } from "./Configuration";
 
 describe("Configuration", () => {
     describe("initializes settings", () => {

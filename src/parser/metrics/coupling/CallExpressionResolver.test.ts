@@ -1,7 +1,7 @@
-import { Relationship } from "../../../../src/parser/metrics/Metric";
-import { getAdditionalRelationships } from "../../../../src/parser/metrics/coupling/CallExpressionResolver";
-import { UnresolvedCallExpression } from "../../../../src/parser/resolver/typeUsages/AbstractCollector";
-import { Accessor } from "../../../../src/parser/resolver/callExpressions/AbstractCollector";
+import { Relationship } from "../Metric";
+import { getAdditionalRelationships } from "./CallExpressionResolver";
+import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector";
+import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 
 describe("CallExpressionResolver", () => {
     describe("resolves call expressions and retrieves additional and transitive relationships", () => {

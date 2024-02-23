@@ -4342,9 +4342,10 @@
     },
     {
         "expression": "list",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "keyword",
         "category": "",
+        "activated_for_language": ["sh"],
         "languages": ["py", "sh"]
     },
     {

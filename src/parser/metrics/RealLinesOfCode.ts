@@ -87,6 +87,7 @@ export class RealLinesOfCode implements Metric {
         // So if there are no child nodes, the file is empty.
         if (cursor.gotoFirstChild()) {
             const realLinesOfCode = this.walkTree(cursor, isCommentFunction);
+            console.log(realLinesOfCode);
             dlog("Included lines for rloc: ", realLinesOfCode);
             rloc = realLinesOfCode.size;
         }

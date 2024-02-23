@@ -23,8 +23,12 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
     ["tsx", "./node_modules/tree-sitter-typescript/tsx/src/node-types.json"],
     ["py", "./node_modules/tree-sitter-python/src/node-types.json"],
     ["cpp", "./node_modules/tree-sitter-cpp/src/node-types.json"],
+<<<<<<< HEAD
     ["rb", "./node_modules/tree-sitter-ruby/src/node-types.json"],
     ["rs", "./node_modules/tree-sitter-rust/src/node-types.json"],
+=======
+    ["sh", "./node_modules/tree-sitter-bash/src/node-types.json"],
+>>>>>>> 77fe16f (feat: add support for Bash #177)
 ]);
 
 export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";

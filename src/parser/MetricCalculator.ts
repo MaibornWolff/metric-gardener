@@ -58,7 +58,6 @@ export class MetricCalculator {
                 "Unable to calculate file metrics because there was an error while creating the tree."
             );
         }
-
         dlog(
             " ------------ Parsing file metrics for file " +
                 parsedFile.filePath +

@@ -17,12 +17,12 @@ async function* mockedFindFilesAsync() {
     yield { fileExtension: "cpp", filePath: "clearly/invalid/path.cpp" };
 }
 
-async function* mockedFindTwoFiles() {
+async function* mockedFindTwoFilesAsync() {
     yield { fileExtension: "cc", filePath: "clearly/invalid/path1.cc" };
     yield { fileExtension: "cpp", filePath: "clearly/invalid/path2.cpp" };
 }
 
-async function* mockedErrorFindFilesAsync() {
+async function* mockedFindFilesAsyncError() {
     yield { fileExtension: "cpp", filePath: "clearly/invalid/path.cpp" };
     throw new Error("Hard drive crashed!");
 }
@@ -39,7 +39,6 @@ beforeAll(() => {
 beforeEach(() => {
     // Clear all instances and calls to constructor and all methods:
     jest.clearAllMocks();
-    jest.resetAllMocks();
 });
 
 describe("GenericParser.calculateMetrics() unit tests", () => {
@@ -85,7 +84,7 @@ describe("GenericParser.calculateMetrics() unit tests", () => {
 
         const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
         findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindTwoFiles();
+            return mockedFindTwoFilesAsync();
         });
 
         const treeParserSpied = jest
@@ -204,7 +203,7 @@ describe("GenericParser.calculateMetrics() unit tests", () => {
 
         const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
         findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindTwoFiles();
+            return mockedFindTwoFilesAsync();
         });
 
         const treeParserSpied = jest
@@ -251,7 +250,7 @@ describe("GenericParser.calculateMetrics() unit tests", () => {
 
         const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
         findFilesAsyncMock.mockImplementation((config) => {
-            return mockedErrorFindFilesAsync();
+            return mockedFindFilesAsyncError();
         });
 
         jest.spyOn(TreeParser, "parse").mockImplementation((file, assumedLanguage) => {

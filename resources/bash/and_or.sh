@@ -31,3 +31,7 @@ return 0
 }
 fun1 && fun2
 fun1 && fun2 || fun1
+
+cat << EOF && echo "Here document executed successfully." #syntax tree created using here doc is not correct
+This is a file
+EOF

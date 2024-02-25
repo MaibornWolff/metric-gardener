@@ -1,20 +1,14 @@
 #!/bin/bash
 
 fun1(){
-echo "hello"
+echo "hello" #inline comment
 return 0
-}
+} #inline comment
 
-fun2(){
+fun2(){ #inline comment
 echo "Li"
 return 0
 }
 fun1 \
   && \
   fun2
-
-cat << EndOfText
-This is line 1.
-This is line 2.
-This is line 3.
-EndOfText

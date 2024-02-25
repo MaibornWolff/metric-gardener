@@ -79,6 +79,4 @@ describe("Bash metrics tests", () => {
             testFileMetric(bashTestResourcesPath + "/comment.sh", FileMetric.commentLines, 9);
         });
     });
-
-    //https://www.mycompiler.io/new/bash
 });

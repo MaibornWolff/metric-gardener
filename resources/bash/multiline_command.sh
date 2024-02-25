@@ -12,3 +12,4 @@ return 0
 fun1 \
   && \
   fun2
+

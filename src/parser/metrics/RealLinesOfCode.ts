@@ -1,6 +1,6 @@
 import { ExpressionMetricMapping } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
-import Parser, { TreeCursor } from "tree-sitter";
+import Parser, { SyntaxNode, TreeCursor } from "tree-sitter";
 import { getExpressionsByCategory } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Language } from "../helper/Language";
@@ -45,7 +45,7 @@ export class RealLinesOfCode implements Metric {
             realLinesOfCode.add(currentNode.startPosition.row);
 
             // This is a leaf node, so add further lines if it spans over multiple lines and is no line ending:
-            if (currentNode.childCount === 0 && !"\r\n".includes(currentNode.type)) {
+            if (isLeafNodeWithCode(currentNode) || isHereDocBody(currentNode)) {
                 for (
                     let i = currentNode.startPosition.row + 1;
                     i <= currentNode.endPosition.row;
@@ -120,4 +120,10 @@ export class RealLinesOfCode implements Metric {
     getName(): string {
         return FileMetric.realLinesOfCode;
     }
+}
+function isLeafNodeWithCode(node: SyntaxNode): boolean {
+    return node.childCount === 0 && !"\r\n".includes(node.type);
+}
+function isHereDocBody(node: SyntaxNode): boolean {
+    return node.type === "heredoc_body";
 }

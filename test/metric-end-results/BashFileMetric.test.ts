@@ -24,7 +24,7 @@ describe("Bash metrics tests", () => {
         it("should counts all ternary expression", () => {
             testFileMetric(bashTestResourcesPath + "/ternary.sh", FileMetric.complexity, 1);
         });
-        it("should counts all binary logical operators (&& and ||)", () => {
+        it("should counts all binary logical operators (&& and ||), except in combination with here-doc", () => {
             testFileMetric(bashTestResourcesPath + "/and_or.sh", FileMetric.complexity, 15);
         });
         it("should counts all for loops", () => {
@@ -62,7 +62,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/rloc_heredoc.sh",
                 FileMetric.realLinesOfCode,
-                6
+                16
             );
         });
     });
@@ -71,7 +71,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(bashTestResourcesPath + "/empty.sh", FileMetric.linesOfCode, 1);
         });
         it("should count all lines in file ", () => {
-            testFileMetric(bashTestResourcesPath + "/complexBash.sh", FileMetric.linesOfCode, 1);
+            testFileMetric(bashTestResourcesPath + "/complexBash.sh", FileMetric.linesOfCode, 76);
         });
     });
     describe("parses comments metric", () => {

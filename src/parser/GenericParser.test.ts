@@ -5,14 +5,15 @@ import { TreeParser } from "./helper/TreeParser";
 import { getParserConfiguration } from "../../test/metric-end-results/TestHelper";
 import { Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
-import { FileMetric } from "./metrics/Metric";
+import { FileMetric, ParsedFile, SimpleFile } from "./metrics/Metric";
 import { MetricCalculator } from "./MetricCalculator";
+import { CouplingCalculator } from "./CouplingCalculator";
 
-jest.mock("./CouplingCalculator");
 jest.mock("./helper/Helper");
-jest.mock("./helper/TreeParser");
-jest.mock("./MetricCalculator");
 
+/*
+ * Implementation of function mocks:
+ */
 async function* mockedFindFilesAsync() {
     yield { fileExtension: "cpp", filePath: "clearly/invalid/path.cpp" };
 }
@@ -27,6 +28,64 @@ async function* mockedFindFilesAsyncError() {
     throw new Error("Hard drive crashed!");
 }
 
+async function mockedTreeParserParse(file: SimpleFile, assumedLanguage: Language) {
+    return Promise.resolve({
+        fileExtension: file.fileExtension,
+        filePath: file.filePath,
+        language: assumedLanguage,
+        tree: tree,
+    });
+}
+
+/*
+ * Helper functions for creating mocks:
+ */
+
+function mockFindFilesAsync(
+    mockedFunction: () => AsyncGenerator<SimpleFile> = mockedFindFilesAsync
+) {
+    const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
+    findFilesAsyncMock.mockImplementation((config) => {
+        return mockedFunction();
+    });
+    return findFilesAsyncMock;
+}
+
+function mockTreeParserParse(
+    implementation: (
+        file: SimpleFile,
+        assumedLanguage: Language
+    ) => Promise<ParsedFile> = mockedTreeParserParse
+) {
+    return jest.spyOn(TreeParser, "parse").mockImplementation(implementation);
+}
+
+function spyOnMetricCalculator() {
+    return jest.spyOn(MetricCalculator.prototype, "calculateMetrics");
+}
+
+function spyOnCouplingCalculatorNoOp() {
+    return jest
+        .spyOn(CouplingCalculator.prototype, "calculateMetrics")
+        .mockReturnValue({ relationships: [], metrics: new Map() });
+}
+
+function spyOnConsoleErrorNoOp() {
+    return jest.spyOn(console, "error").mockImplementation(() => {
+        /* Do nothing */
+    });
+}
+
+/*
+ * Example data:
+ */
+
+const expectedFileMetricsMap = new Map([
+    [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
+]);
+
+const expectedErrorMetricsMap = new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]);
+
 let parser: Parser;
 let tree: Parser.Tree;
 
@@ -36,78 +95,66 @@ beforeAll(() => {
     tree = parser.parse("int main() { return 0; }");
 });
 
-beforeEach(() => {
-    // Clear all instances and calls to constructor and all methods:
-    jest.clearAllMocks();
-});
+describe("GenericParser.calculateMetrics()", () => {
+    beforeEach(() => {
+        // Clear all mock implementations, reset them to original implementation:
+        jest.restoreAllMocks();
+    });
 
-describe("GenericParser.calculateMetrics() unit tests", () => {
-    it("should return the correct value and call the appropriate functions in case there is no error", async () => {
-        const expectedFileMetricsMap = new Map([
-            [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
+    it("should call MetricCalculator.calculateMetrics() and return the result when there is no error", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync();
+        const treeParserSpied = mockTreeParserParse();
+
+        const calculateMetricsSpied = spyOnMetricCalculator().mockResolvedValue([
+            "clearly/invalid/path.cpp",
+            expectedFileMetricsMap,
         ]);
-
-        const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-        findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindFilesAsync();
-        });
-
-        const treeParserSpied = jest
-            .spyOn(TreeParser, "parse")
-            .mockImplementation((file, assumedLanguage) => {
-                return Promise.resolve({
-                    fileExtension: "cpp",
-                    filePath: "clearly/invalid/path.cpp",
-                    language: Language.CPlusPlus,
-                    tree: tree,
-                });
-            });
-
-        const calculateMetricsSpied = jest
-            .spyOn(MetricCalculator.prototype, "calculateMetrics")
-            .mockResolvedValue(["clearly/invalid/path.cpp", expectedFileMetricsMap]);
+        const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
-        const actualResult = await parser.calculateMetrics();
 
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
         expect(actualResult.fileMetrics).toEqual(
             new Map([["clearly/invalid/path.cpp", expectedFileMetricsMap]])
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(1);
+        expect(couplingSpied).toHaveBeenCalledTimes(0);
         expect(treeParserSpied).toHaveBeenCalledTimes(1);
     });
 
-    it("should return the appropriate values and call the appropriate functions in case there is no error and two files are found", async () => {
-        const expectedFileMetricsMap = new Map([
-            [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
-        ]);
+    it("should call MetricCalculator.calculateMetrics() and return the result when multiple files are found and there is no error", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync(mockedFindTwoFilesAsync);
+        const treeParserSpied = mockTreeParserParse();
 
-        const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-        findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindTwoFilesAsync();
-        });
-
-        const treeParserSpied = jest
-            .spyOn(TreeParser, "parse")
-            .mockImplementation((file, assumedLanguage) => {
-                return Promise.resolve({
-                    fileExtension: file.fileExtension,
-                    filePath: file.filePath,
-                    language: Language.CPlusPlus,
-                    tree: tree,
-                });
-            });
-
-        const calculateMetricsSpied = jest
-            .spyOn(MetricCalculator.prototype, "calculateMetrics")
-            .mockImplementation(async (parsedFilePromise) => [
+        const calculateMetricsSpied = spyOnMetricCalculator().mockImplementation(
+            async (parsedFilePromise) => [
                 (await parsedFilePromise).filePath,
                 expectedFileMetricsMap,
-            ]);
+            ]
+        );
+        const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
-        const actualResult = await parser.calculateMetrics();
 
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
         expect(actualResult.fileMetrics).toEqual(
             new Map([
                 ["clearly/invalid/path1.cc", expectedFileMetricsMap],
@@ -115,125 +162,120 @@ describe("GenericParser.calculateMetrics() unit tests", () => {
             ])
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
+        expect(couplingSpied).toHaveBeenCalledTimes(0);
         expect(treeParserSpied).toHaveBeenCalledTimes(2);
     });
 
-    it("should return the appropriate value and call the appropriate functions in case there is an error while parsing the tree", async () => {
-        const expectedFileMetricsMap = new Map([
-            ["ERROR", { metricName: "ERROR", metricValue: -1 }],
-        ]);
+    it("should call CouplingCalculator.calculateMetrics() when requested.", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync(mockedFindTwoFilesAsync);
+        const treeParserSpied = mockTreeParserParse();
+        const calculateMetricsSpied = spyOnMetricCalculator().mockImplementation(
+            async (parsedFilePromise) => [
+                (await parsedFilePromise).filePath,
+                expectedFileMetricsMap,
+            ]
+        );
+        const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-        findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindFilesAsync();
-        });
+        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp", true));
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
+        expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
+        expect(couplingSpied).toHaveBeenCalledTimes(1);
+        expect(treeParserSpied).toHaveBeenCalledTimes(2);
+    });
 
-        jest.spyOn(TreeParser, "parse").mockImplementation(async (file, assumedLanguage) => {
+    it("should return the appropriate error object and print to the error output when there is an error while parsing the tree", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync();
+        mockTreeParserParse(async (file, assumedLanguage) => {
             throw new Error("Baaaaaah");
         });
 
-        jest.spyOn(MetricCalculator.prototype, "calculateMetrics").mockResolvedValue([
-            "clearly/invalid/path.cpp",
-            expectedFileMetricsMap,
-        ]);
-
-        const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {
-            /* Do nothing */
-        });
+        const errorSpy = spyOnConsoleErrorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
+        /*
+         * when:
+         */
         const actualResult = await parser.calculateMetrics();
-
-        // TODO: do no longer include errors into the list of results, use "info" field instead.
+        /*
+         * then:
+         */
+        // TODO: do no longer include errors into the list of results, use "info" field instead #185
         expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedFileMetricsMap]])
+            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]])
         );
         expect(errorSpy).toHaveBeenCalled();
     });
 
-    it("should return the appropriate value and call the appropriate functions in case there is an error while calculating metrics", async () => {
-        const expectedFileMetricsMap = new Map([
-            ["ERROR", { metricName: "ERROR", metricValue: -1 }],
-        ]);
+    it("should return the appropriate error object and print to the error output when there is an error while calculating metrics", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync();
+        mockTreeParserParse();
 
-        const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-        findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindFilesAsync();
+        spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
+            await parsedFilePromise;
+            throw new Error("Buuuh!");
         });
 
-        const treeParserSpied = jest
-            .spyOn(TreeParser, "parse")
-            .mockImplementation((file, assumedLanguage) => {
-                return Promise.resolve({
-                    fileExtension: file.fileExtension,
-                    filePath: file.filePath,
-                    language: Language.CPlusPlus,
-                    tree: tree,
-                });
-            });
+        const errorSpy = spyOnConsoleErrorNoOp();
 
-        jest.spyOn(MetricCalculator.prototype, "calculateMetrics").mockImplementation(
-            async (parsedFilePromise) => {
-                await parsedFilePromise;
-                throw new Error("Buuuh!");
+        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
+
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
+        // TODO: do no longer include errors into the list of results, use "info" field instead #185
+        expect(actualResult.fileMetrics).toEqual(
+            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]])
+        );
+        expect(errorSpy).toHaveBeenCalled();
+    });
+
+    it("should return the successfully calculated metrics and an appropriate error object when there is an error for only the first of two files while calculating metrics", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync(mockedFindTwoFilesAsync);
+        mockTreeParserParse();
+
+        spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
+            const file = await parsedFilePromise;
+            if (file.fileExtension !== "cpp") {
+                throw new Error("I only accept cpp files!");
             }
-        );
-
-        const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {
-            /* Do nothing */
+            return [file.filePath, expectedFileMetricsMap];
         });
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
-        const actualResult = await parser.calculateMetrics();
-
-        // TODO: do no longer include errors into the list of results, use "info" field instead.
-        expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedFileMetricsMap]])
-        );
-        expect(errorSpy).toHaveBeenCalled();
-    });
-
-    it("should perform the appropriate actions in case there is an error for only the first of two files while calculating metrics", async () => {
-        const expectedFileMetricsMap = new Map([
-            [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
-        ]);
-        const expectedErrorMetricsMap = new Map([
-            ["ERROR", { metricName: "ERROR", metricValue: -1 }],
-        ]);
-
-        const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-        findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindTwoFilesAsync();
-        });
-
-        const treeParserSpied = jest
-            .spyOn(TreeParser, "parse")
-            .mockImplementation((file, assumedLanguage) => {
-                return Promise.resolve({
-                    fileExtension: file.fileExtension,
-                    filePath: file.filePath,
-                    language: Language.CPlusPlus,
-                    tree: tree,
-                });
-            });
-
-        const calculateMetricsSpied = jest
-            .spyOn(MetricCalculator.prototype, "calculateMetrics")
-            .mockImplementation(async (parsedFilePromise) => {
-                const file = await parsedFilePromise;
-                if (file.fileExtension !== "cpp") {
-                    throw new Error("I only accept cpp files!");
-                }
-                return [file.filePath, expectedFileMetricsMap];
-            });
-
-        const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {
-            /* Do nothing */
-        });
+        const errorSpy = spyOnConsoleErrorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
-        const actualResult = await parser.calculateMetrics();
 
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
+        // TODO: do no longer include errors into the list of results, use "info" field instead #185
         expect(actualResult.fileMetrics).toEqual(
             new Map([
                 ["clearly/invalid/path1.cc", expectedErrorMetricsMap],
@@ -244,36 +286,23 @@ describe("GenericParser.calculateMetrics() unit tests", () => {
     });
 
     it("should fail gracefully if findFilesAsync throws an error", async () => {
-        const expectedFileMetricsMap = new Map([
-            ["ERROR", { metricName: "ERROR", metricValue: -1 }],
-        ]);
+        /*
+         * Given:
+         */
+        mockFindFilesAsync(mockedFindFilesAsyncError);
+        mockTreeParserParse();
 
-        const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-        findFilesAsyncMock.mockImplementation((config) => {
-            return mockedFindFilesAsyncError();
-        });
-
-        jest.spyOn(TreeParser, "parse").mockImplementation((file, assumedLanguage) => {
-            return Promise.resolve({
-                fileExtension: "cpp",
-                filePath: "clearly/invalid/path.cpp",
-                language: Language.CPlusPlus,
-                tree: tree,
-            });
-        });
-
-        jest.spyOn(MetricCalculator.prototype, "calculateMetrics").mockResolvedValue([
-            "clearly/invalid/path.cpp",
-            expectedFileMetricsMap,
-        ]);
-
-        const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {
-            /* Do nothing */
-        });
+        const errorSpy = spyOnConsoleErrorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
-        const actualResult = await parser.calculateMetrics();
 
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
         expect(actualResult.fileMetrics).toEqual(new Map());
         expect(errorSpy).toHaveBeenCalled();
     });

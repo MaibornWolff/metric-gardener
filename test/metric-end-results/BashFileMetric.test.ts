@@ -24,7 +24,7 @@ describe("Bash metrics tests", () => {
         it("should counts all ternary expression", () => {
             testFileMetric(bashTestResourcesPath + "/ternary.sh", FileMetric.complexity, 1);
         });
-        it("should counts all binary logical operators (&& and ||), except in combination with here-doc", () => {
+        it("should counts all binary logical operators (&& and ||)", () => {
             testFileMetric(bashTestResourcesPath + "/and_or.sh", FileMetric.complexity, 15);
         });
         it("should counts all for loops", () => {

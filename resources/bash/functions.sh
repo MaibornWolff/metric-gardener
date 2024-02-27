@@ -41,4 +41,4 @@ function fibonnaci_recursion() {
     fi
 }
 
-add 5 6
+multiply 5 6

@@ -7,7 +7,7 @@ echo "Enter a number:" # This is an inline comment
 # Multiline comment using the no-op command (:)
 : '
 This is a multiline comment.
-Its created by using the colon (:) as a no-op command,
+Its created by using the colon (:) as a no-op (NOP) command,
 followed by a block enclosed in single quotes.
 This block is treated as a string literal and is ignored.
 '

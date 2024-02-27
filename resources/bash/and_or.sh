@@ -32,6 +32,6 @@ return 0
 fun1 && fun2
 fun1 && fun2 || fun1
 
-cat << EOF && echo "Here document executed successfully." #syntax tree created is not correct
+cat << EOF && echo "Here document executed successfully." #cannot count this '&&' because the tree is not correct
 This is a file
 EOF

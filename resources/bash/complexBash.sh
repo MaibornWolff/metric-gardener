@@ -1,5 +1,4 @@
 #!/bin/bash
-# Bash Script with Various Elements, &&, ||, -a, -o operators, and more C-style expressions
 
 # Variables
 name="Alice"
@@ -25,7 +24,7 @@ main() {
     # Input
     read -p "Enter your favorite color: " favorite_color
 
-    # Conditional statement with -a and -o
+    # Conditional statement with && and ||
     if [[ "$favorite_color" == "Blue" && $age -ge 18 ]]; then
         echo "You like Blue and are 18 or older."
     elif [[ "$favorite_color" == "Green" || $age -lt 18 ]]; then
@@ -45,20 +44,20 @@ main() {
         echo "- $color"
     done
 
-    # While loop with -a
+    # While loop with &&
     num=1
     [[ $num -le 3 && "$name" == "Alice" ]] && while [[ $num -le 3 ]]; do echo "Iteration $num" && ((num++)); done #comment
 
-    # Function calls with -o
+    # Function calls with ||
     greet_user "$name" || perform_calculations $((10 + 5)) $((3 * 4)) #comment
 
-    # Command substitution with -o and C-style expressions
+    # Command substitution with ||
     current_date=$(date +"%Y-%m-%d %H:%M:%S") || { echo "Failed to get the current date and time."; exit 1; }
 
-    # Output redirection with -a and C-style expressions
+    # Output redirection with &&
     echo "This is redirected" >output.txt && echo "Output file created."
 
-    # Here document with -a and C-style expressions
+    # Here document with &&
     cat <<EOF && echo "Here document executed successfully."
     This is a multiline
     text block using
@@ -66,7 +65,7 @@ main() {
     Result of arithmetic expansion: $((5 + 3))
 EOF
 
-    # Arithmetic expansion with -o and C-style expressions
+    # Arithmetic expansion with ||
     result=$((5 * 3)) || echo "Arithmetic expansion failed."
 
 }

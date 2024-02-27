@@ -22,7 +22,7 @@ export abstract class AbstractCollector {
 
     getAccessors(
         parsedFile: ParsedFile,
-        namespacesOfFile: Map<string, FullyQTN>
+        namespacesOfFile: Map<string, FullyQTN>,
     ): Map<string, Accessor[]> {
         const publicAccessors = new Map<string, Accessor[]>();
 

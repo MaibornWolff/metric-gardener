@@ -49,20 +49,20 @@ export class MetricCalculator {
      * that relates each metric name to the calculated metric.
      */
     async calculateMetrics(
-        parsedFilePromise: Promise<SimpleFile>
+        parsedFilePromise: Promise<SimpleFile>,
     ): Promise<[string, Map<string, MetricResult>]> {
         const parsedFile = await parsedFilePromise;
 
         if (!isParsedFile(parsedFile)) {
             throw new Error(
-                "Unable to calculate file metrics because there was an error while creating the tree."
+                "Unable to calculate file metrics because there was an error while creating the tree.",
             );
         }
 
         dlog(
             " ------------ Parsing file metrics for file " +
                 parsedFile.filePath +
-                ":  ------------ "
+                ":  ------------ ",
         );
 
         const metricResults = new Map<string, MetricResult>();
@@ -74,7 +74,7 @@ export class MetricCalculator {
                     console.error("Error while calculating metric");
                     console.error(reason);
                     return { metricName: "ERROR", metricValue: -1 };
-                })
+                }),
             );
         }
 

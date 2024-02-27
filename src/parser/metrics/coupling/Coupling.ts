@@ -39,7 +39,7 @@ export class Coupling implements CouplingMetric {
         allNodeTypes: ExpressionMetricMapping[],
         namespaceCollector: NamespaceCollector,
         usageCollector: UsagesCollector,
-        publicAccessorCollector: PublicAccessorCollector
+        publicAccessorCollector: PublicAccessorCollector,
     ) {
         this.config = config;
         this.namespaceCollector = namespaceCollector;
@@ -62,7 +62,7 @@ export class Coupling implements CouplingMetric {
 
             const moreAccessors = this.publicAccessorCollector.getPublicAccessors(
                 parseFile,
-                this.namespaceCollector.getNamespaces(parseFile)
+                this.namespaceCollector.getNamespaces(parseFile),
             );
             for (const [accessorName, accessors] of moreAccessors) {
                 const existingAccessors = publicAccessors.get(accessorName);
@@ -100,7 +100,7 @@ export class Coupling implements CouplingMetric {
             tree,
             unresolvedCallExpressions,
             publicAccessors,
-            this.alreadyAddedRelationships
+            this.alreadyAddedRelationships,
         );
         relationships = relationships.concat(additionalRelationships);
         dlog("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
@@ -112,7 +112,7 @@ export class Coupling implements CouplingMetric {
 
     private getRelationships(
         namespaces: Map<string, FullyQTN>,
-        usagesCandidates: TypeUsageCandidate[]
+        usagesCandidates: TypeUsageCandidate[],
     ): Relationship[] {
         return usagesCandidates.flatMap((usage) => {
             const usedNamespaceSource = namespaces.get(usage.usedNamespace);
@@ -153,7 +153,7 @@ export class Coupling implements CouplingMetric {
 
     private buildDependencyTree(
         couplingResults: Relationship[],
-        allCouplingMetrics: Map<string, CouplingMetrics>
+        allCouplingMetrics: Map<string, CouplingMetrics>,
     ) {
         const tree = new Map<string, Relationship[]>();
         for (const couplingItem of couplingResults) {
@@ -193,14 +193,14 @@ export class Coupling implements CouplingMetric {
                 couplingItem.fromNamespace,
                 "outgoing",
                 couplingValues,
-                couplingItem
+                couplingItem,
             );
             this.updateMetricsForFile(
                 couplingItem.toSource,
                 couplingItem.toNamespace,
                 "incoming",
                 couplingValues,
-                couplingItem
+                couplingItem,
             );
         }
 
@@ -213,7 +213,7 @@ export class Coupling implements CouplingMetric {
         sourceNamespace: string,
         direction: string,
         couplingValues: Map<string, CouplingMetrics>,
-        couplingItem: Relationship
+        couplingItem: Relationship,
     ) {
         let couplingMetrics = couplingValues.get(filePath);
         if (couplingMetrics === undefined) {
@@ -269,7 +269,7 @@ export class Coupling implements CouplingMetric {
      */
     private formatPrintedPaths(
         relationships: Relationship[],
-        couplingMetrics: Map<string, CouplingMetrics>
+        couplingMetrics: Map<string, CouplingMetrics>,
     ): CouplingResult {
         if (this.config.needsPrintPathFormatting()) {
             for (const relationship of relationships) {

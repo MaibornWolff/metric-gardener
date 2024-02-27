@@ -21,7 +21,7 @@ export class RealLinesOfCode implements Metric {
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.commentStatementsSet = new Set(
-            getExpressionsByCategory(allNodeTypes, this.getName(), "comment")
+            getExpressionsByCategory(allNodeTypes, this.getName(), "comment"),
         );
     }
 

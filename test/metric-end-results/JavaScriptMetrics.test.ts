@@ -22,7 +22,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "functions-and-methods.js",
                 FileMetric.complexity,
-                8
+                8,
             );
         });
 
@@ -30,7 +30,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "multiple-return-statements.js",
                 FileMetric.complexity,
-                3
+                3,
             );
         });
 
@@ -46,7 +46,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "throw-try-catch-finally.js",
                 FileMetric.complexity,
-                1
+                1,
             );
         });
 
@@ -66,7 +66,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "functions-and-methods.js",
                 FileMetric.functions,
-                8
+                8,
             );
         });
     });
@@ -80,7 +80,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "same-line-comment.js",
                 FileMetric.commentLines,
-                4
+                4,
             );
         });
 
@@ -88,7 +88,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "consecutive-comments.js",
                 FileMetric.commentLines,
-                6
+                6,
             );
         });
     });
@@ -124,7 +124,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "single-comment.js",
                 FileMetric.realLinesOfCode,
-                0
+                0,
             );
         });
 
@@ -132,7 +132,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "same-line-comment.js",
                 FileMetric.realLinesOfCode,
-                3
+                3,
             );
         });
 

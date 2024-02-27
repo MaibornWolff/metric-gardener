@@ -36,7 +36,7 @@ describe("Rust metrics tests", () => {
             testFileMetric(
                 rsTestResourcesPath + "rust-example-code.rs",
                 FileMetric.commentLines,
-                20
+                20,
             );
         });
 
@@ -50,7 +50,7 @@ describe("Rust metrics tests", () => {
             testFileMetric(
                 rsTestResourcesPath + "rust-example-code.rs",
                 FileMetric.linesOfCode,
-                105
+                105,
             );
         });
     });
@@ -60,7 +60,7 @@ describe("Rust metrics tests", () => {
             testFileMetric(
                 rsTestResourcesPath + "rust-example-code.rs",
                 FileMetric.realLinesOfCode,
-                70
+                70,
             );
         });
     });

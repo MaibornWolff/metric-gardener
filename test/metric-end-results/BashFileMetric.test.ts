@@ -45,7 +45,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/multiline_command.sh",
                 FileMetric.realLinesOfCode,
-                11
+                11,
             );
         });
         it("should count 0 line for empty file ", () => {
@@ -55,14 +55,14 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/heredoc_NOP.sh",
                 FileMetric.realLinesOfCode,
-                23
+                23,
             );
         });
         it("should count real lines of code correctly for heredoc code", () => {
             testFileMetric(
                 bashTestResourcesPath + "/rloc_heredoc.sh",
                 FileMetric.realLinesOfCode,
-                16
+                16,
             );
         });
     });

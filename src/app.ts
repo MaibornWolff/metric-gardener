@@ -14,7 +14,7 @@ yargs(hideBin(process.argv))
         {},
         (argv) => {
             updateNodeTypesMappingFile();
-        }
+        },
     )
     .command(
         "parse [sources-path]",
@@ -57,7 +57,7 @@ yargs(hideBin(process.argv))
         },
         (argv) => {
             parseSourceCode(argv);
-        }
+        },
     )
     .demandCommand()
     .strictCommands()
@@ -71,7 +71,7 @@ async function parseSourceCode(argv) {
         argv["parse-dependencies"],
         argv["exclusions"],
         argv["compress"],
-        argv["print-relative-paths"]
+        argv["print-relative-paths"],
     );
 
     console.time("Time to complete");
@@ -88,6 +88,6 @@ async function parseSourceCode(argv) {
         results.unknownFiles,
         results.couplingMetrics,
         configuration.outputPath,
-        configuration.compress
+        configuration.compress,
     );
 }

@@ -55,11 +55,11 @@ export class GenericParser {
                         file.filePath,
                         TreeParser.parse(file, fileExtensionLanguage).catch((reason) => {
                             console.error(
-                                "Error while parsing a tree for the file " + file.filePath
+                                "Error while parsing a tree for the file " + file.filePath,
                             );
                             console.error(reason);
                             return file;
-                        })
+                        }),
                     );
                 } else {
                     unknownFiles.push(file.filePath);
@@ -80,7 +80,7 @@ export class GenericParser {
                                 filePath,
                                 new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
                             ];
-                        })
+                        }),
                     );
                 }
             }
@@ -100,7 +100,7 @@ export class GenericParser {
 
             dlog(
                 " --- " + (treeParseResults.length + unknownFiles.length) + " files detected",
-                "\n\n"
+                "\n\n",
             );
 
             if (this.config.parseDependencies) {

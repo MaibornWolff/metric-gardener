@@ -136,6 +136,12 @@ function isLeafNodeButNoLinebreak(node: SyntaxNode): boolean {
 function isHereDocBody(node: SyntaxNode): boolean {
     return node.type === "heredoc_body";
 }
+
+/**
+ * Special handling for Bash heredoc:
+ * Because there is no "heredoc_content" in place to represent plain text lines in the heredoc before a command/variable substitution.
+ * This is probably a bug in the tree-sitter-bash grammar.
+ */
 function countAllLinesBash(node: SyntaxNode): boolean {
     return isLeafNodeButNoLinebreak(node) || isHereDocBody(node);
 }

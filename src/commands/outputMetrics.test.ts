@@ -63,7 +63,7 @@ describe("outputMetrics", () => {
 
             expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",
-                '{"nodes":[],"info":[],"relationships":[]}'
+                '{"nodes":[],"info":[],"relationships":[]}',
             );
         });
     });

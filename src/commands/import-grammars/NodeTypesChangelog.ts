@@ -56,7 +56,7 @@ export class NodeTypesChangelog {
         if (!this.changelog.has(expression.expression)) {
             this.changelog.set(
                 expression.expression,
-                new NodeTypesChangelogEntry(expression.expression, false, expression.languages)
+                new NodeTypesChangelogEntry(expression.expression, false, expression.languages),
             );
         }
         this.changelog.get(expression.expression)?.addedToLanguage(languageAbbr);
@@ -84,7 +84,7 @@ export class NodeTypesChangelog {
         if (!this.changelog.has(expression.expression)) {
             this.changelog.set(
                 expression.expression,
-                new NodeTypesChangelogEntry(expression.expression, false, expression.languages)
+                new NodeTypesChangelogEntry(expression.expression, false, expression.languages),
             );
         }
         this.changelog.get(expression.expression)?.removedFromLanguage(languageAbbr);
@@ -100,7 +100,7 @@ export class NodeTypesChangelog {
                     escapeForCsv(entry.expression) +
                         csvSeparator +
                         Array.from(entry.addedLanguages) +
-                        EOL
+                        EOL,
                 );
             }
         }
@@ -108,7 +108,7 @@ export class NodeTypesChangelog {
 
     writeRemovedNodes(
         writeStream: fs.WriteStream,
-        metricMappings: Map<string, ExpressionMetricMapping>
+        metricMappings: Map<string, ExpressionMetricMapping>,
     ) {
         writeStream.write("Removed syntax nodes:" + EOL + EOL);
         writeStream.write(
@@ -119,7 +119,7 @@ export class NodeTypesChangelog {
                 "Used for calculating the metric(s):" +
                 csvSeparator +
                 "Was explicitly only activated for language(s):" +
-                EOL
+                EOL,
         );
 
         for (const entry of this.changelog.values()) {
@@ -128,7 +128,7 @@ export class NodeTypesChangelog {
                 if (mapping === undefined) {
                     throw new Error(
                         "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
-                            entry.expression
+                            entry.expression,
                     );
                 }
                 const activatedForLangOutput =
@@ -143,7 +143,7 @@ export class NodeTypesChangelog {
                         mapping.metrics +
                         csvSeparator +
                         activatedForLangOutput +
-                        EOL
+                        EOL,
                 );
             }
         }
@@ -151,12 +151,12 @@ export class NodeTypesChangelog {
 
     writeModifiedNodes(
         writeStream: fs.WriteStream,
-        metricMappings: Map<string, ExpressionMetricMapping>
+        metricMappings: Map<string, ExpressionMetricMapping>,
     ) {
         writeStream.write(
             "Already known and still used syntax nodes which were removed from or added to some language(s):" +
                 EOL +
-                EOL
+                EOL,
         );
         writeStream.write(
             "Name:" +
@@ -170,7 +170,7 @@ export class NodeTypesChangelog {
                 "Used for calculating the metric(s):" +
                 csvSeparator +
                 "Was explicitly only activated for language(s):" +
-                EOL
+                EOL,
         );
 
         for (const entry of this.changelog.values()) {
@@ -179,7 +179,7 @@ export class NodeTypesChangelog {
                 if (mapping === undefined) {
                     throw new Error(
                         "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
-                            entry.expression
+                            entry.expression,
                     );
                 }
 
@@ -199,7 +199,7 @@ export class NodeTypesChangelog {
                         mapping.metrics +
                         csvSeparator +
                         activatedForLangOutput +
-                        EOL
+                        EOL,
                 );
             }
         }
@@ -284,7 +284,7 @@ class NodeTypesChangelogEntry {
         isNew: boolean,
         oldLanguages: string[] = [],
         removedLanguages: string[] = [],
-        addedLanguages: string[] = []
+        addedLanguages: string[] = [],
     ) {
         this.expression = expression;
         this.isNewNode = isNew;

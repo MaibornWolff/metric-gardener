@@ -29,12 +29,6 @@ export const enum Language {
     Ruby,
     Rust,
     Bash,
-    /**
-     * For files with unknown file extension. Could be a source code file written in language(s) for which
-     * no tree sitter grammar is installed, a missing entry in {@link fileExtensionToLanguage}
-     * or just a file that is no source code.
-     */
-    Unknown,
 }
 
 /**

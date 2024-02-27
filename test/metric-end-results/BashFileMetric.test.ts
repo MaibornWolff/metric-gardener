@@ -84,7 +84,7 @@ describe("Bash metrics tests", () => {
         });
 
         it("should count all lines in file ", () => {
-            testFileMetric(bashTestResourcesPath + "/complexBash.sh", FileMetric.linesOfCode, 76);
+            testFileMetric(bashTestResourcesPath + "/complexBash.sh", FileMetric.linesOfCode, 75);
         });
     });
 

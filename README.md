@@ -53,6 +53,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Ruby
 -   Rust
+-   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash)
 
 ### Supported File Metrics
 

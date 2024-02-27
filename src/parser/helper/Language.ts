@@ -55,7 +55,6 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Rust, "rs"],
         [Language.Bash, "sh"],
     ])
-
 );
 
 /**

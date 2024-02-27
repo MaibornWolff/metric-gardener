@@ -4345,7 +4345,7 @@
         "metrics": ["complexity"],
         "type": "keyword",
         "category": "",
-        "activated_for_language": ["sh"],
+        "activated_for_languages": ["sh"],
         "languages": ["py", "sh"]
     },
     {

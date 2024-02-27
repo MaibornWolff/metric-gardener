@@ -19,7 +19,7 @@ import { strcmp } from "../../src/parser/helper/Helper";
 export function getParserConfiguration(
     sourcesPath: string,
     parseDependencies = false,
-    formatFilePaths = false
+    formatFilePaths = false,
 ) {
     return new Configuration(
         sourcesPath,
@@ -28,7 +28,7 @@ export function getParserConfiguration(
         "",
         false,
         formatFilePaths, // For project location-independent testing
-        formatFilePaths // For platform-independent testing
+        formatFilePaths, // For platform-independent testing
     );
 }
 /**
@@ -40,7 +40,7 @@ export function getParserConfiguration(
 export function sortCouplingResults(couplingResult: CouplingResult) {
     // Sort the metrics in ascending order of the file paths
     couplingResult.metrics = new Map(
-        [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0]))
+        [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0])),
     );
     couplingResult.relationships.sort((a, b) => {
         // Unique ID for relationships adapted from metrics/coupling/Coupling.ts getRelationships(...)
@@ -60,7 +60,7 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
 export async function parseAndTestFileMetric(
     inputPath: string,
     metric: FileMetric,
-    expected: number
+    expected: number,
 ) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getParserConfiguration(realInputPath));
@@ -91,7 +91,7 @@ export function expectFileMetric(
     results: Map<string, Map<string, MetricResult>>,
     inputPath: string,
     metric: FileMetric,
-    expected: number
+    expected: number,
 ) {
     const realInputPath = fs.realpathSync(inputPath);
     expect(results.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);

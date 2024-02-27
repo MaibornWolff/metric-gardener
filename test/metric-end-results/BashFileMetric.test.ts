@@ -53,7 +53,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/multiline_command.sh",
                 FileMetric.realLinesOfCode,
-                11
+                11,
             );
         });
 
@@ -65,7 +65,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/heredoc_NOP.sh",
                 FileMetric.realLinesOfCode,
-                23
+                23,
             );
         });
 
@@ -73,7 +73,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/rloc_heredoc.sh",
                 FileMetric.realLinesOfCode,
-                16
+                16,
             );
         });
     });

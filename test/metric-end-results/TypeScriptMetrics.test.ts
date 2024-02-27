@@ -22,7 +22,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "functions-and-methods.ts",
                 FileMetric.complexity,
-                9
+                9,
             );
         });
 
@@ -30,7 +30,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "multiple-return-statements.ts",
                 FileMetric.complexity,
-                3
+                3,
             );
         });
 
@@ -46,7 +46,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "throw-try-catch-finally.ts",
                 FileMetric.complexity,
-                1
+                1,
             );
         });
 
@@ -66,7 +66,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "functions-and-methods.ts",
                 FileMetric.functions,
-                9
+                9,
             );
         });
     });
@@ -80,7 +80,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "same-line-comment.ts",
                 FileMetric.commentLines,
-                4
+                4,
             );
         });
 
@@ -88,7 +88,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "consecutive-comments.ts",
                 FileMetric.commentLines,
-                6
+                6,
             );
         });
     });
@@ -102,7 +102,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "non-empty-last-line.ts",
                 FileMetric.linesOfCode,
-                415
+                415,
             );
         });
 
@@ -124,7 +124,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "real-lines-of-code.ts",
                 FileMetric.realLinesOfCode,
-                7
+                7,
             );
         });
 
@@ -136,7 +136,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "single-comment.ts",
                 FileMetric.realLinesOfCode,
-                0
+                0,
             );
         });
 
@@ -144,7 +144,7 @@ describe("TypeScript metrics tests", () => {
             testFileMetric(
                 tsTestResourcesPath + "same-line-comment.ts",
                 FileMetric.realLinesOfCode,
-                3
+                3,
             );
         });
 

@@ -47,7 +47,7 @@ export class TreeParser {
         }
         if (tree.rootNode === undefined) {
             throw new Error(
-                "Root node of syntax tree for file " + file.filePath + " is undefined!"
+                "Root node of syntax tree for file " + file.filePath + " is undefined!",
             );
         }
 

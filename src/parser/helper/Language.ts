@@ -51,7 +51,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Python, "py"],
         [Language.Ruby, "rb"],
         [Language.Rust, "rs"],
-    ])
+    ]),
 );
 
 /**

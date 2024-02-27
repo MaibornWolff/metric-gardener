@@ -18,7 +18,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_code.cpp",
                 FileMetric.complexity,
-                10
+                10,
             );
         });
 
@@ -54,7 +54,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_declarations.hpp",
                 FileMetric.complexity,
-                4
+                4,
             );
         });
 
@@ -62,7 +62,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_implementations.cpp",
                 FileMetric.complexity,
-                6
+                6,
             );
         });
     });
@@ -94,7 +94,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_implementations.cpp",
                 FileMetric.functions,
-                6
+                6,
             );
         });
 
@@ -102,7 +102,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_declarations.hpp",
                 FileMetric.functions,
-                4
+                4,
             );
         });
 
@@ -130,7 +130,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_code.cpp",
                 FileMetric.linesOfCode,
-                67
+                67,
             );
         });
 
@@ -144,7 +144,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_code.cpp",
                 FileMetric.realLinesOfCode,
-                45
+                45,
             );
         });
 
@@ -156,7 +156,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_header.hpp",
                 FileMetric.realLinesOfCode,
-                31
+                31,
             );
         });
 
@@ -164,7 +164,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "same_line_comment.cpp",
                 FileMetric.realLinesOfCode,
-                4
+                4,
             );
         });
 
@@ -172,7 +172,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "weird_lines.cpp",
                 FileMetric.realLinesOfCode,
-                89
+                89,
             );
         });
     });

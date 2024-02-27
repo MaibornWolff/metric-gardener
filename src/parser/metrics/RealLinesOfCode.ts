@@ -21,7 +21,7 @@ export class RealLinesOfCode implements Metric {
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.commentStatementsSet = new Set(
-            getExpressionsByCategory(allNodeTypes, this.getName(), "comment")
+            getExpressionsByCategory(allNodeTypes, this.getName(), "comment"),
         );
     }
 
@@ -38,7 +38,7 @@ export class RealLinesOfCode implements Metric {
     walkTree(
         cursor: TreeCursor,
         isComment: (node: Parser.SyntaxNode) => boolean,
-        realLinesOfCode = new Set<number>()
+        realLinesOfCode = new Set<number>(),
     ) {
         const { currentNode } = cursor;
         if (!isComment(currentNode)) {

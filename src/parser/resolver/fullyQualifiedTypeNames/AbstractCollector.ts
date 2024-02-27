@@ -27,7 +27,7 @@ export abstract class AbstractCollector {
             return new QueryStrategy().getFullyQTNs(
                 parsedFile,
                 this.getNamespaceDelimiter(),
-                this.getNamespacesQuery()
+                this.getNamespacesQuery(),
             );
         }
 
@@ -36,7 +36,7 @@ export abstract class AbstractCollector {
         }
 
         throw Error(
-            "Unsupported Namespace Resolving Strategy " + this.getNamespaceResolvingStrategy()
+            "Unsupported Namespace Resolving Strategy " + this.getNamespaceResolvingStrategy(),
         );
     }
 }

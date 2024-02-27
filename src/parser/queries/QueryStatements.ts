@@ -66,7 +66,7 @@ export class ExpressionQueryStatement extends LanguageSpecificQueryStatement {
     constructor(
         expression: string,
         applicable_for_languages: string[],
-        activated_for_languages?: string[],
+        activated_for_languages?: string[]
     ) {
         super(applicable_for_languages, activated_for_languages);
         this.#expression = expression;
@@ -85,7 +85,7 @@ export class OperatorQueryStatement extends LanguageSpecificQueryStatement {
         category: string,
         operator: string,
         applicableForLanguages: string[],
-        activatedForLanguages?: string[],
+        activatedForLanguages?: string[]
     ) {
         super(applicableForLanguages, activatedForLanguages);
         this.#category = category;
@@ -103,7 +103,7 @@ export class SimpleLanguageSpecificQueryStatement extends LanguageSpecificQueryS
     constructor(
         query: string,
         applicable_for_languages: string[],
-        activated_for_languages?: string[],
+        activated_for_languages?: string[]
     ) {
         super(applicable_for_languages, activated_for_languages);
         this.#query = query;

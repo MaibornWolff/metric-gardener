@@ -38,7 +38,7 @@ export function outputAsJson(
     unknownFiles: string[],
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
-    compress: boolean,
+    compress: boolean
 ) {
     const output = buildOutputObject(fileMetrics, unknownFiles, relationshipMetrics);
     const outputString = JSON.stringify(output).toString();
@@ -46,7 +46,7 @@ export function outputAsJson(
     if (compress) {
         dumpCompressed(
             outputString,
-            outputFilePath.endsWith(".gz") ? outputFilePath : outputFilePath + ".gz",
+            outputFilePath.endsWith(".gz") ? outputFilePath : outputFilePath + ".gz"
         );
     } else {
         fs.writeFileSync(outputFilePath, outputString);
@@ -58,7 +58,7 @@ export function outputAsJson(
 function buildOutputObject(
     fileMetrics: Map<string, Map<string, MetricResult>>,
     unknownFiles: string[],
-    relationshipMetrics: CouplingResult,
+    relationshipMetrics: CouplingResult
 ) {
     const output: {
         nodes: OutputNode[];

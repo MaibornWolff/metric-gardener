@@ -16,7 +16,7 @@ export class QueryStrategy {
     getFullyQTNs(
         parsedFile: ParsedFile,
         namespaceDelimiter,
-        namespacesQuery,
+        namespacesQuery
     ): Map<string, FullyQTN> {
         const { filePath, language, tree } = parsedFile;
 
@@ -66,7 +66,7 @@ export class QueryStrategy {
 
                 namespaceDeclarations.set(
                     namespaceName + namespaceDelimiter + className,
-                    namespaceDeclaration,
+                    namespaceDeclaration
                 );
 
                 // Jump to any next capture

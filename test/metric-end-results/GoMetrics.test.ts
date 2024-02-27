@@ -22,7 +22,7 @@ describe("Go metric tests", () => {
             testFileMetric(
                 goTestResourcesPath + "functions-and-methods.go",
                 FileMetric.complexity,
-                2,
+                2
             );
         });
 
@@ -30,7 +30,7 @@ describe("Go metric tests", () => {
             testFileMetric(
                 goTestResourcesPath + "multiple-return-statements.go",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
 
@@ -46,7 +46,7 @@ describe("Go metric tests", () => {
             testFileMetric(
                 goTestResourcesPath + "throw-try-catch-finally.go",
                 FileMetric.complexity,
-                0,
+                0
             );
         });
 
@@ -60,7 +60,7 @@ describe("Go metric tests", () => {
             testFileMetric(
                 goTestResourcesPath + "functions-and-methods.go",
                 FileMetric.functions,
-                2,
+                2
             );
         });
     });
@@ -79,9 +79,9 @@ describe("Go metric tests", () => {
                 testFileMetric(
                     goTestResourcesPath + "if-statements.go",
                     FileMetric.commentLines,
-                    6,
+                    6
                 );
-            },
+            }
         );
 
         it("should count number of comment lines correctly, including multiple successive comments", () => {
@@ -116,7 +116,7 @@ describe("Go metric tests", () => {
             testFileMetric(
                 goTestResourcesPath + "go-example-code.go",
                 FileMetric.realLinesOfCode,
-                32,
+                32
             );
         });
 
@@ -128,7 +128,7 @@ describe("Go metric tests", () => {
             testFileMetric(
                 goTestResourcesPath + "if-statements.go",
                 FileMetric.realLinesOfCode,
-                19,
+                19
             );
         });
     });

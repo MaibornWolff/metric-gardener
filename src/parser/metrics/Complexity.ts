@@ -54,8 +54,8 @@ export class Complexity implements Metric {
                     nodeType.category,
                     nodeType.operator,
                     nodeType.languages,
-                    nodeType.activated_for_languages,
-                ),
+                    nodeType.activated_for_languages
+                )
             );
         }
     }
@@ -65,8 +65,8 @@ export class Complexity implements Metric {
             new ExpressionQueryStatement(
                 nodeType.expression,
                 nodeType.languages,
-                nodeType.activated_for_languages,
-            ),
+                nodeType.activated_for_languages
+            )
         );
     }
 
@@ -75,7 +75,7 @@ export class Complexity implements Metric {
      */
     addCaseLabelQueryStatements(
         caseNodeTypes: ExpressionMetricMapping[],
-        languagesWithDefaultLabelAbbr: Set<string>,
+        languagesWithDefaultLabelAbbr: Set<string>
     ) {
         for (const caseNodeType of caseNodeTypes) {
             const haveDefaultNodeType: string[] = [];
@@ -95,8 +95,8 @@ export class Complexity implements Metric {
                     new ExpressionQueryStatement(
                         caseNodeType.expression,
                         haveDefaultNodeType,
-                        caseNodeType.activated_for_languages,
-                    ),
+                        caseNodeType.activated_for_languages
+                    )
                 );
             }
 
@@ -116,7 +116,7 @@ export class Complexity implements Metric {
      */
     addCaseDefaultDifferentiatingQuery(
         noDefaultLangAbbrs: string[],
-        caseDefaultNodeType: ExpressionMetricMapping,
+        caseDefaultNodeType: ExpressionMetricMapping
     ) {
         if (caseDefaultNodeType.expression == "case_statement") {
             // Special treatment for "case_statement" used by at least C++ and PHP.
@@ -129,8 +129,8 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(case_statement value: _ ) @case_statement",
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
-                ),
+                    caseDefaultNodeType.activated_for_languages
+                )
             );
         } else if (caseDefaultNodeType.expression == "when_entry") {
             // Special treatment for the "when_entry" used by Kotlin. Can also have more than one child.
@@ -141,8 +141,8 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(when_entry (when_condition)) @when_entry",
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
-                ),
+                    caseDefaultNodeType.activated_for_languages
+                )
             );
         } else if (caseDefaultNodeType.expression == "match_arm") {
             // Special treatment for the "match_arm" used by Rust.
@@ -153,8 +153,8 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(match_arm pattern: (match_pattern (_))) @match_arm",
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
-                ),
+                    caseDefaultNodeType.activated_for_languages
+                )
             );
         } else {
             // Standard treatment: check if the case label node has a named child:
@@ -165,8 +165,8 @@ export class Complexity implements Metric {
                         " (_)) @" +
                         caseDefaultNodeType.expression,
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
-                ),
+                    caseDefaultNodeType.activated_for_languages
+                )
             );
         }
     }
@@ -179,8 +179,8 @@ export class Complexity implements Metric {
             //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.complexityStatementsSuperSet.concat(
-                    new SimpleQueryStatement("(class_body (block)) @initBlock"),
-                ),
+                    new SimpleQueryStatement("(class_body (block)) @initBlock")
+                )
             );
         } else {
             queryBuilder.setStatements(this.complexityStatementsSuperSet);

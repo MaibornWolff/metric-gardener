@@ -18,7 +18,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/Classes.java",
                 FileMetric.classes,
-                2,
+                2
             );
         });
 
@@ -26,7 +26,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/Classlike.java",
                 FileMetric.classes,
-                4,
+                4
             );
         });
 
@@ -34,7 +34,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/NestedClasses.java",
                 FileMetric.classes,
-                4,
+                4
             );
         });
 
@@ -45,7 +45,7 @@ describe("Java metrics tests.", () => {
                     FileMetric.classes +
                     "/ClassWithFieldsAndMethods.java",
                 FileMetric.classes,
-                2,
+                2
             );
         });
 
@@ -57,7 +57,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/Comment.java",
                 FileMetric.classes,
-                0,
+                0
             );
         });
 
@@ -65,7 +65,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/Person.java",
                 FileMetric.classes,
-                3,
+                3
             );
         });
     });
@@ -75,7 +75,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.linesOfCode + "/ClassForLOC.java",
                 FileMetric.linesOfCode,
-                24,
+                24
             );
         });
 
@@ -87,7 +87,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.linesOfCode + "/Linebreak.java",
                 FileMetric.linesOfCode,
-                7,
+                7
             );
         });
 
@@ -95,7 +95,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.linesOfCode + "/MultilineLineOfCode.java",
                 FileMetric.linesOfCode,
-                30,
+                30
             );
         });
     });
@@ -108,7 +108,7 @@ describe("Java metrics tests.", () => {
                     FileMetric.realLinesOfCode +
                     "/RealLineOfCodeAndComments.java",
                 FileMetric.realLinesOfCode,
-                23,
+                23
             );
         });
 
@@ -116,7 +116,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.realLinesOfCode + "/InlineComment.java",
                 FileMetric.realLinesOfCode,
-                4,
+                4
             );
         });
 
@@ -127,7 +127,7 @@ describe("Java metrics tests.", () => {
                     FileMetric.realLinesOfCode +
                     "/MultilineRealLineOfCode.java",
                 FileMetric.realLinesOfCode,
-                57,
+                57
             );
         });
 
@@ -138,7 +138,7 @@ describe("Java metrics tests.", () => {
                     FileMetric.realLinesOfCode +
                     "/InitializationBlock.java",
                 FileMetric.realLinesOfCode,
-                10,
+                10
             );
         });
 
@@ -152,7 +152,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/StaticFuntions.java",
                 FileMetric.functions,
-                5,
+                5
             );
         });
 
@@ -160,7 +160,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/FunctionAccessModifier.java",
                 FileMetric.functions,
-                4,
+                4
             );
         });
 
@@ -168,7 +168,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/Constructor.java",
                 FileMetric.functions,
-                11,
+                11
             );
         });
 
@@ -176,7 +176,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/InterfaceFunction.java",
                 FileMetric.functions,
-                2,
+                2
             );
         });
 
@@ -184,7 +184,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/AbstractClassFunction.java",
                 FileMetric.functions,
-                2,
+                2
             );
         });
 
@@ -192,7 +192,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/OverloadFuntion.java",
                 FileMetric.functions,
-                3,
+                3
             );
         });
 
@@ -200,7 +200,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/LambdaExpression.java",
                 FileMetric.functions,
-                6,
+                6
             );
         });
 
@@ -208,14 +208,14 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.functions + "/RecordMethods.java",
                 FileMetric.functions,
-                3,
+                3
             );
         });
         it("should count all initialization blocks as function declarations", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/InitializationBlock.java",
                 FileMetric.functions,
-                2,
+                2
             );
         });
     });
@@ -225,7 +225,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/IfStatements.java",
                 FileMetric.complexity,
-                8,
+                8
             );
         });
 
@@ -233,7 +233,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/WhileAndForLoop.java",
                 FileMetric.complexity,
-                11,
+                11
             );
         });
 
@@ -241,7 +241,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/SwitchStatement.java",
                 FileMetric.complexity,
-                8,
+                8
             );
         });
 
@@ -249,7 +249,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/TryCatchFinally.java",
                 FileMetric.complexity,
-                8,
+                8
             );
         });
 
@@ -257,7 +257,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/TernaryOperation.java",
                 FileMetric.complexity,
-                2,
+                2
             );
         });
 
@@ -265,7 +265,7 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/DifferentFunctions.java",
                 FileMetric.complexity,
-                5,
+                5
             );
         });
 
@@ -273,14 +273,14 @@ describe("Java metrics tests.", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.complexity + "/LogicalOperator.java",
                 FileMetric.complexity,
-                6,
+                6
             );
         });
         it("should count all initialization blocks", async () => {
             await testFileMetric(
                 javaTestResourcesPath + "/InitializationBlock.java",
                 FileMetric.complexity,
-                2,
+                2
             );
         });
     });
@@ -293,7 +293,7 @@ describe("Java metrics tests.", () => {
                     FileMetric.commentLines +
                     "/DifferentKindOfComments.java",
                 FileMetric.commentLines,
-                28,
+                28
             );
         });
     });

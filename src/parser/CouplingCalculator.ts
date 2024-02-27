@@ -38,7 +38,7 @@ export class CouplingCalculator {
                 allNodeTypes,
                 this.namespaceCollector,
                 this.usageCollector,
-                this.publicAccessorCollector,
+                this.publicAccessorCollector
             ),
         ];
     }

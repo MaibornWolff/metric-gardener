@@ -22,7 +22,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "functions-and-methods.php",
                 FileMetric.complexity,
-                7,
+                7
             );
         });
 
@@ -30,7 +30,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "multiple-return-statements.php",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
 
@@ -46,7 +46,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "throw-try-catch-finally.php",
                 FileMetric.complexity,
-                1,
+                1
             );
         });
 
@@ -66,7 +66,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "functions-and-methods.php",
                 FileMetric.functions,
-                7,
+                7
             );
         });
     });
@@ -76,7 +76,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "empty-last-line.php",
                 FileMetric.linesOfCode,
-                66,
+                66
             );
         });
 
@@ -84,7 +84,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "php-example-code.php",
                 FileMetric.linesOfCode,
-                65,
+                65
             );
         });
 
@@ -106,7 +106,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "php-example-code.php",
                 FileMetric.realLinesOfCode,
-                43,
+                43
             );
         });
 
@@ -118,7 +118,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "same-line-comment.php",
                 FileMetric.realLinesOfCode,
-                11,
+                11
             );
         });
     });
@@ -131,16 +131,16 @@ describe("PHP metrics tests", () => {
                 testFileMetric(
                     phpTestResourcesPath + "php-example-code.php",
                     FileMetric.commentLines,
-                    12,
+                    12
                 );
-            },
+            }
         );
     });
 
     describe("parsing PHP dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             const couplingResult = await getCouplingMetrics(
-                phpTestResourcesPath + "coupling-examples/",
+                phpTestResourcesPath + "coupling-examples/"
             );
 
             expect(couplingResult).toMatchSnapshot();

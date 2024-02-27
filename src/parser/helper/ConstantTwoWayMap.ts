@@ -16,7 +16,7 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
                 this.reverseMap.set(value, key);
             } else {
                 throw new Error(
-                    "Tried to use ConstantTwoWayMap with non-unique or undefined values.",
+                    "Tried to use ConstantTwoWayMap with non-unique or undefined values."
                 );
             }
         }

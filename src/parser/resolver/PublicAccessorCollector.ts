@@ -8,7 +8,7 @@ export class PublicAccessorCollector {
 
     getPublicAccessors(
         parsedFile: ParsedFile,
-        namespacesOfFile: Map<string, FullyQTN>,
+        namespacesOfFile: Map<string, FullyQTN>
     ): Map<string, Accessor[]> {
         const collector = this.accessorCollectorFactory.getCollector(parsedFile);
         return collector !== undefined

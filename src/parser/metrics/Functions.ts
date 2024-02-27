@@ -25,8 +25,8 @@ export class Functions implements Metric {
             //add query for instance init block in Java
             queryBuilder.setStatements(
                 this.statementsSuperSet.concat(
-                    new SimpleQueryStatement("(class_body (block)) @initBlock"),
-                ),
+                    new SimpleQueryStatement("(class_body (block)) @initBlock")
+                )
             );
         } else {
             queryBuilder.setStatements(this.statementsSuperSet);

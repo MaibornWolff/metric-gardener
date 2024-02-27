@@ -9,7 +9,7 @@ describe("Configuration", () => {
                 false,
                 "folder1 , folder2",
                 false,
-                false,
+                false
             );
 
             expect(config.exclusions.length).toBe(2);
@@ -23,7 +23,7 @@ describe("Configuration", () => {
                 false,
                 "folder1",
                 false,
-                false,
+                false
             );
 
             expect(config.exclusions.length).toBe(1);

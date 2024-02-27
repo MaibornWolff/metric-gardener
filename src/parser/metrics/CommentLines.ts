@@ -33,8 +33,8 @@ export class CommentLines implements Metric {
             case Language.Python:
                 additionalStatements.push(
                     new SimpleQueryStatement(
-                        "(expression_statement (string)) @python_multiline_comment",
-                    ),
+                        "(expression_statement (string)) @python_multiline_comment"
+                    )
                 );
                 break;
         }

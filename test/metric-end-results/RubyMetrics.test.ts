@@ -48,7 +48,7 @@ describe("Ruby metrics tests", () => {
             testFileMetric(
                 rbTestResourcesPath + "ruby-example-code.rb",
                 FileMetric.commentLines,
-                15,
+                15
             );
         });
     });
@@ -58,7 +58,7 @@ describe("Ruby metrics tests", () => {
             testFileMetric(
                 rbTestResourcesPath + "ruby-example-code.rb",
                 FileMetric.linesOfCode,
-                90,
+                90
             );
         });
     });
@@ -68,7 +68,7 @@ describe("Ruby metrics tests", () => {
             testFileMetric(
                 rbTestResourcesPath + "ruby-example-code.rb",
                 FileMetric.realLinesOfCode,
-                62,
+                62
             );
         });
     });

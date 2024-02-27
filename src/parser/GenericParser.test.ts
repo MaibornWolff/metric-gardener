@@ -42,7 +42,7 @@ async function mockedTreeParserParse(file: SimpleFile, assumedLanguage: Language
  */
 
 function mockFindFilesAsync(
-    mockedFunction: () => AsyncGenerator<SimpleFile> = mockedFindFilesAsync,
+    mockedFunction: () => AsyncGenerator<SimpleFile> = mockedFindFilesAsync
 ) {
     const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
     findFilesAsyncMock.mockImplementation((config) => {
@@ -54,8 +54,8 @@ function mockFindFilesAsync(
 function mockTreeParserParse(
     implementation: (
         file: SimpleFile,
-        assumedLanguage: Language,
-    ) => Promise<ParsedFile> = mockedTreeParserParse,
+        assumedLanguage: Language
+    ) => Promise<ParsedFile> = mockedTreeParserParse
 ) {
     return jest.spyOn(TreeParser, "parse").mockImplementation(implementation);
 }
@@ -124,7 +124,7 @@ describe("GenericParser.calculateMetrics()", () => {
          * then:
          */
         expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedFileMetricsMap]]),
+            new Map([["clearly/invalid/path.cpp", expectedFileMetricsMap]])
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(1);
         expect(couplingSpied).toHaveBeenCalledTimes(0);
@@ -142,7 +142,7 @@ describe("GenericParser.calculateMetrics()", () => {
             async (parsedFilePromise) => [
                 (await parsedFilePromise).filePath,
                 expectedFileMetricsMap,
-            ],
+            ]
         );
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
@@ -159,7 +159,7 @@ describe("GenericParser.calculateMetrics()", () => {
             new Map([
                 ["clearly/invalid/path1.cc", expectedFileMetricsMap],
                 ["clearly/invalid/path2.cpp", expectedFileMetricsMap],
-            ]),
+            ])
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
         expect(couplingSpied).toHaveBeenCalledTimes(0);
@@ -176,7 +176,7 @@ describe("GenericParser.calculateMetrics()", () => {
             async (parsedFilePromise) => [
                 (await parsedFilePromise).filePath,
                 expectedFileMetricsMap,
-            ],
+            ]
         );
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
@@ -214,7 +214,7 @@ describe("GenericParser.calculateMetrics()", () => {
          */
         // TODO: do no longer include errors into the list of results, use "info" field instead #185
         expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]]),
+            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]])
         );
         expect(errorSpy).toHaveBeenCalled();
     });
@@ -244,7 +244,7 @@ describe("GenericParser.calculateMetrics()", () => {
          */
         // TODO: do no longer include errors into the list of results, use "info" field instead #185
         expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]]),
+            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]])
         );
         expect(errorSpy).toHaveBeenCalled();
     });
@@ -280,7 +280,7 @@ describe("GenericParser.calculateMetrics()", () => {
             new Map([
                 ["clearly/invalid/path1.cc", expectedErrorMetricsMap],
                 ["clearly/invalid/path2.cpp", expectedFileMetricsMap],
-            ]),
+            ])
         );
         expect(errorSpy).toHaveBeenCalled();
     });

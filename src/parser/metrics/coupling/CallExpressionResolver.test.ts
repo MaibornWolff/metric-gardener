@@ -94,7 +94,7 @@ describe("CallExpressionResolver", () => {
                 dependencyTree,
                 unresolvedCallExpressions,
                 publicAccessors,
-                new Set<string>(),
+                new Set<string>()
             );
             expect(additionalRelationships.length).toBe(2);
 

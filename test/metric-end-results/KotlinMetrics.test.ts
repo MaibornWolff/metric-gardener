@@ -30,7 +30,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "case-statements.kt",
                 FileMetric.complexity,
-                4,
+                4
             );
         });
 
@@ -38,7 +38,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "functions-and-methods.kt",
                 FileMetric.complexity,
-                11,
+                11
             );
         });
 
@@ -46,7 +46,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "multiple-return-statements.kt",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
 
@@ -54,7 +54,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "throw-try-catch-finally.kt",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
     });
@@ -70,7 +70,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "functions-and-methods.kt",
                 FileMetric.functions,
-                10,
+                10
             );
         });
     });
@@ -84,7 +84,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "same-line-comment.kt",
                 FileMetric.commentLines,
-                4,
+                4
             );
         });
     });
@@ -94,7 +94,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "kotlin-example-code.kt",
                 FileMetric.linesOfCode,
-                62,
+                62
             );
         });
 
@@ -102,7 +102,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "kotlin-example-code-2.kt",
                 FileMetric.linesOfCode,
-                31,
+                31
             );
         });
 
@@ -124,7 +124,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "kotlin-example-code.kt",
                 FileMetric.realLinesOfCode,
-                50,
+                50
             );
         });
 
@@ -132,7 +132,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "kotlin-example-code-2.kt",
                 FileMetric.realLinesOfCode,
-                31,
+                31
             );
         });
 
@@ -144,7 +144,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "same-line-comment.kt",
                 FileMetric.realLinesOfCode,
-                5,
+                5
             );
         });
 
@@ -152,7 +152,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "weird-lines.kt",
                 FileMetric.realLinesOfCode,
-                30,
+                30
             );
         });
     });

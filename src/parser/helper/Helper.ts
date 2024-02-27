@@ -15,7 +15,7 @@ import { ExpressionQueryStatement } from "../queries/QueryStatements";
 export function mapAllFunctional<KeyType, ValueType>(
     iterator: Iterable<KeyType>,
     map: Map<KeyType, ValueType>,
-    insertFunction: (v: ValueType) => any,
+    insertFunction: (v: ValueType) => any
 ) {
     for (const key of iterator) {
         const mapResult = map.get(key);
@@ -34,7 +34,7 @@ export function mapAllFunctional<KeyType, ValueType>(
  */
 export function mapAllIntoArray<KeyType, ValueType>(
     iterator: Iterable<KeyType>,
-    map: Map<KeyType, ValueType>,
+    map: Map<KeyType, ValueType>
 ): ValueType[] {
     const result: ValueType[] = [];
     mapAllFunctional(iterator, map, (value) => result.push(value));
@@ -129,7 +129,7 @@ export async function* findFilesAsync(config: Configuration): AsyncGenerator<Sim
 
 async function* findFilesAsyncRecursive(
     dir: string,
-    excludedFolders: Set<string>,
+    excludedFolders: Set<string>
 ): AsyncGenerator<SimpleFile> {
     const openedDir = await fs.promises.opendir(dir);
 
@@ -160,7 +160,7 @@ export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metr
             const queryStatement = new ExpressionQueryStatement(
                 expressionMapping.expression,
                 expressionMapping.languages,
-                expressionMapping.activated_for_languages,
+                expressionMapping.activated_for_languages
             );
 
             statements.push(queryStatement);
@@ -172,7 +172,7 @@ export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metr
 export function getExpressionsByCategory(
     allNodeTypes: ExpressionMetricMapping[],
     metricName: string,
-    category: string,
+    category: string
 ) {
     const expressions: string[] = [];
     allNodeTypes.forEach((expressionMapping) => {

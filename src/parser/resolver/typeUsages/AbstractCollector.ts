@@ -59,7 +59,7 @@ export abstract class AbstractCollector {
         let importReferences: ImportReference[] = this.getImports(parsedFile, namespaceCollector);
         if (this.getGroupedImportsQuery().length > 0) {
             importReferences = importReferences.concat(
-                this.getGroupedImports(parsedFile, namespaceCollector),
+                this.getGroupedImports(parsedFile, namespaceCollector)
             );
         }
 
@@ -71,7 +71,7 @@ export abstract class AbstractCollector {
         const { candidates, unresolvedCallExpressions } = this.getUsages(
             parsedFile,
             namespaceCollector,
-            importReferences,
+            importReferences
         );
         dlog("UsagesAndCandidates", filePath, candidates);
 
@@ -83,7 +83,7 @@ export abstract class AbstractCollector {
 
     private getImports(
         parsedFile: ParsedFile,
-        namespaceCollector: NamespaceCollector,
+        namespaceCollector: NamespaceCollector
     ): ImportReference[] {
         const { filePath, language, tree } = parsedFile;
 
@@ -137,7 +137,7 @@ export abstract class AbstractCollector {
                     usageAliasPrefix.length > 0
                         ? importReference.alias
                         : importReference.namespaceSuffix,
-                    importReference,
+                    importReference
                 );
 
             if (usageAliasPrefix.length > 0) {
@@ -219,7 +219,7 @@ export abstract class AbstractCollector {
     private getUsages(
         parsedFile: ParsedFile,
         namespaceCollector: NamespaceCollector,
-        importReferences: ImportReference[],
+        importReferences: ImportReference[]
     ) {
         const { filePath, language, tree } = parsedFile;
 
@@ -247,7 +247,7 @@ export abstract class AbstractCollector {
         // add implemented and extended classes as usages
         // to consider the coupling of those
         for (const [fullyQualifiedName, namespaceReference] of namespaceCollector.getNamespaces(
-            parsedFile,
+            parsedFile
         )) {
             if (namespaceReference.implementedClasses.length > 0) {
                 for (const implementedClass of namespaceReference.implementedClasses) {
@@ -374,7 +374,7 @@ export abstract class AbstractCollector {
                         // Add Same Namespace Candidate
                         // Add Parent Namespace Candidate
                         const fromNamespaceParts = fromNamespace.namespace.split(
-                            this.getNamespaceDelimiter(),
+                            this.getNamespaceDelimiter()
                         );
                         while (fromNamespaceParts.length > 0) {
                             const usageCandidate: TypeUsageCandidate = {
@@ -405,7 +405,7 @@ export abstract class AbstractCollector {
                 }
 
                 const cleanQualifiedName = originalCleanNameParts.join(
-                    this.getNamespaceDelimiter(),
+                    this.getNamespaceDelimiter()
                 );
                 processedQualifiedNames.add(cleanQualifiedName);
 
@@ -433,7 +433,7 @@ export abstract class AbstractCollector {
                 const parentNamespaceCandidates: string[] = [];
                 if (fromNamespace.namespace.includes(this.getNamespaceDelimiter())) {
                     const sourceNamespaceParts = fromNamespace.namespace.split(
-                        this.getNamespaceDelimiter(),
+                        this.getNamespaceDelimiter()
                     );
                     while (sourceNamespaceParts.length > 1) {
                         sourceNamespaceParts.pop();
@@ -455,7 +455,7 @@ export abstract class AbstractCollector {
                             moreCandidates.push(
                                 importReference.usedNamespace +
                                     fromNamespace.namespaceDelimiter +
-                                    cleanQualifiedName,
+                                    cleanQualifiedName
                             );
                         } else {
                             const clonedNameParts = [...originalCleanNameParts];
@@ -463,7 +463,7 @@ export abstract class AbstractCollector {
                                 moreCandidates.push(
                                     importReference.usedNamespace +
                                         fromNamespace.namespaceDelimiter +
-                                        clonedNameParts.join(this.getNamespaceDelimiter()),
+                                        clonedNameParts.join(this.getNamespaceDelimiter())
                                 );
                                 clonedNameParts.pop();
                             }

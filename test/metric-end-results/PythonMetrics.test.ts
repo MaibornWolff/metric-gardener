@@ -30,7 +30,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "case-statements.py",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
 
@@ -38,7 +38,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "functions-and-methods.py",
                 FileMetric.complexity,
-                6,
+                6
             );
         });
 
@@ -46,7 +46,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "multiple-return-statements.py",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
 
@@ -54,7 +54,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "throw-try-catch-finally.py",
                 FileMetric.complexity,
-                2,
+                2
             );
         });
     });
@@ -70,7 +70,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "functions-and-methods.py",
                 FileMetric.functions,
-                6,
+                6
             );
         });
     });
@@ -80,7 +80,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "block-comment.py",
                 FileMetric.commentLines,
-                7,
+                7
             );
         });
 
@@ -124,7 +124,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "block-comment.py",
                 FileMetric.realLinesOfCode,
-                3,
+                3
             );
         });
     });

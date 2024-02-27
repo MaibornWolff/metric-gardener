@@ -16,7 +16,7 @@ describe("C# metric tests", () => {
     describe("parsing C# dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             const couplingResult = await getCouplingMetrics(
-                csharpTestResourcesPath + "coupling-examples/",
+                csharpTestResourcesPath + "coupling-examples/"
             );
             expect(couplingResult).toMatchSnapshot();
         }, 10000);
@@ -39,7 +39,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "case-statements.cs",
                 FileMetric.complexity,
-                4,
+                4
             );
         });
 
@@ -47,7 +47,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "functions-and-methods.cs",
                 FileMetric.complexity,
-                8,
+                8
             );
         });
 
@@ -55,7 +55,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "multiple-return-statements.cs",
                 FileMetric.complexity,
-                3,
+                3
             );
         });
 
@@ -63,7 +63,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "throw-try-catch-finally.cs",
                 FileMetric.complexity,
-                1,
+                1
             );
         });
     });
@@ -82,7 +82,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "functions-and-methods.cs",
                 FileMetric.functions,
-                8,
+                8
             );
         });
     });
@@ -96,7 +96,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "same-line-comment.cs",
                 FileMetric.commentLines,
-                4,
+                4
             );
         });
     });
@@ -106,7 +106,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "c-sharp-example-code.cs",
                 FileMetric.linesOfCode,
-                28,
+                28
             );
         });
 
@@ -114,7 +114,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "non-empty-last-line.cs",
                 FileMetric.linesOfCode,
-                27,
+                27
             );
         });
 
@@ -136,7 +136,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "real-lines-of-code.cs",
                 FileMetric.realLinesOfCode,
-                8,
+                8
             );
         });
 
@@ -148,7 +148,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "single-comment.cs",
                 FileMetric.realLinesOfCode,
-                0,
+                0
             );
         });
 
@@ -156,7 +156,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "same-line-comment.cs",
                 FileMetric.realLinesOfCode,
-                3,
+                3
             );
         });
 
@@ -164,7 +164,7 @@ describe("C# metric tests", () => {
             testFileMetric(
                 csharpTestResourcesPath + "weird-lines.cs",
                 FileMetric.realLinesOfCode,
-                32,
+                32
             );
         });
     });

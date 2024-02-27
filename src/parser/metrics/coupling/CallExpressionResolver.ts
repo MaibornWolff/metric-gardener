@@ -12,7 +12,7 @@ export function getAdditionalRelationships(
     tree: Map<string, Relationship[]>,
     unresolvedCallExpressions: Map<string, UnresolvedCallExpression[]>,
     publicAccessors: Map<string, Accessor[]>,
-    alreadyAddedRelationships: Set<string>,
+    alreadyAddedRelationships: Set<string>
 ) {
     let additionalRelationships: Relationship[] = [];
 
@@ -56,7 +56,7 @@ export function getAdditionalRelationships(
                     namePart,
                     filePath,
                     clonedAccessors.length,
-                    fileDependencies,
+                    fileDependencies
                 );
                 dlog(clonedAccessors.toString());
 
@@ -95,7 +95,7 @@ export function getAdditionalRelationships(
                         const callExpressionDependency = fileAdditionalRelationships.find(
                             (dependency) => {
                                 return dependency.toNamespace === fullyQualifiedNameCandidate;
-                            },
+                            }
                         );
 
                         if (baseDependency !== undefined) {
@@ -105,7 +105,7 @@ export function getAdditionalRelationships(
                                 namespace,
                                 tree,
                                 fileAdditionalRelationships,
-                                alreadyAddedRelationships,
+                                alreadyAddedRelationships
                             );
                         } else if (callExpressionDependency !== undefined) {
                             added = resolveAccessorReturnType(
@@ -114,7 +114,7 @@ export function getAdditionalRelationships(
                                 namespace,
                                 tree,
                                 fileAdditionalRelationships,
-                                alreadyAddedRelationships,
+                                alreadyAddedRelationships
                             );
                         }
 
@@ -142,7 +142,7 @@ function resolveAccessorReturnType(
     namespace: FullyQTN,
     tree: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
-    alreadyAddedRelationships: Set<string>,
+    alreadyAddedRelationships: Set<string>
 ) {
     // TODO resolve return type (generics, etc.)
     dlog(
@@ -151,7 +151,7 @@ function resolveAccessorReturnType(
         " -> check return type add: ",
         accessor.returnType,
         matchingDependency,
-        "\n\n",
+        "\n\n"
     );
 
     const accessorFileDependencies = tree.get(namespace.source) ?? [];
@@ -175,7 +175,7 @@ function resolveAccessorReturnType(
                     "already added: ",
                     accessorFileDependency,
                     alreadyAddedRelationships.has(uniqueId),
-                    "\n\n",
+                    "\n\n"
                 );
                 continue;
             }

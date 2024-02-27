@@ -63,7 +63,7 @@ export class Configuration {
         exclusions: string,
         compress: boolean,
         relativePaths: boolean,
-        enforceBackwardSlash = false,
+        enforceBackwardSlash = false
     ) {
         this.sourcesPath = sourcesPath;
         this.outputPath = outputPath;

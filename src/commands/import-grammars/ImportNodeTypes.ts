@@ -101,7 +101,7 @@ function readNodeTypesJsons(): Map<string, Promise<string | null>> | null {
                 console.error("Error while reading a node-types.json file from " + fileLocation);
                 console.error(reason);
                 return null; // To be handled when awaiting the result.
-            }),
+            })
         );
     }
     return languageAbbrToNodeTypePromises;
@@ -129,7 +129,7 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
 async function updateLanguage(
     languageAbbr: string,
     presentNodes: Set<string>,
-    nodeTypesPromise: Promise<string | null>,
+    nodeTypesPromise: Promise<string | null>
 ) {
     let grammarNodeTypes;
     try {
@@ -157,7 +157,7 @@ async function updateLanguage(
                 "Excluded unnamed node type " +
                     grammarNodeType.type +
                     " for language " +
-                    languageAbbr,
+                    languageAbbr
             );
             continue;
         }
@@ -189,7 +189,7 @@ function updateBinaryExpressions(
     languageAbbr: string,
     presentNodes: Set<string>,
     grammarNodeType,
-    removedNodeTypes: Set<string>,
+    removedNodeTypes: Set<string>
 ) {
     if (grammarNodeType?.fields?.operator?.types !== undefined) {
         for (const binaryOperatorType of grammarNodeType.fields.operator.types) {
@@ -201,7 +201,7 @@ function updateBinaryExpressions(
                 languageAbbr,
                 mapKey,
                 NodeTypeCategory.BinaryExpression,
-                binaryOperator,
+                binaryOperator
             );
         }
     }
@@ -219,7 +219,7 @@ function updateOrAddExpression(
     languageAbbr: string,
     expressionName: string,
     category: NodeTypeCategory = NodeTypeCategory.Other,
-    operator?,
+    operator?
 ) {
     const expression = expressionMappings.get(expressionName);
 
@@ -228,7 +228,7 @@ function updateOrAddExpression(
             changelog.addedNodeToLanguage(expression, languageAbbr);
             expression.languages.push(languageAbbr);
             dlog(
-                'Language "' + languageAbbr + '" was added to node type "' + expressionName + '".',
+                'Language "' + languageAbbr + '" was added to node type "' + expressionName + '".'
             );
         }
     } else {
@@ -242,7 +242,7 @@ function updateOrAddExpression(
         });
         changelog.addedNewNode(expressionName, languageAbbr);
         dlog(
-            'New node type "' + expressionName + '" was added for language "' + languageAbbr + '".',
+            'New node type "' + expressionName + '" was added for language "' + languageAbbr + '".'
         );
     }
 }
@@ -259,7 +259,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
                     expressionName +
                     '" was removed for language "' +
                     languageAbbr +
-                    '".',
+                    '".'
             );
             if (
                 expression.metrics.length > 0 &&
@@ -273,7 +273,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
                         expressionName +
                         '", which was used for calculating the metric(s) ' +
                         expression.metrics +
-                        ". You may have to add a new node of that language to the metric(s) in nodeTypesConfig.json. ##",
+                        ". You may have to add a new node of that language to the metric(s) in nodeTypesConfig.json. ##"
                 );
             }
         }
@@ -289,14 +289,14 @@ async function removeAbandonedNodeTypes(): Promise<void> {
                         expressionName +
                         '", which was used for calculating the metric(s) ' +
                         expression.metrics +
-                        ". You may have to add a new node to the metric(s) in nodeTypesConfig.json. ####",
+                        ". You may have to add a new node to the metric(s) in nodeTypesConfig.json. ####"
                 );
             }
             expressionMappings.delete(expressionName);
             dlog(
                 "Removed node type " +
                     expressionName +
-                    " as it is no longer used in any language grammar",
+                    " as it is no longer used in any language grammar"
             );
         }
     }
@@ -307,13 +307,13 @@ async function writeNewNodeTypeMappings() {
         // Save the updated mappings:
         await fs.promises.writeFile(
             pathToNodeTypesConfig,
-            JSON.stringify(Array.from(expressionMappings.values()), null, 4),
+            JSON.stringify(Array.from(expressionMappings.values()), null, 4)
         );
         console.log("####################################");
         console.log(
             'Successfully updated node type mappings. File saved to "' +
                 pathToNodeTypesConfig +
-                '".',
+                '".'
         );
         console.log("####################################");
     } catch (e) {

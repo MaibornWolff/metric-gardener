@@ -53,12 +53,12 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Ruby
 -   Rust
--   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash)
+-   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash. For the same reason, the && operator is not evalauated if placed in a heredoc after a cat operation and default switch case labels are treated as regular case labels.)
 
 ### Supported File Metrics
 
 **complexity**<br>
-Counts expressions that branch the control flow, like if-statements, loops, catch-blocks, etc. - but no else/default/finally statements. Also counts the following other expressions that are considered to increase the complexity of the code inside a file:
+Counts expressions that branch the control flow, like if-statements, loops, switch case labels, catch-blocks etc. - but no else/default/finally statements. Also counts the following other expressions that are considered to increase the complexity of the code inside a file:
 
 -   function declarations (see functions metric below)
 -   binary logical operations (like AND and OR)

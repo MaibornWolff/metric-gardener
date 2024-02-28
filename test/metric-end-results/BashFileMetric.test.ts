@@ -48,7 +48,7 @@ describe("Bash metrics tests", () => {
         });
     });
 
-    describe("parses real_lines_of_code metric", () => {
+    describe("parses real lines of code metric", () => {
         it("should also count multiline commands ", () => {
             testFileMetric(
                 bashTestResourcesPath + "/multiline_command.sh",
@@ -57,7 +57,7 @@ describe("Bash metrics tests", () => {
             );
         });
 
-        it("should count 0 line for empty file ", () => {
+        it("should count 0 lines for empty file ", () => {
             testFileMetric(bashTestResourcesPath + "/empty.sh", FileMetric.realLinesOfCode, 0);
         });
 
@@ -78,7 +78,7 @@ describe("Bash metrics tests", () => {
         });
     });
 
-    describe("parses lines_of_code metric", () => {
+    describe("parses lines of code metric", () => {
         it("should count 1 line of code for empty file ", () => {
             testFileMetric(bashTestResourcesPath + "/empty.sh", FileMetric.linesOfCode, 1);
         });

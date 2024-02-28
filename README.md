@@ -53,7 +53,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Ruby
 -   Rust
--   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash. For the same reason, the && operator is not evalauated if placed in a heredoc after a cat operation and default switch case labels are treated as regular case labels.)
+-   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if placed after the first heredoc delimiter. Default labels in Switch-statement are treated as regular case labels.)
 
 ### Supported File Metrics
 

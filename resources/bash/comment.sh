@@ -7,7 +7,7 @@ if (($de -a $en)); then #comment
 echo "helo" #comment
 fi #comment
 : '
-This is a multiline comment.
+This is a multiline comment. But it is not counted as comment in our implementation.
 Its created by using the colon (:) as a no-op command,
 followed by a block enclosed in single quotes.
 This block is treated as a string literal and is ignored.

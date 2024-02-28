@@ -9,6 +9,7 @@ import Python from "tree-sitter-python";
 import TypeScript from "tree-sitter-typescript";
 import Ruby from "tree-sitter-ruby";
 import Rust from "tree-sitter-rust";
+import Bash from "tree-sitter-bash";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 
 /**
@@ -27,6 +28,7 @@ export const enum Language {
     Python,
     Ruby,
     Rust,
+    Bash,
 }
 
 /**
@@ -51,6 +53,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Python, "py"],
         [Language.Ruby, "rb"],
         [Language.Rust, "rs"],
+        [Language.Bash, "sh"],
     ]),
 );
 
@@ -70,6 +73,7 @@ export const languageToGrammar = new Map([
     [Language.Python, Python],
     [Language.Ruby, Ruby],
     [Language.Rust, Rust],
+    [Language.Bash, Bash],
 ]);
 
 /**
@@ -95,6 +99,7 @@ export const fileExtensionToLanguage = new Map([
     ["py", Language.Python],
     ["rb", Language.Ruby],
     ["rs", Language.Rust],
+    ["sh", Language.Bash],
 ]);
 
 /**

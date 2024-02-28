@@ -25,6 +25,7 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
     ["cpp", "./node_modules/tree-sitter-cpp/src/node-types.json"],
     ["rb", "./node_modules/tree-sitter-ruby/src/node-types.json"],
     ["rs", "./node_modules/tree-sitter-rust/src/node-types.json"],
+    ["sh", "./node_modules/tree-sitter-bash/src/node-types.json"],
 ]);
 
 export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";

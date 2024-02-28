@@ -179,7 +179,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"]
     },
     {
         "expression": "boolean_literal",
@@ -369,7 +369,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "rs"]
+        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "rs", "sh"]
     },
     {
         "expression": "postfix_unary_expression",
@@ -565,7 +565,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx"]
+        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh"]
     },
     {
         "expression": "goto_statement",
@@ -579,7 +579,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "sh"]
     },
     {
         "expression": "labeled_statement",
@@ -656,7 +656,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx"]
+        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh"]
     },
     {
         "expression": "yield_statement",
@@ -824,7 +824,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "!="
     },
     {
@@ -832,7 +832,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "%"
     },
     {
@@ -840,7 +840,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "&"
     },
     {
@@ -848,7 +848,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "&&"
     },
     {
@@ -856,7 +856,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "*"
     },
     {
@@ -864,7 +864,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "+"
     },
     {
@@ -872,7 +872,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "-"
     },
     {
@@ -880,7 +880,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "/"
     },
     {
@@ -888,7 +888,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "<"
     },
     {
@@ -896,7 +896,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "<<"
     },
     {
@@ -904,7 +904,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "<="
     },
     {
@@ -912,7 +912,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "=="
     },
     {
@@ -920,7 +920,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": ">"
     },
     {
@@ -928,7 +928,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": ">="
     },
     {
@@ -936,7 +936,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": ">>"
     },
     {
@@ -952,7 +952,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "^"
     },
     {
@@ -960,7 +960,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "|"
     },
     {
@@ -968,7 +968,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
         "operator": "||"
     },
     {
@@ -1529,7 +1529,7 @@
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb"]
+        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh"]
     },
     {
         "expression": "discard",
@@ -1719,7 +1719,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "cpp", "tsx", "rs"]
+        "languages": ["go", "java", "js", "ts", "cpp", "tsx", "rs", "sh"]
     },
     {
         "expression": "_simple_statement",
@@ -2273,7 +2273,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["java", "js", "ts", "tsx"]
+        "languages": ["java", "js", "ts", "tsx", "sh"]
     },
     {
         "expression": "update_expression",
@@ -2554,7 +2554,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["java", "js", "php", "ts", "tsx", "rb"]
+        "languages": ["java", "js", "php", "ts", "tsx", "rb", "sh"]
     },
     {
         "expression": "receiver_parameter",
@@ -2764,7 +2764,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "tsx", "rb"]
+        "languages": ["js", "ts", "tsx", "rb", "sh"]
     },
     {
         "expression": "arrow_function",
@@ -2806,7 +2806,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "tsx"]
+        "languages": ["js", "ts", "tsx", "sh"]
     },
     {
         "expression": "object",
@@ -2820,14 +2820,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "tsx", "rb"]
+        "languages": ["js", "ts", "tsx", "rb", "sh"]
     },
     {
         "expression": "string",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "py", "tsx", "rb"]
+        "languages": ["js", "php", "ts", "py", "tsx", "rb", "sh"]
     },
     {
         "expression": "subscript_expression",
@@ -2919,7 +2919,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["js", "ts", "tsx", "php"],
+        "languages": ["js", "ts", "tsx", "php", "sh"],
         "operator": "**"
     },
     {
@@ -2972,7 +2972,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "py", "cpp", "tsx", "rs"]
+        "languages": ["js", "php", "ts", "py", "cpp", "tsx", "rs", "sh"]
     },
     {
         "expression": "export_clause",
@@ -3581,7 +3581,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["kt"]
+        "languages": ["kt", "sh"]
     },
     {
         "expression": "prefix_expression",
@@ -3826,7 +3826,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php"]
+        "languages": ["php", "sh"]
     },
     {
         "expression": "clone_expression",
@@ -3959,14 +3959,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php"]
+        "languages": ["php", "sh"]
     },
     {
         "expression": "compound_statement",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "cpp"]
+        "languages": ["php", "cpp", "sh"]
     },
     {
         "expression": "declare_statement",
@@ -3994,8 +3994,8 @@
         "metrics": ["complexity", "functions"],
         "type": "statement",
         "category": "",
-        "activated_for_languages": ["php", "py"],
-        "languages": ["php", "py", "cpp"]
+        "activated_for_languages": ["php", "py", "sh"],
+        "languages": ["php", "py", "cpp", "sh"]
     },
     {
         "expression": "function_static_declaration",
@@ -4134,7 +4134,8 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "case_label",
-        "languages": ["php", "cpp"]
+        "activated_for_languages": ["php", "cpp"],
+        "languages": ["php", "cpp", "sh"]
     },
     {
         "expression": "cast_type",
@@ -4341,10 +4342,11 @@
     },
     {
         "expression": "list",
-        "metrics": [],
+        "metrics": ["complexity"],
         "type": "keyword",
         "category": "",
-        "languages": ["py"]
+        "activated_for_languages": ["sh"],
+        "languages": ["py", "sh"]
     },
     {
         "expression": "php_tag",
@@ -4820,7 +4822,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["py"]
+        "languages": ["py", "sh"]
     },
     {
         "expression": "binary_operator",
@@ -4946,7 +4948,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["py"]
+        "languages": ["py", "sh"]
     },
     {
         "expression": "except_clause",
@@ -6395,7 +6397,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "rb"]
+        "languages": ["php", "rb", "sh"]
     },
     {
         "expression": "match_block",
@@ -6479,14 +6481,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "rb"]
+        "languages": ["php", "rb", "sh"]
     },
     {
         "expression": "heredoc_start",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php"]
+        "languages": ["php", "sh"]
     },
     {
         "expression": "nowdoc_string",
@@ -6668,7 +6670,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["py", "cpp", "rb"]
+        "languages": ["py", "cpp", "rb", "sh"]
     },
     {
         "expression": "union_pattern",
@@ -7325,11 +7327,130 @@
         "languages": ["rb"]
     },
     {
+        "expression": "concatenation",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "word",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "ansi_c_string",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "arithmetic_expansion",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "brace_expression",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "command_substitution",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "expansion",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "process_substitution",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "raw_string",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "simple_expansion",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "translated_string",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "c_style_for_statement",
+        "metrics": ["complexity"],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "command",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "declaration_command",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "negated_command",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "pipeline",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "redirected_statement",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
         "expression": "subshell",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["rb"]
+        "languages": ["rb", "sh"]
     },
     {
         "expression": "symbol_array",
@@ -7801,11 +7922,223 @@
         "languages": ["rb"]
     },
     {
+        "expression": "test_command",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "unset_command",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "variable_assignment",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "variable_assignments",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "binary_expression_%=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "%="
+    },
+    {
+        "expression": "binary_expression_&=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "&="
+    },
+    {
+        "expression": "binary_expression_**=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "**="
+    },
+    {
+        "expression": "binary_expression_*=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "*="
+    },
+    {
+        "expression": "binary_expression_+=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "+="
+    },
+    {
+        "expression": "binary_expression_-=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "-="
+    },
+    {
+        "expression": "binary_expression_-a",
+        "metrics": ["complexity"],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "-a"
+    },
+    {
+        "expression": "binary_expression_-o",
+        "metrics": ["complexity"],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "-o"
+    },
+    {
+        "expression": "binary_expression_/=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "/="
+    },
+    {
+        "expression": "binary_expression_<<=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "<<="
+    },
+    {
+        "expression": "binary_expression_=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "="
+    },
+    {
+        "expression": "binary_expression_=~",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "=~"
+    },
+    {
+        "expression": "binary_expression_>>=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": ">>="
+    },
+    {
+        "expression": "binary_expression_^=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "^="
+    },
+    {
+        "expression": "binary_expression_test_operator",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "test_operator"
+    },
+    {
+        "expression": "binary_expression_|=",
+        "metrics": [],
+        "type": "statement",
+        "category": "binary_expression",
+        "languages": ["sh"],
+        "operator": "|="
+    },
+    {
+        "expression": "case_item",
+        "metrics": ["complexity"],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "command_name",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "do_group",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "file_redirect",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "heredoc_redirect",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "herestring_redirect",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "extglob_pattern",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "file_descriptor",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
         "expression": "heredoc_content",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["rb"]
+        "languages": ["rb", "sh"]
     },
     {
         "expression": "uninterpreted",
@@ -8464,5 +8797,19 @@
         "type": "statement",
         "category": "",
         "languages": ["rs"]
+    },
+    {
+        "expression": "special_variable_name",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
+    },
+    {
+        "expression": "test_operator",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["sh"]
     }
 ]

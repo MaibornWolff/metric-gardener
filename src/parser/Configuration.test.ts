@@ -12,9 +12,9 @@ describe("Configuration", () => {
                 false,
             );
 
-            expect(config.exclusions.length).toBe(2);
-            expect(config.exclusions[0]).toBe("folder1");
-            expect(config.exclusions[1]).toBe("folder2");
+            expect(config.exclusions.size).toBe(2);
+            expect(config.exclusions.has("folder1")).toBe(true);
+            expect(config.exclusions.has("folder2")).toBe(true);
         });
         it("when one exclusion is given", () => {
             const config = new Configuration(
@@ -26,8 +26,8 @@ describe("Configuration", () => {
                 false,
             );
 
-            expect(config.exclusions.length).toBe(1);
-            expect(config.exclusions[0]).toBe("folder1");
+            expect(config.exclusions.size).toBe(1);
+            expect(config.exclusions.has("folder1")).toBe(true);
         });
     });
 });

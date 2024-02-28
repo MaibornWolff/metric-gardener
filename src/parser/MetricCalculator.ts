@@ -6,10 +6,11 @@ import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
-import { isParsedFile, Metric, MetricResult, SimpleFile } from "./metrics/Metric";
+import { isParsedFile, Metric, MetricResult, BaseFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
+import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -49,33 +50,37 @@ export class MetricCalculator {
      * that relates each metric name to the calculated metric.
      */
     async calculateMetrics(
-        parsedFilePromise: Promise<SimpleFile>,
+        parsedFilePromise: Promise<BaseFile | null>,
     ): Promise<[string, Map<string, MetricResult>]> {
-        const parsedFile = await parsedFilePromise;
+        const sourceFile = await parsedFilePromise;
 
-        if (!isParsedFile(parsedFile)) {
+        if (sourceFile === null) {
             throw new Error(
                 "Unable to calculate file metrics because there was an error while creating the tree.",
             );
         }
-
-        dlog(
-            " ------------ Parsing file metrics for file " +
-                parsedFile.filePath +
-                ":  ------------ ",
-        );
-
         const metricResults = new Map<string, MetricResult>();
         const resultPromises: Promise<MetricResult>[] = [];
 
-        for (const metric of this.#fileMetrics) {
-            resultPromises.push(
-                metric.calculate(parsedFile).catch((reason) => {
-                    console.error("Error while calculating metric");
-                    console.error(reason);
-                    return { metricName: "ERROR", metricValue: -1 };
-                }),
+        if (isParsedFile(sourceFile)) {
+            dlog(
+                " ------------ Parsing file metrics for file " +
+                    sourceFile.filePath +
+                    ":  ------------ ",
             );
+
+            for (const metric of this.#fileMetrics) {
+                resultPromises.push(
+                    metric.calculate(sourceFile).catch((reason) => {
+                        console.error("Error while calculating metric");
+                        console.error(reason);
+                        return { metricName: "ERROR", metricValue: -1 };
+                    }),
+                );
+            }
+        } else {
+            // Unsupported file: only calculate lines of code
+            resultPromises.push(LinesOfCodeRawText.calculate(sourceFile));
         }
 
         const resultsArray = await Promise.all(resultPromises);
@@ -83,6 +88,6 @@ export class MetricCalculator {
             metricResults.set(result.metricName, result);
         }
 
-        return [formatPrintPath(parsedFile.filePath, this.#config), metricResults];
+        return [formatPrintPath(sourceFile.filePath, this.#config), metricResults];
     }
 }

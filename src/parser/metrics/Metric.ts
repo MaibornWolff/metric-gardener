@@ -73,10 +73,36 @@ export interface CouplingMetric {
     getName(): string;
 }
 
+export abstract class BaseFile {
+    /**
+     * Path to the file.
+     */
+    filePath: string;
+
+    /**
+     * File extension of the file.
+     */
+    fileExtension: string;
+
+    protected constructor(filePath: string, fileExtension: string) {
+        this.filePath = filePath;
+        this.fileExtension = fileExtension;
+    }
+}
+
 /**
- * Represents a file to be analyzed for metrics, including its path, file extension, language and parsed syntax tree.
+ * Represents a file written in an unsupported language.
  */
-export interface ParsedFile extends SimpleFile {
+export class UnsupportedFile extends BaseFile {
+    constructor(filePath: string, fileExtension: string) {
+        super(filePath, fileExtension);
+    }
+}
+
+/**
+ * Represents a supported file to be analyzed for metrics, including its path, file extension, language and parsed syntax tree.
+ */
+export class ParsedFile extends BaseFile {
     /**
      * Programming language of the file.
      */
@@ -86,23 +112,14 @@ export interface ParsedFile extends SimpleFile {
      * Parsed syntax tree of the file.
      */
     tree: Tree;
+
+    constructor(filePath: string, fileExtension: string, language: Language, tree: Tree) {
+        super(filePath, fileExtension);
+        this.language = language;
+        this.tree = tree;
+    }
 }
 
-export function isParsedFile(file: SimpleFile): file is ParsedFile {
+export function isParsedFile(file: BaseFile): file is ParsedFile {
     return (file as ParsedFile).language !== undefined && (file as ParsedFile).tree !== undefined;
-}
-
-/**
- * Represents a file.
- */
-export interface SimpleFile {
-    /**
-     * File extension of the file.
-     */
-    fileExtension: string;
-
-    /**
-     * Path to the file.
-     */
-    filePath: string;
 }

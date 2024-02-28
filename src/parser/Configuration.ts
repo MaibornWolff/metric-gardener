@@ -25,7 +25,7 @@ export class Configuration {
     /**
      * Folders to exclude from being searched for files to be parsed.
      */
-    exclusions: string[];
+    exclusions: Set<string>;
 
     /**
      * Whether to compress the output file with the calculated metrics in a zip archive.
@@ -69,7 +69,7 @@ export class Configuration {
         this.outputPath = outputPath;
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;
-        this.exclusions = exclusions.split(",").map((exclusion) => exclusion.trim());
+        this.exclusions = new Set(exclusions.split(",").map((exclusion) => exclusion.trim()));
         this.compress = compress;
         this.relativePaths = relativePaths;
         this.enforceBackwardSlash = enforceBackwardSlash;

@@ -85,7 +85,7 @@ async function parseSourceCode(argv) {
 
     outputAsJson(
         results.fileMetrics,
-        results.unknownFiles,
+        results.unsupportedFiles,
         results.couplingMetrics,
         configuration.outputPath,
         configuration.compress,

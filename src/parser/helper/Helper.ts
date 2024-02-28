@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { ExpressionMetricMapping } from "./Model";
-import { SimpleFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
 import { ExpressionQueryStatement } from "../queries/QueryStatements";
 
@@ -66,6 +65,10 @@ export function strcmp(a: string, b: string) {
     return 0;
 }
 
+export function replaceForwardWithBackwardSlashes(path: string) {
+    return path.replace(/\//g, "\\");
+}
+
 /**
  * Formats the specified file path for being output in the way it is configured for this parser run.
  * @param filePath The file path.
@@ -84,7 +87,7 @@ export function formatPrintPath(filePath: string, config: Configuration): string
         }
     }
     if (config.enforceBackwardSlash) {
-        result = result.replace(/\//g, "\\");
+        result = replaceForwardWithBackwardSlashes(result);
     }
     return result;
 }
@@ -113,24 +116,22 @@ export function getFileExtension(filePath: string): string {
  * @param config Configuration of this parser run.
  * @return AsyncGenerator yielding found paths to single files.
  */
-export async function* findFilesAsync(config: Configuration): AsyncGenerator<SimpleFile> {
+export async function* findFilesAsync(config: Configuration): AsyncGenerator<string> {
     // Handle special case: if the specified sourcePath is a single file, just yield the file.
     if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
-        yield { filePath: config.sourcesPath, fileExtension: getFileExtension(config.sourcesPath) };
+        yield config.sourcesPath;
     } else {
         // sourcePath points to a directory, so use recursive function to find all files.
 
-        // Create set to improve lookup performance:
-        const excludedSet = new Set(config.exclusions);
         // The folder at sourcePath itself cannot be excluded, so continue using delegating yield* generator call:
-        yield* findFilesAsyncRecursive(config.sourcesPath, excludedSet);
+        yield* findFilesAsyncRecursive(config.sourcesPath, config.exclusions);
     }
 }
 
 async function* findFilesAsyncRecursive(
     dir: string,
     excludedFolders: Set<string>,
-): AsyncGenerator<SimpleFile> {
+): AsyncGenerator<string> {
     const openedDir = await fs.promises.opendir(dir);
 
     for await (const currentEntry of openedDir) {
@@ -145,7 +146,7 @@ async function* findFilesAsyncRecursive(
             }
         } // End of if (isDirectory)
         else {
-            yield { filePath: currentPath, fileExtension: getFileExtension(currentPath) };
+            yield currentPath;
         } // End of else (isDirectory)
     } // End of for await (directory entries)
 }

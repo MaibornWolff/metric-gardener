@@ -28,19 +28,19 @@ interface OutputRelationship {
 /**
  * Writes the passed metrics into a json file.
  * @param fileMetrics Metrics calculated on single files.
- * @param unknownFiles List of files that cannot be analyzed.
+ * @param unsupportedFiles List of files that cannot be analyzed.
  * @param relationshipMetrics Relationship metrics.
  * @param outputFilePath Path to write the file to
  * @param compress Whether the file should be compressed
  */
 export function outputAsJson(
     fileMetrics: Map<string, Map<string, MetricResult>>,
-    unknownFiles: string[],
+    unsupportedFiles: string[],
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean,
 ) {
-    const output = buildOutputObject(fileMetrics, unknownFiles, relationshipMetrics);
+    const output = buildOutputObject(fileMetrics, unsupportedFiles, relationshipMetrics);
     const outputString = JSON.stringify(output).toString();
 
     if (compress) {

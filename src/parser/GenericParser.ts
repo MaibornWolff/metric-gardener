@@ -2,15 +2,8 @@ import { findFilesAsync, formatPrintPath } from "./helper/Helper";
 import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
-import {
-    CouplingResult,
-    isParsedFile,
-    MetricResult,
-    ParsedFile,
-    SimpleFile,
-} from "./metrics/Metric";
+import { BaseFile, CouplingResult, isParsedFile, MetricResult, ParsedFile } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { fileExtensionToLanguage } from "./helper/Language";
 import { TreeParser } from "./helper/TreeParser";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -41,29 +34,22 @@ export class GenericParser {
      */
     async calculateMetrics() {
         const fileMetrics = new Map<string, Map<string, MetricResult>>();
-        const unknownFiles: string[] = [];
+        const unsupportedFiles: string[] = [];
         let couplingMetrics = {} as CouplingResult;
 
         try {
             const filePathGenerator = findFilesAsync(this.config);
-            const parsePromises = new Map<string, Promise<ParsedFile | SimpleFile>>();
+            const parsePromises = new Map<string, Promise<BaseFile | null>>();
 
-            for await (const file of filePathGenerator) {
-                const fileExtensionLanguage = fileExtensionToLanguage.get(file.fileExtension);
-                if (fileExtensionLanguage !== undefined) {
-                    parsePromises.set(
-                        file.filePath,
-                        TreeParser.parse(file, fileExtensionLanguage).catch((reason) => {
-                            console.error(
-                                "Error while parsing a tree for the file " + file.filePath,
-                            );
-                            console.error(reason);
-                            return file;
-                        }),
-                    );
-                } else {
-                    unknownFiles.push(file.filePath);
-                }
+            for await (const filePath of filePathGenerator) {
+                parsePromises.set(
+                    filePath,
+                    TreeParser.parse(filePath, this.config).catch((reason) => {
+                        console.error("Error while parsing a tree for the file " + filePath);
+                        console.error(reason);
+                        return null;
+                    }),
+                );
             }
 
             const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
@@ -91,15 +77,19 @@ export class GenericParser {
             const treeParseResults = await Promise.all(parsePromises.values());
 
             for (const file of treeParseResults) {
-                // Do not try to parse the syntax tree of the file again
-                // for the coupling metrics if that already failed once:
-                if (isParsedFile(file)) {
-                    filesForCouplingMetrics.push(file);
+                // Do not try to parse the syntax tree of the file for the coupling metrics
+                // if that file is unsupported or if parsing already failed once:
+                if (file !== null) {
+                    if (isParsedFile(file)) {
+                        filesForCouplingMetrics.push(file);
+                    } else {
+                        unsupportedFiles.push(file.filePath);
+                    }
                 }
             }
 
             dlog(
-                " --- " + (treeParseResults.length + unknownFiles.length) + " files detected",
+                " --- " + (treeParseResults.length + unsupportedFiles.length) + " files detected",
                 "\n\n",
             );
 
@@ -116,13 +106,13 @@ export class GenericParser {
                 fileMetrics.set(filepath, metricsMap);
             }
 
-            for (let i = 0; i < unknownFiles.length; i++) {
-                unknownFiles[i] = formatPrintPath(unknownFiles[i], this.config);
+            for (let i = 0; i < unsupportedFiles.length; i++) {
+                unsupportedFiles[i] = formatPrintPath(unsupportedFiles[i], this.config);
             }
 
             return {
                 fileMetrics,
-                unknownFiles,
+                unsupportedFiles,
                 couplingMetrics,
             };
         } catch (e) {
@@ -133,7 +123,7 @@ export class GenericParser {
 
             return {
                 fileMetrics,
-                unknownFiles,
+                unsupportedFiles,
                 couplingMetrics,
             };
         }

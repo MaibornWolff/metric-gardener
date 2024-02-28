@@ -73,7 +73,7 @@ export interface CouplingMetric {
     getName(): string;
 }
 
-export abstract class BaseFile {
+export abstract class SourceFile {
     /**
      * Path to the file.
      */
@@ -93,7 +93,7 @@ export abstract class BaseFile {
 /**
  * Represents a file written in an unsupported language.
  */
-export class UnsupportedFile extends BaseFile {
+export class UnsupportedFile extends SourceFile {
     constructor(filePath: string, fileExtension: string) {
         super(filePath, fileExtension);
     }
@@ -102,7 +102,7 @@ export class UnsupportedFile extends BaseFile {
 /**
  * Represents a supported file to be analyzed for metrics, including its path, file extension, language and parsed syntax tree.
  */
-export class ParsedFile extends BaseFile {
+export class ParsedFile extends SourceFile {
     /**
      * Programming language of the file.
      */
@@ -120,6 +120,6 @@ export class ParsedFile extends BaseFile {
     }
 }
 
-export function isParsedFile(file: BaseFile): file is ParsedFile {
+export function isParsedFile(file: SourceFile): file is ParsedFile {
     return (file as ParsedFile).language !== undefined && (file as ParsedFile).tree !== undefined;
 }

@@ -2,7 +2,13 @@ import { findFilesAsync, formatPrintPath } from "./helper/Helper";
 import { Configuration } from "./Configuration";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
-import { BaseFile, CouplingResult, isParsedFile, MetricResult, ParsedFile } from "./metrics/Metric";
+import {
+    SourceFile,
+    CouplingResult,
+    isParsedFile,
+    MetricResult,
+    ParsedFile,
+} from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeParser } from "./helper/TreeParser";
 
@@ -39,7 +45,7 @@ export class GenericParser {
 
         try {
             const filePathGenerator = findFilesAsync(this.config);
-            const parsePromises = new Map<string, Promise<BaseFile | null>>();
+            const parsePromises = new Map<string, Promise<SourceFile | null>>();
 
             for await (const filePath of filePathGenerator) {
                 parsePromises.set(

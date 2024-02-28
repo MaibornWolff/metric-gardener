@@ -6,7 +6,7 @@ import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
-import { isParsedFile, Metric, MetricResult, BaseFile } from "./metrics/Metric";
+import { isParsedFile, Metric, MetricResult, SourceFile } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
@@ -50,7 +50,7 @@ export class MetricCalculator {
      * that relates each metric name to the calculated metric.
      */
     async calculateMetrics(
-        parsedFilePromise: Promise<BaseFile | null>,
+        parsedFilePromise: Promise<SourceFile | null>,
     ): Promise<[string, Map<string, MetricResult>]> {
         const sourceFile = await parsedFilePromise;
 

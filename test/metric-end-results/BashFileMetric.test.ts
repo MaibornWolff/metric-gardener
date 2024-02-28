@@ -65,7 +65,7 @@ describe("Bash metrics tests", () => {
             testFileMetric(
                 bashTestResourcesPath + "/heredoc_NOP.sh",
                 FileMetric.realLinesOfCode,
-                23,
+                26,
             );
         });
 

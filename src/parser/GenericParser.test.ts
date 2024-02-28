@@ -6,7 +6,13 @@ import { TreeParser } from "./helper/TreeParser";
 import { getParserConfiguration } from "../../test/metric-end-results/TestHelper";
 import { fileExtensionToLanguage, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
-import { BaseFile, FileMetric, MetricResult, ParsedFile, UnsupportedFile } from "./metrics/Metric";
+import {
+    SourceFile,
+    FileMetric,
+    MetricResult,
+    ParsedFile,
+    UnsupportedFile,
+} from "./metrics/Metric";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
 import { Configuration } from "./Configuration";
@@ -44,7 +50,7 @@ async function mockedTreeParserParse(filePath: string, config: Configuration) {
 }
 
 async function mockedMetricsCalculator(
-    parsedFilePromise: Promise<BaseFile | null>,
+    parsedFilePromise: Promise<SourceFile | null>,
 ): Promise<[string, Map<string, MetricResult>]> {
     const file = await parsedFilePromise;
     if (file !== null) {

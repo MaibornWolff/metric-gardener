@@ -1,12 +1,12 @@
 import fs from "fs";
 import { fileExtensionToLanguage, Language, languageToGrammar } from "./Language";
 import Parser from "tree-sitter";
-import { ParsedFile, BaseFile, UnsupportedFile } from "../metrics/Metric";
+import { ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
 import { getFileExtension } from "./Helper";
 
 export class TreeParser {
-    private static cache: Map<string, BaseFile> = new Map();
+    private static cache: Map<string, SourceFile> = new Map();
 
     static parseSync(filePath: string, config: Configuration): ParsedFile | UnsupportedFile {
         const cachedItem = TreeParser.cache.get(filePath);

@@ -1,61 +1,73 @@
 import { expect, jest } from "@jest/globals";
 import { GenericParser } from "./GenericParser";
-import { findFilesAsync } from "./helper/Helper";
+import { getFileExtension } from "./helper/Helper";
+import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
 import { getParserConfiguration } from "../../test/metric-end-results/TestHelper";
-import { Language, languageToGrammar } from "./helper/Language";
+import { fileExtensionToLanguage, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
-import { FileMetric, ParsedFile, SimpleFile } from "./metrics/Metric";
+import { BaseFile, FileMetric, MetricResult, ParsedFile, UnsupportedFile } from "./metrics/Metric";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
-
-jest.mock("./helper/Helper");
+import { Configuration } from "./Configuration";
 
 /*
  * Implementation of function mocks:
  */
 async function* mockedFindFilesAsync() {
-    yield { fileExtension: "cpp", filePath: "clearly/invalid/path.cpp" };
+    yield "clearly/invalid/path.cpp";
 }
 
 async function* mockedFindTwoFilesAsync() {
-    yield { fileExtension: "cc", filePath: "clearly/invalid/path1.cc" };
-    yield { fileExtension: "cpp", filePath: "clearly/invalid/path2.cpp" };
+    yield "clearly/invalid/path1.cc";
+    yield "clearly/invalid/path2.cpp";
+}
+
+async function* mockedFindAlsoUnsupportedFilesAsync() {
+    yield "clearly/invalid/path1.cc";
+    yield "clearly/invalid/unsupported.unsupported";
 }
 
 async function* mockedFindFilesAsyncError() {
-    yield { fileExtension: "cpp", filePath: "clearly/invalid/path.cpp" };
+    yield "clearly/invalid/path.cpp";
     throw new Error("Hard drive crashed!");
 }
 
-async function mockedTreeParserParse(file: SimpleFile, assumedLanguage: Language) {
+async function mockedTreeParserParse(filePath: string, config: Configuration) {
+    const fileExtension = getFileExtension(filePath);
     return Promise.resolve({
-        fileExtension: file.fileExtension,
-        filePath: file.filePath,
-        language: assumedLanguage,
+        fileExtension: fileExtension,
+        filePath: filePath,
+        language: fileExtensionToLanguage.get(fileExtension),
         tree: tree,
     });
+}
+
+async function mockedMetricsCalculator(
+    parsedFilePromise: Promise<BaseFile | null>,
+): Promise<[string, Map<string, MetricResult>]> {
+    const file = await parsedFilePromise;
+    if (file !== null) {
+        return [file.filePath, expectedFileMetricsMap];
+    }
+    throw new Error("Baaah");
 }
 
 /*
  * Helper functions for creating mocks:
  */
 
-function mockFindFilesAsync(
-    mockedFunction: () => AsyncGenerator<SimpleFile> = mockedFindFilesAsync,
-) {
-    const findFilesAsyncMock = findFilesAsync as jest.Mocked<typeof findFilesAsync>;
-    findFilesAsyncMock.mockImplementation((config) => {
+function mockFindFilesAsync(mockedFunction: () => AsyncGenerator<string> = mockedFindFilesAsync) {
+    return jest.spyOn(HelperModule, "findFilesAsync").mockImplementation((config) => {
         return mockedFunction();
     });
-    return findFilesAsyncMock;
 }
 
 function mockTreeParserParse(
     implementation: (
-        file: SimpleFile,
-        assumedLanguage: Language,
-    ) => Promise<ParsedFile> = mockedTreeParserParse,
+        filePath: string,
+        config: Configuration,
+    ) => Promise<ParsedFile | UnsupportedFile> = mockedTreeParserParse,
 ) {
     return jest.spyOn(TreeParser, "parse").mockImplementation(implementation);
 }
@@ -138,12 +150,8 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync(mockedFindTwoFilesAsync);
         const treeParserSpied = mockTreeParserParse();
 
-        const calculateMetricsSpied = spyOnMetricCalculator().mockImplementation(
-            async (parsedFilePromise) => [
-                (await parsedFilePromise).filePath,
-                expectedFileMetricsMap,
-            ],
-        );
+        const calculateMetricsSpied =
+            spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
@@ -166,18 +174,47 @@ describe("GenericParser.calculateMetrics()", () => {
         expect(treeParserSpied).toHaveBeenCalledTimes(2);
     });
 
+    it("should call MetricCalculator.calculateMetrics() and also return an entry in unknownFiles when unsupported files are found", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync(mockedFindAlsoUnsupportedFilesAsync);
+        const treeParserSpied = mockTreeParserParse();
+
+        const calculateMetricsSpied =
+            spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
+        const couplingSpied = spyOnCouplingCalculatorNoOp();
+
+        const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
+
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
+        expect(actualResult.fileMetrics).toEqual(
+            new Map([
+                ["clearly/invalid/path1.cc", expectedFileMetricsMap],
+                ["clearly/invalid/unsupported.unsupported", expectedFileMetricsMap],
+            ]),
+        );
+        expect(actualResult.unsupportedFiles).toEqual(["clearly/invalid/unsupported.unsupported"]);
+
+        expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
+        expect(couplingSpied).toHaveBeenCalledTimes(0);
+        expect(treeParserSpied).toHaveBeenCalledTimes(2);
+    });
+
     it("should call CouplingCalculator.calculateMetrics() when requested.", async () => {
         /*
          * Given:
          */
         mockFindFilesAsync(mockedFindTwoFilesAsync);
         const treeParserSpied = mockTreeParserParse();
-        const calculateMetricsSpied = spyOnMetricCalculator().mockImplementation(
-            async (parsedFilePromise) => [
-                (await parsedFilePromise).filePath,
-                expectedFileMetricsMap,
-            ],
-        );
+        const calculateMetricsSpied =
+            spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp", true));
@@ -258,7 +295,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
             const file = await parsedFilePromise;
-            if (file.fileExtension !== "cpp") {
+            if (file === null || file.fileExtension !== "cpp") {
                 throw new Error("I only accept cpp files!");
             }
             return [file.filePath, expectedFileMetricsMap];
@@ -276,6 +313,7 @@ describe("GenericParser.calculateMetrics()", () => {
          * then:
          */
         // TODO: do no longer include errors into the list of results, use "info" field instead #185
+        console.log(actualResult.fileMetrics);
         expect(actualResult.fileMetrics).toEqual(
             new Map([
                 ["clearly/invalid/path1.cc", expectedErrorMetricsMap],

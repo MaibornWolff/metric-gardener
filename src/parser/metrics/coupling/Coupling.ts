@@ -12,15 +12,15 @@ import {
     ParsedFile,
     CouplingMetrics,
     CouplingResult,
+    isParsedFile,
 } from "../Metric";
-import { formatPrintPath, getFileExtension } from "../../helper/Helper";
+import { formatPrintPath } from "../../helper/Helper";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
 import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Configuration } from "../../Configuration";
 import { TreeParser } from "../../helper/TreeParser";
-import { fileExtensionToLanguage } from "../../helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -221,12 +221,10 @@ export class Coupling implements CouplingMetric {
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const fileExtension = getFileExtension(filePath);
-        const assumedLanguage = fileExtensionToLanguage.get(getFileExtension(filePath));
-        if (assumedLanguage === undefined) {
+        const parsedFile = TreeParser.parseSync(filePath, this.config);
+        if (!isParsedFile(parsedFile)) {
             return;
         }
-        const parsedFile = TreeParser.parseSync({ filePath, fileExtension }, assumedLanguage);
 
         const namespaces = this.namespaceCollector.getNamespaces(parsedFile);
         if (namespaces.size > 1) {

@@ -11,6 +11,7 @@ import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
+import fs from "fs";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -79,8 +80,11 @@ export class MetricCalculator {
                 );
             }
         } else {
-            // Unsupported file: only calculate lines of code
-            resultPromises.push(LinesOfCodeRawText.calculate(sourceFile));
+            // Unsupported file: only calculate metrics based on the raw source code
+            const sourceCode = await fs.promises.readFile(sourceFile.filePath, {
+                encoding: "utf8",
+            });
+            resultPromises.push(LinesOfCodeRawText.calculate(sourceCode));
         }
 
         const resultsArray = await Promise.all(resultPromises);

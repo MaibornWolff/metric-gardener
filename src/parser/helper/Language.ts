@@ -10,7 +10,10 @@ import TypeScript from "tree-sitter-typescript";
 import Ruby from "tree-sitter-ruby";
 import Rust from "tree-sitter-rust";
 import Bash from "tree-sitter-bash";
+import C from "tree-sitter-c";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
+import { Configuration } from "../Configuration";
+import { getFileExtension, replaceForwardWithBackwardSlashes } from "./Helper";
 
 /**
  * Enum of all supported programming languages.
@@ -29,6 +32,7 @@ export const enum Language {
     Ruby,
     Rust,
     Bash,
+    C,
 }
 
 /**
@@ -54,6 +58,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.Ruby, "rb"],
         [Language.Rust, "rs"],
         [Language.Bash, "sh"],
+        [Language.C, "c"],
     ]),
 );
 
@@ -74,18 +79,19 @@ export const languageToGrammar = new Map([
     [Language.Ruby, Ruby],
     [Language.Rust, Rust],
     [Language.Bash, Bash],
+    [Language.C, C],
 ]);
 
 /**
  * Maps supported file extensions to the corresponding programming languages.
+ * In lower case. This list is for file extensions which are not case-sensitive.
  */
-export const fileExtensionToLanguage = new Map([
+const fileExtensionToLanguage = new Map([
     ["cs", Language.CSharp],
     ["cpp", Language.CPlusPlus],
     ["cp", Language.CPlusPlus],
     ["cxx", Language.CPlusPlus],
     ["cc", Language.CPlusPlus],
-    ["h", Language.CPlusPlus],
     ["hpp", Language.CPlusPlus],
     ["hxx", Language.CPlusPlus],
     ["hh", Language.CPlusPlus],
@@ -101,6 +107,44 @@ export const fileExtensionToLanguage = new Map([
     ["rs", Language.Rust],
     ["sh", Language.Bash],
 ]);
+
+/**
+ * Maps supported file extensions to the corresponding programming languages.
+ * For case-sensitive file extensions.
+ */
+const caseSensitiveFileExtensionToLanguage = new Map([
+    ["c", Language.C],
+    ["C", Language.CPlusPlus],
+    ["h", Language.CPlusPlus],
+    ["H", Language.CPlusPlus],
+]);
+
+/**
+ * Estimates the language of a file based upon the file extension and file path.
+ * @param filePath Path to the file, including the file extension.
+ * @param config Configuration to apply.
+ */
+export function assumeLanguageFromFilePath(filePath: string, config: Configuration) {
+    const fileExtension: string = getFileExtension(filePath);
+
+    // Handling of the parse .h as C option:
+    if (fileExtension === "h" && config.parseAsC.size > 0) {
+        const backwardSlashPath = replaceForwardWithBackwardSlashes(filePath);
+        const pathSplitted = backwardSlashPath.split("\\");
+        for (const pathElement of pathSplitted) {
+            if (config.parseAsC.has(pathElement)) {
+                return Language.C;
+            }
+        }
+    }
+
+    let result = caseSensitiveFileExtensionToLanguage.get(fileExtension);
+    const inLowerCase = fileExtension.toLowerCase();
+    if (result === undefined) {
+        result = fileExtensionToLanguage.get(inLowerCase);
+    }
+    return result;
+}
 
 /**
  * Maps supported file extensions to the corresponding language grammar.

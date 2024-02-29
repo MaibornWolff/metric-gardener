@@ -28,6 +28,11 @@ export class Configuration {
     exclusions: Set<string>;
 
     /**
+     * Folders or file names for which .h files should be parsed as C instead of C++ files.
+     */
+    parseAsC: Set<string>;
+
+    /**
      * Whether to compress the output file with the calculated metrics in a zip archive.
      */
     compress: boolean;
@@ -50,17 +55,18 @@ export class Configuration {
      * @param outputPath Path where the output file with the calculated metrics should be stored.
      * @param parseDependencies Whether dependencies should be analyzed.
      * @param exclusions Folders to exclude from being searched for files to be parsed.
+     * @param parseAsC Folders or file names for which .h files should be parsed as C instead of C++ files.
      * @param compress Whether to compress the output file with the calculated metrics in a zip archive.
-     * @param relativePaths Whether to include the relative file paths or absolute paths
+     * @param relativePaths Whether to include the relative file paths or absolute paths of the analyzed files in the output.
      * @param enforceBackwardSlash Whether to replace all forward slashes in file paths by backward slashes in the output.
      * For platform-independent testing purposes only.
-     * of the analyzed files in the output.
      */
     constructor(
         sourcesPath: string,
         outputPath: string,
         parseDependencies: boolean,
         exclusions: string,
+        parseAsC: string,
         compress: boolean,
         relativePaths: boolean,
         enforceBackwardSlash = false,
@@ -70,6 +76,9 @@ export class Configuration {
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;
         this.exclusions = new Set(exclusions.split(",").map((exclusion) => exclusion.trim()));
+        this.parseAsC = new Set(
+            parseAsC.split(",").map((folderOrFileName) => folderOrFileName.trim()),
+        );
         this.compress = compress;
         this.relativePaths = relativePaths;
         this.enforceBackwardSlash = enforceBackwardSlash;

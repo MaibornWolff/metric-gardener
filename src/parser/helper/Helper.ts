@@ -77,13 +77,13 @@ export function replaceForwardWithBackwardSlashes(path: string) {
 export function formatPrintPath(filePath: string, config: Configuration): string {
     let result = filePath;
     if (config.relativePaths) {
-        // Returns the file path relative to the specified base directory, or the name of the file,
+        // Return the file path relative to the specified base directory, or the name of the file,
         // if the base path points to this single file.
         result = path.relative(config.sourcesPath, filePath);
-        if (config.sourcesPath.length === 0) {
+        if (result.length === 0) {
             // The path specified by the user points to a single file,
             // so return the name of the file as path to print.
-            config.sourcesPath = path.basename(filePath);
+            result = path.basename(filePath);
         }
     }
     if (config.enforceBackwardSlash) {

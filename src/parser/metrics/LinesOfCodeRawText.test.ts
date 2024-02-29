@@ -64,7 +64,7 @@ May add line six as friend, it would be quite near.`;
         });
     });
 
-    it("should count correctly for a file with carriage return as line separator and empty last line", async () => {
+    it("should count correctly for a file with carriage return as line separator and empty lines", async () => {
         const sourceCode = "First line\u{000D}\u{000D}Third line\u{000D}Fourth line\u{000D}";
 
         expect(await LinesOfCodeRawText.calculate(sourceCode)).toEqual({

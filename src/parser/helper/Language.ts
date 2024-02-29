@@ -14,6 +14,7 @@ import C from "tree-sitter-c";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 import { Configuration } from "../Configuration";
 import { getFileExtension, replaceForwardWithBackwardSlashes } from "./Helper";
+import path from "path";
 
 /**
  * Enum of all supported programming languages.
@@ -115,8 +116,7 @@ const fileExtensionToLanguage = new Map([
 const caseSensitiveFileExtensionToLanguage = new Map([
     ["c", Language.C],
     ["C", Language.CPlusPlus],
-    ["h", Language.CPlusPlus],
-    ["H", Language.CPlusPlus],
+    ["H", Language.CPlusPlus], // lowercase .h has a special treatment
 ]);
 
 /**
@@ -128,14 +128,23 @@ export function assumeLanguageFromFilePath(filePath: string, config: Configurati
     const fileExtension: string = getFileExtension(filePath);
 
     // Handling of the parse .h as C option:
-    if (fileExtension === "h" && config.parseAsC.size > 0) {
-        const backwardSlashPath = replaceForwardWithBackwardSlashes(filePath);
-        const pathSplitted = backwardSlashPath.split("\\");
-        for (const pathElement of pathSplitted) {
-            if (config.parseAsC.has(pathElement)) {
-                return Language.C;
+    if (fileExtension === "h") {
+        if (config.parseAllAsC) {
+            return Language.C;
+        }
+        if (config.parseSomeAsC.size > 0) {
+            // Use the path relative to the sources path to avoid the unintuitive behaviour
+            // that higher-level folders are evaluated for this:
+            const relativePath = path.relative(config.sourcesPath, filePath);
+            const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
+            const relpathSplitted = backwardSlashRelpath.split("\\");
+            for (const pathElement of relpathSplitted) {
+                if (config.parseSomeAsC.has(pathElement)) {
+                    return Language.C;
+                }
             }
         }
+        return Language.CPlusPlus;
     }
 
     let result = caseSensitiveFileExtensionToLanguage.get(fileExtension);

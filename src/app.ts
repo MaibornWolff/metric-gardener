@@ -29,17 +29,31 @@ yargs(hideBin(process.argv))
                     type: "string",
                     description: "Output file path",
                 })
-                .option("parse-dependencies", {
-                    type: "boolean",
-                    default: false,
-                    description:
-                        "Flag to enable dependency parsing (dependencies will be appended to the output file)",
-                })
                 .option("exclusions", {
                     alias: "e",
                     type: "string",
                     description: "Exclude folders from scanning for files (comma separated list)",
                     default: "node_modules,.idea,dist,build,out,vendor",
+                })
+                .option("parse-h-as-c", {
+                    alias: "hc",
+                    type: "boolean",
+                    description: "Parse all .h files as C instead of C++ (defaults to C++)",
+                    default: false,
+                })
+                .option("parse-some-h-as-c", {
+                    alias: "shc",
+                    type: "string",
+                    description:
+                        "For the specified folders/files (comma separated list), parse .h files as C instead of C++. " +
+                        "Ignored if parse-h-as-c is set.",
+                    default: "",
+                })
+                .option("print-relative-paths", {
+                    alias: "r",
+                    type: "boolean",
+                    description:
+                        "Use relative instead of absolute paths to the analyzed files in the output",
                 })
                 .option("compress", {
                     alias: "c",
@@ -47,11 +61,11 @@ yargs(hideBin(process.argv))
                     description: "output .gz-zipped file",
                     default: false,
                 })
-                .option("print-relative-paths", {
-                    alias: "r",
+                .option("parse-dependencies", {
                     type: "boolean",
+                    default: false,
                     description:
-                        "Use relative instead of absolute paths to the analyzed files in the output",
+                        "Flag to enable dependency parsing (dependencies will be appended to the output file)",
                 })
                 .demandOption(["sources-path", "output-path"]);
         },
@@ -70,6 +84,8 @@ async function parseSourceCode(argv) {
         argv["output-path"],
         argv["parse-dependencies"],
         argv["exclusions"],
+        argv["parse-h-as-c"],
+        argv["parse-some-h-as-c"],
         argv["compress"],
         argv["print-relative-paths"],
     );

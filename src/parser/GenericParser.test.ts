@@ -319,7 +319,6 @@ describe("GenericParser.calculateMetrics()", () => {
          * then:
          */
         // TODO: do no longer include errors into the list of results, use "info" field instead #185
-        console.log(actualResult.fileMetrics);
         expect(actualResult.fileMetrics).toEqual(
             new Map([
                 ["clearly/invalid/path1.cc", expectedErrorMetricsMap],

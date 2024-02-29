@@ -40,10 +40,9 @@ async function* mockedFindFilesAsyncError() {
 }
 
 async function mockedTreeParserParse(filePath: string, config: Configuration) {
-    const fileExtension = getFileExtension(filePath);
     return Promise.resolve({
         filePath: filePath,
-        language: assumeLanguageFromFilePath(fileExtension, config),
+        language: assumeLanguageFromFilePath(filePath, config),
         tree: tree,
     });
 }
@@ -223,7 +222,7 @@ describe("GenericParser.calculateMetrics()", () => {
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(
-            getParserTestConfiguration("clearly/invalid/path.cpp", true),
+            getParserTestConfiguration("clearly/invalid/path.cpp", false, true),
         );
         /*
          * when:

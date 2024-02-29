@@ -10,7 +10,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  */
 export class LinesOfCodeRawText {
     static async calculate(sourceCode: string): Promise<MetricResult> {
-        const loc = sourceCode.split(/\r\n|\r|\n/).length;
+        const loc = sourceCode.split(/\r\n|\r|\n/g).length;
         dlog(FileMetric.linesOfCode + " - raw text - " + loc);
 
         return {

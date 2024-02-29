@@ -123,8 +123,13 @@ const caseSensitiveFileExtensionToLanguage = new Map([
  * Estimates the language of a file based upon the file extension and file path.
  * @param filePath Path to the file, including the file extension.
  * @param config Configuration to apply.
+ * @param pathModule ONLY FOR TESTING PURPOSES: overrides the platform-specific path module.
  */
-export function assumeLanguageFromFilePath(filePath: string, config: Configuration) {
+export function assumeLanguageFromFilePath(
+    filePath: string,
+    config: Configuration,
+    pathModule = path,
+) {
     const fileExtension: string = getFileExtension(filePath);
 
     // Handling of the parse .h as C option:
@@ -135,7 +140,7 @@ export function assumeLanguageFromFilePath(filePath: string, config: Configurati
         if (config.parseSomeAsC.size > 0) {
             // Use the path relative to the sources path to avoid the unintuitive behaviour
             // that higher-level folders are evaluated for this:
-            const relativePath = path.relative(config.sourcesPath, filePath);
+            const relativePath = pathModule.relative(config.sourcesPath, filePath);
             const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
             const relpathSplitted = backwardSlashRelpath.split("\\");
             for (const pathElement of relpathSplitted) {

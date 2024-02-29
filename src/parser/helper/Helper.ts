@@ -73,17 +73,22 @@ export function replaceForwardWithBackwardSlashes(path: string) {
  * Formats the specified file path for being output in the way it is configured for this parser run.
  * @param filePath The file path.
  * @param config The configuration for this parser run.
+ * @param pathModule ONLY FOR TESTING PURPOSES: overrides the platform-specific path module.
  */
-export function formatPrintPath(filePath: string, config: Configuration): string {
+export function formatPrintPath(
+    filePath: string,
+    config: Configuration,
+    pathModule = path,
+): string {
     let result = filePath;
     if (config.relativePaths) {
         // Return the file path relative to the specified base directory, or the name of the file,
         // if the base path points to this single file.
-        result = path.relative(config.sourcesPath, filePath);
+        result = pathModule.relative(config.sourcesPath, filePath);
         if (result.length === 0) {
             // The path specified by the user points to a single file,
             // so return the name of the file as path to print.
-            result = path.basename(filePath);
+            result = pathModule.basename(filePath);
         }
     }
     if (config.enforceBackwardSlash) {

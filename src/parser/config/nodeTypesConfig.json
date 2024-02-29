@@ -60,7 +60,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "cpp", "rs"]
+        "languages": ["cs", "go", "java", "cpp", "rs", "c"]
     },
     {
         "expression": "indexer_declaration",
@@ -158,7 +158,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp", "tsx", "rs"]
+        "languages": ["cs", "java", "js", "php", "ts", "cpp", "tsx", "rs", "c"]
     },
     {
         "expression": "await_expression",
@@ -179,7 +179,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"]
     },
     {
         "expression": "boolean_literal",
@@ -193,7 +193,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "php", "cpp"]
+        "languages": ["cs", "java", "php", "cpp", "c"]
     },
     {
         "expression": "character_literal",
@@ -221,7 +221,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "php", "py", "cpp"]
+        "languages": ["cs", "php", "py", "cpp", "c"]
     },
     {
         "expression": "default_expression",
@@ -263,7 +263,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "ts", "py", "cpp", "tsx", "rb", "rs"]
+        "languages": ["cs", "go", "java", "js", "kt", "ts", "py", "cpp", "tsx", "rb", "rs", "c"]
     },
     {
         "expression": "implicit_array_creation_expression",
@@ -369,7 +369,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "rs", "sh"]
+        "languages": [
+            "cs",
+            "go",
+            "java",
+            "js",
+            "kt",
+            "php",
+            "ts",
+            "py",
+            "cpp",
+            "tsx",
+            "rs",
+            "sh",
+            "c"
+        ]
     },
     {
         "expression": "postfix_unary_expression",
@@ -446,7 +460,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "cpp", "kt", "rs"]
+        "languages": ["cs", "java", "cpp", "kt", "rs", "c"]
     },
     {
         "expression": "switch_expression",
@@ -509,7 +523,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "c"]
     },
     {
         "expression": "checked_statement",
@@ -523,14 +537,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "c"]
     },
     {
         "expression": "do_statement",
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "cpp", "tsx"]
+        "languages": ["cs", "java", "js", "php", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "empty_statement",
@@ -544,7 +558,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "php", "ts", "py", "cpp", "go", "tsx", "rs"]
+        "languages": ["cs", "java", "js", "php", "ts", "py", "cpp", "go", "tsx", "rs", "c"]
     },
     {
         "expression": "fixed_statement",
@@ -565,28 +579,28 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh"]
+        "languages": ["cs", "go", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh", "c"]
     },
     {
         "expression": "goto_statement",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "php", "cpp"]
+        "languages": ["cs", "go", "php", "cpp", "c"]
     },
     {
         "expression": "if_statement",
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "sh"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "sh", "c"]
     },
     {
         "expression": "labeled_statement",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "ts", "cpp", "tsx"]
+        "languages": ["cs", "go", "java", "js", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "local_declaration_statement",
@@ -614,14 +628,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "c"]
     },
     {
         "expression": "switch_statement",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "js", "php", "ts", "cpp", "tsx"]
+        "languages": ["cs", "js", "php", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "throw_statement",
@@ -656,7 +670,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh"]
+        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh", "c"]
     },
     {
         "expression": "yield_statement",
@@ -754,7 +768,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "java", "py", "cpp", "rb"]
+        "languages": ["cs", "go", "java", "py", "cpp", "rb", "c"]
     },
     {
         "expression": "array_rank_specifier",
@@ -782,7 +796,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "py", "cpp", "php", "rs"]
+        "languages": ["cs", "py", "cpp", "php", "rs", "c"]
     },
     {
         "expression": "attribute_argument",
@@ -824,7 +838,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "!="
     },
     {
@@ -832,7 +846,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "%"
     },
     {
@@ -840,7 +854,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "&"
     },
     {
@@ -848,7 +862,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "&&"
     },
     {
@@ -856,7 +870,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "*"
     },
     {
@@ -864,7 +878,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "+"
     },
     {
@@ -872,7 +886,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "-"
     },
     {
@@ -880,7 +894,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "/"
     },
     {
@@ -888,7 +902,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "<"
     },
     {
@@ -896,7 +910,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "<<"
     },
     {
@@ -904,7 +918,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "<="
     },
     {
@@ -912,7 +926,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "=="
     },
     {
@@ -920,7 +934,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": ">"
     },
     {
@@ -928,7 +942,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": ">="
     },
     {
@@ -936,7 +950,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": ">>"
     },
     {
@@ -952,7 +966,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "^"
     },
     {
@@ -960,7 +974,7 @@
         "metrics": [],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "|"
     },
     {
@@ -968,7 +982,7 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
         "operator": "||"
     },
     {
@@ -1060,7 +1074,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "php", "cpp", "rs"]
+        "languages": ["cs", "php", "cpp", "rs", "c"]
     },
     {
         "expression": "declaration_pattern",
@@ -1291,7 +1305,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "cpp"]
+        "languages": ["cs", "go", "cpp", "c"]
     },
     {
         "expression": "parameter_modifier",
@@ -1529,7 +1543,7 @@
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh"]
+        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh", "c"]
     },
     {
         "expression": "discard",
@@ -1543,14 +1557,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs"]
+        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs", "c"]
     },
     {
         "expression": "false",
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c"]
     },
     {
         "expression": "module",
@@ -1579,7 +1593,7 @@
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c"]
     },
     {
         "expression": "type",
@@ -1614,7 +1628,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "js", "kt", "ts", "cpp", "tsx", "rs"]
+        "languages": ["go", "js", "kt", "ts", "cpp", "tsx", "rs", "c"]
     },
     {
         "expression": "composite_literal",
@@ -1719,7 +1733,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "cpp", "tsx", "rs", "sh"]
+        "languages": ["go", "java", "js", "ts", "cpp", "tsx", "rs", "sh", "c"]
     },
     {
         "expression": "_simple_statement",
@@ -1824,7 +1838,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "java", "kt", "ts", "cpp", "tsx", "rs"]
+        "languages": ["go", "java", "kt", "ts", "cpp", "tsx", "rs", "c"]
     },
     {
         "expression": "const_declaration",
@@ -1951,7 +1965,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "cpp", "rs"]
+        "languages": ["go", "cpp", "rs", "c"]
     },
     {
         "expression": "for_clause",
@@ -2028,7 +2042,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["go", "cpp"]
+        "languages": ["go", "cpp", "c"]
     },
     {
         "expression": "range_clause",
@@ -2105,7 +2119,7 @@
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["go", "cpp", "rs"]
+        "languages": ["go", "cpp", "rs", "c"]
     },
     {
         "expression": "import",
@@ -2231,7 +2245,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["java", "js", "ts", "cpp", "tsx"]
+        "languages": ["java", "js", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "annotation_type_declaration",
@@ -2280,7 +2294,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["java", "js", "php", "ts", "cpp", "tsx"]
+        "languages": ["java", "js", "php", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "array_access",
@@ -2799,7 +2813,7 @@
         "metrics": [],
         "type": "keyword",
         "category": "",
-        "languages": ["js", "php", "ts", "cpp", "tsx"]
+        "languages": ["js", "php", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "number",
@@ -2834,7 +2848,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "cpp", "tsx"]
+        "languages": ["js", "php", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "template_string",
@@ -2972,7 +2986,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "php", "ts", "py", "cpp", "tsx", "rs", "sh"]
+        "languages": ["js", "php", "ts", "py", "cpp", "tsx", "rs", "sh", "c"]
     },
     {
         "expression": "export_clause",
@@ -3182,7 +3196,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["js", "ts", "cpp", "tsx"]
+        "languages": ["js", "ts", "cpp", "tsx", "c"]
     },
     {
         "expression": "additive_expression",
@@ -3966,7 +3980,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "cpp", "sh"]
+        "languages": ["php", "cpp", "sh", "c"]
     },
     {
         "expression": "declare_statement",
@@ -3995,7 +4009,7 @@
         "type": "statement",
         "category": "",
         "activated_for_languages": ["php", "py", "sh"],
-        "languages": ["php", "py", "cpp", "sh"]
+        "languages": ["php", "py", "cpp", "sh", "c"]
     },
     {
         "expression": "function_static_declaration",
@@ -4058,7 +4072,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "cpp", "rs"]
+        "languages": ["php", "cpp", "rs", "c"]
     },
     {
         "expression": "anonymous_function_use_clause",
@@ -4134,8 +4148,8 @@
         "metrics": ["complexity"],
         "type": "statement",
         "category": "case_label",
-        "activated_for_languages": ["php", "cpp"],
-        "languages": ["php", "cpp", "sh"]
+        "activated_for_languages": ["php", "cpp", "c"],
+        "languages": ["php", "cpp", "sh", "c"]
     },
     {
         "expression": "cast_type",
@@ -4331,7 +4345,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["php", "cpp", "rs"]
+        "languages": ["php", "cpp", "rs", "c"]
     },
     {
         "expression": "variadic_unpacking",
@@ -4843,7 +4857,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["py", "cpp"]
+        "languages": ["py", "cpp", "c"]
     },
     {
         "expression": "dictionary",
@@ -5074,28 +5088,28 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "abstract_function_declarator",
         "metrics": ["functions", "complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "abstract_parenthesized_declarator",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "abstract_pointer_declarator",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "abstract_reference_declarator",
@@ -5109,14 +5123,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "attributed_declarator",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "destructor_name",
@@ -5130,7 +5144,7 @@
         "metrics": ["functions", "complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "operator_name",
@@ -5144,14 +5158,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "pointer_declarator",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "qualified_identifier",
@@ -5186,7 +5200,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp", "rs"]
+        "languages": ["cpp", "rs", "c"]
     },
     {
         "expression": "co_await_expression",
@@ -5200,7 +5214,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "delete_expression",
@@ -5214,14 +5228,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp", "rs"]
+        "languages": ["cpp", "rs", "c"]
     },
     {
         "expression": "number_literal",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "parameter_pack_expansion",
@@ -5235,14 +5249,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "sizeof_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "user_defined_literal",
@@ -5312,21 +5326,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "sized_type_specifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "struct_specifier",
         "metrics": ["classes"],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "template_type",
@@ -5340,7 +5354,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "access_specifier",
@@ -5361,21 +5375,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "attribute_specifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "attributed_statement",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "base_class_clause",
@@ -5389,14 +5403,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "comma_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "condition_clause",
@@ -5431,14 +5445,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "enumerator_list",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "explicit_function_specifier",
@@ -5452,7 +5466,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "field_initializer",
@@ -5480,21 +5494,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "initializer_list",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "initializer_pair",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "lambda_capture_specifier",
@@ -5515,42 +5529,42 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_based_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_call_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_declspec_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_pointer_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_unaligned_ptr_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "namespace_alias_definition",
@@ -5599,70 +5613,70 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_def",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_defined",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_elif",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_else",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_function_def",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_if",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_ifdef",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_include",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_params",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ref_qualifier",
@@ -5683,14 +5697,14 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "subscript_designator",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "template_argument_list",
@@ -5746,21 +5760,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "type_definition",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "type_descriptor",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "type_parameter_declaration",
@@ -5774,7 +5788,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "using_declaration",
@@ -5816,21 +5830,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_signed_ptr_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "ms_unsigned_ptr_modifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "namespace_identifier",
@@ -5844,21 +5858,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "preproc_directive",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "system_lib_string",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "record_struct_declaration",
@@ -6670,7 +6684,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["py", "cpp", "rb", "sh"]
+        "languages": ["py", "cpp", "rb", "sh", "c"]
     },
     {
         "expression": "union_pattern",
@@ -6712,7 +6726,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "fold_expression",
@@ -6726,21 +6740,21 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "offsetof_expression",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "requires_clause",
@@ -6827,49 +6841,49 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_goto_list",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_input_operand",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_input_operand_list",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_output_operand",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_output_operand_list",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "gnu_asm_qualifier",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "init_statement",
@@ -6897,7 +6911,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "requirement_seq",
@@ -6932,7 +6946,7 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp", "rb"]
+        "languages": ["cpp", "rb", "c"]
     },
     {
         "expression": "raw_string_content",
@@ -6995,35 +7009,35 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "seh_try_statement",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "seh_except_clause",
         "metrics": ["complexity"],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "seh_finally_clause",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "subscript_range_designator",
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cpp"]
+        "languages": ["cpp", "c"]
     },
     {
         "expression": "error_suppression_expression",
@@ -8811,5 +8825,12 @@
         "type": "statement",
         "category": "",
         "languages": ["sh"]
+    },
+    {
+        "expression": "macro_type_specifier",
+        "metrics": [],
+        "type": "statement",
+        "category": "",
+        "languages": ["c"]
     }
 ]

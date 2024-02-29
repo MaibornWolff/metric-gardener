@@ -82,7 +82,13 @@ export class Configuration {
         this.outputPath = outputPath;
         this.parseMetrics = true;
         this.parseDependencies = parseDependencies;
-        this.exclusions = new Set(exclusions.split(",").map((exclusion) => exclusion.trim()));
+
+        if (exclusions.length > 0) {
+            this.exclusions = new Set(exclusions.split(",").map((exclusion) => exclusion.trim()));
+        } else {
+            this.exclusions = new Set();
+        }
+
         this.parseAllAsC = parseAllAsC;
 
         if (!parseAllAsC && parseSomeAsC.length > 0) {

@@ -5323,7 +5323,7 @@
     },
     {
         "expression": "enum_specifier",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["cpp", "c"]
@@ -5351,7 +5351,7 @@
     },
     {
         "expression": "union_specifier",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["cpp", "c"]

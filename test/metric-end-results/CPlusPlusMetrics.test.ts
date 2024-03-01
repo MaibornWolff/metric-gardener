@@ -87,6 +87,10 @@ describe("C++ metrics tests", () => {
         it("should also count class declarations in source code files", () => {
             testFileMetric(cppTestResourcesPath + "source_class.cxx", FileMetric.classes, 1);
         });
+
+        it("should count enums and unions as class", () => {
+            testFileMetric(cppTestResourcesPath + "enums_and_unions.cpp", FileMetric.classes, 20);
+        });
     });
 
     describe("parses C++ functions metric", () => {

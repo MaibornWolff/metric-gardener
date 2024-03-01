@@ -81,7 +81,7 @@ describe("C++ metrics tests", () => {
         });
 
         it("should also count for structs", () => {
-            testFileMetric(cppTestResourcesPath + "structs.hpp", FileMetric.classes, 4);
+            testFileMetric(cppTestResourcesPath + "structs.hpp", FileMetric.classes, 6);
         });
 
         it("should also count class declarations in source code files", () => {

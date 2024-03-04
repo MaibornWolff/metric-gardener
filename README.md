@@ -54,6 +54,9 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   Ruby
 -   Rust
 -   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if placed after the first heredoc delimiter. Default labels in Switch-statement are treated as regular case labels.)
+-   C
+
+Note: to parse .h files as C instead of C++, use the command line option `parse-h-as-c` or `parse-some-h-as-c`.
 
 ### Supported File Metrics
 

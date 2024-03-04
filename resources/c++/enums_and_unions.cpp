@@ -1,9 +1,14 @@
-
+/*
+ * Unscoped enums:
+ */
 enum unscoped_enum { Kartoffel, Karotte, Kohlrabi, Krautsalat };
 enum unscoped_fixed_type_enum: int { Eins, Zwei, Drei };
-// unfixed forward declaration not allowed by ISO C++ according to clang compiler.
+// unscoped enums with unfixed type cannot be opaque/forward declared.
 enum unscoped_fixed_type_opaque_enum: int;
 
+/*
+ * Scoped enums:
+ */
 enum class scoped_class_enum { Kartoffel, Karotte, Kohlrabi, Krautsalat };
 enum class scoped_class_fixed_enum: int { Eins, Zwei, Drei };
 enum class scoped_class_opaque_enum;
@@ -13,6 +18,9 @@ enum struct scoped_struct_enum { Kartoffel, Karotte, Kohlrabi, Krautsalat };
 enum struct scoped_struct_fixed_enum: int { Eins, Zwei, Drei };
 enum struct scoped_struct_opaque_enum;
 enum struct scoped_struct_fixed_opaque_enum: int;
+
+// Should not count, as it is just an alias definition not defining a new enum:
+typedef enum unscoped_enum Meals;
 
 union an_union {
     int i;

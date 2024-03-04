@@ -1,15 +1,18 @@
-#ifndef C_EXAMPLE_HEADER_987678
-#define C_EXAMPLE_HEADER_987678
+#ifndef TYPEDEF_HEADER_87945
+#define TYPEDEF_HEADER_87945
 
 enum Food { Kartoffel, Sauerkraut, Bratwurst, Brezel, Bauernbrot };
 
 // Scoped enum:
 enum struct Scoped_Enum { Pizza, Pasta, Schnitzel, Backfisch };
 // Opaque scoped enum:
-enum struct Scoped_Enum: int;
+enum struct Scoped_Enum_2: int;
 
-// Should not count as struct, as it defines just an alias.
+// Should not count as enum, as it defines just an alias.
 typedef enum Food Food;
+// The following does not work:
+// typedef enum struct Scoped_Enum Scoped_Enum_Alias;
+typedef enum Scoped_Enum Scoped_Enum_Alias;
 
 struct not_easily_usable {
     int a;
@@ -57,7 +60,7 @@ union forward_declared_union;
 
 // Do not count type aliases as structs/classes/unions.
 typedef struct forward_declared alias_name;
-typedef class forward_declared_class;
+typedef class forward_declared_class class_alias_name;
 typedef union forward_declared_union union_alias_name;
 
 // Only works with C++. Should also not be counted.

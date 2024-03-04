@@ -75,11 +75,12 @@ export async function parseAndTestFileMetric(
 /**
  * Calculates all file metrics for all supported files that can be found under the specified input path.
  * @param inputPath Path to the source code files to parse.
+ * @param parseAllAsC Whether to parse all .h files as C instead of C++ files.
  * @return Map that maps the absolute file paths to the corresponding map of calculated file metric results.
  */
-export async function parseAllFileMetrics(inputPath: string) {
+export async function parseAllFileMetrics(inputPath: string, parseAllAsC = false) {
     const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getParserTestConfiguration(realInputPath));
+    const parser = new GenericParser(getParserTestConfiguration(realInputPath, parseAllAsC));
     return (await parser.calculateMetrics()).fileMetrics;
 }
 

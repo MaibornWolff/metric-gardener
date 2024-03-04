@@ -3,8 +3,10 @@
 
 enum Food { Kartoffel, Sauerkraut, Bratwurst, Brezel, Bauernbrot };
 
-// New fixed-type enum introduced in C23.
-enum Food_C23: int { Pizza, Pasta, Schnitzel, Backfisch };
+// Scoped enum:
+enum struct Scoped_Enum { Pizza, Pasta, Schnitzel, Backfisch };
+// Opaque scoped enum:
+enum struct Scoped_Enum: int;
 
 // Should not count as struct, as it defines just an alias.
 typedef enum Food Food;
@@ -45,20 +47,28 @@ typedef union second_union {
 typedef union first_union number_union;
 
 /*
- * Forward declared struct/union. Declares the struct/union, but does not define it.
- * So we should not count it as struct/union to avoid counting one struct two times.
- * Forward-declared enums are not allowed in C.
+ * Forward declared struct/class/union. Declares the struct/class/union, but does not define it.
+ * So we should not count it as struct/class/union to avoid counting one struct two times.
+ * Scoped enums are not forward declared, but opaque enums which can be used as-is (see above).
  */
 struct forward_declared;
+class forward_declared_class;
 union forward_declared_union;
 
-typedef struct forward_declared alias_name; // Do not count type aliases as structs/unions.
+// Do not count type aliases as structs/classes/unions.
+typedef struct forward_declared alias_name;
+typedef class forward_declared_class;
 typedef union forward_declared_union union_alias_name;
 
-// Only works with C++
-// typedef forward_declared another_alias_name;
+// Only works with C++. Should also not be counted.
+typedef forward_declared another_alias_name;
+typedef forward_declared_class another_class_alias_name;
+typedef forward_declared_union another_union_alias_name;
 
-struct forward_declared { // Should only count a struct definition as a struct.
+// Should only count a struct/class/union definition as a struct/class/union, like the following:
+struct forward_declared {
+};
+class forward_declared_class {
 };
 union forward_declared_union {
 };

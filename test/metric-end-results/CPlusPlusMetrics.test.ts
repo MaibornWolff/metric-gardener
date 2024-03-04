@@ -91,6 +91,10 @@ describe("C++ metrics tests", () => {
         it("should count enums and unions as class", () => {
             testFileMetric(cppTestResourcesPath + "enums_and_unions.cpp", FileMetric.classes, 20);
         });
+
+        it("should not count typedefs without definition of a new class/struct/union", () => {
+            testFileMetric(cppTestResourcesPath + "typedefs.h", FileMetric.classes, 11);
+        });
     });
 
     describe("parses C++ functions metric", () => {

@@ -4455,7 +4455,7 @@
     },
     {
         "expression": "type_alias_declaration",
-        "metrics": [],
+        "metrics": ["classes"],
         "type": "statement",
         "category": "",
         "languages": ["ts", "tsx"]

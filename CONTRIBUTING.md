@@ -75,3 +75,11 @@ This results in the following structure for commit messages:
     ```
 
 -   `tech: improve handling of errors in GenericParser.ts #4`
+
+### Pull Requests
+
+Follow the given template when opening the PR
+
+-   Give the PR a meaningful title to describe what it changes. E.g. issue or branch name.
+-   Add the correct labels
+-   The PR Assignee is only used by the reviewer to see who is reviewing it

@@ -10,7 +10,7 @@ enum struct Scoped_Enum_2: int;
 
 // Should not count as enum, as it defines just an alias.
 typedef enum Food Food;
-// The following does not work:
+// The following is no valid C++ code and does not compile:
 // typedef enum struct Scoped_Enum Scoped_Enum_Alias;
 typedef enum Scoped_Enum Scoped_Enum_Alias;
 

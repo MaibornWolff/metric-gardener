@@ -79,16 +79,16 @@ yargs(hideBin(process.argv))
     .parseSync();
 
 async function parseSourceCode(argv) {
-    const configuration = new Configuration(
-        await fs.promises.realpath(argv["sources-path"]),
-        argv["output-path"],
-        argv["parse-dependencies"],
-        argv["exclusions"],
-        argv["parse-h-as-c"],
-        argv["parse-some-h-as-c"],
-        argv["compress"],
-        argv["print-relative-paths"],
-    );
+    const configuration = new Configuration({
+        sourcesPath: await fs.promises.realpath(argv["sources-path"]),
+        outputPath: argv["output-path"],
+        parseDependencies: argv["parse-dependencies"],
+        exclusions: argv["exclusions"],
+        parseAllHAsC: argv["parse-h-as-c"],
+        parseSomeHAsC: argv["parse-some-h-as-c"],
+        compress: argv["compress"],
+        relativePaths: argv["print-relative-paths"],
+    });
 
     console.time("Time to complete");
 

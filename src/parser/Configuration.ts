@@ -1,4 +1,49 @@
 /**
+ * Parameters of the constructor of {@link Configuration}.
+ * Represents configuration options that can be provided by the user via command line arguments.
+ */
+export interface ConfigurationParams {
+    /**
+     * Path to the source files to be parsed.
+     */
+    sourcesPath: string;
+    /**
+     * Path where the output file with the calculated metrics should be stored.
+     */
+    outputPath: string;
+    /**
+     * Whether dependencies should be analyzed.
+     */
+    parseDependencies: boolean;
+    /**
+     * Folders to exclude from being searched for files to be parsed.
+     */
+    exclusions: string;
+    /**
+     * Whether to parse all .h files as C instead of C++.
+     */
+    parseAllHAsC: boolean;
+    /**
+     * Folders or file names for which .h files should be parsed as C instead of C++ files. Ignored if parseAllAsC is set.
+     */
+    parseSomeHAsC: string;
+    /**
+     * Whether to compress the output file with the calculated metrics in a zip archive.
+     */
+    compress: boolean;
+    /**
+     * Whether to include the relative file paths or absolute paths of the analyzed files in the output.
+     */
+    relativePaths: boolean;
+    /**
+     * Whether to replace all forward slashes in file paths by backward slashes
+     * in the output.
+     * FOR PLATFORM-INDEPENDENT TESTING PURPOSES ONLY: this option should not be exposed to the user.
+     */
+    enforceBackwardSlash?: boolean;
+}
+
+/**
  * Configures the files to be parsed and the metrics to be calculated.
  */
 export class Configuration {
@@ -30,12 +75,12 @@ export class Configuration {
     /**
      * Whether to parse all .h files as C instead of C++.
      */
-    readonly parseAllAsC: boolean;
+    readonly parseAllHAsC: boolean;
 
     /**
      * Folders or file names for which .h files should be parsed as C instead of C++ files.
      */
-    readonly parseSomeAsC: Set<string>;
+    readonly parseSomeHAsC: Set<string>;
 
     /**
      * Whether to compress the output file with the calculated metrics in a zip archive.
@@ -49,59 +94,41 @@ export class Configuration {
 
     /**
      * Whether to replace all forward slashes in file paths by backward slashes in the output.
-     * For platform-independent testing purposes only.
+     * FOR PLATFORM-INDEPENDENT TESTING PURPOSES ONLY: this option should not be exposed to the user.
      */
     readonly enforceBackwardSlash: boolean;
 
     /**
-     * Constructs a new {@link Configuration} object by specifying the files to be parsed
-     * and the metrics to be calculated.
-     * @param sourcesPath Path to the source files to be parsed.
-     * @param outputPath Path where the output file with the calculated metrics should be stored.
-     * @param parseDependencies Whether dependencies should be analyzed.
-     * @param exclusions Folders to exclude from being searched for files to be parsed.
-     * @param parseAllAsC Whether to parse all .h files as C instead of C++.
-     * @param parseSomeAsC Folders or file names for which .h files should be parsed as C instead of C++ files. Ignored if parseAllAsC is set.
-     * @param compress Whether to compress the output file with the calculated metrics in a zip archive.
-     * @param relativePaths Whether to include the relative file paths or absolute paths of the analyzed files in the output.
-     * @param enforceBackwardSlash Whether to replace all forward slashes in file paths by backward slashes in the output.
-     * For platform-independent testing purposes only.
+     * Constructs a new {@link Configuration} object by specifying the configuration options passed by the user
+     * as command line arguments.
+     * @param parameters {@link Parameters} object containing the configuration options.
      */
-    constructor(
-        sourcesPath: string,
-        outputPath: string,
-        parseDependencies: boolean,
-        exclusions: string,
-        parseAllAsC: boolean,
-        parseSomeAsC: string,
-        compress: boolean,
-        relativePaths: boolean,
-        enforceBackwardSlash = false,
-    ) {
-        this.sourcesPath = sourcesPath;
-        this.outputPath = outputPath;
+    constructor(parameters: ConfigurationParams) {
+        this.sourcesPath = parameters.sourcesPath;
+        this.outputPath = parameters.outputPath;
         this.parseMetrics = true;
-        this.parseDependencies = parseDependencies;
+        this.parseDependencies = parameters.parseDependencies;
 
-        if (exclusions.length > 0) {
-            this.exclusions = new Set(exclusions.split(",").map((exclusion) => exclusion.trim()));
-        } else {
-            this.exclusions = new Set();
-        }
+        this.exclusions = new Set(
+            parameters.exclusions.length > 0
+                ? parameters.exclusions.split(",").map((exclusion) => exclusion.trim())
+                : null,
+        );
 
-        this.parseAllAsC = parseAllAsC;
+        this.parseAllHAsC = parameters.parseAllHAsC;
 
-        if (!parseAllAsC && parseSomeAsC.length > 0) {
-            this.parseSomeAsC = new Set(
-                parseSomeAsC.split(",").map((folderOrFileName) => folderOrFileName.trim()),
-            );
-        } else {
-            this.parseSomeAsC = new Set();
-        }
+        this.parseSomeHAsC = new Set(
+            !parameters.parseAllHAsC && parameters.parseSomeHAsC.length > 0
+                ? parameters.parseSomeHAsC
+                      .split(",")
+                      .map((folderOrFileName) => folderOrFileName.trim())
+                : null,
+        );
 
-        this.compress = compress;
-        this.relativePaths = relativePaths;
-        this.enforceBackwardSlash = enforceBackwardSlash;
+        this.compress = parameters.compress;
+        this.relativePaths = parameters.relativePaths;
+        this.enforceBackwardSlash =
+            parameters.enforceBackwardSlash === undefined ? false : parameters.enforceBackwardSlash;
     }
 
     /**

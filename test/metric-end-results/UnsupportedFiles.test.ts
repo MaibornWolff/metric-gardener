@@ -1,4 +1,4 @@
-import { expectFileMetric, getParserTestConfiguration } from "./TestHelper";
+import { expectFileMetric, getTestConfiguration } from "./TestHelper";
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
 import { FileMetric } from "../../src/parser/metrics/Metric";
@@ -13,7 +13,7 @@ describe("Test for handling unsupported files, with unknown or no file extension
 
     beforeAll(async () => {
         const realInputPath = fs.realpathSync(unsupportedTestResourcesPath);
-        const parser = new GenericParser(getParserTestConfiguration(realInputPath));
+        const parser = new GenericParser(getTestConfiguration(realInputPath));
         results = await parser.calculateMetrics();
     });
 

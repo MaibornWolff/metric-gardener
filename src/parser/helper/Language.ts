@@ -134,17 +134,17 @@ export function assumeLanguageFromFilePath(
 
     // Handling of the parse .h as C option:
     if (fileExtension === "h") {
-        if (config.parseAllAsC) {
+        if (config.parseAllHAsC) {
             return Language.C;
         }
-        if (config.parseSomeAsC.size > 0) {
+        if (config.parseSomeHAsC.size > 0) {
             // Use the path relative to the sources path to avoid the unintuitive behaviour
             // that higher-level folders are evaluated for this:
             const relativePath = pathModule.relative(config.sourcesPath, filePath);
             const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
             const relpathSplitted = backwardSlashRelpath.split("\\");
             for (const pathElement of relpathSplitted) {
-                if (config.parseSomeAsC.has(pathElement)) {
+                if (config.parseSomeHAsC.has(pathElement)) {
                     return Language.C;
                 }
             }

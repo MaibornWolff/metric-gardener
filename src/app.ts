@@ -27,7 +27,13 @@ yargs(hideBin(process.argv))
                 .option("output-path", {
                     alias: "o",
                     type: "string",
-                    description: "Output file path",
+                    description: "Output file path (required)",
+                })
+                .option("relative-paths", {
+                    alias: "r",
+                    type: "boolean",
+                    description:
+                        "Write relative instead of absolute paths to the analyzed files in the output",
                 })
                 .option("exclusions", {
                     alias: "e",
@@ -48,12 +54,6 @@ yargs(hideBin(process.argv))
                         "For the specified folders/files (comma separated list), parse .h files as C instead of C++. " +
                         "Ignored if parse-h-as-c is set.",
                     default: "",
-                })
-                .option("print-relative-paths", {
-                    alias: "r",
-                    type: "boolean",
-                    description:
-                        "Use relative instead of absolute paths to the analyzed files in the output",
                 })
                 .option("compress", {
                     alias: "c",
@@ -87,7 +87,7 @@ async function parseSourceCode(argv) {
         parseAllHAsC: argv["parse-h-as-c"],
         parseSomeHAsC: argv["parse-some-h-as-c"],
         compress: argv["compress"],
-        relativePaths: argv["print-relative-paths"],
+        relativePaths: argv["relative-paths"],
     });
 
     console.time("Time to complete");

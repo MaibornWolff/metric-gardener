@@ -94,7 +94,7 @@ export class UnsupportedFile extends SourceFile {
 }
 
 /**
- * Represents a supported file to be analyzed for metrics, including its path, language and parsed syntax tree.
+ * Represents a parsed file written in a supported language that can be analyzed for metrics.
  */
 export class ParsedFile extends SourceFile {
     /**

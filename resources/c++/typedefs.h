@@ -1,10 +1,10 @@
 #ifndef TYPEDEF_HEADER_87945
 #define TYPEDEF_HEADER_87945
 
-enum Food { Kartoffel, Sauerkraut, Bratwurst, Brezel, Bauernbrot };
+enum Food { Potato, Sauerkraut, Sausage, Pretzel, Bread };
 
 // Scoped enum:
-enum struct Scoped_Enum { Pizza, Pasta, Schnitzel, Backfisch };
+enum struct Scoped_Enum { Pizza, Pasta, Fish, Steak };
 // Opaque scoped enum:
 enum struct Scoped_Enum_2: int;
 

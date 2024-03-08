@@ -1,10 +1,10 @@
 #ifndef C_EXAMPLE_HEADER_987678
 #define C_EXAMPLE_HEADER_987678
 
-enum Food { Kartoffel, Sauerkraut, Bratwurst, Brezel, Bauernbrot };
+enum Food { Potato, Sauerkraut, Sausage, Pretzel, Bread };
 
 // New fixed-type enum introduced in C23.
-enum Food_C23: int { Pizza, Pasta, Schnitzel, Backfisch };
+enum Food_C23: int { Pizza, Pasta, Fish, Steak };
 
 // Should not count as struct, as it defines just an alias.
 typedef enum Food Food;

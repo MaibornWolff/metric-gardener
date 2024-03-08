@@ -132,24 +132,12 @@ export function assumeLanguageFromFilePath(
 ) {
     const fileExtension: string = getFileExtension(filePath);
 
-    // Handling of the parse .h as C option:
     if (fileExtension === "h") {
-        if (config.parseAllHAsC) {
+        if (shouldHBeParsedAsC(filePath, config, pathModule)) {
             return Language.C;
+        } else {
+            return Language.CPlusPlus;
         }
-        if (config.parseSomeHAsC.size > 0) {
-            // Use the path relative to the sources path to avoid the unintuitive behaviour
-            // that higher-level folders are evaluated for this:
-            const relativePath = pathModule.relative(config.sourcesPath, filePath);
-            const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
-            const relpathSplitted = backwardSlashRelpath.split("\\");
-            for (const pathElement of relpathSplitted) {
-                if (config.parseSomeHAsC.has(pathElement)) {
-                    return Language.C;
-                }
-            }
-        }
-        return Language.CPlusPlus;
     }
 
     let result = caseSensitiveFileExtensionToLanguage.get(fileExtension);
@@ -158,6 +146,28 @@ export function assumeLanguageFromFilePath(
         result = fileExtensionToLanguage.get(inLowerCase);
     }
     return result;
+}
+
+/**
+ * Handling of the parse .h as C option.
+ */
+function shouldHBeParsedAsC(filePath: string, config: Configuration, pathModule = path): boolean {
+    if (config.parseAllHAsC) {
+        return true;
+    }
+    if (config.parseSomeHAsC.size > 0) {
+        // Use the path relative to the sources path to avoid the unintuitive behaviour
+        // that higher-level folders are evaluated for this:
+        const relativePath = pathModule.relative(config.sourcesPath, filePath);
+        const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
+        const relpathSplitted = backwardSlashRelpath.split("\\");
+        for (const pathElement of relpathSplitted) {
+            if (config.parseSomeHAsC.has(pathElement)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**

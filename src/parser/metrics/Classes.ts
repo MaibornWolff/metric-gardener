@@ -19,10 +19,10 @@ export class Classes implements Metric {
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
 
-        this.addQueriesForC_Cpp();
+        this.addQueriesForCAndCpp();
     }
 
-    addQueriesForC_Cpp() {
+    addQueriesForCAndCpp() {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(struct_specifier body: (field_declaration_list)) @struct_definition",

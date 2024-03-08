@@ -9,12 +9,6 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 **It is based on grammars from [tree-sitter](https://github.com/tree-sitter/tree-sitter).**
 
-### Main Issues with MetricGardener
-
-1.  It is not very well tested
-2.  Because of 1., there might be some issues for certain languages
-3.  The list of supported languages is still rather limited
-
 ### Usage
 
 #### Install required build tools:

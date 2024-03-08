@@ -65,7 +65,7 @@ yargs(hideBin(process.argv))
                     type: "boolean",
                     default: false,
                     description:
-                        "Flag to enable dependency parsing (dependencies will be appended to the output file)",
+                        "EXPERIMENTAL: flag to enable dependency parsing (dependencies will be appended to the output file)",
                 })
                 .demandOption(["sources-path", "output-path"]);
         },

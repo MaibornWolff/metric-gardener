@@ -3,7 +3,7 @@ import { GenericParser } from "./GenericParser";
 import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
-import { getParserTestConfiguration } from "../../test/metric-end-results/TestHelper";
+import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
 import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
 import {
@@ -130,7 +130,7 @@ describe("GenericParser.calculateMetrics()", () => {
         ]);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
          * when:
@@ -158,7 +158,7 @@ describe("GenericParser.calculateMetrics()", () => {
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
          * when:
@@ -189,7 +189,7 @@ describe("GenericParser.calculateMetrics()", () => {
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
          * when:
@@ -211,7 +211,7 @@ describe("GenericParser.calculateMetrics()", () => {
         expect(treeParserSpied).toHaveBeenCalledTimes(2);
     });
 
-    it("should call CouplingCalculator.calculateMetrics() when requested.", async () => {
+    it("should call CouplingCalculator.calculateMetrics() when parseDependencies is set.", async () => {
         /*
          * Given:
          */
@@ -222,7 +222,7 @@ describe("GenericParser.calculateMetrics()", () => {
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(
-            getParserTestConfiguration("clearly/invalid/path.cpp", false, true),
+            getTestConfiguration("clearly/invalid/path.cpp", { parseDependencies: true }),
         );
         /*
          * when:
@@ -247,7 +247,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
         /*
          * when:
          */
@@ -276,7 +276,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
          * when:
@@ -309,7 +309,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
          * when:
@@ -337,7 +337,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserTestConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
          * when:

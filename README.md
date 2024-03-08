@@ -41,7 +41,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Go
 -   PHP
--   TypeScript
+-   TypeScript, TSX (only type declaration using object type literal is counted for 'classes' metric, but not type alias.)
 -   Java
 -   C#
 -   C++

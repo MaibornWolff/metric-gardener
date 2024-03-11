@@ -62,7 +62,6 @@ Counts expressions that branch the control flow, like if-statements, loops, swit
 The number of function declarations inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, abstract functions, constructors, init blocks, closures, etc.
 
 **classes**<br>
-<<<<<<< HEAD
 The number of class definitions inside a file, also counting for enums, interfaces, structs, unions, traits and records.
 
 <details><summary>Language specific details</summary>

@@ -19,7 +19,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
     -   For Linux: ensure that `make` and a C/C++ compiler toolchain is installed, e.g. GCC including the `g++` command.
     -   For macOS: ensure that the "Xcode Command Line Tools" are installed. These include `make` as well as the `clang` and `clang++` compiler.
     -   For Windows: ensure that you have installed Visual Studio 2019 or later with the "Desktop development with C++" workload.
-    -   Further information can be found here: https://github.com/nodejs/node-gyp#installation
+    -   Further information about the required build tools can be found here: https://github.com/nodejs/node-gyp#installation
 
 #### Install project and parse your sources:
 

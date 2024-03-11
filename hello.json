@@ -1,0 +1,18 @@
+{
+    "nodes": [
+        {
+            "name": "C:\\Programmieren\\metric-gardener\\resources\\tsx\\type.tsx",
+            "type": "File",
+            "metrics": {
+                "complexity": 0,
+                "functions": 0,
+                "classes": 1,
+                "lines_of_code": 13,
+                "comment_lines": 2,
+                "real_lines_of_code": 11
+            }
+        }
+    ],
+    "info": [],
+    "relationships": []
+}

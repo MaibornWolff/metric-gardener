@@ -66,7 +66,7 @@ export class TreeParser {
         parser.setLanguage(languageToGrammar.get(language));
 
         const tree = parser.parse(sourceCode);
-
+        console.log(tree.rootNode.toString());
         if (tree === undefined) {
             throw new Error("Syntax tree for file " + filePath + " is undefined!");
         }

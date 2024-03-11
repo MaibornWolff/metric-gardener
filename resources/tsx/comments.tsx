@@ -18,5 +18,8 @@ const MyComponent = () => {
         </div>
     );
 };
-
-export default MyComponent;
+/*comment
+*/export default MyComponent; /*more comment
+more
+more */
+//last comment

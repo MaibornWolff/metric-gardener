@@ -29,3 +29,6 @@ class UseFunction{
 const myFunction = function myFunctionDefinition() {
     return 42;
 };
+let sum = (x: number, y: number): number => {
+    return x + y;
+}

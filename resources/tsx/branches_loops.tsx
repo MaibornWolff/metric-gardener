@@ -20,6 +20,14 @@ function switchFunction(text: string): {message: string} {
     for(let i=0; i<10; i++){
         console.log("hello");
     }
+    let someArray = [1, "string", false];
+    for (let entry of someArray) {
+        console.log(entry);
+    }
+    for (let i in someArray) {
+        console.log(i);
+    }
+
     let counter = 0;
     while(counter < 5){
         counter++;

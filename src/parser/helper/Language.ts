@@ -13,7 +13,7 @@ import Bash from "tree-sitter-bash";
 import C from "tree-sitter-c";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 import { Configuration } from "../Configuration";
-import { getFileExtension, replaceForwardWithBackwardSlashes } from "./Helper";
+import { getFileExtension, lookupLowerCase, replaceForwardWithBackwardSlashes } from "./Helper";
 import path from "path";
 
 /**
@@ -135,17 +135,15 @@ export function assumeLanguageFromFilePath(
     if (fileExtension === "h") {
         if (shouldHBeParsedAsC(filePath, config, pathModule)) {
             return Language.C;
-        } else {
-            return Language.CPlusPlus;
         }
+        return Language.CPlusPlus;
     }
 
-    let result = caseSensitiveFileExtensionToLanguage.get(fileExtension);
-    const inLowerCase = fileExtension.toLowerCase();
-    if (result === undefined) {
-        result = fileExtensionToLanguage.get(inLowerCase);
+    const resultCaseSensitive = caseSensitiveFileExtensionToLanguage.get(fileExtension);
+    if (resultCaseSensitive !== undefined) {
+        return resultCaseSensitive;
     }
-    return result;
+    return lookupLowerCase(fileExtensionToLanguage, fileExtension);
 }
 
 /**

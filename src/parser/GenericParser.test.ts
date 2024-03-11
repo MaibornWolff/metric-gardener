@@ -4,14 +4,14 @@ import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
 import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
-import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./helper/Language";
+import { assumeLanguageFromFilePath, FileType, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
 import {
     SourceFile,
     FileMetric,
-    MetricResult,
     ParsedFile,
     UnsupportedFile,
+    FileMetricResults,
 } from "./metrics/Metric";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
@@ -43,13 +43,14 @@ async function mockedTreeParserParse(filePath: string, config: Configuration) {
     return Promise.resolve({
         filePath: filePath,
         language: assumeLanguageFromFilePath(filePath, config),
+        fileType: FileType.SourceCode,
         tree: tree,
     });
 }
 
 async function mockedMetricsCalculator(
     parsedFilePromise: Promise<SourceFile | null>,
-): Promise<[string, Map<string, MetricResult>]> {
+): Promise<[string, FileMetricResults]> {
     const file = await parsedFilePromise;
     if (file !== null) {
         return [file.filePath, expectedFileMetricsMap];
@@ -96,11 +97,17 @@ function spyOnConsoleErrorNoOp() {
  * Example data:
  */
 
-const expectedFileMetricsMap = new Map([
-    [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
-]);
+const expectedFileMetricsMap: FileMetricResults = {
+    fileType: FileType.SourceCode,
+    metricResults: new Map([
+        [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
+    ]),
+};
 
-const expectedErrorMetricsMap = new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]);
+const expectedErrorMetricsMap: FileMetricResults = {
+    fileType: FileType.Error,
+    metricResults: new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
+};
 
 let parser: Parser;
 let tree: Parser.Tree;

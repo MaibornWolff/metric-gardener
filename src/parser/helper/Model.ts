@@ -26,4 +26,8 @@ export enum NodeTypeCategory {
      * Node types that are exclusively used for default labels in a switch-case-block.
      */
     DefaultLabel = "default_label",
+    /**
+     * Node types that define the nesting level in structured text.
+     */
+    Nesting = "nesting",
 }

@@ -6,13 +6,20 @@ import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { ExpressionMetricMapping } from "./helper/Model";
 import { Configuration } from "./Configuration";
-import { isParsedFile, Metric, MetricResult, SourceFile } from "./metrics/Metric";
+import {
+    FileMetricResults,
+    isParsedFile,
+    Metric,
+    MetricResult,
+    SourceFile,
+} from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
-import { NestingLevel } from "./metrics/NestingLevel";
+import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
 import fs from "fs";
+import { FileType } from "./helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -22,7 +29,8 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Arranges the calculation of all basic single file metrics on multiple files.
  */
 export class MetricCalculator {
-    readonly #fileMetrics: Metric[] = [];
+    readonly #sourceFileMetrics: Metric[] = [];
+    readonly #structuredTextFileMetrics: Metric[] = [];
     readonly #config: Configuration;
 
     /**
@@ -35,26 +43,27 @@ export class MetricCalculator {
         const allNodeTypes: ExpressionMetricMapping[] =
             nodeTypesConfig as ExpressionMetricMapping[];
 
-        this.#fileMetrics = [
+        this.#sourceFileMetrics = [
             new Complexity(allNodeTypes),
             new Functions(allNodeTypes),
             new Classes(allNodeTypes),
             new LinesOfCode(),
             new CommentLines(allNodeTypes),
             new RealLinesOfCode(allNodeTypes),
-            new NestingLevel(allNodeTypes),
         ];
+
+        this.#structuredTextFileMetrics = [new LinesOfCode(), new MaxNestingLevel(allNodeTypes)];
     }
 
     /**
-     * Calculates all basic single file metrics on the specified file.
+     * Calculates file metrics on the specified file.
      * @param parsedFilePromise Promise for a parsed file for which the metric should be calculated.
-     * @return A tuple that contains the path of the file and a Map
-     * that relates each metric name to the calculated metric.
+     * @return A tuple that contains the path of the file and
+     * the calculated metrics.
      */
     async calculateMetrics(
         parsedFilePromise: Promise<SourceFile | null>,
-    ): Promise<[string, Map<string, MetricResult>]> {
+    ): Promise<[string, FileMetricResults]> {
         const sourceFile = await parsedFilePromise;
 
         if (sourceFile === null) {
@@ -72,7 +81,12 @@ export class MetricCalculator {
                     ":  ------------ ",
             );
 
-            for (const metric of this.#fileMetrics) {
+            const metricsToCalculate =
+                sourceFile.fileType == FileType.SourceCode
+                    ? this.#sourceFileMetrics
+                    : this.#structuredTextFileMetrics;
+
+            for (const metric of metricsToCalculate) {
                 resultPromises.push(
                     metric.calculate(sourceFile).catch((reason) => {
                         console.error("Error while calculating metric");
@@ -94,6 +108,9 @@ export class MetricCalculator {
             metricResults.set(result.metricName, result);
         }
 
-        return [formatPrintPath(sourceFile.filePath, this.#config), metricResults];
+        return [
+            formatPrintPath(sourceFile.filePath, this.#config),
+            { fileType: sourceFile.fileType, metricResults },
+        ];
     }
 }

@@ -1,5 +1,5 @@
 import { Tree } from "tree-sitter";
-import { Language } from "../helper/Language";
+import { FileType, Language, languageToFileType } from "../helper/Language";
 
 /**
  * Names of all available file metrics.
@@ -11,7 +11,15 @@ export enum FileMetric {
     linesOfCode = "lines_of_code",
     complexity = "complexity",
     realLinesOfCode = "real_lines_of_code",
-    nestingLevel = "nesting_level",
+    maxNestingLevel = "max_nesting_level",
+}
+
+/**
+ * Interface for carrying the results of the metric calculations for a file.
+ */
+export interface FileMetricResults {
+    fileType: FileType;
+    metricResults: Map<string, MetricResult>;
 }
 
 /**
@@ -80,8 +88,11 @@ export abstract class SourceFile {
      */
     filePath: string;
 
-    protected constructor(filePath: string) {
+    fileType: FileType;
+
+    protected constructor(filePath: string, fileType: FileType) {
         this.filePath = filePath;
+        this.fileType = fileType;
     }
 }
 
@@ -90,7 +101,7 @@ export abstract class SourceFile {
  */
 export class UnsupportedFile extends SourceFile {
     constructor(filePath: string) {
-        super(filePath);
+        super(filePath, FileType.Unsupported);
     }
 }
 
@@ -109,7 +120,8 @@ export class ParsedFile extends SourceFile {
     tree: Tree;
 
     constructor(filePath: string, language: Language, tree: Tree) {
-        super(filePath);
+        const fileType = languageToFileType(language);
+        super(filePath, fileType);
         this.language = language;
         this.tree = tree;
     }

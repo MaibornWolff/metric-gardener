@@ -1,9 +1,9 @@
 import { expectFileMetric, parseAllFileMetrics } from "./TestHelper";
-import { FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
+import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 
 describe("Bash metrics tests", () => {
     const bashTestResourcesPath = "./resources/bash/";
-    let results: Map<string, Map<string, MetricResult>>;
+    let results: Map<string, FileMetricResults>;
 
     const testFileMetric = (inputPath, metric, expected) =>
         expectFileMetric(results, inputPath, metric, expected);

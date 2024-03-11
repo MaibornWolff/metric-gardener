@@ -66,7 +66,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.C, "c"],
         [Language.JSON, "json"],
         [Language.YAML, "yaml"],
-    ])
+    ]),
 );
 
 /**
@@ -119,6 +119,22 @@ const fileExtensionToLanguage = new Map([
     ["yaml", Language.YAML],
     ["yml", Language.YAML],
 ]);
+
+export const enum FileType {
+    SourceCode = "source_code",
+    StructuredText = "structured_text",
+    Unsupported = "unsupported_file",
+    Error = "ERROR",
+}
+
+/**
+ * Set of structured text languages.
+ */
+export const structuredTextLanguages = new Set([Language.JSON, Language.YAML]);
+
+export function languageToFileType(language: Language) {
+    return structuredTextLanguages.has(language) ? FileType.StructuredText : FileType.SourceCode;
+}
 
 /**
  * Maps supported file extensions to the corresponding programming languages.

@@ -1,10 +1,10 @@
 import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper";
-import { FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
+import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 
 describe("PHP metrics tests", () => {
     const phpTestResourcesPath = "./resources/php/";
 
-    let results: Map<string, Map<string, MetricResult>>;
+    let results: Map<string, FileMetricResults>;
 
     const testFileMetric = (inputPath, metric, expected) =>
         expectFileMetric(results, inputPath, metric, expected);

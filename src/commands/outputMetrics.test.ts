@@ -1,6 +1,7 @@
 import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
 import { Relationship, MetricResult, CouplingResult } from "../parser/metrics/Metric";
+import { FileType } from "../parser/helper/Language";
 
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
@@ -19,8 +20,8 @@ describe("outputMetrics", () => {
             file2.set("metric2", { metricName: "metric2", metricValue: 45 });
 
             const fileMetrics = new Map([
-                ["/file/path1.test", file1],
-                ["/file/path2.test", file2],
+                ["/file/path1.test", { fileType: FileType.SourceCode, metricResults: file1 }],
+                ["/file/path2.test", { fileType: FileType.SourceCode, metricResults: file2 }],
             ]);
 
             const unknownFiles = ["/file/path3.unknown", "/file/noExtension"];

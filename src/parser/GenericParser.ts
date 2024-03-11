@@ -6,11 +6,12 @@ import {
     SourceFile,
     CouplingResult,
     isParsedFile,
-    MetricResult,
     ParsedFile,
+    FileMetricResults,
 } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeParser } from "./helper/TreeParser";
+import { FileType } from "./helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -39,7 +40,7 @@ export class GenericParser {
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
     async calculateMetrics() {
-        const fileMetrics = new Map<string, Map<string, MetricResult>>();
+        const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
         let couplingMetrics = {} as CouplingResult;
 
@@ -58,7 +59,7 @@ export class GenericParser {
                 );
             }
 
-            const fileMetricPromises: Promise<[string, Map<string, MetricResult>]>[] = [];
+            const fileMetricPromises: Promise<[string, FileMetricResults]>[] = [];
 
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator(this.config);
@@ -70,7 +71,12 @@ export class GenericParser {
                             console.error(reason);
                             return [
                                 filePath,
-                                new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
+                                {
+                                    fileType: FileType.Error,
+                                    metricResults: new Map([
+                                        ["ERROR", { metricName: "ERROR", metricValue: -1 }],
+                                    ]),
+                                },
                             ];
                         }),
                     );
@@ -108,8 +114,8 @@ export class GenericParser {
 
             // Await completion of file metric calculations:
             const promisesResults = await Promise.all(fileMetricPromises);
-            for (const [filepath, metricsMap] of promisesResults) {
-                fileMetrics.set(filepath, metricsMap);
+            for (const [filepath, fileMetricResults] of promisesResults) {
+                fileMetrics.set(filepath, fileMetricResults);
             }
 
             for (let i = 0; i < unsupportedFiles.length; i++) {

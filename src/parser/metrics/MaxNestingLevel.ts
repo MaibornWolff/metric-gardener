@@ -1,4 +1,4 @@
-import { ExpressionMetricMapping } from "../helper/Model";
+import { ExpressionMetricMapping, NodeTypeCategory } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeCursor } from "tree-sitter";
@@ -10,16 +10,16 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 /**
  * Calculates maximum nesting level of a json file.
  */
-export class NestingLevel implements Metric {
+export class MaxNestingLevel implements Metric {
     private nodeTypesToCount: string[] = [];
 
     /**
-     * Constructs a new instance of {@link NestingLevel}.
+     * Constructs a new instance of {@link MaxNestingLevel}.
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         for (const nodeType of allNodeTypes) {
-            if (nodeType.metrics.includes(this.getName())) {
+            if (nodeType.category === NodeTypeCategory.Nesting) {
                 this.nodeTypesToCount.push(nodeType.expression);
             }
         }
@@ -56,24 +56,24 @@ export class NestingLevel implements Metric {
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
         const { language, tree } = parsedFile;
 
-        let nestingLevel = 0;
+        let maxNestingLevel = 0;
         const cursor = tree.walk();
 
         if (cursor.gotoFirstChild()) {
-            nestingLevel = this.walkTree(cursor);
+            maxNestingLevel = this.walkTree(cursor);
             // -1 for top level
-            nestingLevel = nestingLevel - 1 < 0 ? 0 : nestingLevel - 1;
+            maxNestingLevel = Math.max(maxNestingLevel - 1, 0);
         }
 
-        dlog(this.getName() + " - " + nestingLevel);
+        dlog(this.getName() + " - " + maxNestingLevel);
 
         return {
             metricName: this.getName(),
-            metricValue: nestingLevel,
+            metricValue: maxNestingLevel,
         };
     }
 
     getName(): string {
-        return FileMetric.nestingLevel;
+        return FileMetric.maxNestingLevel;
     }
 }

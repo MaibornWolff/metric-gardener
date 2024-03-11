@@ -1,11 +1,12 @@
 import fs from "fs";
 import { Readable } from "stream";
 import zlib from "zlib";
-import { CouplingResult, MetricResult } from "../parser/metrics/Metric";
+import { CouplingResult, FileMetricResults } from "../parser/metrics/Metric";
+import { FileType } from "../parser/helper/Language";
 
 interface OutputNode {
     name: string;
-    type: "File";
+    type: string;
     metrics: {
         [key: string]: number;
     };
@@ -13,7 +14,7 @@ interface OutputNode {
 
 interface OutputInfoNode {
     name: string;
-    type: "File";
+    type: string;
     message: string;
 }
 
@@ -34,7 +35,7 @@ interface OutputRelationship {
  * @param compress Whether the file should be compressed
  */
 export function outputAsJson(
-    fileMetrics: Map<string, Map<string, MetricResult>>,
+    fileMetrics: Map<string, FileMetricResults>,
     unsupportedFiles: string[],
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
@@ -56,7 +57,7 @@ export function outputAsJson(
 }
 
 function buildOutputObject(
-    fileMetrics: Map<string, Map<string, MetricResult>>,
+    fileMetrics: Map<string, FileMetricResults>,
     unknownFiles: string[],
     relationshipMetrics: CouplingResult,
 ) {
@@ -72,16 +73,16 @@ function buildOutputObject(
 
     const outputNodeReferenceLookUp = new Map<string, OutputNode>();
 
-    for (const [filePath, metricsMap] of fileMetrics.entries()) {
+    for (const [filePath, fileMetricResults] of fileMetrics.entries()) {
         const metrics = {};
 
-        for (const [metricName, metricValue] of metricsMap.entries()) {
+        for (const [metricName, metricValue] of fileMetricResults.metricResults.entries()) {
             metrics[metricName] = metricValue.metricValue;
         }
 
         const outputNode: OutputNode = {
             name: filePath,
-            type: "File",
+            type: fileMetricResults.fileType,
             metrics: metrics,
         };
 
@@ -92,7 +93,7 @@ function buildOutputObject(
     for (const filePath of unknownFiles) {
         const outputNode: OutputInfoNode = {
             name: filePath,
-            type: "File",
+            type: FileType.Unsupported,
             message: "Unknown language or file extension",
         };
 
@@ -110,7 +111,7 @@ function buildOutputObject(
         } else {
             const newOutputNode: OutputNode = {
                 name: filePath,
-                type: "File",
+                type: FileType.SourceCode,
                 metrics: {},
             };
 

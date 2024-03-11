@@ -1,7 +1,7 @@
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";
-import { CouplingResult, FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
+import { CouplingResult, FileMetric, FileMetricResults, MetricResult } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
 
 /**
@@ -76,7 +76,9 @@ export async function parseAndTestFileMetric(
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getTestConfiguration(realInputPath));
     const results = await parser.calculateMetrics();
-    expect(results.fileMetrics.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
+    expect(results.fileMetrics.get(realInputPath)?.metricResults.get(metric)?.metricValue).toBe(
+        expected,
+    );
 }
 
 /**
@@ -102,13 +104,13 @@ export async function parseAllFileMetrics(inputPath: string, parseHAsC = false) 
  * @param expected Expected metric value.
  * */
 export function expectFileMetric(
-    results: Map<string, Map<string, MetricResult>>,
+    results: Map<string, FileMetricResults>,
     inputPath: string,
     metric: FileMetric,
     expected: number,
 ) {
     const realInputPath = fs.realpathSync(inputPath);
-    expect(results.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
+    expect(results.get(realInputPath)?.metricResults.get(metric)?.metricValue).toBe(expected);
 }
 
 /**

@@ -2775,9 +2775,9 @@
     },
     {
         "expression": "array",
-        "metrics": ["nesting_level"],
+        "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "nesting",
         "languages": ["js", "ts", "tsx", "rb", "sh", "json"]
     },
     {
@@ -2824,9 +2824,9 @@
     },
     {
         "expression": "object",
-        "metrics": ["nesting_level"],
+        "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "nesting",
         "languages": ["js", "ts", "tsx", "json"]
     },
     {
@@ -8870,9 +8870,9 @@
     },
     {
         "expression": "block_node",
-        "metrics": ["nesting_level"],
+        "metrics": [],
         "type": "statement",
-        "category": "",
+        "category": "nesting",
         "languages": ["yaml"]
     },
     {

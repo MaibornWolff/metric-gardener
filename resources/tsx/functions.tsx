@@ -10,15 +10,15 @@ const el = (
     />
 );
 const App = ({ message }: AppProps): React.JSX.Element => <div>{message}</div>; //lambda expression
-function useCallback<T extends (...args: any[]) => any>(
+function useCallbackCustom<T extends (...args: any[]) => any>(
     callback: T,
     deps: []
 ): T{
     return useCallback(callback, deps);
 }
-useCallback((e) => {console.log("hi")}, []);
+useCallbackCustom((e) => {console.log("hi")}, []);
 class UseFunction{
-    thisIsAFUnction(){
+    thisIsAFunction(){
         console.log("hello");
     }
     private testFunction3(): number {

@@ -4,10 +4,10 @@ import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import {
-    ExpressionQueryStatement,
     QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/QueryStatements";
+import { getQueryStatements } from "../helper/Helper";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -17,27 +17,8 @@ export class Classes implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        for (const nodeType of allNodeTypes) {
-            if (nodeType.metrics.includes(this.getName())) {
-                if (nodeType.expression === "type_alias_declaration") {
-                    this.statementsSuperSet.push(
-                        new SimpleLanguageSpecificQueryStatement(
-                            "(type_alias_declaration value: (object_type))",
-                            nodeType.languages,
-                            nodeType.activated_for_languages,
-                        ),
-                    );
-                } else {
-                    this.statementsSuperSet.push(
-                        new ExpressionQueryStatement(
-                            nodeType.expression,
-                            nodeType.languages,
-                            nodeType.activated_for_languages,
-                        ),
-                    );
-                }
-            }
-        }
+        this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
+        this.addQueriesForJS_TS_TSX();
     }
 
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
@@ -58,7 +39,14 @@ export class Classes implements Metric {
             metricValue: matches.length,
         };
     }
-
+    addQueriesForJS_TS_TSX() {
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(type_alias_declaration value: (object_type))",
+                ["ts", "tsx"],
+            ),
+        );
+    }
     getName(): string {
         return FileMetric.classes;
     }

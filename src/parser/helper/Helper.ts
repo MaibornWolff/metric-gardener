@@ -25,6 +25,17 @@ export function mapAllFunctional<KeyType, ValueType>(
 }
 
 /**
+ * Looks up the passed string key converted to lower case in the passed map. Returns the retrieved value (if any).
+ * @param map Map from which to retrieve the value.
+ * @param key The key to look up after being converted to lower case. The passed object is not modified.
+ * @return the value retrieved from the map, if any.
+ */
+export function lookupLowerCase<V>(map: Map<string, V>, key: string) {
+    const inLowerCase = key.toLowerCase();
+    return map.get(inLowerCase);
+}
+
+/**
  * Maps all elements of the specified iterable using the specified map. Returns an array of all mapped values,
  * skipping elements for which there is no value available in the map.
  * @param iterator Iterable of elements to map.

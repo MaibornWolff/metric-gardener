@@ -42,7 +42,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         parser.setLanguage(languageToGrammar.get(Language.JSON));
         tree = parser.parse('{ "a": { "b": "c" } }');
 
-        const parsedFile = new ParsedFile("test.json", "json", Language.JSON, tree);
+        const parsedFile = new ParsedFile("test.json", Language.JSON, tree);
 
         // when
         const result = await maxNestingLevel.calculate(parsedFile);
@@ -59,7 +59,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         parser.setLanguage(languageToGrammar.get(Language.YAML));
         tree = parser.parse("on:\n  push:\n    branches:\n      - main");
 
-        const parsedFile = new ParsedFile("test.yaml", "yaml", Language.YAML, tree);
+        const parsedFile = new ParsedFile("test.yaml", Language.YAML, tree);
 
         // when
         const result = await maxNestingLevel.calculate(parsedFile);
@@ -76,7 +76,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         parser.setLanguage(languageToGrammar.get(Language.Python));
         tree = parser.parse('{ "a": { "b": "c" } }');
 
-        const parsedFile = new ParsedFile("test.py", "py", Language.Python, tree);
+        const parsedFile = new ParsedFile("test.py", Language.Python, tree);
 
         // when
         const result = await maxNestingLevel.calculate(parsedFile);

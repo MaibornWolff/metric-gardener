@@ -1,0 +1,18 @@
+{
+    "nodes": [
+        {
+            "name": "C:\\Programmieren\\metric-gardener\\resources\\typescript\\test.ts",
+            "type": "File",
+            "metrics": {
+                "complexity": 0,
+                "functions": 0,
+                "classes": 1,
+                "lines_of_code": 31,
+                "comment_lines": 26,
+                "real_lines_of_code": 4
+            }
+        }
+    ],
+    "info": [],
+    "relationships": []
+}

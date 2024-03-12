@@ -69,6 +69,9 @@ describe("TypeScript metrics tests", () => {
                 9,
             );
         });
+        it("should count functionsy", () => {
+            testFileMetric(tsTestResourcesPath + "test.ts", FileMetric.functions, 1);
+        });
     });
 
     describe("parses TypeScript comment lines metric", () => {

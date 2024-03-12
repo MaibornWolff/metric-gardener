@@ -48,6 +48,8 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   Python
 -   JavaScript
 -   Kotlin
+-   JSON
+-   YAML
 
 #### Basic support with missing or incomplete unit tests:
 
@@ -87,6 +89,9 @@ The number of comment lines inside a file. Does count for any kind of comment (e
 
 **real_lines_of_code**<br>
 The number of lines inside a file that contain actual code of the programming language, not counting for comments, empty lines, etc.
+
+**max_nesting_level**<br>
+The maximum nesting level of data serialization languages like JSON and YAML.
 
 ### Command line options for the `parse` command
 

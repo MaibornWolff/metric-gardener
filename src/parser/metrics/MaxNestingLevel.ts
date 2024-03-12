@@ -54,7 +54,7 @@ export class MaxNestingLevel implements Metric {
     }
 
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
-        const { language, tree } = parsedFile;
+        const { tree } = parsedFile;
 
         let maxNestingLevel = 0;
         const cursor = tree.walk();

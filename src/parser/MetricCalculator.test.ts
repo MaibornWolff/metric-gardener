@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import { MetricCalculator } from "./MetricCalculator";
-import { getParserConfiguration } from "../../test/metric-end-results/TestHelper";
+import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
 import { FileMetric, ParsedFile, UnsupportedFile } from "./metrics/Metric";
 import { FileType, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
@@ -90,7 +90,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     let tree: Parser.Tree;
 
     beforeAll(() => {
-        metricCalculator = new MetricCalculator(getParserConfiguration("clearly/invalid/path.cpp"));
+        metricCalculator = new MetricCalculator(getTestConfiguration("clearly/invalid/path.cpp"));
         parser = new Parser();
     });
 
@@ -103,7 +103,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
         tree = parser.parse('{ "a": { "b": "c" } }');
-        parsedFile = new ParsedFile("test.py", "py", Language.Python, tree);
+        parsedFile = new ParsedFile("test.py", Language.Python, tree);
         parsedFilePromise = new Promise<ParsedFile>((resolve) => {
             resolve(parsedFile);
         });
@@ -148,7 +148,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.JSON));
         tree = parser.parse('{ "a": { "b": "c" } }');
-        parsedFile = new ParsedFile("test.json", "json", Language.JSON, tree);
+        parsedFile = new ParsedFile("test.json", Language.JSON, tree);
         parsedFilePromise = new Promise<ParsedFile>((resolve) => {
             resolve(parsedFile);
         });
@@ -179,7 +179,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
     it("should calculate lines of code for a text file", async () => {
         // given
-        const unsupportedFile = new UnsupportedFile("test.txt", "txt");
+        const unsupportedFile = new UnsupportedFile("test.txt");
         const unsupportedFilePromise = new Promise<UnsupportedFile>((resolve) => {
             resolve(unsupportedFile);
         });
@@ -227,7 +227,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
         tree = parser.parse('{ "a": { "b": "c" } }');
-        parsedFile = new ParsedFile("test.py", "py", Language.Python, tree);
+        parsedFile = new ParsedFile("test.py", Language.Python, tree);
         parsedFilePromise = new Promise<ParsedFile>((resolve) => {
             resolve(parsedFile);
         });

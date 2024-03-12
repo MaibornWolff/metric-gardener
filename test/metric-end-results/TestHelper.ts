@@ -1,7 +1,7 @@
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";
-import { CouplingResult, FileMetric, FileMetricResults, MetricResult } from "../../src/parser/metrics/Metric";
+import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
 
 /**

@@ -4,7 +4,12 @@ import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
 import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
-import { assumeLanguageFromFilePath, FileType, Language, languageToGrammar } from "./helper/Language";
+import {
+    assumeLanguageFromFilePath,
+    FileType,
+    Language,
+    languageToGrammar,
+} from "./helper/Language";
 import Parser from "tree-sitter";
 import {
     SourceFile,

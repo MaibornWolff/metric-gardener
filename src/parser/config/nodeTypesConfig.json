@@ -1543,7 +1543,21 @@
         "metrics": ["comment_lines", "real_lines_of_code"],
         "type": "statement",
         "category": "comment",
-        "languages": ["cs", "go", "js", "php", "ts", "py", "cpp", "tsx", "rb", "sh", "c", "json", "yaml"]
+        "languages": [
+            "cs",
+            "go",
+            "js",
+            "php",
+            "ts",
+            "py",
+            "cpp",
+            "tsx",
+            "rb",
+            "sh",
+            "c",
+            "json",
+            "yaml"
+        ]
     },
     {
         "expression": "discard",
@@ -1557,7 +1571,22 @@
         "metrics": [],
         "type": "statement",
         "category": "",
-        "languages": ["cs", "go", "js", "ts", "py", "cpp", "java", "php", "tsx", "rb", "rs", "c", "json", "yaml"]
+        "languages": [
+            "cs",
+            "go",
+            "js",
+            "ts",
+            "py",
+            "cpp",
+            "java",
+            "php",
+            "tsx",
+            "rb",
+            "rs",
+            "c",
+            "json",
+            "yaml"
+        ]
     },
     {
         "expression": "false",

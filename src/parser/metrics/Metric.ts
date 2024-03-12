@@ -79,14 +79,8 @@ export abstract class SourceFile {
      */
     filePath: string;
 
-    /**
-     * File extension of the file.
-     */
-    fileExtension: string;
-
-    protected constructor(filePath: string, fileExtension: string) {
+    protected constructor(filePath: string) {
         this.filePath = filePath;
-        this.fileExtension = fileExtension;
     }
 }
 
@@ -94,13 +88,13 @@ export abstract class SourceFile {
  * Represents a file written in an unsupported language.
  */
 export class UnsupportedFile extends SourceFile {
-    constructor(filePath: string, fileExtension: string) {
-        super(filePath, fileExtension);
+    constructor(filePath: string) {
+        super(filePath);
     }
 }
 
 /**
- * Represents a supported file to be analyzed for metrics, including its path, file extension, language and parsed syntax tree.
+ * Represents a parsed file written in a supported language that can be analyzed for metrics.
  */
 export class ParsedFile extends SourceFile {
     /**
@@ -113,8 +107,8 @@ export class ParsedFile extends SourceFile {
      */
     tree: Tree;
 
-    constructor(filePath: string, fileExtension: string, language: Language, tree: Tree) {
-        super(filePath, fileExtension);
+    constructor(filePath: string, language: Language, tree: Tree) {
+        super(filePath);
         this.language = language;
         this.tree = tree;
     }

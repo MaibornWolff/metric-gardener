@@ -1,15 +1,33 @@
 #ifndef STRUCTS_18734
 #define STRUCTS_18734
 
+// C-style structs with typedef:
+
 struct example_struct {
     int a;
     int b;
     int c;
 };
 
+typedef struct {
+    int first;
+    char* second;
+} example_typedef_struct;
+
+typedef struct struct_name {
+    char first;
+    char second;
+    char third;
+} typedef_name;
+
+typedef example_struct example_struct_alias;
+typedef int Custom_Number;
+
 struct derived_struct : public example_struct {
-    int d;
+    Custom_Number d;
 };
+
+// C++ class-like struct
 
 struct class_like_struct {
     /**

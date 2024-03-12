@@ -1,35 +1,46 @@
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
-import { Configuration } from "../../src/parser/Configuration";
+import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";
 import { CouplingResult, FileMetric, MetricResult } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
 
 /**
- * Gets a parser configuration for the test cases.
+ * Gets a configuration for test cases.
  * @param sourcesPath Path to the source files.
- * @param parseDependencies Whether to enable parsing dependencies.
- * @param formatFilePaths Whether to format the output file paths to be independent
- * of project location and platform.
- * When this is enabled, do not forget to also format the file path when accessing metric results from the output.
+ * @param customOverrides Partial {@link ConfigurationParams} object for overriding parts of the default test configuration.
+ * @param formatFilePaths Whether to format the output file paths to be independent of project location and platform.
+ * If set to true, it sets the necessary configuration options and may override custom overrides.
+ * When using this option, do not forget to also format the file path when accessing metric results from the output.
  * You should use {@link formatPrintPath} for this, e.g.:
  * <pre><code>
  * results.fileMetrics.get(formatPrintPath(inputPath, config))
  * </code></pre>
+ *
+ * @return A configuration for testing purposes.
  */
-export function getParserConfiguration(
+export function getTestConfiguration(
     sourcesPath: string,
-    parseDependencies = false,
+    customOverrides: Partial<ConfigurationParams> = {},
     formatFilePaths = false,
 ) {
-    return new Configuration(
-        sourcesPath,
-        "invalid/output/path",
-        parseDependencies,
-        "",
-        false,
-        formatFilePaths, // For project location-independent testing
-        formatFilePaths, // For platform-independent testing
-    );
+    let configParams: ConfigurationParams = {
+        sourcesPath: sourcesPath,
+        outputPath: "invalid/output/path",
+        parseDependencies: false,
+        exclusions: "",
+        parseAllHAsC: false,
+        parseSomeHAsC: "",
+        compress: false,
+        relativePaths: false,
+    };
+    configParams = { ...configParams, ...customOverrides };
+
+    if (formatFilePaths) {
+        configParams.relativePaths = true;
+        configParams.enforceBackwardSlash = true;
+    }
+
+    return new Configuration(configParams);
 }
 /**
  * Sorts the contents of the specified {@link CouplingResult} in a deterministic way.
@@ -63,7 +74,7 @@ export async function parseAndTestFileMetric(
     expected: number,
 ) {
     const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getParserConfiguration(realInputPath));
+    const parser = new GenericParser(getTestConfiguration(realInputPath));
     const results = await parser.calculateMetrics();
     expect(results.fileMetrics.get(realInputPath)?.get(metric)?.metricValue).toBe(expected);
 }
@@ -71,11 +82,14 @@ export async function parseAndTestFileMetric(
 /**
  * Calculates all file metrics for all supported files that can be found under the specified input path.
  * @param inputPath Path to the source code files to parse.
+ * @param parseHAsC Whether to parse all .h files as C instead of C++ files.
  * @return Map that maps the absolute file paths to the corresponding map of calculated file metric results.
  */
-export async function parseAllFileMetrics(inputPath: string) {
+export async function parseAllFileMetrics(inputPath: string, parseHAsC = false) {
     const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getParserConfiguration(realInputPath));
+    const parser = new GenericParser(
+        getTestConfiguration(realInputPath, { parseAllHAsC: parseHAsC }),
+    );
     return (await parser.calculateMetrics()).fileMetrics;
 }
 
@@ -104,7 +118,7 @@ export function expectFileMetric(
  */
 export async function getFileMetrics(inputPath: string) {
     const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getParserConfiguration(realInputPath));
+    const parser = new GenericParser(getTestConfiguration(realInputPath));
     return await parser.calculateMetrics();
 }
 
@@ -114,7 +128,9 @@ export async function getFileMetrics(inputPath: string) {
  */
 export async function getCouplingMetrics(inputPath: string) {
     const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getParserConfiguration(realInputPath, true, true));
+    const parser = new GenericParser(
+        getTestConfiguration(realInputPath, { parseDependencies: true }, true),
+    );
 
     const results = await parser.calculateMetrics();
     const couplingResult = results.couplingMetrics;

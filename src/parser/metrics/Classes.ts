@@ -19,6 +19,57 @@ export class Classes implements Metric {
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
         this.addQueriesForJS_TS_TSX();
+        this.addQueriesForCAndCpp();
+    }
+
+    addQueriesForCAndCpp() {
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(struct_specifier body: (field_declaration_list)) @struct_definition",
+                ["cpp", "c"],
+            ),
+        );
+
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(union_specifier body: (field_declaration_list)) @union_definition",
+                ["cpp", "c"],
+            ),
+        );
+
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(class_specifier body: (field_declaration_list)) @class_definition",
+                ["cpp"],
+            ),
+        );
+
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                `(enum_specifier [
+    base: (_)
+    body: (enumerator_list)
+]) @enum_with_body_or_type
+
+(enum_specifier "enum" 
+    [
+        "class"
+        "struct"
+    ]
+    !base
+    !body
+) @scoped_enum_without_body_or_type
+`,
+                ["cpp"],
+            ),
+        );
+
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(enum_specifier body: (enumerator_list)) @enum_definition",
+                ["c"],
+            ),
+        );
     }
 
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {

@@ -1,9 +1,8 @@
 import fs from "fs";
-import { fileExtensionToLanguage, Language, languageToGrammar } from "./Language";
+import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language";
 import Parser from "tree-sitter";
 import { ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
-import { getFileExtension } from "./Helper";
 
 export class TreeParser {
     private static cache: Map<string, SourceFile> = new Map();
@@ -42,12 +41,11 @@ export class TreeParser {
         filePath: string,
         config: Configuration,
     ): ParsedFile | UnsupportedFile {
-        const fileExtension = getFileExtension(filePath);
-        let language = fileExtensionToLanguage.get(fileExtension);
+        let language = assumeLanguageFromFilePath(filePath, config);
 
         if (language === undefined) {
             // Unsupported file language, return
-            const unsupportedFile = new UnsupportedFile(filePath, fileExtension);
+            const unsupportedFile = new UnsupportedFile(filePath);
             TreeParser.cache.set(filePath, unsupportedFile);
             return unsupportedFile;
         }
@@ -74,7 +72,7 @@ export class TreeParser {
             throw new Error("Root node of syntax tree for file " + filePath + " is undefined!");
         }
 
-        const parsedFile = new ParsedFile(filePath, fileExtension, language, tree);
+        const parsedFile = new ParsedFile(filePath, language, tree);
         TreeParser.cache.set(filePath, parsedFile);
 
         return parsedFile;

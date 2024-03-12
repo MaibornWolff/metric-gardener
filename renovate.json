@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:js-app", "packages:eslint", ":semanticCommits"],
+    "extends": ["config:js-app", ":semanticCommits"],
     "packageRules": [
         {
             "matchFileNames": [".github/workflows/*"],
@@ -10,7 +10,12 @@
         {
             "matchFileNames": ["package.json"],
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "excludePackagePatterns": ["^tree-sitter-.*", "^prettier", "^pretty-quick"],
+            "excludePackagePatterns": [
+                "^tree-sitter-.*",
+                "^prettier",
+                "^pretty-quick",
+                ".*eslint.*"
+            ],
             "groupName": "npm dependencies without major updates",
             "enabled": true
         },
@@ -23,6 +28,11 @@
         {
             "matchPackagePatterns": ["^prettier", "^pretty-quick"],
             "groupName": "prettier & pretty-quick dependency updates",
+            "enabled": true
+        },
+        {
+            "matchPackagePatterns": [".*eslint.*"],
+            "groupName": "eslint dependency updates",
             "enabled": true
         }
     ],

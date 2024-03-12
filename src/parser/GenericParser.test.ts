@@ -3,8 +3,8 @@ import { GenericParser } from "./GenericParser";
 import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
-import { getParserConfiguration } from "../../test/metric-end-results/TestHelper";
-import { fileExtensionToLanguage, Language, languageToGrammar } from "./helper/Language";
+import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
+import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
 import {
     SourceFile,
@@ -40,11 +40,9 @@ async function* mockedFindFilesAsyncError() {
 }
 
 async function mockedTreeParserParse(filePath: string, config: Configuration) {
-    const fileExtension = getFileExtension(filePath);
     return Promise.resolve({
-        fileExtension: fileExtension,
         filePath: filePath,
-        language: fileExtensionToLanguage.get(fileExtension),
+        language: assumeLanguageFromFilePath(filePath, config),
         tree: tree,
     });
 }
@@ -132,7 +130,7 @@ describe("GenericParser.calculateMetrics()", () => {
         ]);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
          * when:
@@ -160,7 +158,7 @@ describe("GenericParser.calculateMetrics()", () => {
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
          * when:
@@ -191,7 +189,7 @@ describe("GenericParser.calculateMetrics()", () => {
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
          * when:
@@ -213,7 +211,7 @@ describe("GenericParser.calculateMetrics()", () => {
         expect(treeParserSpied).toHaveBeenCalledTimes(2);
     });
 
-    it("should call CouplingCalculator.calculateMetrics() when requested.", async () => {
+    it("should call CouplingCalculator.calculateMetrics() when parseDependencies is set.", async () => {
         /*
          * Given:
          */
@@ -223,7 +221,9 @@ describe("GenericParser.calculateMetrics()", () => {
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp", true));
+        const parser = new GenericParser(
+            getTestConfiguration("clearly/invalid/path.cpp", { parseDependencies: true }),
+        );
         /*
          * when:
          */
@@ -247,7 +247,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
         /*
          * when:
          */
@@ -276,7 +276,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
          * when:
@@ -301,7 +301,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
             const file = await parsedFilePromise;
-            if (file === null || file.fileExtension !== "cpp") {
+            if (file === null || getFileExtension(file.filePath) !== "cpp") {
                 throw new Error("I only accept cpp files!");
             }
             return [file.filePath, expectedFileMetricsMap];
@@ -309,7 +309,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
          * when:
@@ -337,7 +337,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const errorSpy = spyOnConsoleErrorNoOp();
 
-        const parser = new GenericParser(getParserConfiguration("clearly/invalid/path.cpp"));
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
          * when:

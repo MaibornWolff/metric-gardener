@@ -25,6 +25,17 @@ export function mapAllFunctional<KeyType, ValueType>(
 }
 
 /**
+ * Looks up the passed string key converted to lower case in the passed map. Returns the retrieved value (if any).
+ * @param map Map from which to retrieve the value.
+ * @param key The key to look up after being converted to lower case. The passed object is not modified.
+ * @return the value retrieved from the map, if any.
+ */
+export function lookupLowerCase<V>(map: Map<string, V>, key: string) {
+    const inLowerCase = key.toLowerCase();
+    return map.get(inLowerCase);
+}
+
+/**
  * Maps all elements of the specified iterable using the specified map. Returns an array of all mapped values,
  * skipping elements for which there is no value available in the map.
  * @param iterator Iterable of elements to map.
@@ -73,17 +84,22 @@ export function replaceForwardWithBackwardSlashes(path: string) {
  * Formats the specified file path for being output in the way it is configured for this parser run.
  * @param filePath The file path.
  * @param config The configuration for this parser run.
+ * @param pathModule ONLY FOR TESTING PURPOSES: overrides the platform-specific path module.
  */
-export function formatPrintPath(filePath: string, config: Configuration): string {
+export function formatPrintPath(
+    filePath: string,
+    config: Configuration,
+    pathModule = path,
+): string {
     let result = filePath;
     if (config.relativePaths) {
-        // Returns the file path relative to the specified base directory, or the name of the file,
+        // Return the file path relative to the specified base directory, or the name of the file,
         // if the base path points to this single file.
-        result = path.relative(config.sourcesPath, filePath);
-        if (config.sourcesPath.length == 0) {
+        result = pathModule.relative(config.sourcesPath, filePath);
+        if (result.length === 0) {
             // The path specified by the user points to a single file,
             // so return the name of the file as path to print.
-            config.sourcesPath = path.basename(filePath);
+            result = pathModule.basename(filePath);
         }
     }
     if (config.enforceBackwardSlash) {

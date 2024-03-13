@@ -71,6 +71,7 @@ export class Classes implements Metric {
             ),
         );
     }
+    
     addQueriesForTSAndTSX() {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(

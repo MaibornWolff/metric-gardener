@@ -8,6 +8,8 @@ import {
     isParsedFile,
     ParsedFile,
     FileMetricResults,
+    ErrorFile,
+    isErrorFile,
 } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeParser } from "./helper/TreeParser";
@@ -42,11 +44,12 @@ export class GenericParser {
     async calculateMetrics() {
         const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
+        const errorFiles = new Map<string, Error>();
         let couplingMetrics = {} as CouplingResult;
 
         try {
             const filePathGenerator = findFilesAsync(this.config);
-            const parsePromises = new Map<string, Promise<SourceFile | null>>();
+            const parsePromises = new Map<string, Promise<SourceFile>>();
 
             for await (const filePath of filePathGenerator) {
                 parsePromises.set(
@@ -54,12 +57,12 @@ export class GenericParser {
                     TreeParser.parse(filePath, this.config).catch((reason) => {
                         console.error("Error while parsing a tree for the file " + filePath);
                         console.error(reason);
-                        return null;
+                        return new ErrorFile(filePath, reason);
                     }),
                 );
             }
 
-            const fileMetricPromises: Promise<[string, FileMetricResults]>[] = [];
+            const fileMetricPromises: Promise<[SourceFile, FileMetricResults]>[] = [];
 
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator(this.config);
@@ -69,15 +72,7 @@ export class GenericParser {
                         metricsParser.calculateMetrics(parsePromise).catch((reason) => {
                             console.error("Error while parsing file metrics");
                             console.error(reason);
-                            return [
-                                filePath,
-                                {
-                                    fileType: FileType.Error,
-                                    metricResults: new Map([
-                                        ["ERROR", { metricName: "ERROR", metricValue: -1 }],
-                                    ]),
-                                },
-                            ];
+                            return [new ErrorFile(filePath, reason), {fileType: FileType.Error, metricResults: new Map()}];
                         }),
                     );
                 }
@@ -91,13 +86,15 @@ export class GenericParser {
             for (const file of treeParseResults) {
                 // Do not try to parse the syntax tree of the file for the coupling metrics
                 // if that file is unsupported or if parsing already failed once:
-                if (file !== null) {
+                if (!isErrorFile(file)) {
                     if (isParsedFile(file)) {
                         filesForCouplingMetrics.push(file);
                     } else {
-                        unsupportedFiles.push(file.filePath);
+                        unsupportedFiles.push(formatPrintPath(file.filePath, this.config));
                     }
                 }
+                // Error files are added at the end of the promise chain,
+                // together with errors that occurred at a later stage (in metricsParser.calculateMetrics).
             }
 
             dlog(
@@ -114,17 +111,23 @@ export class GenericParser {
 
             // Await completion of file metric calculations:
             const promisesResults = await Promise.all(fileMetricPromises);
-            for (const [filepath, fileMetricResults] of promisesResults) {
-                fileMetrics.set(filepath, fileMetricResults);
-            }
 
-            for (let i = 0; i < unsupportedFiles.length; i++) {
-                unsupportedFiles[i] = formatPrintPath(unsupportedFiles[i], this.config);
+            for (const [sourceFile, fileMetricResults] of promisesResults) {
+                const printPath = formatPrintPath(sourceFile.filePath, this.config);
+                if (isErrorFile(sourceFile)) {
+                    errorFiles.set(printPath, sourceFile.error);
+                } else {
+                    fileMetrics.set(printPath, fileMetricResults);
+                    if(fileMetricResults.error !== undefined) {
+                        errorFiles.set(printPath, fileMetricResults.error);
+                    }
+                }
             }
 
             return {
                 fileMetrics,
                 unsupportedFiles,
+                errorFiles,
                 couplingMetrics,
             };
         } catch (e) {
@@ -136,6 +139,7 @@ export class GenericParser {
             return {
                 fileMetrics,
                 unsupportedFiles,
+                errorFiles,
                 couplingMetrics,
             };
         }

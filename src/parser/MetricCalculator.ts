@@ -7,16 +7,19 @@ import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { NodeTypeConfig } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import {
+    ErrorFile,
     FileMetricResults,
+    isErrorFile,
     isParsedFile,
     Metric,
     MetricResult,
-    SourceFile,
+    SourceFile
 } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { formatPrintPath } from "./helper/Helper";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
+
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
 import fs from "fs";
 import { FileType } from "./helper/Language";
@@ -57,21 +60,19 @@ export class MetricCalculator {
     /**
      * Calculates file metrics on the specified file.
      * @param parsedFilePromise Promise for a parsed file for which the metric should be calculated.
-     * @return A tuple that contains the path of the file and
+     * @return A tuple that contains the representation of the file and
      * the calculated metrics.
      */
     async calculateMetrics(
-        parsedFilePromise: Promise<SourceFile | null>,
-    ): Promise<[string, FileMetricResults]> {
+        parsedFilePromise: Promise<SourceFile>,
+    ): Promise<[SourceFile, FileMetricResults]> {
         const sourceFile = await parsedFilePromise;
 
-        if (sourceFile === null) {
-            throw new Error(
-                "Unable to calculate file metrics because there was an error while creating the tree.",
-            );
+        if (isErrorFile(sourceFile)) {
+            return [sourceFile, {fileType: sourceFile.fileType, metricResults: new Map()}];
         }
         const metricResults = new Map<string, MetricResult>();
-        const resultPromises: Promise<MetricResult>[] = [];
+        const resultPromises: Promise<MetricResult | null>[] = [];
 
         if (isParsedFile(sourceFile)) {
             dlog(
@@ -90,7 +91,7 @@ export class MetricCalculator {
                     metric.calculate(sourceFile).catch((reason) => {
                         console.error("Error while calculating metric");
                         console.error(reason);
-                        return { metricName: "ERROR", metricValue: -1 };
+                        return null;
                     }),
                 );
             }
@@ -103,13 +104,21 @@ export class MetricCalculator {
         }
 
         const resultsArray = await Promise.all(resultPromises);
+        let errorOccured = false;
         for (const result of resultsArray) {
-            metricResults.set(result.metricName, result);
+            if(result !== null){
+                metricResults.set(result.metricName, result);
+            } else {
+                errorOccured = true;
+            }
         }
 
-        return [
-            formatPrintPath(sourceFile.filePath, this.#config),
-            { fileType: sourceFile.fileType, metricResults },
-        ];
+        if(!errorOccured){
+            return [sourceFile, { fileType: sourceFile.fileType, metricResults }];
+        } else {
+            return [sourceFile,
+                { fileType: sourceFile.fileType, metricResults, error: new Error("Error while calculating metric(s) for file " + sourceFile.filePath) }];
+        }
+
     }
 }

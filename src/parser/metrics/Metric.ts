@@ -20,6 +20,7 @@ export enum FileMetric {
 export interface FileMetricResults {
     fileType: FileType;
     metricResults: Map<string, MetricResult>;
+    error?: Error;
 }
 
 /**
@@ -129,4 +130,20 @@ export class ParsedFile extends SourceFile {
 
 export function isParsedFile(file: SourceFile): file is ParsedFile {
     return (file as ParsedFile).language !== undefined && (file as ParsedFile).tree !== undefined;
+}
+
+export class ErrorFile extends SourceFile {
+    /**
+     * Error that occured while processing the file.
+     */
+    error: Error;
+
+    constructor(filePath: string, error: Error) {
+        super(filePath, FileType.Error);
+        this.error = error;
+    }
+}
+
+export function isErrorFile(file: SourceFile): file is ErrorFile {
+    return (file as ErrorFile).error !== undefined;
 }

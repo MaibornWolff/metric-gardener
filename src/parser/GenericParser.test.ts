@@ -20,6 +20,7 @@ import {
     ParsedFile,
     UnsupportedFile,
     FileMetricResults,
+    isErrorFile,
 } from "./metrics/Metric";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
@@ -48,22 +49,22 @@ async function* mockedFindFilesAsyncError() {
 }
 
 async function mockedTreeParserParse(filePath: string, config: Configuration) {
-    return Promise.resolve({
-        filePath: filePath,
-        language: assumeLanguageFromFilePath(filePath, config),
-        fileType: FileType.SourceCode,
-        tree: tree,
-    });
+    const language = assumeLanguageFromFilePath(filePath, config);
+    if (language !== undefined) {
+        return Promise.resolve(new ParsedFile(filePath, language, tree));
+    } else {
+        return new UnsupportedFile(filePath);
+    }
 }
 
 async function mockedMetricsCalculator(
-    parsedFilePromise: Promise<SourceFile | null>,
-): Promise<[string, FileMetricResults]> {
+    parsedFilePromise: Promise<SourceFile>,
+): Promise<[SourceFile, FileMetricResults]> {
     const file = await parsedFilePromise;
-    if (file !== null) {
-        return [file.filePath, expectedFileMetricsMap];
+    if (isErrorFile(file)) {
+        return [file, {fileType: file.fileType, metricResults: new Map()}];
     }
-    throw new Error("Baaah");
+    return [file, expectedFileMetricsMap];
 }
 
 /*
@@ -104,10 +105,7 @@ const expectedFileMetricsMap: FileMetricResults = {
     ]),
 };
 
-const expectedErrorMetricsMap: FileMetricResults = {
-    fileType: FileType.Error,
-    metricResults: new Map([["ERROR", { metricName: "ERROR", metricValue: -1 }]]),
-};
+const expectedErrorMetricsMap = new Map();
 
 let parser: Parser;
 let tree: Parser.Tree;
@@ -131,10 +129,8 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync();
         const treeParserSpied = mockTreeParserParse();
 
-        const calculateMetricsSpied = spyOnMetricCalculator().mockResolvedValue([
-            "clearly/invalid/path.cpp",
-            expectedFileMetricsMap,
-        ]);
+        const calculateMetricsSpied =
+            spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
         const couplingSpied = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
@@ -262,9 +258,9 @@ describe("GenericParser.calculateMetrics()", () => {
         /*
          * then:
          */
-        // TODO: do no longer include errors into the list of results, use "info" field instead #185
-        expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]]),
+        expect(actualResult.fileMetrics).toEqual(new Map());
+        expect(actualResult.errorFiles).toEqual(
+            new Map([["clearly/invalid/path.cpp", new Error("Baaaaaah")]]),
         );
         expect(errorSpy).toHaveBeenCalled();
     });
@@ -292,9 +288,9 @@ describe("GenericParser.calculateMetrics()", () => {
         /*
          * then:
          */
-        // TODO: do no longer include errors into the list of results, use "info" field instead #185
-        expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedErrorMetricsMap]]),
+        expect(actualResult.fileMetrics).toEqual(new Map());
+        expect(actualResult.errorFiles).toEqual(
+            new Map([["clearly/invalid/path.cpp", new Error("Buuuh!")]]),
         );
         expect(errorSpy).toHaveBeenCalled();
     });
@@ -311,7 +307,7 @@ describe("GenericParser.calculateMetrics()", () => {
             if (file === null || getFileExtension(file.filePath) !== "cpp") {
                 throw new Error("I only accept cpp files!");
             }
-            return [file.filePath, expectedFileMetricsMap];
+            return [file, expectedFileMetricsMap];
         });
 
         const errorSpy = spyOnConsoleErrorNoOp();
@@ -327,10 +323,10 @@ describe("GenericParser.calculateMetrics()", () => {
          */
         // TODO: do no longer include errors into the list of results, use "info" field instead #185
         expect(actualResult.fileMetrics).toEqual(
-            new Map([
-                ["clearly/invalid/path1.cc", expectedErrorMetricsMap],
-                ["clearly/invalid/path2.cpp", expectedFileMetricsMap],
-            ]),
+            new Map([["clearly/invalid/path2.cpp", expectedFileMetricsMap]]),
+        );
+        expect(actualResult.errorFiles).toEqual(
+            new Map([["clearly/invalid/path1.cc", new Error("I only accept cpp files!")]]),
         );
         expect(errorSpy).toHaveBeenCalled();
     });

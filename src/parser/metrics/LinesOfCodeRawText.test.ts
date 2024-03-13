@@ -2,8 +2,6 @@ import { LinesOfCodeRawText } from "./LinesOfCodeRawText";
 import { FileMetric } from "./Metric";
 
 describe("LinesOfCodeRawText.calculate(...)", () => {
-    const unsupportedTestResourcesPath = "./resources/unsupported/";
-
     it("should calculate lines of code correctly for a file with multiple lines", async () => {
         const sourceCode = `Line one is the best line.
 or may it is line two?

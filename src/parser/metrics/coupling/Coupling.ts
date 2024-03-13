@@ -94,7 +94,7 @@ export class Coupling implements CouplingMetric {
         dlog("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
-        const { tree, rootFiles } = this.buildDependencyTree(relationships, couplingMetrics);
+        const tree = this.buildDependencyTree(relationships, couplingMetrics).tree;
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
@@ -188,20 +188,8 @@ export class Coupling implements CouplingMetric {
     private calculateCouplingMetrics(couplingResults: Relationship[]) {
         const couplingValues = new Map<string, CouplingMetrics>();
         for (const couplingItem of couplingResults) {
-            this.updateMetricsForFile(
-                couplingItem.fromSource,
-                couplingItem.fromNamespace,
-                "outgoing",
-                couplingValues,
-                couplingItem,
-            );
-            this.updateMetricsForFile(
-                couplingItem.toSource,
-                couplingItem.toNamespace,
-                "incoming",
-                couplingValues,
-                couplingItem,
-            );
+            this.updateMetricsForFile(couplingItem.fromSource, "outgoing", couplingValues);
+            this.updateMetricsForFile(couplingItem.toSource, "incoming", couplingValues);
         }
 
         dlog("\n\n", couplingValues);
@@ -210,10 +198,8 @@ export class Coupling implements CouplingMetric {
 
     private updateMetricsForFile(
         filePath: string,
-        sourceNamespace: string,
         direction: string,
         couplingValues: Map<string, CouplingMetrics>,
-        couplingItem: Relationship,
     ) {
         let couplingMetrics = couplingValues.get(filePath);
         if (couplingMetrics === undefined) {

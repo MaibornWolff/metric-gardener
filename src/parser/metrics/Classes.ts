@@ -18,7 +18,7 @@ export class Classes implements Metric {
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
-        this.addQueriesForJS_TS_TSX();
+        this.addQueriesForTSAndTSX();
         this.addQueriesForCAndCpp();
     }
 
@@ -71,7 +71,14 @@ export class Classes implements Metric {
             ),
         );
     }
-
+    addQueriesForTSAndTSX() {
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(type_alias_declaration value: (object_type))",
+                ["ts", "tsx"],
+            ),
+        );
+    }
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
@@ -90,14 +97,7 @@ export class Classes implements Metric {
             metricValue: matches.length,
         };
     }
-    addQueriesForJS_TS_TSX() {
-        this.statementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement(
-                "(type_alias_declaration value: (object_type))",
-                ["ts", "tsx"],
-            ),
-        );
-    }
+
     getName(): string {
         return FileMetric.classes;
     }

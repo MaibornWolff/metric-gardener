@@ -41,7 +41,7 @@ describe("TSX metrics tests.", () => {
         it("should count the catch statement, but not the function call catch().", () => {
             testFileMetric(tsxTestResourcesPath + "/catch.tsx", FileMetric.complexity, 6);
         });
-        it("should also count the arrow function in react element.", () => {
+        it("should also count the arrow function in the react element.", () => {
             testFileMetric(
                 tsxTestResourcesPath + "/arrowFunctionReact.tsx",
                 FileMetric.complexity,
@@ -57,7 +57,7 @@ describe("TSX metrics tests.", () => {
         it("should count all multiline, one-line and inline comments.", () => {
             testFileMetric(tsxTestResourcesPath + "/comments.tsx", FileMetric.commentLines, 11);
         });
-        it("should count no comment lines when file is empty.", () => {
+        it("should count no comment lines when the file is empty.", () => {
             testFileMetric(tsxTestResourcesPath + "/empty.tsx", FileMetric.commentLines, 0);
         });
     });
@@ -66,7 +66,7 @@ describe("TSX metrics tests.", () => {
         it("should not count comments and empty lines.", () => {
             testFileMetric(tsxTestResourcesPath + "/comments.tsx", FileMetric.realLinesOfCode, 16);
         });
-        it("should count no real lines of code when file is empty.", () => {
+        it("should count no real lines of code when the file is empty.", () => {
             testFileMetric(tsxTestResourcesPath + "/empty.tsx", FileMetric.realLinesOfCode, 0);
         });
     });
@@ -75,7 +75,7 @@ describe("TSX metrics tests.", () => {
         it("should count all lines in file.", () => {
             testFileMetric(tsxTestResourcesPath + "/comments.tsx", FileMetric.linesOfCode, 25);
         });
-        it("should count 1 line of code when file is empty.", () => {
+        it("should count 1 line of code when the file is empty.", () => {
             testFileMetric(tsxTestResourcesPath + "/empty.tsx", FileMetric.linesOfCode, 1);
         });
     });

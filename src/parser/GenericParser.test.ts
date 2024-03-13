@@ -3,7 +3,10 @@ import { GenericParser } from "./GenericParser";
 import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
-import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
+import {
+    getTestConfiguration,
+    spyOnConsoleErrorNoOp,
+} from "../../test/metric-end-results/TestHelper";
 import {
     assumeLanguageFromFilePath,
     FileType,
@@ -90,12 +93,6 @@ function spyOnCouplingCalculatorNoOp() {
     return jest
         .spyOn(CouplingCalculator.prototype, "calculateMetrics")
         .mockReturnValue({ relationships: [], metrics: new Map() });
-}
-
-function spyOnConsoleErrorNoOp() {
-    return jest.spyOn(console, "error").mockImplementation(() => {
-        /* Do nothing */
-    });
 }
 
 /*

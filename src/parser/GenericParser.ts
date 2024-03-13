@@ -65,14 +65,20 @@ export class GenericParser {
             const fileMetricPromises: Promise<[SourceFile, FileMetricResults]>[] = [];
 
             if (this.config.parseMetrics) {
-                const metricsParser = new MetricCalculator(this.config);
+                const metricsParser = new MetricCalculator();
 
                 for (const [filePath, parsePromise] of parsePromises) {
                     fileMetricPromises.push(
                         metricsParser.calculateMetrics(parsePromise).catch((reason) => {
                             console.error("Error while parsing file metrics");
                             console.error(reason);
-                            return [new ErrorFile(filePath, reason), {fileType: FileType.Error, metricResults: new Map()}];
+                            return [
+                                new ErrorFile(filePath, reason),
+                                {
+                                    fileType: FileType.Error,
+                                    metricResults: new Map(),
+                                },
+                            ];
                         }),
                     );
                 }
@@ -86,21 +92,16 @@ export class GenericParser {
             for (const file of treeParseResults) {
                 // Do not try to parse the syntax tree of the file for the coupling metrics
                 // if that file is unsupported or if parsing already failed once:
-                if (!isErrorFile(file)) {
-                    if (isParsedFile(file)) {
-                        filesForCouplingMetrics.push(file);
-                    } else {
-                        unsupportedFiles.push(formatPrintPath(file.filePath, this.config));
-                    }
+                if (isParsedFile(file)) {
+                    filesForCouplingMetrics.push(file);
+                } else if (!isErrorFile(file)) {
+                    unsupportedFiles.push(formatPrintPath(file.filePath, this.config));
                 }
                 // Error files are added at the end of the promise chain,
                 // together with errors that occurred at a later stage (in metricsParser.calculateMetrics).
             }
 
-            dlog(
-                " --- " + (treeParseResults.length + unsupportedFiles.length) + " files detected",
-                "\n\n",
-            );
+            dlog(" --- " + treeParseResults.length + " files detected", "\n\n");
 
             if (this.config.parseDependencies) {
                 const couplingParser = new CouplingCalculator(this.config);
@@ -115,10 +116,12 @@ export class GenericParser {
             for (const [sourceFile, fileMetricResults] of promisesResults) {
                 const printPath = formatPrintPath(sourceFile.filePath, this.config);
                 if (isErrorFile(sourceFile)) {
+                    // Error while parsing the syntax tree
                     errorFiles.set(printPath, sourceFile.error);
                 } else {
                     fileMetrics.set(printPath, fileMetricResults);
-                    if(fileMetricResults.error !== undefined) {
+                    if (fileMetricResults.error !== undefined) {
+                        // Error while calculating (some) metrics on the syntax tree
                         errorFiles.set(printPath, fileMetricResults.error);
                     }
                 }

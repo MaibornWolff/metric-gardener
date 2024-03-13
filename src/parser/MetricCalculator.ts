@@ -5,19 +5,16 @@ import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { NodeTypeConfig } from "./helper/Model";
-import { Configuration } from "./Configuration";
 import {
-    ErrorFile,
     FileMetricResults,
     isErrorFile,
     isParsedFile,
     Metric,
     MetricResult,
-    SourceFile
+    SourceFile,
 } from "./metrics/Metric";
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { formatPrintPath } from "./helper/Helper";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
 
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
@@ -34,16 +31,14 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class MetricCalculator {
     readonly #sourceFileMetrics: Metric[] = [];
     readonly #structuredTextFileMetrics: Metric[] = [];
-    readonly #config: Configuration;
 
     /**
      * Constructs a new instance of {@link MetricCalculator} for arranging the calculation of all
      * basic single file metrics on multiple files.
-     * @param configuration Configuration that should be applied for this new instance.
      */
-    constructor(configuration: Configuration) {
-        this.#config = configuration;
-        const allNodeTypes: NodeTypeConfig[] = nodeTypesConfig as NodeTypeConfig[];
+    constructor() {
+        const allNodeTypes: NodeTypeConfig[] =
+            nodeTypesConfig as NodeTypeConfig[];
 
         this.#sourceFileMetrics = [
             new Complexity(allNodeTypes),
@@ -69,7 +64,7 @@ export class MetricCalculator {
         const sourceFile = await parsedFilePromise;
 
         if (isErrorFile(sourceFile)) {
-            return [sourceFile, {fileType: sourceFile.fileType, metricResults: new Map()}];
+            return [sourceFile, { fileType: sourceFile.fileType, metricResults: new Map() }];
         }
         const metricResults = new Map<string, MetricResult>();
         const resultPromises: Promise<MetricResult | null>[] = [];
@@ -106,19 +101,26 @@ export class MetricCalculator {
         const resultsArray = await Promise.all(resultPromises);
         let errorOccured = false;
         for (const result of resultsArray) {
-            if(result !== null){
+            if (result !== null) {
                 metricResults.set(result.metricName, result);
             } else {
                 errorOccured = true;
             }
         }
 
-        if(!errorOccured){
+        if (!errorOccured) {
             return [sourceFile, { fileType: sourceFile.fileType, metricResults }];
         } else {
-            return [sourceFile,
-                { fileType: sourceFile.fileType, metricResults, error: new Error("Error while calculating metric(s) for file " + sourceFile.filePath) }];
+            return [
+                sourceFile,
+                {
+                    fileType: sourceFile.fileType,
+                    metricResults,
+                    error: new Error(
+                        "Error while calculating metric(s) for file " + sourceFile.filePath,
+                    ),
+                },
+            ];
         }
-
     }
 }

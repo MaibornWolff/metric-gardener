@@ -134,7 +134,7 @@ export function isParsedFile(file: SourceFile): file is ParsedFile {
 
 export class ErrorFile extends SourceFile {
     /**
-     * Error that occured while processing the file.
+     * Error that occurred while processing the file.
      */
     error: Error;
 

@@ -8,7 +8,7 @@ export class NamespaceCollector {
     private cache = new Map<Language, Map<string, Map<string, FullyQTN>>>();
 
     getNamespaces(parsedFile: ParsedFile): Map<string, FullyQTN> {
-        const { filePath, language, tree } = parsedFile;
+        const { filePath, language } = parsedFile;
         let namespacesByLanguage = this.cache.get(language);
         if (namespacesByLanguage === undefined) {
             this.cache.set(parsedFile.language, new Map());

@@ -14,7 +14,7 @@ import { ExpressionQueryStatement } from "../queries/QueryStatements";
 export function mapAllFunctional<KeyType, ValueType>(
     iterator: Iterable<KeyType>,
     map: Map<KeyType, ValueType>,
-    insertFunction: (v: ValueType) => any,
+    insertFunction: (v: ValueType) => void,
 ) {
     for (const key of iterator) {
         const mapResult = map.get(key);

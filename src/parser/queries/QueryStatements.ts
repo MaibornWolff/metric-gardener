@@ -20,11 +20,11 @@ export class SimpleQueryStatement implements QueryStatementInterface {
         this.#query = query;
     }
 
-    activatedFor(language: Language): boolean {
+    activatedFor(_language: Language): boolean {
         return true;
     }
 
-    applicableFor(language: Language): boolean {
+    applicableFor(_language: Language): boolean {
         return true;
     }
 

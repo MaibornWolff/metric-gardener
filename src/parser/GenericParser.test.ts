@@ -71,9 +71,7 @@ async function mockedMetricsCalculator(
  */
 
 function mockFindFilesAsync(mockedFunction: () => AsyncGenerator<string> = mockedFindFilesAsync) {
-    return jest.spyOn(HelperModule, "findFilesAsync").mockImplementation((config) => {
-        return mockedFunction();
-    });
+    return jest.spyOn(HelperModule, "findFilesAsync").mockImplementation(mockedFunction);
 }
 
 function mockTreeParserParse(
@@ -236,7 +234,7 @@ describe("GenericParser.calculateMetrics()", () => {
         /*
          * when:
          */
-        const actualResult = await parser.calculateMetrics();
+        await parser.calculateMetrics();
         /*
          * then:
          */
@@ -250,7 +248,7 @@ describe("GenericParser.calculateMetrics()", () => {
          * Given:
          */
         mockFindFilesAsync();
-        mockTreeParserParse(async (file, assumedLanguage) => {
+        mockTreeParserParse(async () => {
             throw new Error("Baaaaaah");
         });
 

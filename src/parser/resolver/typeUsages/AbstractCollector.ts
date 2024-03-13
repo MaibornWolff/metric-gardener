@@ -50,20 +50,14 @@ export abstract class AbstractCollector {
 
     private importsBySuffixOrAlias = new Map<string, Map<string, ImportReference>>();
 
-    private processedPublicAccessors = new Set<string>();
-
     getUsageCandidates(parsedFile: ParsedFile, namespaceCollector: NamespaceCollector) {
-        const { filePath, language, tree } = parsedFile;
+        const filePath = parsedFile.filePath;
         this.importsBySuffixOrAlias.set(filePath, new Map());
 
-        let importReferences: ImportReference[] = this.getImports(parsedFile, namespaceCollector);
+        let importReferences: ImportReference[] = this.getImports(parsedFile);
         if (this.getGroupedImportsQuery().length > 0) {
-            importReferences = importReferences.concat(
-                this.getGroupedImports(parsedFile, namespaceCollector),
-            );
+            importReferences = importReferences.concat(this.getGroupedImports(parsedFile));
         }
-
-        this.processedPublicAccessors = new Set();
 
         dlog("Alias Map:", filePath, this.importsBySuffixOrAlias);
         dlog("Import References", filePath, importReferences);
@@ -81,10 +75,7 @@ export abstract class AbstractCollector {
         };
     }
 
-    private getImports(
-        parsedFile: ParsedFile,
-        namespaceCollector: NamespaceCollector,
-    ): ImportReference[] {
+    private getImports(parsedFile: ParsedFile): ImportReference[] {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);
@@ -148,7 +139,7 @@ export abstract class AbstractCollector {
         return importsOfFile;
     }
 
-    private getGroupedImports(parsedFile: ParsedFile, namespaceCollector: NamespaceCollector) {
+    private getGroupedImports(parsedFile: ParsedFile) {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);

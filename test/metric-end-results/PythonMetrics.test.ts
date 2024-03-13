@@ -98,7 +98,7 @@ describe("Python metrics test", () => {
             testFileMetric(pythonTestResourcesPath + "empty.py", FileMetric.linesOfCode, 1);
         });
 
-        it("should count number of lines correctly for an file with one non-empty line", () => {
+        it("should count number of lines correctly for a file with one non-empty line", () => {
             testFileMetric(pythonTestResourcesPath + "one-line.py", FileMetric.linesOfCode, 1);
         });
 

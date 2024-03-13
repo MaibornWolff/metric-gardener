@@ -71,7 +71,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         });
     });
 
-    it("should calculate nothing if node type is does not contain language", async () => {
+    it("should calculate nothing if the language does not contain a nesting node", async () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
         tree = parser.parse('{ "a": { "b": "c" } }');

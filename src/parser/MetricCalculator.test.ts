@@ -102,7 +102,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     it("should calculate all metrics of type source code for a python file", async () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
-        tree = parser.parse('{ "a": { "b": "c" } }');
+        tree = parser.parse("sum(range(4))");
         parsedFile = new ParsedFile("test.py", Language.Python, tree);
         parsedFilePromise = new Promise<ParsedFile>((resolve) => {
             resolve(parsedFile);
@@ -211,22 +211,18 @@ describe("MetricCalculator.calculateMetrics()", () => {
             resolve(null);
         });
 
-        try {
-            // when
-            await metricCalculator.calculateMetrics(parsedFilePromise);
-            fail();
-        } catch (e) {
-            // then
-            expect(e.message).toEqual(
+        // then
+        await expect(metricCalculator.calculateMetrics(parsedFilePromise)).rejects.toThrow(
+            new Error(
                 "Unable to calculate file metrics because there was an error while creating the tree.",
-            );
-        }
+            ),
+        );
     });
 
-    it("result should contain error object when an error is thrown while calculating any metric on a source file", async () => {
+    it("should include an error object in the result when an error is thrown while calculating any metric on a source file", async () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
-        tree = parser.parse('{ "a": { "b": "c" } }');
+        tree = parser.parse("sum(range(4))");
         parsedFile = new ParsedFile("test.py", Language.Python, tree);
         parsedFilePromise = new Promise<ParsedFile>((resolve) => {
             resolve(parsedFile);

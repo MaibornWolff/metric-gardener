@@ -82,7 +82,7 @@ export class MetricCalculator {
             );
 
             const metricsToCalculate =
-                sourceFile.fileType == FileType.SourceCode
+                sourceFile.fileType === FileType.SourceCode
                     ? this.#sourceFileMetrics
                     : this.#structuredTextFileMetrics;
 

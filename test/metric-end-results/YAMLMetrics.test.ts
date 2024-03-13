@@ -23,7 +23,15 @@ describe("YAML metrics tests", () => {
         });
 
         it("should correctly calculate nesting level of a yaml file with only one line", () => {
-            testFileMetric(yamlTestResourcesPath + "oneline.yaml", FileMetric.maxNestingLevel, 0);
+            testFileMetric(yamlTestResourcesPath + "one-line.yaml", FileMetric.maxNestingLevel, 0);
+        });
+
+        it("should correctly calculate nesting level of a yaml file with only one non-empty line", () => {
+            testFileMetric(yamlTestResourcesPath + "one-line.yaml", FileMetric.maxNestingLevel, 0);
+        });
+
+        it("should correctly calculate nesting level of an empty yaml file", () => {
+            testFileMetric(yamlTestResourcesPath + "empty.yml", FileMetric.maxNestingLevel, 0);
         });
     });
 });

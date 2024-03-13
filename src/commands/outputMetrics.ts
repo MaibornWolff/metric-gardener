@@ -30,6 +30,7 @@ interface OutputRelationship {
  * Writes the passed metrics into a json file.
  * @param fileMetrics Metrics calculated on single files.
  * @param unsupportedFiles List of files that cannot be analyzed.
+ * @param errorFiles List of files that caused an error while being analyzed.
  * @param relationshipMetrics Relationship metrics.
  * @param outputFilePath Path to write the file to
  * @param compress Whether the file should be compressed
@@ -37,11 +38,17 @@ interface OutputRelationship {
 export function outputAsJson(
     fileMetrics: Map<string, FileMetricResults>,
     unsupportedFiles: string[],
+    errorFiles: Map<string, Error>,
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean,
 ) {
-    const output = buildOutputObject(fileMetrics, unsupportedFiles, relationshipMetrics);
+    const output = buildOutputObject(
+        fileMetrics,
+        unsupportedFiles,
+        errorFiles,
+        relationshipMetrics,
+    );
     const outputString = JSON.stringify(output).toString();
 
     if (compress) {
@@ -59,6 +66,7 @@ export function outputAsJson(
 function buildOutputObject(
     fileMetrics: Map<string, FileMetricResults>,
     unknownFiles: string[],
+    errorFiles: Map<string, Error>,
     relationshipMetrics: CouplingResult,
 ) {
     const output: {
@@ -95,6 +103,16 @@ function buildOutputObject(
             name: filePath,
             type: FileType.Unsupported,
             message: "Unknown language or file extension",
+        };
+
+        output.info.push(outputNode);
+    }
+
+    for (const [filePath, error] of errorFiles) {
+        const outputNode: OutputInfoNode = {
+            name: filePath,
+            type: FileType.Error,
+            message: error.message,
         };
 
         output.info.push(outputNode);

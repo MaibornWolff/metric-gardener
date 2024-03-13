@@ -124,7 +124,7 @@ export const enum FileType {
     SourceCode = "source_code",
     StructuredText = "structured_text",
     Unsupported = "unsupported_file",
-    Error = "ERROR",
+    Error = "error_file",
 }
 
 /**

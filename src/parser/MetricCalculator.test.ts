@@ -1,10 +1,7 @@
 import { jest } from "@jest/globals";
 import { MetricCalculator } from "./MetricCalculator";
-import {
-    getTestConfiguration,
-    spyOnConsoleErrorNoOp,
-} from "../../test/metric-end-results/TestHelper";
-import { FileMetric, ParsedFile, UnsupportedFile } from "./metrics/Metric";
+import { getTestConfiguration, spyOnConsoleErrorNoOp } from "../../test/metric-end-results/TestHelper";
+import { ErrorFile, FileMetric, FileMetricResults, ParsedFile, SourceFile, UnsupportedFile } from "./metrics/Metric";
 import { FileType, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
 import { Classes } from "./metrics/Classes";
@@ -88,7 +85,7 @@ function initiateErrorSpies() {
 describe("MetricCalculator.calculateMetrics()", () => {
     let metricCalculator: MetricCalculator;
     let parsedFile: ParsedFile;
-    let parsedFilePromise: Promise<ParsedFile | null>;
+    let parsedFilePromise: Promise<SourceFile>;
     let parser: Parser;
     let tree: Parser.Tree;
 
@@ -115,11 +112,11 @@ describe("MetricCalculator.calculateMetrics()", () => {
         initiateSpies();
 
         // when
-        const [filepath, fileMetricResults] =
+        const [sourceFile, fileMetricResults] =
             await metricCalculator.calculateMetrics(parsedFilePromise);
 
         // then
-        expect(filepath).toEqual("test.py");
+        expect(sourceFile).toEqual(parsedFile);
         expect(fileMetricResults.fileType).toEqual(FileType.SourceCode);
         expect(fileMetricResults.metricResults.get("classes")).toEqual({
             metricName: FileMetric.classes,
@@ -160,11 +157,11 @@ describe("MetricCalculator.calculateMetrics()", () => {
         initiateSpies();
 
         // when
-        const [filepath, fileMetricResults] =
+        const [sourceFile, fileMetricResults] =
             await metricCalculator.calculateMetrics(parsedFilePromise);
 
         // then
-        expect(filepath).toEqual("test.json");
+        expect(sourceFile).toEqual(parsedFile);
         expect(fileMetricResults.fileType).toEqual(FileType.StructuredText);
         expect(fileMetricResults.metricResults.has("classes")).toEqual(false);
         expect(fileMetricResults.metricResults.has("comment_lines")).toEqual(false);
@@ -191,11 +188,11 @@ describe("MetricCalculator.calculateMetrics()", () => {
         initiateSpies();
 
         // when
-        const [filepath, fileMetricResults] =
+        const [sourceFile, fileMetricResults] =
             await metricCalculator.calculateMetrics(unsupportedFilePromise);
 
         // then
-        expect(filepath).toEqual("test.txt");
+        expect(sourceFile).toEqual(unsupportedFile);
         expect(fileMetricResults.fileType).toEqual(FileType.Unsupported);
         expect(fileMetricResults.metricResults.has("classes")).toEqual(false);
         expect(fileMetricResults.metricResults.has("comment_lines")).toEqual(false);
@@ -209,18 +206,22 @@ describe("MetricCalculator.calculateMetrics()", () => {
         expect(fileMetricResults.metricResults.has("max_nesting_level")).toEqual(false);
     });
 
-    it("should throw an error when source file is null", async () => {
+    it("should return an empty map of metrics when the source file is an error file", async () => {
         // given
-        parsedFilePromise = new Promise<ParsedFile | null>((resolve) => {
-            resolve(null);
+        const errorFile = new ErrorFile("/path/to/error/causing/file.js",
+            new Error("Root node of syntax tree for file /path/to/error/causing/file.js is undefined!"));
+
+        parsedFilePromise = new Promise<SourceFile>((resolve) => {
+            resolve(errorFile);
         });
 
+        // when
+        const result = await metricCalculator.calculateMetrics(parsedFilePromise);
+
         // then
-        await expect(metricCalculator.calculateMetrics(parsedFilePromise)).rejects.toThrow(
-            new Error(
-                "Unable to calculate file metrics because there was an error while creating the tree.",
-            ),
-        );
+        const expectedResult: [SourceFile, FileMetricResults] = [errorFile, {fileType: FileType.Error, metricResults: new Map()}];
+        expect(result).toEqual(expectedResult);
+
     });
 
     it("should include an error object in the result when an error is thrown while calculating any metric on a source file", async () => {
@@ -235,15 +236,12 @@ describe("MetricCalculator.calculateMetrics()", () => {
         initiateErrorSpies();
 
         // when
-        const [filepath, fileMetricResults] =
+        const [sourceFile, fileMetricResults] =
             await metricCalculator.calculateMetrics(parsedFilePromise);
 
         // then
-        expect(filepath).toEqual("test.py");
+        expect(sourceFile).toEqual(parsedFile);
         expect(fileMetricResults.fileType).toEqual(FileType.SourceCode);
-        expect(fileMetricResults.metricResults.get("ERROR")).toEqual({
-            metricName: "ERROR",
-            metricValue: -1,
-        });
+        expect(fileMetricResults.error).toEqual(new Error("Error while calculating metric(s) for file " + sourceFile.filePath));
     });
 });

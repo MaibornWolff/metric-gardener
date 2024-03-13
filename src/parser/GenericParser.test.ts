@@ -62,7 +62,7 @@ async function mockedMetricsCalculator(
 ): Promise<[SourceFile, FileMetricResults]> {
     const file = await parsedFilePromise;
     if (isErrorFile(file)) {
-        return [file, {fileType: file.fileType, metricResults: new Map()}];
+        return [file, { fileType: file.fileType, metricResults: new Map() }];
     }
     return [file, expectedFileMetricsMap];
 }
@@ -104,8 +104,6 @@ const expectedFileMetricsMap: FileMetricResults = {
         [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
     ]),
 };
-
-const expectedErrorMetricsMap = new Map();
 
 let parser: Parser;
 let tree: Parser.Tree;
@@ -304,7 +302,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
             const file = await parsedFilePromise;
-            if (file === null || getFileExtension(file.filePath) !== "cpp") {
+            if (getFileExtension(file.filePath) !== "cpp") {
                 throw new Error("I only accept cpp files!");
             }
             return [file, expectedFileMetricsMap];
@@ -321,7 +319,6 @@ describe("GenericParser.calculateMetrics()", () => {
         /*
          * then:
          */
-        // TODO: do no longer include errors into the list of results, use "info" field instead #185
         expect(actualResult.fileMetrics).toEqual(
             new Map([["clearly/invalid/path2.cpp", expectedFileMetricsMap]]),
         );

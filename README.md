@@ -91,7 +91,7 @@ The number of comment lines inside a file. Does count for any kind of comment (e
 The number of lines inside a file that contain actual code of the programming language, not counting for comments, empty lines, etc.
 
 **max_nesting_level**<br>
-The maximum nesting level of data serialization languages like JSON and YAML.
+The maximum nesting level of structured text files, like JSON and YAML.
 
 ### Command line options for the `parse` command
 

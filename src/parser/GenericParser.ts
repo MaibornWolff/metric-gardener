@@ -86,22 +86,13 @@ export class GenericParser {
 
             // We need to ensure that all trees have been parsed before calculating the coupling metrics,
             // as we need to know the language of the file for that:
-            const filesForCouplingMetrics: ParsedFile[] = [];
             const treeParseResults = await Promise.all(parsePromises.values());
 
-            for (const file of treeParseResults) {
-                // Do not try to parse the syntax tree of the file for the coupling metrics
-                // if that file is unsupported or if parsing already failed once:
-                if (isParsedFile(file)) {
-                    filesForCouplingMetrics.push(file);
-                } else if (!isErrorFile(file)) {
-                    unsupportedFiles.push(formatPrintPath(file.filePath, this.config));
-                }
-                // Error files are added at the end of the promise chain,
-                // together with errors that occurred at a later stage (in metricsParser.calculateMetrics).
-            }
-
             dlog(" --- " + treeParseResults.length + " files detected", "\n\n");
+
+            // Do only include files for calculating the coupling metrics
+            // that are supported and have been parsed successfully:
+            const filesForCouplingMetrics: ParsedFile[] = treeParseResults.filter(isParsedFile);
 
             if (this.config.parseDependencies) {
                 const couplingParser = new CouplingCalculator(this.config);
@@ -123,6 +114,9 @@ export class GenericParser {
                     if (fileMetricResults.error !== undefined) {
                         // Error while calculating (some) metrics on the syntax tree
                         errorFiles.set(printPath, fileMetricResults.error);
+                    }
+                    if (!isParsedFile(sourceFile)) {
+                        unsupportedFiles.push(formatPrintPath(sourceFile.filePath, this.config));
                     }
                 }
             }

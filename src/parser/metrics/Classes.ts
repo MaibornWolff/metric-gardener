@@ -1,6 +1,5 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { ExpressionMetricMapping } from "../helper/Model";
-import { getQueryStatements } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
@@ -8,6 +7,7 @@ import {
     QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/QueryStatements";
+import { getQueryStatements } from "../helper/Helper";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -18,7 +18,7 @@ export class Classes implements Metric {
 
     constructor(allNodeTypes: ExpressionMetricMapping[]) {
         this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
-
+        this.addQueriesForTSAndTSX();
         this.addQueriesForCAndCpp();
     }
 
@@ -72,6 +72,14 @@ export class Classes implements Metric {
         );
     }
 
+    addQueriesForTSAndTSX() {
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(type_alias_declaration value: (object_type))",
+                ["ts", "tsx"],
+            ),
+        );
+    }
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);

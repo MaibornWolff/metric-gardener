@@ -1,6 +1,9 @@
 import { jest } from "@jest/globals";
 import { MetricCalculator } from "./MetricCalculator";
-import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
+import {
+    getTestConfiguration,
+    spyOnConsoleErrorNoOp,
+} from "../../test/metric-end-results/TestHelper";
 import { FileMetric, ParsedFile, UnsupportedFile } from "./metrics/Metric";
 import { FileType, Language, languageToGrammar } from "./helper/Language";
 import Parser from "tree-sitter";
@@ -97,6 +100,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     beforeEach(() => {
         // Clear all mock implementations, reset them to original implementation:
         jest.restoreAllMocks();
+        spyOnConsoleErrorNoOp();
     });
 
     it("should calculate all metrics of type source code for a python file", async () => {

@@ -3,6 +3,7 @@ import { GenericParser } from "../../src/parser/GenericParser";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";
 import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
+import { jest } from "@jest/globals";
 
 /**
  * Gets a configuration for test cases.
@@ -42,6 +43,13 @@ export function getTestConfiguration(
 
     return new Configuration(configParams);
 }
+
+export function spyOnConsoleErrorNoOp() {
+    return jest.spyOn(console, "error").mockImplementation(() => {
+        /* Do nothing */
+    });
+}
+
 /**
  * Sorts the contents of the specified {@link CouplingResult} in a deterministic way.
  * This is necessary as there can be deviations concerning the order

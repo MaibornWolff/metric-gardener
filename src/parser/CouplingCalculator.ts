@@ -1,5 +1,5 @@
 import fs from "fs";
-import { ExpressionMetricMapping } from "./helper/Model";
+import { NodeTypeConfig } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import { Coupling } from "./metrics/coupling/Coupling";
 import { NamespaceCollector } from "./resolver/NamespaceCollector";
@@ -26,7 +26,7 @@ export class CouplingCalculator {
         const nodeTypesJson = fs
             .readFileSync(fs.realpathSync("./src/parser/config/nodeTypesConfig.json"))
             .toString();
-        const allNodeTypes: ExpressionMetricMapping[] = JSON.parse(nodeTypesJson);
+        const allNodeTypes: NodeTypeConfig[] = JSON.parse(nodeTypesJson);
 
         this.namespaceCollector = new NamespaceCollector();
         this.publicAccessorCollector = new PublicAccessorCollector();

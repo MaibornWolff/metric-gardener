@@ -1,4 +1,5 @@
 import { Language, languageToAbbreviation } from "../helper/Language";
+import { NodeTypeConfig } from "../helper/Model";
 
 export interface QueryStatementInterface {
     activatedFor(language: Language): boolean;
@@ -60,40 +61,53 @@ export abstract class LanguageSpecificQueryStatement implements QueryStatementIn
     abstract toString(): string;
 }
 
-export class ExpressionQueryStatement extends LanguageSpecificQueryStatement {
-    readonly #expression: string;
+export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
+    protected readonly nodeTypeName: string;
 
     constructor(
-        expression: string,
-        applicable_for_languages: string[],
-        activated_for_languages?: string[],
+        nodeType: NodeTypeConfig,
+        applicable_for_languages: string[] = nodeType.languages,
+        activated_for_languages: string[] | undefined = nodeType.activated_for_languages,
     ) {
+        const { type_name, grammar_type_name } = nodeType;
         super(applicable_for_languages, activated_for_languages);
-        this.#expression = expression;
+
+        if (grammar_type_name === undefined) {
+            this.nodeTypeName = type_name;
+        } else {
+            this.nodeTypeName = grammar_type_name;
+        }
     }
 
     override toString(): string {
-        return "(" + this.#expression + ") @" + this.#expression;
+        return "(" + this.nodeTypeName + ") @" + this.nodeTypeName;
     }
 }
 
-export class OperatorQueryStatement extends LanguageSpecificQueryStatement {
-    readonly #category: string;
+export class OperatorQueryStatement extends NodeTypeQueryStatement {
     readonly #operator: string;
 
     constructor(
-        category: string,
-        operator: string,
-        applicableForLanguages: string[],
-        activatedForLanguages?: string[],
+        nodeType: NodeTypeConfig,
+        applicable_for_languages: string[] = nodeType.languages,
+        activated_for_languages: string[] | undefined = nodeType.activated_for_languages,
     ) {
-        super(applicableForLanguages, activatedForLanguages);
-        this.#category = category;
-        this.#operator = operator;
+        if (nodeType.operator === undefined) {
+            throw new Error(
+                "Tried to create a OperatorQueryStatement for the node type " +
+                    nodeType.type_name +
+                    " that has no operator.",
+            );
+        }
+
+        super(nodeType, applicable_for_languages, activated_for_languages);
+        this.#operator = nodeType.operator;
     }
 
     override toString(): string {
-        return "(" + this.#category + ' operator: "' + this.#operator + '") @operator_expression';
+        return (
+            "(" + this.nodeTypeName + ' operator: "' + this.#operator + '") @operator_expression'
+        );
     }
 }
 

@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { ExpressionMetricMapping } from "../helper/Model";
-import { getQueryStatements } from "../helper/Helper";
+import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
+import { getQueryStatementsByCategory } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
@@ -14,8 +14,11 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class Functions implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
+    constructor(allNodeTypes: NodeTypeConfig[]) {
+        this.statementsSuperSet = getQueryStatementsByCategory(
+            allNodeTypes,
+            NodeTypeCategory.Function,
+        );
     }
 
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {

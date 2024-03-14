@@ -1,4 +1,4 @@
-import { ExpressionMetricMapping } from "../../parser/helper/Model";
+import { NodeTypeConfig } from "../../parser/helper/Model";
 import fs from "fs";
 import { EOL } from "os";
 
@@ -45,25 +45,29 @@ export class NodeTypesChangelog {
     }
 
     /**
-     * Logs that an expression was added to a language.
-     * Expected to be called directly before the change is applied to the expression mapping in order
+     * Logs that a node type was added to a language.
+     * Expected to be called directly before the change is applied to the node type config in order
      * to correctly track the difference to the old status of the mapping.
-     * @param expression The expression, in the state before the change is applied.
+     * @param nodeTypeConfig The node type configuration, in the state before the change is applied.
      * @param languageAbbr Abbreviation of the language.
      */
-    addedNodeToLanguage(expression: ExpressionMetricMapping, languageAbbr: string) {
-        // There is no changelog entry for this expression yet, so create it.
-        if (!this.changelog.has(expression.expression)) {
+    addedNodeToLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string) {
+        // There is no changelog entry for this node type yet, so create it.
+        if (!this.changelog.has(nodeTypeConfig.type_name)) {
             this.changelog.set(
-                expression.expression,
-                new NodeTypesChangelogEntry(expression.expression, false, expression.languages),
+                nodeTypeConfig.type_name,
+                new NodeTypesChangelogEntry(
+                    nodeTypeConfig.type_name,
+                    false,
+                    nodeTypeConfig.languages,
+                ),
             );
         }
-        this.changelog.get(expression.expression)?.addedToLanguage(languageAbbr);
+        this.changelog.get(nodeTypeConfig.type_name)?.addedToLanguage(languageAbbr);
     }
 
     /**
-     * Logs that a totally new node type/expression was added to a language.
+     * Logs that a totally new node type was added to a language.
      * @param nodeTypeName Name of the node type.
      * @param languageAbbr Abbreviation of the language to which this node was added.
      */
@@ -74,20 +78,24 @@ export class NodeTypesChangelog {
     }
 
     /**
-     * Logs that an expression was removed from a language.
-     * Expected to be called directly before the change is applied to the expression mapping in order
+     * Logs that a node type was removed from a language.
+     * Expected to be called directly before the change is applied to the node type config in order
      * to correctly track the difference to the old status of the mapping.
-     * @param expression The expression, in the state before the change is applied.
+     * @param nodeTypeConfig The node type configuration, in the state before the change is applied.
      * @param languageAbbr Abbreviation of the language.
      */
-    removedNodeFromLanguage(expression: ExpressionMetricMapping, languageAbbr: string) {
-        if (!this.changelog.has(expression.expression)) {
+    removedNodeFromLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string) {
+        if (!this.changelog.has(nodeTypeConfig.type_name)) {
             this.changelog.set(
-                expression.expression,
-                new NodeTypesChangelogEntry(expression.expression, false, expression.languages),
+                nodeTypeConfig.type_name,
+                new NodeTypesChangelogEntry(
+                    nodeTypeConfig.type_name,
+                    false,
+                    nodeTypeConfig.languages,
+                ),
             );
         }
-        this.changelog.get(expression.expression)?.removedFromLanguage(languageAbbr);
+        this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(languageAbbr);
     }
 
     writeNewNodes(writeStream: fs.WriteStream) {
@@ -97,7 +105,7 @@ export class NodeTypesChangelog {
         for (const entry of this.changelog.values()) {
             if (entry.isNewNode) {
                 writeStream.write(
-                    escapeForCsv(entry.expression) +
+                    escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
                         Array.from(entry.addedLanguages) +
                         EOL,
@@ -106,17 +114,14 @@ export class NodeTypesChangelog {
         }
     }
 
-    writeRemovedNodes(
-        writeStream: fs.WriteStream,
-        metricMappings: Map<string, ExpressionMetricMapping>,
-    ) {
+    writeRemovedNodes(writeStream: fs.WriteStream, metricMappings: Map<string, NodeTypeConfig>) {
         writeStream.write("Removed syntax nodes:" + EOL + EOL);
         writeStream.write(
             "Name:" +
                 csvSeparator +
                 "Was present in language(s):" +
                 csvSeparator +
-                "Used for calculating the metric(s):" +
+                "Mapped to category:" +
                 csvSeparator +
                 "Was explicitly only activated for language(s):" +
                 EOL,
@@ -124,11 +129,11 @@ export class NodeTypesChangelog {
 
         for (const entry of this.changelog.values()) {
             if (entry.isRemovedNode()) {
-                const mapping = metricMappings.get(entry.expression);
+                const mapping = metricMappings.get(entry.nodeTypeName);
                 if (mapping === undefined) {
                     throw new Error(
-                        "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
-                            entry.expression,
+                        "Programming mistake: No existing node type configuration for a syntax node type that is not new: " +
+                            entry.nodeTypeName,
                     );
                 }
                 const activatedForLangOutput =
@@ -136,11 +141,11 @@ export class NodeTypesChangelog {
                         ? ""
                         : mapping.activated_for_languages;
                 writeStream.write(
-                    escapeForCsv(entry.expression) +
+                    escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
                         Array.from(entry.removedLanguages) +
                         csvSeparator +
-                        mapping.metrics +
+                        mapping.category +
                         csvSeparator +
                         activatedForLangOutput +
                         EOL,
@@ -149,10 +154,7 @@ export class NodeTypesChangelog {
         }
     }
 
-    writeModifiedNodes(
-        writeStream: fs.WriteStream,
-        metricMappings: Map<string, ExpressionMetricMapping>,
-    ) {
+    writeModifiedNodes(writeStream: fs.WriteStream, metricMappings: Map<string, NodeTypeConfig>) {
         writeStream.write(
             "Already known and still used syntax nodes which were removed from or added to some language(s):" +
                 EOL +
@@ -167,7 +169,7 @@ export class NodeTypesChangelog {
                 csvSeparator +
                 "Remains in language(s):" +
                 csvSeparator +
-                "Used for calculating the metric(s):" +
+                "Mapped to category::" +
                 csvSeparator +
                 "Was explicitly only activated for language(s):" +
                 EOL,
@@ -175,11 +177,11 @@ export class NodeTypesChangelog {
 
         for (const entry of this.changelog.values()) {
             if (entry.isModifiedNode()) {
-                const mapping = metricMappings.get(entry.expression);
+                const mapping = metricMappings.get(entry.nodeTypeName);
                 if (mapping === undefined) {
                     throw new Error(
-                        "Programming mistake: No existing expression mapping for a syntax node that is not new: " +
-                            entry.expression,
+                        "Programming mistake: No existing node type configuration for a syntax node type that is not new: " +
+                            entry.nodeTypeName,
                     );
                 }
 
@@ -188,7 +190,7 @@ export class NodeTypesChangelog {
                         ? ""
                         : mapping.activated_for_languages;
                 writeStream.write(
-                    escapeForCsv(entry.expression) +
+                    escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
                         Array.from(entry.addedLanguages) +
                         csvSeparator +
@@ -196,7 +198,7 @@ export class NodeTypesChangelog {
                         csvSeparator +
                         Array.from(entry.remainingLanguages) +
                         csvSeparator +
-                        mapping.metrics +
+                        mapping.category +
                         csvSeparator +
                         activatedForLangOutput +
                         EOL,
@@ -211,7 +213,7 @@ export class NodeTypesChangelog {
      * are currently calculated with the changed syntax node(s).
      * @return Promise that fulfills once the changelog has been written successfully.
      */
-    writeChangelog(metricMappings: Map<string, ExpressionMetricMapping>) {
+    writeChangelog(metricMappings: Map<string, NodeTypeConfig>) {
         return new Promise<void>((resolve, reject) => {
             const writeStream = fs.createWriteStream(pathToWriteChangelog);
 
@@ -226,7 +228,7 @@ export class NodeTypesChangelog {
                 resolve();
             });
 
-            writeStream.write("Changelog for updating the expression mappings" + EOL + EOL);
+            writeStream.write("Changelog for updating the node types configuration" + EOL + EOL);
 
             this.writeNewNodes(writeStream);
             writeStream.write(EOL);
@@ -241,14 +243,14 @@ export class NodeTypesChangelog {
 }
 
 /**
- * Tracks the changes that were applied to one expression mapping due to changes of the corresponding node type
- * of the tree sitter grammars.
+ * Tracks the changes that were applied to the configuration of one node type due to changes
+ * of the corresponding node type of the tree sitter grammars.
  */
 class NodeTypesChangelogEntry {
     /**
-     * Name of the expression/node type.
+     * Name of the node type.
      */
-    expression: string;
+    nodeTypeName: string;
 
     /**
      * Whether this entry is for adding a totally new node type that was not included in the mappings file before.
@@ -271,22 +273,22 @@ class NodeTypesChangelogEntry {
     remainingLanguages: Set<string>;
 
     /**
-     * Constructs a new changelog entry. Tracks the changes that were applied to one expression.
-     * Expected to be created when the first change operation of one expression is to be performed.
-     * @param expression Name of the expression.
+     * Constructs a new changelog entry. Tracks the changes that were applied to one node type.
+     * Expected to be created when the first change operation of one node type is to be performed.
+     * @param nodeTypeName Name of the node type.
      * @param isNew Whether this is a totally new node that was not included in the mappings file before.
      * @param oldLanguages Languages that included this node type before.
      * @param removedLanguages Languages from which this node type was removed.
      * @param addedLanguages Languages to which this node type was added.
      */
     constructor(
-        expression: string,
+        nodeTypeName: string,
         isNew: boolean,
         oldLanguages: string[] = [],
         removedLanguages: string[] = [],
         addedLanguages: string[] = [],
     ) {
-        this.expression = expression;
+        this.nodeTypeName = nodeTypeName;
         this.isNewNode = isNew;
         this.remainingLanguages = new Set(oldLanguages);
         this.removedLanguages = new Set(removedLanguages);
@@ -294,7 +296,7 @@ class NodeTypesChangelogEntry {
     }
 
     /**
-     * Logs that this expression was added to a language.
+     * Logs that this node type was added to a language.
      * @param languageAbbr Abbreviation of the language to which this node was added.
      */
     addedToLanguage(languageAbbr: string) {
@@ -302,7 +304,7 @@ class NodeTypesChangelogEntry {
     }
 
     /**
-     * Logs that this expression was removed from a language.
+     * Logs that this node type was removed from a language.
      * @param languageAbbr Abbreviation of the language from which this node was removed.
      */
     removedFromLanguage(languageAbbr: string) {

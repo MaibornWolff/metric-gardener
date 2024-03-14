@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { ExpressionMetricMapping } from "./Model";
+import { NodeTypeCategory, NodeTypeConfig } from "./Model";
 import { Configuration } from "../Configuration";
-import { ExpressionQueryStatement } from "../queries/QueryStatements";
+import { NodeTypeQueryStatement } from "../queries/QueryStatements";
 
 /**
  * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
@@ -167,39 +167,70 @@ async function* findFilesAsyncRecursive(
     } // End of for await (directory entries)
 }
 
-export function getQueryStatements(allNodeTypes: ExpressionMetricMapping[], metricName: string) {
-    const statements: ExpressionQueryStatement[] = [];
-    allNodeTypes.forEach((expressionMapping) => {
-        if (
-            expressionMapping.metrics.includes(metricName) &&
-            expressionMapping.type === "statement"
-        ) {
-            const queryStatement = new ExpressionQueryStatement(
-                expressionMapping.expression,
-                expressionMapping.languages,
-                expressionMapping.activated_for_languages,
-            );
-
-            statements.push(queryStatement);
+export function findNodeTypesByCategory(
+    allNodeTypes: NodeTypeConfig[],
+    category: NodeTypeCategory,
+    callback: (nodeTypeConfig: NodeTypeConfig) => void,
+) {
+    for (const nodeTypeConfig of allNodeTypes) {
+        if (nodeTypeConfig.category === category) {
+            callback(nodeTypeConfig);
         }
+    }
+}
+
+export function findNodeTypesByCategories(
+    allNodeTypes: NodeTypeConfig[],
+    categories: Set<NodeTypeCategory>,
+    callback: (nodeTypeConfig: NodeTypeConfig) => void,
+) {
+    for (const nodeTypeConfig of allNodeTypes) {
+        if (categories.has(nodeTypeConfig.category)) {
+            callback(nodeTypeConfig);
+        }
+    }
+}
+
+export function getQueryStatementsByCategory(
+    allNodeTypes: NodeTypeConfig[],
+    category: NodeTypeCategory,
+) {
+    const statements: NodeTypeQueryStatement[] = [];
+    findNodeTypesByCategory(allNodeTypes, category, (nodeType) => {
+        const queryStatement = new NodeTypeQueryStatement(nodeType);
+        statements.push(queryStatement);
     });
+
     return statements;
 }
 
-export function getExpressionsByCategory(
-    allNodeTypes: ExpressionMetricMapping[],
-    metricName: string,
-    category: string,
+export function getQueryStatementsByCategories(
+    allNodeTypes: NodeTypeConfig[],
+    categories: Set<NodeTypeCategory>,
 ) {
-    const expressions: string[] = [];
-    allNodeTypes.forEach((expressionMapping) => {
-        if (
-            expressionMapping.metrics.includes(metricName) &&
-            expressionMapping.category === category
-        ) {
-            const { expression } = expressionMapping;
-            expressions.push(expression);
-        }
+    const statements: NodeTypeQueryStatement[] = [];
+    findNodeTypesByCategories(allNodeTypes, categories, (nodeType) => {
+        const queryStatement = new NodeTypeQueryStatement(nodeType);
+        statements.push(queryStatement);
     });
-    return expressions;
+
+    return statements;
+}
+
+export function getNodeTypesByCategory(allNodeTypes: NodeTypeConfig[], category: NodeTypeCategory) {
+    const types: NodeTypeConfig[] = [];
+    findNodeTypesByCategory(allNodeTypes, category, (nodeTypeConfig) => types.push(nodeTypeConfig));
+    return types;
+}
+
+export function getNodeTypeNamesByCategory(
+    allNodeTypes: NodeTypeConfig[],
+    category: NodeTypeCategory,
+) {
+    const typeNames: string[] = [];
+    findNodeTypesByCategory(allNodeTypes, category, (nodeTypeConfig) => {
+        const { type_name } = nodeTypeConfig;
+        typeNames.push(type_name);
+    });
+    return typeNames;
 }

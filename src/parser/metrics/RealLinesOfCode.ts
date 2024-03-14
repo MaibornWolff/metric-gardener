@@ -1,7 +1,7 @@
-import { ExpressionMetricMapping } from "../helper/Model";
+import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { SyntaxNode, TreeCursor } from "tree-sitter";
-import { getExpressionsByCategory } from "../helper/Helper";
+import { getNodeTypeNamesByCategory } from "../helper/Helper";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Language } from "../helper/Language";
 
@@ -19,9 +19,9 @@ export class RealLinesOfCode implements Metric {
      * Constructs a new instance of {@link RealLinesOfCode}.
      * @param allNodeTypes List of all configured syntax node types.
      */
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+    constructor(allNodeTypes: NodeTypeConfig[]) {
         this.commentStatementsSet = new Set(
-            getExpressionsByCategory(allNodeTypes, this.getName(), "comment"),
+            getNodeTypeNamesByCategory(allNodeTypes, NodeTypeCategory.Comment),
         );
     }
 

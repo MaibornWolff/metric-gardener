@@ -2,31 +2,25 @@ import { MaxNestingLevel } from "./MaxNestingLevel";
 import Parser from "tree-sitter";
 import { Language, languageToGrammar } from "../helper/Language";
 import { FileMetric, ParsedFile } from "./Metric";
-import { ExpressionMetricMapping, NodeTypeCategory } from "../helper/Model";
+import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model";
 
 describe("MaxNestingLevel.calculate(...)", () => {
     let maxNestingLevel: MaxNestingLevel;
     let parser: Parser;
     let tree: Parser.Tree;
-    const nodeTypes: ExpressionMetricMapping[] = [
+    const nodeTypes: NodeTypeConfig[] = [
         {
-            expression: "array",
-            metrics: [],
-            type: "statement",
+            type_name: "array",
             category: NodeTypeCategory.Nesting,
             languages: ["json"],
         },
         {
-            expression: "object",
-            metrics: [],
-            type: "statement",
+            type_name: "object",
             category: NodeTypeCategory.Nesting,
             languages: ["json"],
         },
         {
-            expression: "block_node",
-            metrics: [],
-            type: "statement",
+            type_name: "block_node",
             category: NodeTypeCategory.Nesting,
             languages: ["yaml"],
         },

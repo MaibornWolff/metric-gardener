@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { ExpressionMetricMapping } from "../helper/Model";
-import { getQueryStatements } from "../helper/Helper";
+import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
+import { getQueryStatementsByCategory } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
@@ -22,8 +22,11 @@ export class CommentLines implements Metric {
      * Constructor of the class {@link CommentLines}.
      * @param allNodeTypes List of all configured syntax node types.
      */
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
+    constructor(allNodeTypes: NodeTypeConfig[]) {
+        this.statementsSuperSet = getQueryStatementsByCategory(
+            allNodeTypes,
+            NodeTypeCategory.Comment,
+        );
     }
 
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {

@@ -1,4 +1,4 @@
-import { ExpressionMetricMapping, NodeTypeCategory } from "../helper/Model";
+import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeCursor } from "tree-sitter";
@@ -17,10 +17,10 @@ export class MaxNestingLevel implements Metric {
      * Constructs a new instance of {@link MaxNestingLevel}.
      * @param allNodeTypes List of all configured syntax node types.
      */
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+    constructor(allNodeTypes: NodeTypeConfig[]) {
         for (const nodeType of allNodeTypes) {
             if (nodeType.category === NodeTypeCategory.Nesting) {
-                this.nodeTypesToCount.push(nodeType.expression);
+                this.nodeTypesToCount.push(nodeType.type_name);
             }
         }
     }

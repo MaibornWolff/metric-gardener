@@ -4,7 +4,7 @@ import { Classes } from "./metrics/Classes";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { ExpressionMetricMapping } from "./helper/Model";
+import { NodeTypeConfig } from "./helper/Model";
 import { Configuration } from "./Configuration";
 import {
     FileMetricResults,
@@ -40,8 +40,7 @@ export class MetricCalculator {
      */
     constructor(configuration: Configuration) {
         this.#config = configuration;
-        const allNodeTypes: ExpressionMetricMapping[] =
-            nodeTypesConfig as ExpressionMetricMapping[];
+        const allNodeTypes: NodeTypeConfig[] = nodeTypesConfig as NodeTypeConfig[];
 
         this.#sourceFileMetrics = [
             new Complexity(allNodeTypes),

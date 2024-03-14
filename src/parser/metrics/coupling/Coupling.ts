@@ -1,4 +1,4 @@
-import { ExpressionMetricMapping } from "../../helper/Model";
+import { NodeTypeConfig } from "../../helper/Model";
 import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector";
 import {
     UnresolvedCallExpression,
@@ -36,7 +36,7 @@ export class Coupling implements CouplingMetric {
 
     constructor(
         config: Configuration,
-        allNodeTypes: ExpressionMetricMapping[],
+        allNodeTypes: NodeTypeConfig[],
         namespaceCollector: NamespaceCollector,
         usageCollector: UsagesCollector,
         publicAccessorCollector: PublicAccessorCollector,

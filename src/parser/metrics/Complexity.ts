@@ -1,10 +1,10 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { ExpressionMetricMapping, NodeTypeCategory } from "../helper/Model";
+import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import {
-    ExpressionQueryStatement,
+    NodeTypeQueryStatement,
     OperatorQueryStatement,
     QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
@@ -19,9 +19,18 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class Complexity implements Metric {
     private complexityStatementsSuperSet: QueryStatementInterface[] = [];
 
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
+    private nodeTypeCategories = new Set([
+        NodeTypeCategory.If,
+        NodeTypeCategory.Loop,
+        NodeTypeCategory.Conditional,
+        NodeTypeCategory.LogicalBinaryExpression,
+        NodeTypeCategory.CaseLabel,
+        NodeTypeCategory.CatchBlock,
+    ]);
+
+    constructor(allNodeTypes: NodeTypeConfig[]) {
         const languagesWithDefaultLabelAbbr = new Set<string>();
-        const caseNodeTypes: ExpressionMetricMapping[] = [];
+        const caseNodeTypes: NodeTypeConfig[] = [];
 
         for (const nodeType of allNodeTypes) {
             /*
@@ -34,10 +43,10 @@ export class Complexity implements Metric {
                 }
             }
 
-            if (nodeType.metrics.includes(this.getName())) {
+            if (this.nodeTypeCategories.has(nodeType.category)) {
                 if (nodeType.category === NodeTypeCategory.CaseLabel) {
                     caseNodeTypes.push(nodeType);
-                } else if (nodeType.category === NodeTypeCategory.BinaryExpression) {
+                } else if (nodeType.category === NodeTypeCategory.LogicalBinaryExpression) {
                     this.addBinaryExpressionQueryStatement(nodeType);
                 } else if (nodeType.category === NodeTypeCategory.Other) {
                     this.addExpressionQueryStatement(nodeType);
@@ -47,34 +56,21 @@ export class Complexity implements Metric {
         this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
     }
 
-    addBinaryExpressionQueryStatement(nodeType: ExpressionMetricMapping) {
+    addBinaryExpressionQueryStatement(nodeType: NodeTypeConfig) {
         if (nodeType.operator !== undefined) {
-            this.complexityStatementsSuperSet.push(
-                new OperatorQueryStatement(
-                    nodeType.category,
-                    nodeType.operator,
-                    nodeType.languages,
-                    nodeType.activated_for_languages,
-                ),
-            );
+            this.complexityStatementsSuperSet.push(new OperatorQueryStatement(nodeType));
         }
     }
 
-    addExpressionQueryStatement(nodeType: ExpressionMetricMapping) {
-        this.complexityStatementsSuperSet.push(
-            new ExpressionQueryStatement(
-                nodeType.expression,
-                nodeType.languages,
-                nodeType.activated_for_languages,
-            ),
-        );
+    addExpressionQueryStatement(nodeType: NodeTypeConfig) {
+        this.complexityStatementsSuperSet.push(new NodeTypeQueryStatement(nodeType));
     }
 
     /**
      * Add queries for each case label syntax node type.
      */
     addCaseLabelQueryStatements(
-        caseNodeTypes: ExpressionMetricMapping[],
+        caseNodeTypes: NodeTypeConfig[],
         languagesWithDefaultLabelAbbr: Set<string>,
     ) {
         for (const caseNodeType of caseNodeTypes) {
@@ -92,11 +88,7 @@ export class Complexity implements Metric {
             // For languages which have also a default node type, always count this case node type:
             if (haveDefaultNodeType.length > 0) {
                 this.complexityStatementsSuperSet.push(
-                    new ExpressionQueryStatement(
-                        caseNodeType.expression,
-                        haveDefaultNodeType,
-                        caseNodeType.activated_for_languages,
-                    ),
+                    new NodeTypeQueryStatement(caseNodeType, haveDefaultNodeType),
                 );
             }
 
@@ -116,9 +108,9 @@ export class Complexity implements Metric {
      */
     addCaseDefaultDifferentiatingQuery(
         noDefaultLangAbbrs: string[],
-        caseDefaultNodeType: ExpressionMetricMapping,
+        caseDefaultNodeType: NodeTypeConfig,
     ) {
-        if (caseDefaultNodeType.expression == "case_statement") {
+        if (caseDefaultNodeType.type_name == "case_statement") {
             // Special treatment for "case_statement" used by at least C++ and PHP.
             // This syntax node can have more than one child,
             // because it also has the content of the case block as child(s).
@@ -132,7 +124,7 @@ export class Complexity implements Metric {
                     caseDefaultNodeType.activated_for_languages,
                 ),
             );
-        } else if (caseDefaultNodeType.expression == "when_entry") {
+        } else if (caseDefaultNodeType.type_name == "when_entry") {
             // Special treatment for the "when_entry" used by Kotlin. Can also have more than one child.
             //
             // A conditional when_entry can be differentiated from an else when_entry by checking
@@ -144,7 +136,7 @@ export class Complexity implements Metric {
                     caseDefaultNodeType.activated_for_languages,
                 ),
             );
-        } else if (caseDefaultNodeType.expression == "match_arm") {
+        } else if (caseDefaultNodeType.type_name == "match_arm") {
             // Special treatment for the "match_arm" used by Rust.
             //
             // A conditional match_arm can be differentiated from a default label by checking
@@ -160,10 +152,7 @@ export class Complexity implements Metric {
             // Standard treatment: check if the case label node has a named child:
             this.complexityStatementsSuperSet.push(
                 new SimpleLanguageSpecificQueryStatement(
-                    "(" +
-                        caseDefaultNodeType.expression +
-                        " (_)) @" +
-                        caseDefaultNodeType.expression,
+                    "(" + caseDefaultNodeType.type_name + " (_)) @" + caseDefaultNodeType.type_name,
                     noDefaultLangAbbrs,
                     caseDefaultNodeType.activated_for_languages,
                 ),

@@ -1,5 +1,5 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
-import { ExpressionMetricMapping } from "../helper/Model";
+import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
@@ -7,7 +7,7 @@ import {
     QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/QueryStatements";
-import { getQueryStatements } from "../helper/Helper";
+import { getQueryStatementsByCategories } from "../helper/Helper";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -16,8 +16,21 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class Classes implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
-    constructor(allNodeTypes: ExpressionMetricMapping[]) {
-        this.statementsSuperSet = getQueryStatements(allNodeTypes, this.getName());
+    private nodeTypeCategories = new Set([
+        NodeTypeCategory.ClassDefinition,
+        NodeTypeCategory.EnumDefinition,
+        NodeTypeCategory.StructDefinition,
+        NodeTypeCategory.RecordDefinition,
+        NodeTypeCategory.UnionDefinition,
+        NodeTypeCategory.TraitDefinition,
+        NodeTypeCategory.InterfaceDefinition,
+    ]);
+
+    constructor(allNodeTypes: NodeTypeConfig[]) {
+        this.statementsSuperSet = getQueryStatementsByCategories(
+            allNodeTypes,
+            this.nodeTypeCategories,
+        );
         this.addQueriesForTSAndTSX();
         this.addQueriesForCAndCpp();
     }
@@ -51,7 +64,7 @@ export class Classes implements Metric {
     body: (enumerator_list)
 ]) @enum_with_body_or_type
 
-(enum_specifier "enum" 
+(enum_specifier "enum"
     [
         "class"
         "struct"

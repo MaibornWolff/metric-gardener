@@ -754,7 +754,7 @@
     },
     {
         "type_name": "catch_clause",
-        "category": "",
+        "category": "catch_block",
         "languages": ["cs", "java", "js", "php", "ts", "cpp", "tsx"]
     },
     {

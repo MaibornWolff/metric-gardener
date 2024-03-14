@@ -26,6 +26,7 @@ export class Complexity implements Metric {
         NodeTypeCategory.LogicalBinaryExpression,
         NodeTypeCategory.CaseLabel,
         NodeTypeCategory.CatchBlock,
+        NodeTypeCategory.Function,
     ]);
 
     constructor(allNodeTypes: NodeTypeConfig[]) {
@@ -48,7 +49,7 @@ export class Complexity implements Metric {
                     caseNodeTypes.push(nodeType);
                 } else if (nodeType.category === NodeTypeCategory.LogicalBinaryExpression) {
                     this.addBinaryExpressionQueryStatement(nodeType);
-                } else if (nodeType.category === NodeTypeCategory.Other) {
+                } else {
                     this.addExpressionQueryStatement(nodeType);
                 }
             }

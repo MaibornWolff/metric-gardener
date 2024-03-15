@@ -1,6 +1,6 @@
 # File Metrics for TypeScript (TS) and TypeScript JSX (TSX)
 
-This document outlines the definition of file metrics for TypeScript (TS) and TypeScript JSX (TSX). The identified file metrics include:
+This document outlines the definition of file metrics for TypeScript (TS) and TypeScript JSX (TSX).
 
 ### 1. classes
 
@@ -19,15 +19,30 @@ It does **not** count:
 
 ### 2. functions
 
-The "functions" metric counts :
+The "functions" metric counts:
 
--   methods declarations in classes and interface
+-   methods declarations in classes, abstract classes and interfaces
 -   static methods, constructors, getters and setters
--   the keyword `function`
+-   functions declared with the keyword `function`
 -   arrow functions
+
+### 3. complexity
+
+The "complexity" metric counts:
+
+-   `if`, `if else` statements, but **no** `else` statements
+-   ternary expressions
+-   for, while, do-while loops
+-   `case` labels in switch-statements, but **no** `default` labels
+-   `catch` labels in try-catch blocks, but **no** `finally` labels
+-   binary operations `&&` and `||`
+-   everything counted for "functions" metric
 
 It does **not** count:
 
--   getter and setter
+-   `.catch()` method call for Promises
+-   `.forEach()` method call for iterables
 
-to test: constructors, getter, setter
+### 4. lines_of_code and real_lines_of_code
+
+see README.md

@@ -35,7 +35,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Go
 -   PHP
--   TypeScript
+-   [TypeScript and TSX](https://github.com/MaibornWolff/metric-gardener/blob/main/TS_TSX.md)
 -   Java
 -   C#
 -   C++

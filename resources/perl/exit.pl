@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-eval { die };
-print "after die\n";
+# unlike die, exit will not be caught by eval
 eval { exit };
 print "after exit\n";

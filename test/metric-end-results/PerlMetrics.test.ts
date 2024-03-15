@@ -121,7 +121,22 @@ describe("Perl metrics tests", () => {
         });
     });
 
-    // describe("parsing classes metric", () => {});
+    describe("parsing classes metric", () => {
+        it("should count classes correctly", () => {
+            // count: class definition
+            // not: class declaration
+            testFileMetric(path + "classes.pl", FileMetric.classes, 2);
+        });
+
+        it("should count classes using packages correctly", () => {
+            throw "unsure: package, bless, parent";
+            testFileMetric(path + "classes-using-packages.pl", FileMetric.classes, 2);
+        });
+
+        it("should NOT count normal packages", () => {
+            testFileMetric(path + "modules/Module.pm", FileMetric.classes, 0);
+        });
+    });
 
     // describe("parsing lines_of_code metric", () => {});
 

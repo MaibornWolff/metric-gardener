@@ -47,7 +47,10 @@ export class Complexity implements Metric {
             if (this.nodeTypeCategories.has(nodeType.category)) {
                 if (nodeType.category === NodeTypeCategory.CaseLabel) {
                     caseNodeTypes.push(nodeType);
-                } else if (nodeType.category === NodeTypeCategory.LogicalBinaryExpression) {
+                } else if (
+                    nodeType.category === NodeTypeCategory.LogicalBinaryExpression &&
+                    nodeType.operator !== undefined
+                ) {
                     this.addBinaryExpressionQueryStatement(nodeType);
                 } else {
                     this.addExpressionQueryStatement(nodeType);

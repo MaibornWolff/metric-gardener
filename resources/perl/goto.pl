@@ -5,7 +5,7 @@ use warnings;
 # https://perldoc.perl.org/perlsyn#Goto
 
 goto LABEL;
-die; # never
+...;
 LABEL: print "goto LABEL\n";
 
 my $i = 1;

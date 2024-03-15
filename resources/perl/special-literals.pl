@@ -16,4 +16,4 @@ SUB;
 
 print "end\n";
 __END__
-die; # never
+comment

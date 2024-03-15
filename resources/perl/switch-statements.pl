@@ -8,31 +8,31 @@ use v5.10.1;
 
 for ("a") {
     when ("a") { print "for when\n" }
-    when ("b") { die }
-    default    { die }
+    when ("b") { ... }
+    default    { ... }
 }
 
 foreach ("b") {
-    when ("a") { die }
+    when ("a") { ... }
     when ("b") { print "foreach when\n" }
-    default    { die }
+    default    { ... }
 }
 
 given ("c") {
-    when ("a") { die }
-    when ("b") { die }
+    when ("a") { ... }
+    when ("b") { ... }
     default    { print "given default\n" }
 }
 
 given ("a") {
     when ("a") { print "continue 1\n"; continue }
-    when ("b") { die }
+    when ("b") { ... }
     default    { print "continue 2\n"; continue }
     print "continue 3\n"
 }
 
 given ("b") {
-    when ("a") { die }
-    when ("b") { print "break\n"; break; die }
-    default    { die }
+    when ("a") { ... }
+    when ("b") { print "break\n"; break; ... }
+    default    { ... }
 }

@@ -10,7 +10,7 @@ $i = 1;
 while ($i <= 2) {
     print "next $i\n";
     next;
-    die; # never
+    ...;
 } continue { $i++ }
 
 $i = 1;

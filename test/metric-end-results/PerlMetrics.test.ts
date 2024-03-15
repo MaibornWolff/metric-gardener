@@ -60,13 +60,17 @@ describe("Perl metrics tests", () => {
             testFileMetric(path + "statement-modifiers.pl", FileMetric.complexity, 7);
         });
 
-        it("should count subroutines", () => {
-            // count: sub definition, anonymous
-            // not: sub declaration
+        it("should count functions correctly", () => {
             throw "unsure: AUTOLOAD";
+            throw "unsure: BEGIN, UNITCHECK, CHECK, INIT, END";
+            throw "unsure: defer";
             testFileMetric(path + "sub.pl", FileMetric.complexity, 8);
             testFileMetric(path + "sub-anonymous.pl", FileMetric.complexity, 6);
             testFileMetric(path + "sub-autoload.pl", FileMetric.complexity, 1);
+            testFileMetric(path + "classes.pl", FileMetric.complexity, 4);
+            testFileMetric(path + "classes-using-packages.pl", FileMetric.complexity, 4);
+            testFileMetric(path + "compound-statements.pl", FileMetric.functions, 0);
+            testFileMetric(path + "defer-blocks.pl", FileMetric.functions, 0);
         });
 
         it("should count switch statements correctly", () => {

@@ -82,7 +82,40 @@ describe("Perl metrics tests", () => {
         });
     });
 
-    // describe("parsing functions metric", () => {});
+    describe("parsing functions metric", () => {
+        it("should count subroutines", () => {
+            // count: sub definition
+            // not: sub declaration
+            testFileMetric(path + "sub.pl", FileMetric.functions, 8);
+        });
+
+        it("should count anonymous subroutines", () => {
+            // count: sub
+            testFileMetric(path + "sub-anonymous.pl", FileMetric.functions, 6);
+        });
+
+        it("should count AUTOLOAD", () => {
+            throw "unsure: AUTOLOAD";
+            testFileMetric(path + "sub-autoload.pl", FileMetric.functions, 1);
+        });
+
+        it("should count class ADJUST and methods", () => {
+            // count: ADJUST, method, sub, sub DESTROY
+            testFileMetric(path + "classes.pl", FileMetric.functions, 4);
+            testFileMetric(path + "classes-using-packages.pl", FileMetric.functions, 4);
+        });
+
+        it("should ??? NOT ??? count compound statements", () => {
+            // not: if, else, elsif, unless, given, when, while, until, for, foreach, continue, {}
+            throw "unsure: BEGIN, UNITCHECK, CHECK, INIT, END";
+            testFileMetric(path + "compound-statements.pl", FileMetric.functions, 0);
+        });
+
+        it("should ??? NOT ??? count defer blocks", () => {
+            throw "unsure: defer";
+            testFileMetric(path + "defer-blocks.pl", FileMetric.functions, 0);
+        });
+    });
 
     // describe("parsing classes metric", () => {});
 

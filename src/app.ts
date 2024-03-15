@@ -12,7 +12,7 @@ yargs(hideBin(process.argv))
         "import-grammars",
         "(re-)import grammar expression types for supported languages",
         {},
-        (argv) => {
+        (_argv) => {
             updateNodeTypesMappingFile();
         },
     )

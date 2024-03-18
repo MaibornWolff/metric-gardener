@@ -6,3 +6,5 @@ use warnings;
 
 print "Hello, world!\n"; # This is a comment
 print "# inside string\n";
+# Comment line starts with #
+    # Comment line starts with spaces followed by #

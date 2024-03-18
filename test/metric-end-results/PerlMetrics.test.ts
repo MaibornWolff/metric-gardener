@@ -138,7 +138,39 @@ describe("Perl metrics tests", () => {
         });
     });
 
-    // describe("parsing lines_of_code metric", () => {});
+    describe("parsing lines_of_code metric", () => {
+        it("should count comments correctly", () => {
+            testFileMetric(path + "comments.pl", FileMetric.linesOfCode, 9);
+        });
+
+        it("should count empty files correctly", () => {
+            testFileMetric(path + "empty.pl", FileMetric.linesOfCode, 1);
+        });
+
+        it("should count one line break correctly", () => {
+            testFileMetric(path + "line-break.pl", FileMetric.linesOfCode, 2);
+        });
+
+        it("should count one line correctly", () => {
+            testFileMetric(path + "line-break.pl", FileMetric.linesOfCode, 1);
+        });
+
+        it("should count pods correctly", () => {
+            testFileMetric(path + "pod.pl", FileMetric.linesOfCode, 27);
+        });
+
+        it("should count __DATA__ correctly", () => {
+            testFileMetric(path + "special-literals-data.pl", FileMetric.linesOfCode, 12);
+        });
+
+        it("should count __END__ correctly", () => {
+            testFileMetric(path + "special-literals.pl", FileMetric.linesOfCode, 20);
+        });
+
+        it("should count weird lines correctly", () => {
+            testFileMetric(path + "weird-lines.pl", FileMetric.linesOfCode, 15);
+        });
+    });
 
     // describe("parsing comment_lines metric", () => {});
 

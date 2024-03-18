@@ -172,7 +172,29 @@ describe("Perl metrics tests", () => {
         });
     });
 
-    // describe("parsing comment_lines metric", () => {});
+    describe("parsing comment_lines metric", () => {
+        describe("parsing comment_lines metric", () => {
+            it("should count comments correctly", () => {
+                // count: lines starting with #, lines having only spaces and tabs before #
+                throw "unsure: lines having code before #";
+                testFileMetric(path + "comments.pl", FileMetric.commentLines, 4);
+            });
+
+            it("should count pods", () => {
+                testFileMetric(path + "pod.pl", FileMetric.commentLines, 14);
+            });
+
+            it("should ??? NOT ??? count __DATA__", () => {
+                throw "unsure: __DATA__";
+                testFileMetric(path + "special-literals-data.pl", FileMetric.commentLines, 2);
+            });
+
+            it("should count __END__", () => {
+                throw "unsure: line with __END__";
+                testFileMetric(path + "special-literals.pl", FileMetric.commentLines, 5);
+            });
+        });
+    });
 
     // describe("parsing real_lines_of_code metric", () => {});
 

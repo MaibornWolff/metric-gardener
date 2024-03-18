@@ -10,7 +10,7 @@ The "complexity" metric counts:
 -   ternary expressions
 -   `for...of`, `for await...of`, `for...in`,`while` and `do...while` loops
 -   `case` labels in switch-statements
--   `catch` labels in try-catch blocks
+-   `catch` blocks
 -   logical binary operations `&&` and `||`
 -   everything counted for the "functions" metric
 
@@ -32,7 +32,7 @@ The "functions" metric counts:
 
 The "classes" metric counts:
 
--   declarations of class, abstract class, interface and enum
+-   declarations of classes, abstract classes, interfaces and enums
 -   type aliases declaration with one single object type literal e.g. `type ObjectType = { message: string};`
 
 It does **not** count:
@@ -45,4 +45,4 @@ It does **not** count:
 
 ### lines_of_code, comment_lines and real_lines_of_code
 
-see README.md
+see [README.md](README.md)

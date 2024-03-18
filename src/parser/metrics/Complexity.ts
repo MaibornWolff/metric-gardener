@@ -22,7 +22,7 @@ export class Complexity implements Metric {
     private nodeTypeCategories = new Set([
         NodeTypeCategory.If,
         NodeTypeCategory.Loop,
-        NodeTypeCategory.Conditional,
+        NodeTypeCategory.ConditionalExpression,
         NodeTypeCategory.LogicalBinaryExpression,
         NodeTypeCategory.CaseLabel,
         NodeTypeCategory.CatchBlock,

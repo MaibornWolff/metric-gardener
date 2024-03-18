@@ -83,7 +83,7 @@ export enum NodeTypeCategory {
     /**
      * Represents other conditional expressions, like ternary operators.
      */
-    Conditional = "conditional",
+    ConditionalExpression = "conditional_expression",
 
     // Classes, structs and similar constructs:
 

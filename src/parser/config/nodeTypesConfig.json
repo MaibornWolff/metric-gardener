@@ -156,7 +156,7 @@
     },
     {
         "type_name": "conditional_expression",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["cs", "php", "py", "cpp", "c"]
     },
     {
@@ -226,7 +226,7 @@
     },
     {
         "type_name": "is_expression",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["cs"]
     },
     {
@@ -1029,7 +1029,7 @@
     },
     {
         "type_name": "switch_expression_arm",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["cs"]
     },
     {
@@ -1691,7 +1691,7 @@
     },
     {
         "type_name": "ternary_expression",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["java", "js", "ts", "tsx", "sh"]
     },
     {
@@ -2463,7 +2463,7 @@
     },
     {
         "type_name": "elvis_expression",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["kt"]
     },
     {
@@ -3187,7 +3187,7 @@
     },
     {
         "type_name": "list",
-        "category": "conditional",
+        "category": "conditional_expression",
         "activated_for_languages": ["sh"],
         "languages": ["py", "sh"]
     },
@@ -3203,7 +3203,7 @@
     },
     {
         "type_name": "conditional_type",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["ts", "tsx"]
     },
     {
@@ -3473,7 +3473,7 @@
     },
     {
         "type_name": "boolean_operator",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["py"]
     },
     {
@@ -4278,7 +4278,7 @@
     },
     {
         "type_name": "and_pattern",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["cs"]
     },
     {
@@ -4333,7 +4333,7 @@
     },
     {
         "type_name": "or_pattern",
-        "category": "conditional",
+        "category": "conditional_expression",
         "languages": ["cs", "rs"]
     },
     {

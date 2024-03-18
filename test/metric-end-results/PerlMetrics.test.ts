@@ -196,7 +196,41 @@ describe("Perl metrics tests", () => {
         });
     });
 
-    // describe("parsing real_lines_of_code metric", () => {});
+    describe("parsing real_lines_of_code metric", () => {
+        it("should NOT count comments", () => {
+            testFileMetric(path + "comments.pl", FileMetric.linesOfCode, 4);
+        });
+
+        it("should NOT count empty files", () => {
+            testFileMetric(path + "empty.pl", FileMetric.linesOfCode, 0);
+        });
+
+        it("should NOT count one line break", () => {
+            testFileMetric(path + "line-break.pl", FileMetric.linesOfCode, 0);
+        });
+
+        it("should count one line correctly", () => {
+            testFileMetric(path + "line-break.pl", FileMetric.linesOfCode, 1);
+        });
+
+        it("should NOT count pods", () => {
+            testFileMetric(path + "pod.pl", FileMetric.linesOfCode, 8);
+        });
+
+        it("should ??? NOT ??? count __DATA__", () => {
+            throw "unsure: __DATA__";
+            testFileMetric(path + "special-literals-data.pl", FileMetric.linesOfCode, 4);
+        });
+
+        it("should NOT count __END__", () => {
+            throw "unsure: line with __END__";
+            testFileMetric(path + "special-literals.pl", FileMetric.linesOfCode, 11);
+        });
+
+        it("should count weird lines correctly", () => {
+            testFileMetric(path + "weird-lines.pl", FileMetric.linesOfCode, 10);
+        });
+    });
 
     // describe("parsing max_nesting_level metric", () => {}); ???
 

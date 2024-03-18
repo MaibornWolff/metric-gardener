@@ -1,4 +1,4 @@
-import { expectFileMetric, parseAllFileMetrics } from "./TestHelper";
+import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 
 describe("Perl metrics tests", () => {
@@ -234,5 +234,10 @@ describe("Perl metrics tests", () => {
 
     // describe("parsing max_nesting_level metric", () => {}); ???
 
-    // describe("parsing coupling metric", () => {}); ???
+    describe("parsing coupling metric", () => {
+        it("should calculate correctly", async () => {
+            const couplingResult = await getCouplingMetrics(path);
+            expect(couplingResult).toMatchSnapshot();
+        });
+    });
 });

@@ -1,6 +1,6 @@
 import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
-import { Relationship, MetricResult, CouplingResult } from "../parser/metrics/Metric";
+import { Relationship, MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric";
 import { FileType } from "../parser/helper/Language";
 
 describe("outputMetrics", () => {
@@ -11,24 +11,37 @@ describe("outputMetrics", () => {
         });
 
         it("when metrics are present", () => {
-            const file1 = new Map<string, MetricResult>();
-            file1.set("metric1", { metricName: "metric1", metricValue: 42 });
-            file1.set("metric2", { metricName: "metric2", metricValue: 43 });
+            const file1MetricResults = new Map<string, MetricResult>();
+            file1MetricResults.set("metric1", { metricName: "metric1", metricValue: 42 });
+            file1MetricResults.set("metric2", { metricName: "metric2", metricValue: 43 });
 
-            const file2 = new Map<string, MetricResult>();
-            file2.set("metric1", { metricName: "metric1", metricValue: 44 });
-            file2.set("metric2", { metricName: "metric2", metricValue: 45 });
+            const file2MetricResults = new Map<string, MetricResult>();
+            file2MetricResults.set("metric1", { metricName: "metric1", metricValue: 44 });
+            const file2MetricErrors = new Map<string, MetricError>();
+            file2MetricErrors.set("metric2", { metricName: "metric2", error: new Error("Buh!") });
 
             const fileMetrics = new Map([
-                ["/file/path1.test", { fileType: FileType.SourceCode, metricResults: file1 }],
-                ["/file/path2.test", { fileType: FileType.SourceCode, metricResults: file2 }],
+                [
+                    "/file/path1.test",
+                    {
+                        fileType: FileType.SourceCode,
+                        metricResults: file1MetricResults,
+                        metricErrors: new Map(),
+                    },
+                ],
+                [
+                    "/file/path2.test",
+                    {
+                        fileType: FileType.SourceCode,
+                        metricResults: file2MetricResults,
+                        metricErrors: file2MetricErrors,
+                    },
+                ],
             ]);
 
             const unknownFiles = ["/file/path3.unknown", "/file/noExtension"];
 
-            const errorFiles = new Map([
-                ["/file/path4.error", new Error("Error while calculating metrics.")],
-            ]);
+            const errorFiles = ["/file/path4.error"];
 
             const relationShipMetrics = {
                 relationships: [
@@ -71,14 +84,7 @@ describe("outputMetrics", () => {
             const fileMetrics = new Map();
             const relationShipMetrics = {} as CouplingResult;
 
-            outputAsJson(
-                fileMetrics,
-                [],
-                new Map(),
-                relationShipMetrics,
-                "mocked-file.json",
-                false,
-            );
+            outputAsJson(fileMetrics, [], [], relationShipMetrics, "mocked-file.json", false);
 
             expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",

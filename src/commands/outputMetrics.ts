@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Readable } from "stream";
 import zlib from "zlib";
-import { CouplingResult, FileMetricResults } from "../parser/metrics/Metric";
+import { CouplingResult, FileMetricResults, MetricError } from "../parser/metrics/Metric";
 import { FileType } from "../parser/helper/Language";
 
 interface OutputNode {
@@ -30,7 +30,7 @@ interface OutputRelationship {
  * Writes the passed metrics into a json file.
  * @param fileMetrics Metrics calculated on single files.
  * @param unsupportedFiles List of files that cannot be analyzed.
- * @param errorFiles List of files that caused an error while being analyzed.
+ * @param errorFiles List of files that could not be parsed at all.
  * @param relationshipMetrics Relationship metrics.
  * @param outputFilePath Path to write the file to
  * @param compress Whether the file should be compressed
@@ -38,7 +38,7 @@ interface OutputRelationship {
 export function outputAsJson(
     fileMetrics: Map<string, FileMetricResults>,
     unsupportedFiles: string[],
-    errorFiles: Map<string, Error>,
+    errorFiles: string[],
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean,
@@ -66,7 +66,7 @@ export function outputAsJson(
 function buildOutputObject(
     fileMetrics: Map<string, FileMetricResults>,
     unknownFiles: string[],
-    errorFiles: Map<string, Error>,
+    errorFiles: string[],
     relationshipMetrics: CouplingResult,
 ) {
     const output: {
@@ -81,8 +81,13 @@ function buildOutputObject(
 
     const outputNodeReferenceLookUp = new Map<string, OutputNode>();
 
+    const metricErrorsPerFile = new Map<string, Iterable<MetricError>>();
+
     for (const [filePath, fileMetricResults] of fileMetrics.entries()) {
         const metrics = {};
+        if (fileMetricResults.metricErrors.size > 0) {
+            metricErrorsPerFile.set(filePath, fileMetricResults.metricErrors.values());
+        }
 
         for (const [metricName, metricValue] of fileMetricResults.metricResults.entries()) {
             metrics[metricName] = metricValue.metricValue;
@@ -98,6 +103,7 @@ function buildOutputObject(
         output.nodes.push(outputNode);
     }
 
+    // Info for unknown file types
     for (const filePath of unknownFiles) {
         const outputNode: OutputInfoNode = {
             name: filePath,
@@ -108,11 +114,28 @@ function buildOutputObject(
         output.info.push(outputNode);
     }
 
-    for (const [filePath, error] of errorFiles) {
+    // Info when parsing the syntax tree failed
+    for (const filePath of errorFiles) {
         const outputNode: OutputInfoNode = {
             name: filePath,
             type: FileType.Error,
-            message: error.message,
+            message: "Error while parsing a syntax tree for the file",
+        };
+
+        output.info.push(outputNode);
+    }
+
+    // Info when the calculation of (some) metrics failed
+    for (const [filePath, metricErrors] of metricErrorsPerFile) {
+        let message = "Error while calculating the following metric(s) for the file:";
+        for (const metricError of metricErrors) {
+            message = message.concat(" ", metricError.metricName);
+        }
+
+        const outputNode: OutputInfoNode = {
+            name: filePath,
+            type: FileType.Error,
+            message,
         };
 
         output.info.push(outputNode);

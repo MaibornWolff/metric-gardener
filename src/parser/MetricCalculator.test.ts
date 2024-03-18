@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { expect, jest } from "@jest/globals";
 import { MetricCalculator } from "./MetricCalculator";
 import { spyOnConsoleErrorNoOp } from "../../test/metric-end-results/TestHelper";
 import {
@@ -66,7 +66,7 @@ function initiateErrorSpies() {
         new Error("something went wrong when calculating classes metric"),
     );
     jest.spyOn(CommentLines.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating commentlines metric"),
+        new Error("something went wrong when calculating commentLines metric"),
     );
     jest.spyOn(Complexity.prototype, "calculate").mockRejectedValue(
         new Error("something went wrong when calculating complexity metric"),
@@ -80,10 +80,10 @@ function initiateErrorSpies() {
         metricValue: 2,
     });
     jest.spyOn(MaxNestingLevel.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating maxnestinglevel metric"),
+        new Error("something went wrong when calculating maxNestingLevel metric"),
     );
     jest.spyOn(RealLinesOfCode.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating reallinesofcode metric"),
+        new Error("something went wrong when calculating realLinesOfCode metric"),
     );
     jest.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
         metricName: FileMetric.linesOfCode,
@@ -234,7 +234,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
         // then
         const expectedResult: [SourceFile, FileMetricResults] = [
             errorFile,
-            { fileType: FileType.Error, metricResults: new Map() },
+            { fileType: FileType.Error, metricResults: new Map(), metricErrors: new Map() },
         ];
         expect(result).toEqual(expectedResult);
     });
@@ -272,8 +272,25 @@ describe("MetricCalculator.calculateMetrics()", () => {
         expect(fileMetricResults.metricResults.has(FileMetric.realLinesOfCode)).toEqual(false);
         expect(fileMetricResults.metricResults.has(FileMetric.maxNestingLevel)).toEqual(false);
 
-        expect(fileMetricResults.error).toEqual(
-            new Error("Error while calculating metric(s) for file " + sourceFile.filePath),
-        );
+        expect(fileMetricResults.metricErrors.get(FileMetric.classes)).toEqual({
+            metricName: FileMetric.classes,
+            error: new Error("something went wrong when calculating classes metric"),
+        });
+        expect(fileMetricResults.metricErrors.get(FileMetric.commentLines)).toEqual({
+            metricName: FileMetric.commentLines,
+            error: new Error("something went wrong when calculating commentLines metric"),
+        });
+        expect(fileMetricResults.metricErrors.get(FileMetric.complexity)).toEqual({
+            metricName: FileMetric.complexity,
+            error: new Error("something went wrong when calculating complexity metric"),
+        });
+        expect(fileMetricResults.metricErrors.has(FileMetric.functions)).toEqual(false);
+        expect(fileMetricResults.metricErrors.has(FileMetric.linesOfCode)).toEqual(false);
+        expect(fileMetricResults.metricErrors.get(FileMetric.realLinesOfCode)).toEqual({
+            metricName: FileMetric.realLinesOfCode,
+            error: new Error("something went wrong when calculating realLinesOfCode metric"),
+        });
+        // Should not have been tried to calculate on source code in the first place:
+        expect(fileMetricResults.metricErrors.has(FileMetric.maxNestingLevel)).toEqual(false);
     });
 });

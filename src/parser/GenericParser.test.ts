@@ -21,6 +21,9 @@ import {
     UnsupportedFile,
     FileMetricResults,
     isErrorFile,
+    ErrorFile,
+    MetricError,
+    MetricResult,
 } from "./metrics/Metric";
 import { MetricCalculator } from "./MetricCalculator";
 import { CouplingCalculator } from "./CouplingCalculator";
@@ -62,9 +65,12 @@ async function mockedMetricsCalculator(
 ): Promise<[SourceFile, FileMetricResults]> {
     const file = await parsedFilePromise;
     if (isErrorFile(file)) {
-        return [file, { fileType: file.fileType, metricResults: new Map() }];
+        return [
+            file,
+            { fileType: file.fileType, metricResults: new Map(), metricErrors: new Map() },
+        ];
     }
-    return [file, expectedFileMetricsMap];
+    return [file, expectedFileMetricsResults];
 }
 
 /*
@@ -98,11 +104,12 @@ function spyOnCouplingCalculatorNoOp() {
  * Example data:
  */
 
-const expectedFileMetricsMap: FileMetricResults = {
+const expectedFileMetricsResults: FileMetricResults = {
     fileType: FileType.SourceCode,
     metricResults: new Map([
         [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
     ]),
+    metricErrors: new Map(),
 };
 
 let parser: Parser;
@@ -141,7 +148,7 @@ describe("GenericParser.calculateMetrics()", () => {
          * then:
          */
         expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path.cpp", expectedFileMetricsMap]]),
+            new Map([["clearly/invalid/path.cpp", expectedFileMetricsResults]]),
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(1);
         expect(couplingSpied).toHaveBeenCalledTimes(0);
@@ -170,8 +177,8 @@ describe("GenericParser.calculateMetrics()", () => {
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([
-                ["clearly/invalid/path1.cc", expectedFileMetricsMap],
-                ["clearly/invalid/path2.cpp", expectedFileMetricsMap],
+                ["clearly/invalid/path1.cc", expectedFileMetricsResults],
+                ["clearly/invalid/path2.cpp", expectedFileMetricsResults],
             ]),
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
@@ -201,8 +208,8 @@ describe("GenericParser.calculateMetrics()", () => {
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([
-                ["clearly/invalid/path1.cc", expectedFileMetricsMap],
-                ["clearly/invalid/unsupported.unsupported", expectedFileMetricsMap],
+                ["clearly/invalid/path1.cc", expectedFileMetricsResults],
+                ["clearly/invalid/unsupported.unsupported", expectedFileMetricsResults],
             ]),
         );
         expect(actualResult.unsupportedFiles).toEqual(["clearly/invalid/unsupported.unsupported"]);
@@ -242,8 +249,8 @@ describe("GenericParser.calculateMetrics()", () => {
          * Given:
          */
         mockFindFilesAsync();
-        mockTreeParserParse(async () => {
-            throw new Error("Baaaaaah");
+        mockTreeParserParse(async (filePath) => {
+            return new ErrorFile(filePath, new Error("Baaaaaah"));
         });
 
         const errorSpy = spyOnConsoleErrorNoOp();
@@ -257,9 +264,7 @@ describe("GenericParser.calculateMetrics()", () => {
          * then:
          */
         expect(actualResult.fileMetrics).toEqual(new Map());
-        expect(actualResult.errorFiles).toEqual(
-            new Map([["clearly/invalid/path.cpp", new Error("Baaaaaah")]]),
-        );
+        expect(actualResult.errorFiles).toEqual(["clearly/invalid/path.cpp"]);
         expect(errorSpy).toHaveBeenCalled();
     });
 
@@ -270,9 +275,31 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync();
         mockTreeParserParse();
 
+        const metricErrors: Map<string, MetricError> = new Map([
+            [
+                FileMetric.linesOfCode,
+                {
+                    metricName: FileMetric.linesOfCode,
+                    error: new Error("Buuuh!"),
+                },
+            ],
+        ]);
+
+        const errorMetricsResults: FileMetricResults = {
+            fileType: FileType.SourceCode,
+            metricResults: new Map(),
+            metricErrors,
+        };
+
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
-            await parsedFilePromise;
-            throw new Error("Buuuh!");
+            return [
+                await parsedFilePromise,
+                {
+                    fileType: FileType.SourceCode,
+                    metricResults: new Map(),
+                    metricErrors,
+                },
+            ];
         });
 
         const errorSpy = spyOnConsoleErrorNoOp();
@@ -286,10 +313,10 @@ describe("GenericParser.calculateMetrics()", () => {
         /*
          * then:
          */
-        expect(actualResult.fileMetrics).toEqual(new Map());
-        expect(actualResult.errorFiles).toEqual(
-            new Map([["clearly/invalid/path.cpp", new Error("Buuuh!")]]),
+        expect(actualResult.fileMetrics).toEqual(
+            new Map([["clearly/invalid/path.cpp", errorMetricsResults]]),
         );
+        expect(actualResult.errorFiles).toEqual([]);
         expect(errorSpy).toHaveBeenCalled();
     });
 
@@ -300,12 +327,28 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync(mockedFindTwoFilesAsync);
         mockTreeParserParse();
 
+        const metricErrors: Map<string, MetricError> = new Map([
+            [
+                FileMetric.linesOfCode,
+                {
+                    metricName: FileMetric.linesOfCode,
+                    error: new Error("I only accept cpp files!"),
+                },
+            ],
+        ]);
+
+        const errorMetricsResults: FileMetricResults = {
+            fileType: FileType.SourceCode,
+            metricResults: new Map(),
+            metricErrors,
+        };
+
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
             const file = await parsedFilePromise;
             if (getFileExtension(file.filePath) !== "cpp") {
-                throw new Error("I only accept cpp files!");
+                return [file, errorMetricsResults];
             }
-            return [file, expectedFileMetricsMap];
+            return [file, expectedFileMetricsResults];
         });
 
         const errorSpy = spyOnConsoleErrorNoOp();
@@ -320,11 +363,81 @@ describe("GenericParser.calculateMetrics()", () => {
          * then:
          */
         expect(actualResult.fileMetrics).toEqual(
-            new Map([["clearly/invalid/path2.cpp", expectedFileMetricsMap]]),
+            new Map([
+                ["clearly/invalid/path2.cpp", expectedFileMetricsResults],
+                ["clearly/invalid/path1.cc", errorMetricsResults],
+            ]),
         );
-        expect(actualResult.errorFiles).toEqual(
-            new Map([["clearly/invalid/path1.cc", new Error("I only accept cpp files!")]]),
+        expect(actualResult.errorFiles).toEqual([]);
+        expect(errorSpy).toHaveBeenCalled();
+    });
+
+    it("should return the successfully calculated metrics and an appropriate error object when there is an error for only some of the metrics of a file", async () => {
+        /*
+         * Given:
+         */
+        mockFindFilesAsync(mockedFindTwoFilesAsync);
+        mockTreeParserParse();
+
+        const metricResults = new Map<string, MetricResult>([
+            [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
+            [
+                FileMetric.realLinesOfCode,
+                { metricName: FileMetric.realLinesOfCode, metricValue: 3 },
+            ],
+        ]);
+
+        const metricErrors = new Map<string, MetricError>([
+            [
+                FileMetric.classes,
+                {
+                    metricName: FileMetric.classes,
+                    error: new Error("Classes metric is to difficult for this program!"),
+                },
+            ],
+            [
+                FileMetric.functions,
+                {
+                    metricName: FileMetric.classes,
+                    error: new Error(
+                        "Unable to call functions, because, well, it does not work, ok??",
+                    ),
+                },
+            ],
+        ]);
+
+        const partialErrorMetricsResults: FileMetricResults = {
+            fileType: FileType.SourceCode,
+            metricResults,
+            metricErrors,
+        };
+
+        spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
+            const file = await parsedFilePromise;
+            if (getFileExtension(file.filePath) === "cpp") {
+                return [file, partialErrorMetricsResults];
+            }
+            return [file, expectedFileMetricsResults];
+        });
+
+        const errorSpy = spyOnConsoleErrorNoOp();
+
+        const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
+
+        /*
+         * when:
+         */
+        const actualResult = await parser.calculateMetrics();
+        /*
+         * then:
+         */
+        expect(actualResult.fileMetrics).toEqual(
+            new Map([
+                ["clearly/invalid/path2.cpp", partialErrorMetricsResults],
+                ["clearly/invalid/path1.cc", expectedFileMetricsResults],
+            ]),
         );
+        expect(actualResult.errorFiles).toEqual([]);
         expect(errorSpy).toHaveBeenCalled();
     });
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language";
 import Parser from "tree-sitter";
-import { ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric";
+import { ErrorFile, ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
 
 export class TreeParser {
@@ -32,8 +32,12 @@ export class TreeParser {
             return cachedItem;
         }
 
-        const sourceCode = await fs.promises.readFile(filePath, { encoding: "utf8" });
-        return this.#parseTree(sourceCode, filePath, config);
+        try {
+            const sourceCode = await fs.promises.readFile(filePath, { encoding: "utf8" });
+            return this.#parseTree(sourceCode, filePath, config);
+        } catch (error) {
+            return new ErrorFile(filePath, error);
+        }
     }
 
     static #parseTree(

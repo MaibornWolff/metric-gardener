@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
-import { getQueryStatementsByCategory } from "../helper/Helper";
+import { getQueryStatementsByCategories } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
@@ -15,7 +15,7 @@ export class Functions implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
     constructor(allNodeTypes: NodeTypeConfig[]) {
-        this.statementsSuperSet = getQueryStatementsByCategory(
+        this.statementsSuperSet = getQueryStatementsByCategories(
             allNodeTypes,
             NodeTypeCategory.Function,
         );

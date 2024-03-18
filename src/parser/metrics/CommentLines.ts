@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder";
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
-import { getQueryStatementsByCategory } from "../helper/Helper";
+import { getQueryStatementsByCategories } from "../helper/Helper";
 import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
 import { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
@@ -23,7 +23,7 @@ export class CommentLines implements Metric {
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: NodeTypeConfig[]) {
-        this.statementsSuperSet = getQueryStatementsByCategory(
+        this.statementsSuperSet = getQueryStatementsByCategories(
             allNodeTypes,
             NodeTypeCategory.Comment,
         );

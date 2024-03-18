@@ -167,18 +167,6 @@ async function* findFilesAsyncRecursive(
     } // End of for await (directory entries)
 }
 
-export function findNodeTypesByCategory(
-    allNodeTypes: NodeTypeConfig[],
-    category: NodeTypeCategory,
-    callback: (nodeTypeConfig: NodeTypeConfig) => void,
-) {
-    for (const nodeTypeConfig of allNodeTypes) {
-        if (nodeTypeConfig.category === category) {
-            callback(nodeTypeConfig);
-        }
-    }
-}
-
 export function findNodeTypesByCategories(
     allNodeTypes: NodeTypeConfig[],
     categories: Set<NodeTypeCategory>,
@@ -191,25 +179,12 @@ export function findNodeTypesByCategories(
     }
 }
 
-export function getQueryStatementsByCategory(
-    allNodeTypes: NodeTypeConfig[],
-    category: NodeTypeCategory,
-) {
-    const statements: NodeTypeQueryStatement[] = [];
-    findNodeTypesByCategory(allNodeTypes, category, (nodeType) => {
-        const queryStatement = new NodeTypeQueryStatement(nodeType);
-        statements.push(queryStatement);
-    });
-
-    return statements;
-}
-
 export function getQueryStatementsByCategories(
     allNodeTypes: NodeTypeConfig[],
-    categories: Set<NodeTypeCategory>,
+    ...categories: NodeTypeCategory[]
 ) {
     const statements: NodeTypeQueryStatement[] = [];
-    findNodeTypesByCategories(allNodeTypes, categories, (nodeType) => {
+    findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeType) => {
         const queryStatement = new NodeTypeQueryStatement(nodeType);
         statements.push(queryStatement);
     });
@@ -217,20 +192,24 @@ export function getQueryStatementsByCategories(
     return statements;
 }
 
-export function getNodeTypesByCategory(allNodeTypes: NodeTypeConfig[], category: NodeTypeCategory) {
+export function getNodeTypesByCategories(
+    allNodeTypes: NodeTypeConfig[],
+    ...categories: NodeTypeCategory[]
+) {
     const types: NodeTypeConfig[] = [];
-    findNodeTypesByCategory(allNodeTypes, category, (nodeTypeConfig) => types.push(nodeTypeConfig));
+    findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeTypeConfig) =>
+        types.push(nodeTypeConfig),
+    );
     return types;
 }
 
-export function getNodeTypeNamesByCategory(
+export function getNodeTypeNamesByCategories(
     allNodeTypes: NodeTypeConfig[],
-    category: NodeTypeCategory,
+    ...categories: NodeTypeCategory[]
 ) {
     const typeNames: string[] = [];
-    findNodeTypesByCategory(allNodeTypes, category, (nodeTypeConfig) => {
-        const { type_name } = nodeTypeConfig;
-        typeNames.push(type_name);
+    findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeTypeConfig) => {
+        typeNames.push(nodeTypeConfig.type_name);
     });
     return typeNames;
 }

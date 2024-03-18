@@ -39,6 +39,20 @@ sub attribute {
 }
 
 
+package SubclassNew;
+
+use parent -norequire, "Class";
+
+sub new {
+    my $class = shift;
+    my $self = {
+        attribute => shift // "new default value\n",
+    };
+    bless $self, $class;
+    return $self;
+}
+
+
 package main;
 
 $object = Class->new;
@@ -52,3 +66,6 @@ print_attribute $object;
 
 $object = Subclass->new;
 print $object->attribute("subclass\n");
+
+$object = SubclassNew->new;
+$object->print_attribute;

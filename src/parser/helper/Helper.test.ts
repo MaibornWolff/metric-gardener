@@ -1,10 +1,9 @@
 import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper";
 import {
     formatPrintPath,
-    getNodeTypeNamesByCategory,
-    getNodeTypesByCategory,
+    getNodeTypeNamesByCategories,
+    getNodeTypesByCategories,
     getQueryStatementsByCategories,
-    getQueryStatementsByCategory,
 } from "./Helper";
 import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model";
@@ -102,6 +101,11 @@ describe("Helper.ts", () => {
     describe("Helper for node types", () => {
         const exampleNodeTypes: NodeTypeConfig[] = [
             {
+                type_name: "node type 0",
+                languages: ["rs"],
+                category: NodeTypeCategory.If,
+            },
+            {
                 type_name: "node type 1",
                 languages: ["cpp"],
                 category: NodeTypeCategory.Other,
@@ -136,26 +140,38 @@ describe("Helper.ts", () => {
 
         describe("getNodeTypesByCategory(...)", () => {
             it("should return all node types of a category", () => {
-                const result = getNodeTypesByCategory(exampleNodeTypes, NodeTypeCategory.Comment);
+                const result = getNodeTypesByCategories(exampleNodeTypes, NodeTypeCategory.Comment);
 
                 const expectedResult = [
-                    {
-                        type_name: "node type 2",
-                        languages: ["cpp", "js", "ts", "tsx"],
-                        activated_for_languages: ["cpp"],
-                        category: NodeTypeCategory.Comment,
-                    },
-                    {
-                        type_name: "node type 4",
-                        languages: ["java"],
-                        category: NodeTypeCategory.Comment,
-                    },
-                    {
-                        type_name: "node type 5",
-                        languages: ["go"],
-                        category: NodeTypeCategory.Comment,
-                    },
+                    exampleNodeTypes[2],
+                    exampleNodeTypes[4],
+                    exampleNodeTypes[5],
                 ];
+
+                expect(result).toEqual(expectedResult);
+            });
+
+            it("should return all node types that match one of multiple categories", () => {
+                const result = getNodeTypesByCategories(
+                    exampleNodeTypes,
+                    NodeTypeCategory.Comment,
+                    NodeTypeCategory.ClassDefinition,
+                );
+
+                const expectedResult = [
+                    exampleNodeTypes[2],
+                    exampleNodeTypes[4],
+                    exampleNodeTypes[5],
+                    exampleNodeTypes[6],
+                ];
+
+                expect(result).toEqual(expectedResult);
+            });
+
+            it("should return an empty list when no category is passed", () => {
+                const result = getNodeTypesByCategories(exampleNodeTypes);
+
+                const expectedResult: string[] = [];
 
                 expect(result).toEqual(expectedResult);
             });
@@ -163,7 +179,7 @@ describe("Helper.ts", () => {
 
         describe("getNodeTypeNamesByCategory(...)", () => {
             it("should return the names of all node types of a category", () => {
-                const result = getNodeTypeNamesByCategory(
+                const result = getNodeTypeNamesByCategories(
                     exampleNodeTypes,
                     NodeTypeCategory.Comment,
                 );
@@ -172,11 +188,38 @@ describe("Helper.ts", () => {
 
                 expect(result).toEqual(expectedResult);
             });
+
+            it("should return the names of all node types that match one of multiple categories", () => {
+                const result = getNodeTypeNamesByCategories(
+                    exampleNodeTypes,
+                    NodeTypeCategory.Comment,
+                    NodeTypeCategory.ClassDefinition,
+                    NodeTypeCategory.If,
+                );
+
+                const expectedResult = [
+                    "node type 0",
+                    "node type 2",
+                    "node type 4",
+                    "node type 5",
+                    "node type 6",
+                ];
+
+                expect(result).toEqual(expectedResult);
+            });
+
+            it("should return an empty list when no category is passed", () => {
+                const result = getNodeTypeNamesByCategories(exampleNodeTypes);
+
+                const expectedResult: string[] = [];
+
+                expect(result).toEqual(expectedResult);
+            });
         });
 
         describe("getQueryStatementsByCategory(...)", () => {
-            it("should return query statements fo all node types of a category", () => {
-                const result = getQueryStatementsByCategory(
+            it("should return query statements for all node types of a single category", () => {
+                const result = getQueryStatementsByCategories(
                     exampleNodeTypes,
                     NodeTypeCategory.Comment,
                 );
@@ -202,13 +245,12 @@ describe("Helper.ts", () => {
 
                 expect(result).toEqual(expectedResult);
             });
-        });
 
-        describe("getQueryStatementsByCategories(...)", () => {
-            it("should return query statements fo all node types that match one of the categories", () => {
+            it("should return query statements for all node types that match one of multiple categories", () => {
                 const result = getQueryStatementsByCategories(
                     exampleNodeTypes,
-                    new Set([NodeTypeCategory.Comment, NodeTypeCategory.ClassDefinition]),
+                    NodeTypeCategory.Comment,
+                    NodeTypeCategory.ClassDefinition,
                 );
 
                 const expectedResult = [
@@ -234,6 +276,14 @@ describe("Helper.ts", () => {
                         category: NodeTypeCategory.ClassDefinition,
                     }),
                 ];
+
+                expect(result).toEqual(expectedResult);
+            });
+
+            it("should return an empty list when no category is passed", () => {
+                const result = getQueryStatementsByCategories(exampleNodeTypes);
+
+                const expectedResult: NodeTypeQueryStatement[] = [];
 
                 expect(result).toEqual(expectedResult);
             });

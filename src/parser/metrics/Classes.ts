@@ -29,7 +29,7 @@ export class Classes implements Metric {
     constructor(allNodeTypes: NodeTypeConfig[]) {
         this.statementsSuperSet = getQueryStatementsByCategories(
             allNodeTypes,
-            this.nodeTypeCategories,
+            ...this.nodeTypeCategories,
         );
         this.addQueriesForTSAndTSX();
         this.addQueriesForCAndCpp();

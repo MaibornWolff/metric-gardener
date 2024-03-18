@@ -2,12 +2,38 @@
 
 This document outlines the definition of file metrics for TypeScript (TS) and TypeScript JSX (TSX).
 
-### 1. classes
+### complexity
+
+The "complexity" metric counts:
+
+-   `if` and `if else` statements
+-   ternary expressions
+-   `for...of`, `for await...of`, `for...in`,`while` and `do...while` loops
+-   `case` labels in switch-statements
+-   `catch` labels in try-catch blocks
+-   logical binary operations `&&` and `||`
+-   everything counted for "functions" metric
+
+It does **not** count:
+
+-   `.catch()` method call for Promises
+-   `.forEach()` method call for iterables and other built-in functions
+
+### functions
+
+The "functions" metric counts:
+
+-   method declarations in classes, abstract classes and interfaces
+-   static methods, constructors, getters and setters
+-   functions declared with the keyword `function`
+-   arrow functions
+
+### classes
 
 The "classes" metric counts:
 
--   keywords like: `class`, `abstract class`, `interface`, `enum`
--   type aliases with object type literals e.g. `type ObjectType = { message: string};`
+-   declarations of class, abstract class, interface and enum
+-   type aliases declaration with one single object type literal e.g. `type ObjectType = { message: string};`
 
 It does **not** count:
 
@@ -17,32 +43,6 @@ It does **not** count:
     -   `type Tuple = [name: string, age: number];`
     -   `type AliasType = number;`
 
-### 2. functions
-
-The "functions" metric counts:
-
--   methods declarations in classes, abstract classes and interfaces
--   static methods, constructors, getters and setters
--   functions declared with the keyword `function`
--   arrow functions
-
-### 3. complexity
-
-The "complexity" metric counts:
-
--   `if`, `if else` statements, but **no** `else` statements
--   ternary expressions
--   for, while, do-while loops
--   `case` labels in switch-statements, but **no** `default` labels
--   `catch` labels in try-catch blocks, but **no** `finally` labels
--   binary operations `&&` and `||`
--   everything counted for "functions" metric
-
-It does **not** count:
-
--   `.catch()` method call for Promises
--   `.forEach()` method call for iterables
-
-### 4. lines_of_code and real_lines_of_code
+### lines_of_code, comment_lines and real_lines_of_code
 
 see README.md

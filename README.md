@@ -64,14 +64,6 @@ The number of function declarations inside a file. Includes all kinds of functio
 **classes**<br>
 The number of class definitions inside a file, also counting for enums, interfaces, structs, unions, traits and records.
 
-<details><summary>Language specific details</summary>
-
-| Syntax    | Description                                                                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| JS/TS/TSX | Counts type declarations with object type literal like `type book = {title: string};`. Type alias like `type alias_type = number;` will not be counted. |
-
-</details>
-
 **lines_of_code**<br>
 The total number of lines of a file, including empty lines, comments, etc.
 
@@ -80,6 +72,8 @@ The number of comment lines inside a file. Does count for any kind of comment (e
 
 **real_lines_of_code**<br>
 The number of lines inside a file that contain actual code of the programming language, not counting for comments, empty lines, etc.
+
+**Note:** _Please click on the languages listed in the section above to access language-specific details._
 
 ### Command line options for the `parse` command
 

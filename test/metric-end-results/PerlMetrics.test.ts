@@ -16,42 +16,36 @@ describe("Perl metrics tests", () => {
     describe("parsing complexity metric", () => {
         it("should count compound statements correctly", () => {
             // count: if, elsif, unless, when, while, until, for, foreach
+            // as function: BEGIN, UNITCHECK, CHECK, INIT, END
             // not: else, given, continue, {}
-            throw "unsure: BEGIN, UNITCHECK, CHECK, INIT, END";
-            testFileMetric(path + "compound-statements.pl", FileMetric.complexity, 23);
+            testFileMetric(path + "compound-statements.pl", FileMetric.complexity, 28);
         });
 
-        it("should ??? NOT ??? count defer blocks", () => {
-            throw "unsure: defer";
-            testFileMetric(path + "defer-blocks.pl", FileMetric.complexity, 0);
-        });
-
-        it("should ??? NOT ??? count dump", () => {
-            throw "unsure: dump, CORE::dump";
+        it("should NOT count dump", () => {
+            // not: dump, CORE::dump
             testFileMetric(path + "dump.pl", FileMetric.complexity, 0);
         });
 
-        it("should ??? NOT ??? count exit", () => {
-            throw "unsure: exit";
+        it("should NOT count exit", () => {
+            // not: exit
             testFileMetric(path + "exit.pl", FileMetric.complexity, 0);
         });
 
-        it("should ??? NOT ??? count goto", () => {
-            throw "unsure: goto LABEL, goto EXPR, goto &NAME";
+        it("should NOT count goto", () => {
+            // not: goto LABEL, goto EXPR, goto &NAME
             testFileMetric(path + "goto.pl", FileMetric.complexity, 0);
         });
 
-        it("should ??? NOT ??? count loop control commands", () => {
+        it("should NOT count loop control commands", () => {
             // (count: while, if)
-            throw "unsure: next, last, redo";
+            // not: next, last, redo
             testFileMetric(path + "loop-control.pl", FileMetric.complexity, 5);
         });
 
         it("should count operators correctly", () => {
-            // count: and, &&, or, ||, //, ?:
+            // count: and, &&, &&=, or, ||, ||=, //, //=, xor, ?:
             // not: everything else
-            throw "unsure: xor, &&=, ||=, //=";
-            testFileMetric(path + "operators.pl", FileMetric.complexity, 19);
+            testFileMetric(path + "operators.pl", FileMetric.complexity, 22);
         });
 
         it("should count statement modifiers correctly", () => {
@@ -61,28 +55,24 @@ describe("Perl metrics tests", () => {
         });
 
         it("should count functions correctly", () => {
-            throw "unsure: AUTOLOAD";
-            throw "unsure: BEGIN, UNITCHECK, CHECK, INIT, END";
-            throw "unsure: defer";
             testFileMetric(path + "sub.pl", FileMetric.complexity, 8);
             testFileMetric(path + "sub-anonymous.pl", FileMetric.complexity, 6);
             testFileMetric(path + "sub-autoload.pl", FileMetric.complexity, 1);
             testFileMetric(path + "classes.pl", FileMetric.complexity, 4);
             testFileMetric(path + "classes-using-packages.pl", FileMetric.complexity, 4);
-            testFileMetric(path + "compound-statements.pl", FileMetric.functions, 0);
-            testFileMetric(path + "defer-blocks.pl", FileMetric.functions, 0);
+            testFileMetric(path + "defer-blocks.pl", FileMetric.complexity, 1);
         });
 
         it("should count switch statements correctly", () => {
-            // count: when
-            // not: default
-            throw "unsure: for, foreach, given, continue, break";
-            testFileMetric(path + "switch-statements.pl", FileMetric.complexity, 10);
+            // count: when, for, foreach
+            // not: given, default, continue, break
+            testFileMetric(path + "switch-statements.pl", FileMetric.complexity, 12);
         });
 
         it("should count try-catch correctly", () => {
-            throw "unsure: eval, die, do, try, catch";
-            testFileMetric(path + "try-catch.pl", FileMetric.complexity, 0);
+            // count: or, catch
+            // not: eval, die, do, try
+            testFileMetric(path + "try-catch.pl", FileMetric.complexity, 2);
         });
     });
 
@@ -99,7 +89,7 @@ describe("Perl metrics tests", () => {
         });
 
         it("should count AUTOLOAD", () => {
-            throw "unsure: AUTOLOAD";
+            // count: AUTOLOAD
             testFileMetric(path + "sub-autoload.pl", FileMetric.functions, 1);
         });
 
@@ -109,15 +99,15 @@ describe("Perl metrics tests", () => {
             testFileMetric(path + "classes-using-packages.pl", FileMetric.functions, 4);
         });
 
-        it("should ??? NOT ??? count compound statements", () => {
+        it("should count compound statements", () => {
+            // count: BEGIN, UNITCHECK, CHECK, INIT, END
             // not: if, else, elsif, unless, given, when, while, until, for, foreach, continue, {}
-            throw "unsure: BEGIN, UNITCHECK, CHECK, INIT, END";
-            testFileMetric(path + "compound-statements.pl", FileMetric.functions, 0);
+            testFileMetric(path + "compound-statements.pl", FileMetric.functions, 5);
         });
 
-        it("should ??? NOT ??? count defer blocks", () => {
-            throw "unsure: defer";
-            testFileMetric(path + "defer-blocks.pl", FileMetric.functions, 0);
+        it("should count defer blocks", () => {
+            // count: defer
+            testFileMetric(path + "defer-blocks.pl", FileMetric.functions, 1);
         });
     });
 
@@ -129,7 +119,6 @@ describe("Perl metrics tests", () => {
         });
 
         it("should count classes using packages correctly", () => {
-            throw "unsure: package, bless, parent";
             testFileMetric(path + "classes-using-packages.pl", FileMetric.classes, 2);
         });
 
@@ -175,8 +164,8 @@ describe("Perl metrics tests", () => {
     describe("parsing comment_lines metric", () => {
         describe("parsing comment_lines metric", () => {
             it("should count comments correctly", () => {
-                // count: lines starting with #, lines having only spaces and tabs before #
-                throw "unsure: lines having code before #";
+                // count: any line with #
+                // not: # in strings
                 testFileMetric(path + "comments.pl", FileMetric.commentLines, 4);
             });
 
@@ -184,14 +173,13 @@ describe("Perl metrics tests", () => {
                 testFileMetric(path + "pod.pl", FileMetric.commentLines, 14);
             });
 
-            it("should ??? NOT ??? count __DATA__", () => {
-                throw "unsure: __DATA__";
+            it("should NOT count __DATA__", () => {
                 testFileMetric(path + "special-literals-data.pl", FileMetric.commentLines, 2);
             });
 
             it("should count __END__", () => {
-                throw "unsure: line with __END__";
-                testFileMetric(path + "special-literals.pl", FileMetric.commentLines, 5);
+                // count: lines including and after __END__
+                testFileMetric(path + "special-literals.pl", FileMetric.commentLines, 4);
             });
         });
     });
@@ -217,14 +205,14 @@ describe("Perl metrics tests", () => {
             testFileMetric(path + "pod.pl", FileMetric.linesOfCode, 8);
         });
 
-        it("should ??? NOT ??? count __DATA__", () => {
-            throw "unsure: __DATA__";
+        it("should count __DATA__", () => {
             testFileMetric(path + "special-literals-data.pl", FileMetric.linesOfCode, 4);
         });
 
-        it("should NOT count __END__", () => {
-            throw "unsure: line with __END__";
-            testFileMetric(path + "special-literals.pl", FileMetric.linesOfCode, 11);
+        it("should NOT count after __END__", () => {
+            // count: line with __END__
+            // not: lines after __END__
+            testFileMetric(path + "special-literals.pl", FileMetric.linesOfCode, 12);
         });
 
         it("should count weird lines correctly", () => {

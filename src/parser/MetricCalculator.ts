@@ -39,8 +39,7 @@ export class MetricCalculator {
      * basic single file metrics on multiple files.
      */
     constructor() {
-        const allNodeTypes: NodeTypeConfig[] =
-            nodeTypesConfig as NodeTypeConfig[];
+        const allNodeTypes: NodeTypeConfig[] = nodeTypesConfig as NodeTypeConfig[];
 
         this.#sourceFileMetrics = [
             new Complexity(allNodeTypes),

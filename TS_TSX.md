@@ -12,7 +12,7 @@ The "complexity" metric counts:
 -   `case` labels in switch-statements
 -   `catch` labels in try-catch blocks
 -   logical binary operations `&&` and `||`
--   everything counted for "functions" metric
+-   everything counted for the "functions" metric
 
 It does **not** count:
 

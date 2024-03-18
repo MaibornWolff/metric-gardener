@@ -20,7 +20,7 @@ export enum FileMetric {
 export interface FileMetricResults {
     fileType: FileType;
     metricResults: Map<string, MetricResult>;
-    error?: Error;
+    metricErrors: Map<string, MetricError>;
 }
 
 /**
@@ -36,6 +36,14 @@ export interface MetricResult {
      * Value of the metric.
      */
     metricValue: number;
+}
+
+/**
+ * Represents an error that occurred during the metric calculation process.
+ */
+export interface MetricError {
+    metricName: string;
+    error: Error;
 }
 
 export interface Relationship {

@@ -8,12 +8,10 @@ import {
     isParsedFile,
     ParsedFile,
     FileMetricResults,
-    ErrorFile,
     isErrorFile,
 } from "./metrics/Metric";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeParser } from "./helper/TreeParser";
-import { FileType } from "./helper/Language";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -44,7 +42,7 @@ export class GenericParser {
     async calculateMetrics() {
         const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
-        const errorFiles = new Map<string, Error>();
+        const errorFiles: string[] = [];
         let couplingMetrics = {} as CouplingResult;
 
         try {
@@ -52,14 +50,7 @@ export class GenericParser {
             const parsePromises = new Map<string, Promise<SourceFile>>();
 
             for await (const filePath of filePathGenerator) {
-                parsePromises.set(
-                    filePath,
-                    TreeParser.parse(filePath, this.config).catch((reason) => {
-                        console.error("Error while parsing a tree for the file " + filePath);
-                        console.error(reason);
-                        return new ErrorFile(filePath, reason);
-                    }),
-                );
+                parsePromises.set(filePath, TreeParser.parse(filePath, this.config));
             }
 
             const fileMetricPromises: Promise<[SourceFile, FileMetricResults]>[] = [];
@@ -68,19 +59,7 @@ export class GenericParser {
                 const metricsParser = new MetricCalculator();
 
                 for (const [filePath, parsePromise] of parsePromises) {
-                    fileMetricPromises.push(
-                        metricsParser.calculateMetrics(parsePromise).catch((reason) => {
-                            console.error("Error while parsing file metrics");
-                            console.error(reason);
-                            return [
-                                new ErrorFile(filePath, reason),
-                                {
-                                    fileType: FileType.Error,
-                                    metricResults: new Map(),
-                                },
-                            ];
-                        }),
-                    );
+                    fileMetricPromises.push(metricsParser.calculateMetrics(parsePromise));
                 }
             }
 
@@ -90,9 +69,21 @@ export class GenericParser {
 
             dlog(" --- " + treeParseResults.length + " files detected", "\n\n");
 
-            // Do only include files for calculating the coupling metrics
-            // that are supported and have been parsed successfully:
-            const filesForCouplingMetrics: ParsedFile[] = treeParseResults.filter(isParsedFile);
+            const filesForCouplingMetrics: ParsedFile[] = [];
+
+            for (const sourceFile of treeParseResults) {
+                if (isErrorFile(sourceFile)) {
+                    const printPath = formatPrintPath(sourceFile.filePath, this.config);
+                    errorFiles.push(printPath);
+
+                    console.error("Error while parsing the syntax tree for the file " + printPath);
+                    console.error(sourceFile.error);
+                } else if (isParsedFile(sourceFile)) {
+                    // Do only include files for calculating the coupling metrics
+                    // that are supported and have been parsed successfully:
+                    filesForCouplingMetrics.push(sourceFile);
+                }
+            }
 
             if (this.config.parseDependencies) {
                 const couplingParser = new CouplingCalculator(this.config);
@@ -106,14 +97,18 @@ export class GenericParser {
 
             for (const [sourceFile, fileMetricResults] of promisesResults) {
                 const printPath = formatPrintPath(sourceFile.filePath, this.config);
-                if (isErrorFile(sourceFile)) {
-                    // Error while parsing the syntax tree
-                    errorFiles.set(printPath, sourceFile.error);
-                } else {
+                if (!isErrorFile(sourceFile)) {
                     fileMetrics.set(printPath, fileMetricResults);
-                    if (fileMetricResults.error !== undefined) {
-                        // Error while calculating (some) metrics on the syntax tree
-                        errorFiles.set(printPath, fileMetricResults.error);
+
+                    // Inform about errors that occurred while calculating (some) metrics on the syntax tree
+                    for (const metricError of fileMetricResults.metricErrors.values()) {
+                        console.error(
+                            "Error while calculating the metric " +
+                                metricError.metricName +
+                                " on the file " +
+                                sourceFile.filePath,
+                        );
+                        console.error(metricError.error);
                     }
                     if (!isParsedFile(sourceFile)) {
                         unsupportedFiles.push(formatPrintPath(sourceFile.filePath, this.config));

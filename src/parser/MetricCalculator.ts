@@ -6,10 +6,12 @@ import { CommentLines } from "./metrics/CommentLines";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { NodeTypeConfig } from "./helper/Model";
 import {
+    FileMetric,
     FileMetricResults,
     isErrorFile,
     isParsedFile,
     Metric,
+    MetricError,
     MetricResult,
     SourceFile,
 } from "./metrics/Metric";
@@ -64,9 +66,17 @@ export class MetricCalculator {
         const sourceFile = await parsedFilePromise;
 
         if (isErrorFile(sourceFile)) {
-            return [sourceFile, { fileType: sourceFile.fileType, metricResults: new Map() }];
+            return [
+                sourceFile,
+                {
+                    fileType: sourceFile.fileType,
+                    metricResults: new Map(),
+                    metricErrors: new Map(),
+                },
+            ];
         }
         const metricResults = new Map<string, MetricResult>();
+        const metricErrors = new Map<string, MetricError>();
         const resultPromises: Promise<MetricResult | null>[] = [];
 
         if (isParsedFile(sourceFile)) {
@@ -84,43 +94,37 @@ export class MetricCalculator {
             for (const metric of metricsToCalculate) {
                 resultPromises.push(
                     metric.calculate(sourceFile).catch((reason) => {
-                        console.error("Error while calculating metric");
-                        console.error(reason);
+                        metricErrors.set(metric.getName(), {
+                            metricName: metric.getName(),
+                            error: reason,
+                        });
                         return null;
                     }),
                 );
             }
         } else {
             // Unsupported file: only calculate metrics based on the raw source code
-            const sourceCode = await fs.promises.readFile(sourceFile.filePath, {
-                encoding: "utf8",
-            });
-            resultPromises.push(LinesOfCodeRawText.calculate(sourceCode));
-        }
-
-        const resultsArray = await Promise.all(resultPromises);
-        let errorOccured = false;
-        for (const result of resultsArray) {
-            if (result !== null) {
-                metricResults.set(result.metricName, result);
-            } else {
-                errorOccured = true;
+            try {
+                // Reading a file might fail, catch that
+                const sourceCode = await fs.promises.readFile(sourceFile.filePath, {
+                    encoding: "utf8",
+                });
+                resultPromises.push(LinesOfCodeRawText.calculate(sourceCode)); // Should never throw
+            } catch (error) {
+                metricErrors.set(FileMetric.linesOfCode, {
+                    metricName: FileMetric.linesOfCode,
+                    error,
+                });
             }
         }
 
-        if (!errorOccured) {
-            return [sourceFile, { fileType: sourceFile.fileType, metricResults }];
-        } else {
-            return [
-                sourceFile,
-                {
-                    fileType: sourceFile.fileType,
-                    metricResults,
-                    error: new Error(
-                        "Error while calculating metric(s) for file " + sourceFile.filePath,
-                    ),
-                },
-            ];
+        const resultsArray = await Promise.all(resultPromises);
+        for (const result of resultsArray) {
+            if (result !== null) {
+                metricResults.set(result.metricName, result);
+            }
         }
+
+        return [sourceFile, { fileType: sourceFile.fileType, metricResults, metricErrors }];
     }
 }

@@ -47,10 +47,10 @@ export class GenericParser {
 
         try {
             const filePathGenerator = findFilesAsync(this.config);
-            const parsePromises = new Map<string, Promise<SourceFile>>();
+            const parsePromises: Promise<SourceFile>[] = [];
 
             for await (const filePath of filePathGenerator) {
-                parsePromises.set(filePath, TreeParser.parse(filePath, this.config));
+                parsePromises.push(TreeParser.parse(filePath, this.config));
             }
 
             const fileMetricPromises: Promise<[SourceFile, FileMetricResults]>[] = [];
@@ -58,14 +58,14 @@ export class GenericParser {
             if (this.config.parseMetrics) {
                 const metricsParser = new MetricCalculator();
 
-                for (const [filePath, parsePromise] of parsePromises) {
+                for (const parsePromise of parsePromises) {
                     fileMetricPromises.push(metricsParser.calculateMetrics(parsePromise));
                 }
             }
 
             // We need to ensure that all trees have been parsed before calculating the coupling metrics,
             // as we need to know the language of the file for that:
-            const treeParseResults = await Promise.all(parsePromises.values());
+            const treeParseResults = await Promise.all(parsePromises);
 
             dlog(" --- " + treeParseResults.length + " files detected", "\n\n");
 
@@ -111,7 +111,7 @@ export class GenericParser {
                         console.error(metricError.error);
                     }
                     if (!isParsedFile(sourceFile)) {
-                        unsupportedFiles.push(formatPrintPath(sourceFile.filePath, this.config));
+                        unsupportedFiles.push(printPath);
                     }
                 }
             }

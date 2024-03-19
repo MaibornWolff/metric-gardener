@@ -398,7 +398,7 @@ describe("GenericParser.calculateMetrics()", () => {
             [
                 FileMetric.functions,
                 {
-                    metricName: FileMetric.classes,
+                    metricName: FileMetric.functions,
                     error: new Error(
                         "Unable to call functions, because, well, it does not work, ok??",
                     ),

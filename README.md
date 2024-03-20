@@ -43,7 +43,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   [TypeScript and TSX](https://github.com/MaibornWolff/metric-gardener/blob/main/TS_TSX.md)
 -   Java
 -   C#
--   C++
+-   [C++](Cpp.md)
 -   Python
 -   JavaScript
 -   Kotlin

@@ -3029,7 +3029,7 @@
     },
     {
         "type_name": "binary_expression_xor",
-        "category": "logical_binary_expression",
+        "category": "",
         "languages": ["php", "cpp"],
         "grammar_type_name": "binary_expression",
         "operator": "xor"

@@ -2945,7 +2945,7 @@
     {
         "type_name": "function_definition",
         "category": "function",
-        "deactivated_for_languages": ["cpp", "c", "pl"],
+        "deactivated_for_languages": ["cpp", "c"],
         "languages": ["php", "py", "cpp", "sh", "c"]
     },
     {
@@ -6635,7 +6635,7 @@
     },
     {
         "type_name": "binary_expression_&&=",
-        "category": "binary_expression",
+        "category": "logical_binary_expression",
         "languages": ["pl"],
         "grammar_type_name": "binary_expression",
         "operator": "&&="
@@ -6670,14 +6670,14 @@
     },
     {
         "type_name": "binary_expression_//",
-        "category": "binary_expression",
+        "category": "logical_binary_expression",
         "languages": ["pl"],
         "grammar_type_name": "binary_expression",
         "operator": "//"
     },
     {
         "type_name": "binary_expression_//=",
-        "category": "binary_expression",
+        "category": "logical_binary_expression",
         "languages": ["pl"],
         "grammar_type_name": "binary_expression",
         "operator": "//="
@@ -6726,7 +6726,7 @@
     },
     {
         "type_name": "binary_expression_||=",
-        "category": "binary_expression",
+        "category": "logical_binary_expression",
         "languages": ["pl"],
         "grammar_type_name": "binary_expression",
         "operator": "||="
@@ -6740,7 +6740,7 @@
     },
     {
         "type_name": "bless",
-        "category": "",
+        "category": "class_definition",
         "languages": ["pl"]
     },
     {
@@ -6755,7 +6755,7 @@
     },
     {
         "type_name": "comments",
-        "category": "",
+        "category": "comment",
         "languages": ["pl"]
     },
     {
@@ -6770,7 +6770,7 @@
     },
     {
         "type_name": "elsif_clause",
-        "category": "",
+        "category": "if",
         "languages": ["pl"]
     },
     {
@@ -6785,17 +6785,17 @@
     },
     {
         "type_name": "for_simple_statement",
-        "category": "",
+        "category": "loop",
         "languages": ["pl"]
     },
     {
         "type_name": "for_statement_1",
-        "category": "",
+        "category": "loop",
         "languages": ["pl"]
     },
     {
         "type_name": "for_statement_2",
-        "category": "",
+        "category": "loop",
         "languages": ["pl"]
     },
     {
@@ -6840,17 +6840,17 @@
     },
     {
         "type_name": "heredoc_body_statement",
-        "category": "",
+        "category": "comment",
         "languages": ["pl"]
     },
     {
         "type_name": "heredoc_initializer",
-        "category": "",
+        "category": "comment",
         "languages": ["pl"]
     },
     {
         "type_name": "if_simple_statement",
-        "category": "",
+        "category": "if",
         "languages": ["pl"]
     },
     {
@@ -6925,7 +6925,7 @@
     },
     {
         "type_name": "pod_statement",
-        "category": "",
+        "category": "comment",
         "languages": ["pl"]
     },
     {
@@ -6980,7 +6980,7 @@
     },
     {
         "type_name": "special_block",
-        "category": "",
+        "category": "function",
         "languages": ["pl"]
     },
     {
@@ -7065,12 +7065,12 @@
     },
     {
         "type_name": "unless_simple_statement",
-        "category": "",
+        "category": "conditional_expression",
         "languages": ["pl"]
     },
     {
         "type_name": "unless_statement",
-        "category": "",
+        "category": "conditional_expression",
         "languages": ["pl"]
     },
     {
@@ -7080,12 +7080,12 @@
     },
     {
         "type_name": "until_simple_statement",
-        "category": "",
+        "category": "loop",
         "languages": ["pl"]
     },
     {
         "type_name": "until_statement",
-        "category": "",
+        "category": "loop",
         "languages": ["pl"]
     },
     {
@@ -7120,7 +7120,7 @@
     },
     {
         "type_name": "use_parent_statement",
-        "category": "",
+        "category": "class_definition",
         "languages": ["pl"]
     },
     {
@@ -7130,12 +7130,12 @@
     },
     {
         "type_name": "when_simple_statement",
-        "category": "",
+        "category": "case_label",
         "languages": ["pl"]
     },
     {
         "type_name": "while_simple_statement",
-        "category": "",
+        "category": "loop",
         "languages": ["pl"]
     },
     {
@@ -7175,7 +7175,7 @@
     },
     {
         "type_name": "function",
-        "category": "",
+        "category": "function",
         "languages": ["pl"]
     },
     {
@@ -7190,12 +7190,12 @@
     },
     {
         "type_name": "heredoc_end_identifier",
-        "category": "",
+        "category": "comment",
         "languages": ["pl"]
     },
     {
         "type_name": "heredoc_start_identifier",
-        "category": "",
+        "category": "comment",
         "languages": ["pl"]
     },
     {

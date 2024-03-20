@@ -21,7 +21,7 @@
         "commitmsg": "commitlint --edit"
     },
     "lint-staged": {
-        "src/**/*.ts": "eslint --fix"
+        "src/**/*.ts": "eslint --max-warnings=0"
     },
     "dependencies": {
         "copyfiles": "2.4.1",

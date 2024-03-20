@@ -24,6 +24,10 @@ Concrete_Class::Concrete_Class(std::shared_ptr<library::client> client)
 {
 }
 
+Concrete_Class::~Concrete_Class()
+{
+}
+
 void Concrete_Class::send_message(const size_t number, const int retry) const
 {
     for (int i = 0; i < number; i++)

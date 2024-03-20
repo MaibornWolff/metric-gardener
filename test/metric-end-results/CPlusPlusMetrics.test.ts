@@ -18,7 +18,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_code.cpp",
                 FileMetric.complexity,
-                10,
+                11,
             );
         });
 
@@ -50,11 +50,11 @@ describe("C++ metrics tests", () => {
             testFileMetric(cppTestResourcesPath + "classes.hpp", FileMetric.complexity, 0);
         });
 
-        it("should count function declarations", () => {
+        it("should count function declarations, including default and deleted functions", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_declarations.hpp",
                 FileMetric.complexity,
-                4,
+                6,
             );
         });
 
@@ -106,11 +106,11 @@ describe("C++ metrics tests", () => {
             );
         });
 
-        it("should count function declarations", () => {
+        it("should count function declarations, including default and deleted functions", () => {
             testFileMetric(
                 cppTestResourcesPath + "function_declarations.hpp",
                 FileMetric.functions,
-                4,
+                6,
             );
         });
 
@@ -122,8 +122,16 @@ describe("C++ metrics tests", () => {
             testFileMetric(cppTestResourcesPath + "helpful_templates.h", FileMetric.functions, 5);
         });
 
-        it("should count correctly in a more complex file, also counting for constructors", () => {
-            testFileMetric(cppTestResourcesPath + "cpp_example_code.cpp", FileMetric.functions, 9);
+        it("should count correctly in a more complex file, also counting for constructors and destructors", () => {
+            testFileMetric(cppTestResourcesPath + "cpp_example_code.cpp", FileMetric.functions, 10);
+        });
+
+        it("should count correctly in a more complex header file, also counting virtual and pure virtual (abstract) functions", () => {
+            testFileMetric(
+                cppTestResourcesPath + "cpp_example_header.hpp",
+                FileMetric.functions,
+                11,
+            );
         });
     });
 
@@ -138,7 +146,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_code.cpp",
                 FileMetric.linesOfCode,
-                67,
+                71,
             );
         });
 
@@ -152,7 +160,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_code.cpp",
                 FileMetric.realLinesOfCode,
-                45,
+                48,
             );
         });
 
@@ -164,7 +172,7 @@ describe("C++ metrics tests", () => {
             testFileMetric(
                 cppTestResourcesPath + "cpp_example_header.hpp",
                 FileMetric.realLinesOfCode,
-                31,
+                32,
             );
         });
 

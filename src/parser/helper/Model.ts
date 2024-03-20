@@ -8,9 +8,9 @@ export interface NodeTypeConfig {
      */
     type_name: string;
     /**
-     * Can be used to consider the node type only for a certain subset of the languages that have the node type.
+     * Can be used to omit the node type from a certain subset of the languages that have the node type.
      */
-    activated_for_languages?: string[];
+    deactivated_for_languages?: string[];
     /**
      * Languages that have the node type.
      */

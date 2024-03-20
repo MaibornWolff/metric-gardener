@@ -1584,7 +1584,7 @@
         "metrics": ["lines_of_code", "real_lines_of_code"],
         "type": "statement",
         "category": "start_rule",
-        "activated_for_languages": ["py"],
+        "deactivated_for_languages": ["py"],
         "languages": ["ts", "py"]
     },
     {

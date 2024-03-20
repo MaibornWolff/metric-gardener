@@ -125,7 +125,7 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(case_statement value: _ ) @case_statement",
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
+                    caseDefaultNodeType.deactivated_for_languages,
                 ),
             );
         } else if (caseDefaultNodeType.type_name == "when_entry") {
@@ -137,7 +137,7 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(when_entry (when_condition)) @when_entry",
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
+                    caseDefaultNodeType.deactivated_for_languages,
                 ),
             );
         } else if (caseDefaultNodeType.type_name == "match_arm") {
@@ -149,7 +149,7 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(match_arm pattern: (match_pattern (_))) @match_arm",
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
+                    caseDefaultNodeType.deactivated_for_languages,
                 ),
             );
         } else {
@@ -158,7 +158,7 @@ export class Complexity implements Metric {
                 new SimpleLanguageSpecificQueryStatement(
                     "(" + caseDefaultNodeType.type_name + " (_)) @" + caseDefaultNodeType.type_name,
                     noDefaultLangAbbrs,
-                    caseDefaultNodeType.activated_for_languages,
+                    caseDefaultNodeType.deactivated_for_languages,
                 ),
             );
         }

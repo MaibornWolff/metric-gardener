@@ -137,9 +137,9 @@ export class NodeTypesChangelog {
                     );
                 }
                 const activatedForLangOutput =
-                    mapping.activated_for_languages === undefined
+                    mapping.deactivated_for_languages === undefined
                         ? ""
-                        : mapping.activated_for_languages;
+                        : mapping.deactivated_for_languages;
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
@@ -186,9 +186,9 @@ export class NodeTypesChangelog {
                 }
 
                 const activatedForLangOutput =
-                    mapping.activated_for_languages === undefined
+                    mapping.deactivated_for_languages === undefined
                         ? ""
-                        : mapping.activated_for_languages;
+                        : mapping.deactivated_for_languages;
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +

@@ -113,7 +113,7 @@ describe("Helper.ts", () => {
             {
                 type_name: "node type 2",
                 languages: ["cpp", "js", "ts", "tsx"],
-                activated_for_languages: ["cpp"],
+                deactivated_for_languages: ["cpp"],
                 category: NodeTypeCategory.Comment,
             },
             {
@@ -228,7 +228,7 @@ describe("Helper.ts", () => {
                     new NodeTypeQueryStatement({
                         type_name: "node type 2",
                         languages: ["cpp", "js", "ts", "tsx"],
-                        activated_for_languages: ["cpp"],
+                        deactivated_for_languages: ["cpp"],
                         category: NodeTypeCategory.Comment,
                     }),
                     new NodeTypeQueryStatement({
@@ -257,7 +257,7 @@ describe("Helper.ts", () => {
                     new NodeTypeQueryStatement({
                         type_name: "node type 2",
                         languages: ["cpp", "js", "ts", "tsx"],
-                        activated_for_languages: ["cpp"],
+                        deactivated_for_languages: ["cpp"],
                         category: NodeTypeCategory.Comment,
                     }),
                     new NodeTypeQueryStatement({

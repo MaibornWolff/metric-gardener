@@ -13,6 +13,11 @@ class example_class {
         void member_function (int c, char* chars, std::string &str);
     public:
         int member_function (int d, std::unique_ptr<std::string> str_ptr);
+
+        // Default comparison function, new in C++20
+        auto operator<=>(const example_class&) const = default;
+
+        void you_shall_not_pass(const int number) = delete;
 };
 
 #endif

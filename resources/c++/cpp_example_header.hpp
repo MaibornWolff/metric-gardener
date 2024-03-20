@@ -22,14 +22,14 @@ class Super_Class
      * @brief timeout in seconds.
      */
     int timeout_seconds;
-    
+
   public:
     // Concrete constructor
     Super_Class(std::shared_ptr<library::client> client);
 
     // Abstract function
     virtual void send_message(const size_t number, const int retry) const = 0;
-    
+
 };
 
 /**
@@ -54,6 +54,10 @@ class Concrete_Class final : public Super_Class
      */
     Concrete_Class(std::shared_ptr<library::client> client);
 
+    /**
+     * A destructor.
+     */
+     ~Concrete_Class();
 
     virtual void send_message(const size_t number, const int retry) const override;
 

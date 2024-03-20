@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Perl metrics tests parsing coupling metric should calculate correctly 1`] = `
+{
+  "metrics": Map {},
+  "relationships": [],
+}
+`;

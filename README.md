@@ -40,8 +40,8 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Go
 -   PHP
--   [TypeScript and TSX](https://github.com/MaibornWolff/metric-gardener/blob/main/TS_TSX.md)
--   Java
+-   [TypeScript and TSX](TS_TSX.md)
+-   [Java](Java.md)
 -   C#
 -   C++
 -   Python
@@ -67,7 +67,7 @@ Counts expressions that branch the control flow, like if-statements, loops, swit
 -   binary logical operations (like AND and OR)
 
 **functions**<br>
-The number of function declarations inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, abstract functions, constructors, init blocks, closures, etc.
+The number of function declarations inside a file. Includes all kinds of functions, like constructors, lambda functions, member functions, abstract functions, init blocks, closures, etc.
 
 **classes**<br>
 The number of class definitions inside a file, also counting for enums, interfaces, structs, unions, traits and records.

@@ -21,6 +21,7 @@ It does **not** count:
 
 -   preprocessor directives like `#if`, `#ifdef` or `#ifndef`
 -   `for-each`, `copy_if` function calls from the Standard Template Libraries or other built-in functions
+-   `xor` (alternative syntax `^`) operators
 
 ### functions
 

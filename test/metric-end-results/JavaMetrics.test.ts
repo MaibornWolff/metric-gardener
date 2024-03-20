@@ -38,7 +38,7 @@ describe("Java metrics tests.", () => {
             );
         });
 
-        it("should not count the fields or methods of a class correctly", () => {
+        it("should not count the fields or methods of a class", () => {
             testFileMetric(
                 javaTestResourcesPath +
                     "/" +
@@ -66,6 +66,13 @@ describe("Java metrics tests.", () => {
                 javaTestResourcesPath + "/" + FileMetric.classes + "/Person.java",
                 FileMetric.classes,
                 3,
+            );
+        });
+        it("should count all anonymous class declarations", () => {
+            testFileMetric(
+                javaTestResourcesPath + "/" + FileMetric.classes + "/AnonymousClass.java",
+                FileMetric.classes,
+                2,
             );
         });
     });

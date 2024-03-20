@@ -33,6 +33,7 @@ export class Classes implements Metric {
         );
         this.addQueriesForTSAndTSX();
         this.addQueriesForCAndCpp();
+        this.addQueriesForJava();
     }
 
     addQueriesForCAndCpp() {
@@ -91,6 +92,13 @@ export class Classes implements Metric {
                 "(type_alias_declaration value: (object_type))",
                 ["ts", "tsx"],
             ),
+        );
+    }
+    addQueriesForJava() {
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", [
+                "java",
+            ]),
         );
     }
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {

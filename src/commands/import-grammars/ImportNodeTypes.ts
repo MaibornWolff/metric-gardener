@@ -29,6 +29,7 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
     ["c", "./node_modules/tree-sitter-c/src/node-types.json"],
     ["json", "./node_modules/tree-sitter-json/src/node-types.json"],
     ["yaml", "./node_modules/tree-sitter-yaml/src/node-types.json"],
+    ["perl", "./node_modules/tree-sitter-perl/src/node-types.json"],
 ]);
 
 export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";

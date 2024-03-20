@@ -1,6 +1,6 @@
-# File Metrics for C++
+# File Metrics for C and C++
 
-This document outlines the definition of file metrics for C++.
+This document outlines the definition of file metrics for C and C++.
 
 ### complexity
 

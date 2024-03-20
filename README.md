@@ -43,7 +43,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   [TypeScript and TSX](https://github.com/MaibornWolff/metric-gardener/blob/main/TS_TSX.md)
 -   Java
 -   C#
--   [C++](Cpp.md)
+-   [C++](CAndCpp.md)
 -   Python
 -   JavaScript
 -   Kotlin
@@ -56,7 +56,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   Rust
 -   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if placed after the first heredoc delimiter. Default labels in Switch-statement are treated as regular case labels.)
 -   Flow-annotated JavaScript
--   C (take a look at the CLI option [`parse-h-as-c`](#command-line-options-for-the-parse-command) or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers as C)
+-   [C](CAndCpp.md) (take a look at the CLI option [`parse-h-as-c`](#command-line-options-for-the-parse-command) or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers as C)
 
 ### Supported File Metrics
 

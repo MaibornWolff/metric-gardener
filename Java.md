@@ -35,6 +35,7 @@ The "functions" metric counts:
 The "classes" metric counts:
 
 -   definitions of `class`, `abstract classe`, `interface`, `enum` and `record`
+-   anonymous classes
 
 ### lines_of_code, comment_lines and real_lines_of_code
 

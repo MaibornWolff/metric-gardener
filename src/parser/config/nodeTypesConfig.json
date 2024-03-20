@@ -187,7 +187,21 @@
     {
         "type_name": "identifier",
         "category": "",
-        "languages": ["cs", "go", "java", "js", "kt", "ts", "py", "cpp", "tsx", "rb", "rs", "c"]
+        "languages": [
+            "cs",
+            "go",
+            "java",
+            "js",
+            "kt",
+            "ts",
+            "py",
+            "cpp",
+            "tsx",
+            "rb",
+            "rs",
+            "c",
+            "pl"
+        ]
     },
     {
         "type_name": "implicit_array_creation_expression",
@@ -276,7 +290,8 @@
             "tsx",
             "rs",
             "sh",
-            "c"
+            "c",
+            "pl"
         ]
     },
     {
@@ -372,7 +387,7 @@
     {
         "type_name": "block",
         "category": "",
-        "languages": ["cs", "go", "java", "py", "rb", "rs"]
+        "languages": ["cs", "go", "java", "py", "rb", "rs", "pl"]
     },
     {
         "type_name": "break_statement",
@@ -427,7 +442,7 @@
     {
         "type_name": "if_statement",
         "category": "if",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "sh", "c"]
+        "languages": ["cs", "go", "java", "js", "php", "ts", "py", "cpp", "tsx", "sh", "c", "pl"]
     },
     {
         "type_name": "labeled_statement",
@@ -482,7 +497,7 @@
     {
         "type_name": "while_statement",
         "category": "loop",
-        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh", "c"]
+        "languages": ["cs", "java", "js", "kt", "php", "ts", "py", "cpp", "tsx", "sh", "c", "pl"]
     },
     {
         "type_name": "yield_statement",
@@ -547,7 +562,7 @@
     {
         "type_name": "argument",
         "category": "",
-        "languages": ["cs", "php"]
+        "languages": ["cs", "php", "pl"]
     },
     {
         "type_name": "argument_list",
@@ -609,49 +624,49 @@
     {
         "type_name": "binary_expression_%",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "%"
     },
     {
         "type_name": "binary_expression_&",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "&"
     },
     {
         "type_name": "binary_expression_&&",
         "category": "logical_binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "&&"
     },
     {
         "type_name": "binary_expression_*",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "*"
     },
     {
         "type_name": "binary_expression_+",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "+"
     },
     {
         "type_name": "binary_expression_-",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "-"
     },
     {
         "type_name": "binary_expression_/",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "/"
     },
@@ -665,7 +680,7 @@
     {
         "type_name": "binary_expression_<<",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "<<"
     },
@@ -700,7 +715,7 @@
     {
         "type_name": "binary_expression_>>",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": ">>"
     },
@@ -714,21 +729,21 @@
     {
         "type_name": "binary_expression_^",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "^"
     },
     {
         "type_name": "binary_expression_|",
         "category": "binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "|"
     },
     {
         "type_name": "binary_expression_||",
         "category": "logical_binary_expression",
-        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c"],
+        "languages": ["cs", "go", "java", "js", "php", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "||"
     },
@@ -890,7 +905,7 @@
     {
         "type_name": "interpolation",
         "category": "",
-        "languages": ["cs", "py", "rb"]
+        "languages": ["cs", "py", "rb", "pl"]
     },
     {
         "type_name": "interpolation_alignment_clause",
@@ -1090,12 +1105,12 @@
     {
         "type_name": "variable_declaration",
         "category": "",
-        "languages": ["cs", "js", "kt", "ts", "tsx"]
+        "languages": ["cs", "js", "kt", "ts", "tsx", "pl"]
     },
     {
         "type_name": "variable_declarator",
         "category": "",
-        "languages": ["cs", "java", "js", "ts", "tsx"]
+        "languages": ["cs", "java", "js", "ts", "tsx", "pl"]
     },
     {
         "type_name": "when_clause",
@@ -1168,13 +1183,14 @@
             "rs",
             "c",
             "json",
-            "yaml"
+            "yaml",
+            "pl"
         ]
     },
     {
         "type_name": "false",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c", "json"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c", "json", "pl"]
     },
     {
         "type_name": "module",
@@ -1195,7 +1211,7 @@
     {
         "type_name": "true",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c", "json"]
+        "languages": ["go", "java", "js", "ts", "py", "cpp", "tsx", "rb", "c", "json", "pl"]
     },
     {
         "type_name": "type",
@@ -1220,7 +1236,7 @@
     {
         "type_name": "call_expression",
         "category": "",
-        "languages": ["go", "js", "kt", "ts", "cpp", "tsx", "rs", "c"]
+        "languages": ["go", "js", "kt", "ts", "cpp", "tsx", "rs", "c", "pl"]
     },
     {
         "type_name": "composite_literal",
@@ -1295,7 +1311,7 @@
     {
         "type_name": "unary_expression",
         "category": "",
-        "languages": ["go", "java", "js", "ts", "cpp", "tsx", "rs", "sh", "c"]
+        "languages": ["go", "java", "js", "ts", "cpp", "tsx", "rs", "sh", "c", "pl"]
     },
     {
         "type_name": "_simple_statement",
@@ -1532,7 +1548,7 @@
     {
         "type_name": "source_file",
         "category": "",
-        "languages": ["go", "kt", "rs"]
+        "languages": ["go", "kt", "rs", "pl"]
     },
     {
         "type_name": "type_alias",
@@ -1692,7 +1708,7 @@
     {
         "type_name": "ternary_expression",
         "category": "conditional_expression",
-        "languages": ["java", "js", "ts", "tsx", "sh"]
+        "languages": ["java", "js", "ts", "tsx", "sh", "pl"]
     },
     {
         "type_name": "update_expression",
@@ -1717,7 +1733,7 @@
     {
         "type_name": "method_invocation",
         "category": "",
-        "languages": ["java"]
+        "languages": ["java", "pl"]
     },
     {
         "type_name": "method_reference",
@@ -1984,7 +2000,7 @@
     {
         "type_name": "super",
         "category": "",
-        "languages": ["java", "js", "ts", "tsx", "rb", "rs"]
+        "languages": ["java", "js", "ts", "tsx", "rb", "rs", "pl"]
     },
     {
         "type_name": "generator_function_declaration",
@@ -2044,7 +2060,7 @@
     {
         "type_name": "array",
         "category": "nesting",
-        "languages": ["js", "ts", "tsx", "rb", "sh", "json"]
+        "languages": ["js", "ts", "tsx", "rb", "sh", "json", "pl"]
     },
     {
         "type_name": "arrow_function",
@@ -2139,7 +2155,7 @@
     {
         "type_name": "arguments",
         "category": "",
-        "languages": ["js", "php", "ts", "tsx", "rs"]
+        "languages": ["js", "php", "ts", "tsx", "rs", "pl"]
     },
     {
         "type_name": "assignment_pattern",
@@ -2156,7 +2172,7 @@
     {
         "type_name": "binary_expression_**",
         "category": "binary_expression",
-        "languages": ["js", "ts", "tsx", "php", "sh"],
+        "languages": ["js", "ts", "tsx", "php", "sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "**"
     },
@@ -2199,7 +2215,7 @@
     {
         "type_name": "else_clause",
         "category": "",
-        "languages": ["js", "php", "ts", "py", "cpp", "tsx", "rs", "sh", "c"]
+        "languages": ["js", "php", "ts", "py", "cpp", "tsx", "rs", "sh", "c", "pl"]
     },
     {
         "type_name": "export_clause",
@@ -2334,7 +2350,7 @@
     {
         "type_name": "regex_pattern",
         "category": "",
-        "languages": ["js", "ts", "tsx"]
+        "languages": ["js", "ts", "tsx", "pl"]
     },
     {
         "type_name": "shorthand_property_identifier",
@@ -2364,7 +2380,7 @@
     {
         "type_name": "anonymous_function",
         "category": "",
-        "languages": ["kt"]
+        "languages": ["kt", "pl"]
     },
     {
         "type_name": "anonymous_initializer",
@@ -2854,7 +2870,7 @@
     {
         "type_name": "integer",
         "category": "",
-        "languages": ["php", "py", "rb"]
+        "languages": ["php", "py", "rb", "pl"]
     },
     {
         "type_name": "anonymous_function_creation_expression",
@@ -2929,7 +2945,7 @@
     {
         "type_name": "function_definition",
         "category": "function",
-        "deactivated_for_languages": ["cpp", "c"],
+        "deactivated_for_languages": ["cpp", "c", "pl"],
         "languages": ["php", "py", "cpp", "sh", "c"]
     },
     {
@@ -2995,14 +3011,14 @@
     {
         "type_name": "binary_expression_.",
         "category": "binary_expression",
-        "languages": ["php"],
+        "languages": ["php", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "."
     },
     {
         "type_name": "binary_expression_<=>",
         "category": "binary_expression",
-        "languages": ["php", "cpp"],
+        "languages": ["php", "cpp", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "<=>"
     },
@@ -3023,7 +3039,7 @@
     {
         "type_name": "binary_expression_or",
         "category": "logical_binary_expression",
-        "languages": ["php", "cpp"],
+        "languages": ["php", "cpp", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "or"
     },
@@ -3031,7 +3047,7 @@
         "type_name": "binary_expression_xor",
         "category": "logical_binary_expression",
         "deactivated_for_languages": ["cpp"],
-        "languages": ["php", "cpp"],
+        "languages": ["php", "cpp", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "xor"
     },
@@ -3260,7 +3276,7 @@
     {
         "type_name": "function_signature",
         "category": "",
-        "languages": ["ts", "tsx"]
+        "languages": ["ts", "tsx", "pl"]
     },
     {
         "type_name": "internal_module",
@@ -5456,7 +5472,7 @@
     {
         "type_name": "hash",
         "category": "",
-        "languages": ["rb"]
+        "languages": ["rb", "pl"]
     },
     {
         "type_name": "if",
@@ -5526,7 +5542,7 @@
     {
         "type_name": "alias",
         "category": "",
-        "languages": ["rb"]
+        "languages": ["yaml", "rb", "pl"]
     },
     {
         "type_name": "begin_block",
@@ -5771,42 +5787,42 @@
     {
         "type_name": "binary_expression_%=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "%="
     },
     {
         "type_name": "binary_expression_&=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "&="
     },
     {
         "type_name": "binary_expression_**=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "**="
     },
     {
         "type_name": "binary_expression_*=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "*="
     },
     {
         "type_name": "binary_expression_+=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "+="
     },
     {
         "type_name": "binary_expression_-=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "-="
     },
@@ -5827,42 +5843,42 @@
     {
         "type_name": "binary_expression_/=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "/="
     },
     {
         "type_name": "binary_expression_<<=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "<<="
     },
     {
         "type_name": "binary_expression_=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "="
     },
     {
         "type_name": "binary_expression_=~",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "=~"
     },
     {
         "type_name": "binary_expression_>>=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": ">>="
     },
     {
         "type_name": "binary_expression_^=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "^="
     },
@@ -5876,7 +5892,7 @@
     {
         "type_name": "binary_expression_|=",
         "category": "binary_expression",
-        "languages": ["sh"],
+        "languages": ["sh", "pl"],
         "grammar_type_name": "binary_expression",
         "operator": "|="
     },
@@ -6088,7 +6104,7 @@
     {
         "type_name": "return_expression",
         "category": "",
-        "languages": ["rs"]
+        "languages": ["rs", "pl"]
     },
     {
         "type_name": "struct_expression",
@@ -6416,11 +6432,6 @@
         "languages": ["json", "yaml"]
     },
     {
-        "type_name": "alias",
-        "category": "",
-        "languages": ["yaml"]
-    },
-    {
         "type_name": "anchor",
         "category": "",
         "languages": ["yaml"]
@@ -6574,5 +6585,707 @@
         "type_name": "yaml_version",
         "category": "",
         "languages": ["yaml"]
+    },
+    {
+        "type_name": "array_access_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "array_dereference",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "array_function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "array_ref",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "arrow_notation",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "backtick_quoted",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "bareword",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "bareword_import",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "binary_expression_!~",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "!~"
+    },
+    {
+        "type_name": "binary_expression_&&=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "&&="
+    },
+    {
+        "type_name": "binary_expression_&.=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "&.="
+    },
+    {
+        "type_name": "binary_expression_..",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": ".."
+    },
+    {
+        "type_name": "binary_expression_...",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "..."
+    },
+    {
+        "type_name": "binary_expression_.=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": ".="
+    },
+    {
+        "type_name": "binary_expression_//",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "//"
+    },
+    {
+        "type_name": "binary_expression_//=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "//="
+    },
+    {
+        "type_name": "binary_expression_X=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "X="
+    },
+    {
+        "type_name": "binary_expression_^.=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "^.="
+    },
+    {
+        "type_name": "binary_expression_cmp",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "cmp"
+    },
+    {
+        "type_name": "binary_expression_isa",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "isa"
+    },
+    {
+        "type_name": "binary_expression_x",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "x"
+    },
+    {
+        "type_name": "binary_expression_|.=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "|.="
+    },
+    {
+        "type_name": "binary_expression_||=",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "||="
+    },
+    {
+        "type_name": "binary_expression_~~",
+        "category": "binary_expression",
+        "languages": ["pl"],
+        "grammar_type_name": "binary_expression",
+        "operator": "~~"
+    },
+    {
+        "type_name": "bless",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "call_expression_recursive",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "command_qx_quoted",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "comments",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "continue",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "ellipsis_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "elsif_clause",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "empty_parenthesized_argument",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "empty_parenthesized_expression",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "for_simple_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "for_statement_1",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "for_statement_2",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "function_attribute",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "function_prototype",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "goto_expression",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "grep_or_map_function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hash_access_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hash_arrow_operator",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hash_dereference",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hash_ref",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "heredoc_body_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "heredoc_initializer",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "if_simple_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "join_function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "key_value_pair",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "list_block",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "loop_control_keyword",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "loop_control_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "module_name",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "multi_var_declaration",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "named_block_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "package_name",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "package_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "package_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "parenthesized_argument",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "patter_matcher_m",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "pattern_matcher",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "pod_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "push_function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "regex_pattern_qr",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "require_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "scalar_dereference",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "scalar_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "scope",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "single_line_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "single_var_declaration",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "sort_function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "special_array_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "special_block",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "special_hash_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "special_literal",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "special_scalar_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "standalone_block",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "standard_input",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "standard_input_to_identifier",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "standard_input_to_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "string_double_quoted",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "string_q_quoted",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "string_qq_quoted",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "string_single_quoted",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "substitution_pattern_s",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "to_reference",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "transliteration_tr_or_y",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "type_glob",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "type_glob_declaration",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "unless_simple_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "unless_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "unpack_function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "until_simple_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "until_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_constant_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_no_feature_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_no_if_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_no_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_no_subs_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_no_version",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "use_parent_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "version",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "when_simple_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "while_simple_statement",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "word_list_qw",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "array_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "arrow_operator",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "end_delimiter",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "end_delimiter_qw",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "file_handle",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "floating_point",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "function",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "grep",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hash_variable",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "heredoc_end_identifier",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "heredoc_start_identifier",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hexadecimal",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "join",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "list_item",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "map",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "no_require",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "octal",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "prototype",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "push",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "regex_option",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "regex_option_for_substitution",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "regex_option_for_transliteration",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "reverse",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "scientific_notation",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "semi_colon",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "separator_delimiter",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "sort",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "start_delimiter",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "start_delimiter_qw",
+        "category": "",
+        "languages": ["pl"]
     }
 ]

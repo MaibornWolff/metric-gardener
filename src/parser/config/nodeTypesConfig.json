@@ -237,7 +237,7 @@
     {
         "type_name": "lambda_expression",
         "category": "function",
-        "activated_for_languages": ["cs", "java"],
+        "deactivated_for_languages": ["cpp"],
         "languages": ["cs", "java", "cpp"]
     },
     {
@@ -1179,7 +1179,7 @@
     {
         "type_name": "module",
         "category": "",
-        "activated_for_languages": ["py"],
+        "deactivated_for_languages": ["ts", "tsx", "rb"],
         "languages": ["ts", "py", "tsx", "rb"]
     },
     {
@@ -2929,7 +2929,7 @@
     {
         "type_name": "function_definition",
         "category": "function",
-        "activated_for_languages": ["php", "py", "sh"],
+        "deactivated_for_languages": ["cpp", "c"],
         "languages": ["php", "py", "cpp", "sh", "c"]
     },
     {
@@ -3037,7 +3037,7 @@
     {
         "type_name": "case_statement",
         "category": "case_label",
-        "activated_for_languages": ["php", "cpp", "c"],
+        "deactivated_for_languages": ["sh"],
         "languages": ["php", "cpp", "sh", "c"]
     },
     {
@@ -3188,7 +3188,7 @@
     {
         "type_name": "list",
         "category": "conditional_expression",
-        "activated_for_languages": ["sh"],
+        "deactivated_for_languages": ["py"],
         "languages": ["py", "sh"]
     },
     {

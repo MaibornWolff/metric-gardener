@@ -261,8 +261,8 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
             );
             if (
                 nodeType.category !== "" &&
-                (nodeType.activated_for_languages === undefined ||
-                    nodeType.activated_for_languages.includes(languageAbbr))
+                (nodeType.deactivated_for_languages === undefined ||
+                    nodeType.deactivated_for_languages.includes(languageAbbr))
             ) {
                 console.warn(
                     '## Attention required! Language "' +

@@ -35,23 +35,26 @@ export class SimpleQueryStatement implements QueryStatementInterface {
 }
 
 export abstract class LanguageSpecificQueryStatement implements QueryStatementInterface {
-    protected readonly activatedForLanguages: Set<Language>;
+    protected readonly deactivatedForLanguages: Set<Language>;
     protected readonly applicableForLanguages: Set<Language>;
 
-    protected constructor(applicable_for_languages: string[], activated_for_languages?: string[]) {
+    protected constructor(
+        applicable_for_languages: string[],
+        deactivated_for_languages?: string[],
+    ) {
         this.applicableForLanguages =
             languageToAbbreviation.getKeysForAllValues(applicable_for_languages);
 
-        if (activated_for_languages !== undefined) {
-            this.activatedForLanguages =
-                languageToAbbreviation.getKeysForAllValues(activated_for_languages);
+        if (deactivated_for_languages !== undefined) {
+            this.deactivatedForLanguages =
+                languageToAbbreviation.getKeysForAllValues(deactivated_for_languages);
         } else {
-            this.activatedForLanguages = new Set();
+            this.deactivatedForLanguages = new Set();
         }
     }
 
     activatedFor(language: Language): boolean {
-        return this.activatedForLanguages.size === 0 || this.activatedForLanguages.has(language);
+        return !this.deactivatedForLanguages.has(language);
     }
 
     applicableFor(language: Language): boolean {
@@ -67,10 +70,10 @@ export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
     constructor(
         nodeType: NodeTypeConfig,
         applicable_for_languages: string[] = nodeType.languages,
-        activated_for_languages: string[] | undefined = nodeType.activated_for_languages,
+        deactivated_for_languages: string[] | undefined = nodeType.deactivated_for_languages,
     ) {
         const { type_name, grammar_type_name } = nodeType;
-        super(applicable_for_languages, activated_for_languages);
+        super(applicable_for_languages, deactivated_for_languages);
 
         if (grammar_type_name === undefined) {
             this.nodeTypeName = type_name;
@@ -90,7 +93,7 @@ export class OperatorQueryStatement extends NodeTypeQueryStatement {
     constructor(
         nodeType: NodeTypeConfig,
         applicable_for_languages: string[] = nodeType.languages,
-        activated_for_languages: string[] | undefined = nodeType.activated_for_languages,
+        deactivated_for_languages: string[] | undefined = nodeType.deactivated_for_languages,
     ) {
         if (nodeType.operator === undefined) {
             throw new Error(
@@ -100,7 +103,7 @@ export class OperatorQueryStatement extends NodeTypeQueryStatement {
             );
         }
 
-        super(nodeType, applicable_for_languages, activated_for_languages);
+        super(nodeType, applicable_for_languages, deactivated_for_languages);
         this.#operator = nodeType.operator;
     }
 
@@ -117,9 +120,9 @@ export class SimpleLanguageSpecificQueryStatement extends LanguageSpecificQueryS
     constructor(
         query: string,
         applicable_for_languages: string[],
-        activated_for_languages?: string[],
+        deactivated_for_languages?: string[],
     ) {
-        super(applicable_for_languages, activated_for_languages);
+        super(applicable_for_languages, deactivated_for_languages);
         this.#query = query;
     }
 

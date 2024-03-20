@@ -13,6 +13,7 @@ import Bash from "tree-sitter-bash";
 import C from "tree-sitter-c";
 import JSON from "tree-sitter-json";
 import YAML from "tree-sitter-yaml";
+import Perl from "@ganezdragon/tree-sitter-perl";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap.js";
 import { Configuration } from "../Configuration.js";
 import { getFileExtension, lookupLowerCase, replaceForwardWithBackwardSlashes } from "./Helper.js";
@@ -38,6 +39,7 @@ export const enum Language {
     C,
     JSON,
     YAML,
+    Perl,
 }
 
 /**
@@ -66,6 +68,7 @@ export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
         [Language.C, "c"],
         [Language.JSON, "json"],
         [Language.YAML, "yaml"],
+        [Language.Perl, "pl"],
     ]),
 );
 
@@ -89,6 +92,7 @@ export const languageToGrammar = new Map([
     [Language.C, C],
     [Language.JSON, JSON],
     [Language.YAML, YAML],
+    [Language.Perl, Perl],
 ]);
 
 /**
@@ -118,6 +122,8 @@ const fileExtensionToLanguage = new Map([
     ["json", Language.JSON],
     ["yaml", Language.YAML],
     ["yml", Language.YAML],
+    ["pl", Language.Perl],
+    ["pm", Language.Perl],
 ]);
 
 export const enum FileType {

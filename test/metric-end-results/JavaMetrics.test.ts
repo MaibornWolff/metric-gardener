@@ -68,6 +68,7 @@ describe("Java metrics tests.", () => {
                 3,
             );
         });
+
         it("should count all anonymous class declarations", () => {
             testFileMetric(
                 javaTestResourcesPath + "/" + FileMetric.classes + "/AnonymousClass.java",

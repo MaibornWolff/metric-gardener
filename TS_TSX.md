@@ -6,7 +6,7 @@ This document outlines the definition of file metrics for TypeScript (TS) and Ty
 
 The "complexity" metric counts:
 
--   `if` and `if else` statements
+-   `if` and `else if` statements
 -   ternary expressions
 -   `for...of`, `for await...of`, `for...in`,`while` and `do...while` loops
 -   `case` labels in switch-statements

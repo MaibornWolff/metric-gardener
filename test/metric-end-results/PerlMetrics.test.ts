@@ -32,8 +32,9 @@ describe("Perl metrics tests", () => {
         });
 
         it("should NOT count goto", () => {
+            // (count: sub)
             // not: goto LABEL, goto EXPR, goto &NAME
-            testFileMetric(path + "goto.pl", FileMetric.complexity, 0);
+            testFileMetric(path + "goto.pl", FileMetric.complexity, 3);
         });
 
         it("should NOT count loop control commands", () => {
@@ -129,7 +130,7 @@ describe("Perl metrics tests", () => {
 
     describe("parsing lines_of_code metric", () => {
         it("should count comments correctly", () => {
-            testFileMetric(path + "comments.pl", FileMetric.linesOfCode, 9);
+            testFileMetric(path + "comments.pl", FileMetric.linesOfCode, 11);
         });
 
         it("should count empty files correctly", () => {
@@ -141,7 +142,7 @@ describe("Perl metrics tests", () => {
         });
 
         it("should count one line correctly", () => {
-            testFileMetric(path + "line-break.pl", FileMetric.linesOfCode, 1);
+            testFileMetric(path + "one-line.pl", FileMetric.linesOfCode, 1);
         });
 
         it("should count pods correctly", () => {
@@ -166,7 +167,7 @@ describe("Perl metrics tests", () => {
             it("should count comments correctly", () => {
                 // count: any line with #
                 // not: # in strings
-                testFileMetric(path + "comments.pl", FileMetric.commentLines, 4);
+                testFileMetric(path + "comments.pl", FileMetric.commentLines, 5);
             });
 
             it("should count pods", () => {

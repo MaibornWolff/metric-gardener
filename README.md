@@ -144,31 +144,8 @@ Activate dependency analysis by passing `--parseDependencies`
 
 ### TODOs
 
-Next Steps:
-
--   Apply new activated_for_languages flag in node-types-mapped.config for conflicting expressions.
--   Documentation, e.g.: Document the used Query Captures to be able to implement new languages as a developer
--   Configurable language specifics (has heavy candidate building, has generics, etc.)
-
-Performance Optimizations:
-
--   Skip primitive types like (void, boolean, etc.) during accessor scan and usage candidates building
--   Exclude System Namespaces like System in CSharp etc. (Configurable option would also be nice (e.g. exclude NameSpace _UnitTest_))
--   Improve performance in Abstract Usage Collector (add candidates only if they can be found in previously retrieved fully qualified type names in other words the Namespace Collector).
-
-Refactoring Todos:
-
 -   Rename callExpression Resolver to accessor Resolver
 -   Refactor Abstract Usage Collector (small resolver classes?)
-
-Other TODOs and ideas:
-
--   Verbose Mode to output calculated metrics (-v), executed queries (-vv), ect.
 -   Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
--   Implement CK Metrics, Cyclic Dependencies Metric, etc. without neo4j
--   Performance & Duplicate Adds (see TODO comments)
--   Export relationships as a graph file
--   Write command to add new language and map expressions
--   Checkout sample project(s) per language and parse them as an automatic test
--   ProgressBar
 -   Separate Infrastructure from Domain Code
+-   Checkout sample project(s) per language and parse them as an automatic test

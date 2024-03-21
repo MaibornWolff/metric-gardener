@@ -67,15 +67,11 @@ export class MetricCalculator {
         if (isErrorFile(sourceFile)) {
             return [
                 sourceFile,
-                {
-                    fileType: sourceFile.fileType,
-                    metricResults: new Map(),
-                    metricErrors: new Map(),
-                },
+                { fileType: sourceFile.fileType, metricResults: [], metricErrors: [] },
             ];
         }
-        const metricResults = new Map<string, MetricResult>();
-        const metricErrors = new Map<string, MetricError>();
+
+        const metricErrors: MetricError[] = [];
         const resultPromises: Promise<MetricResult | null>[] = [];
 
         if (isParsedFile(sourceFile)) {
@@ -93,10 +89,7 @@ export class MetricCalculator {
             for (const metric of metricsToCalculate) {
                 resultPromises.push(
                     metric.calculate(sourceFile).catch((reason) => {
-                        metricErrors.set(metric.getName(), {
-                            metricName: metric.getName(),
-                            error: reason,
-                        });
+                        metricErrors.push({ metricName: metric.getName(), error: reason });
                         return null;
                     }),
                 );
@@ -110,19 +103,12 @@ export class MetricCalculator {
                 });
                 resultPromises.push(LinesOfCodeRawText.calculate(sourceCode)); // Should never throw
             } catch (error) {
-                metricErrors.set(FileMetric.linesOfCode, {
-                    metricName: FileMetric.linesOfCode,
-                    error,
-                });
+                metricErrors.push({ metricName: FileMetric.linesOfCode, error });
             }
         }
 
         const resultsArray = await Promise.all(resultPromises);
-        for (const result of resultsArray) {
-            if (result !== null) {
-                metricResults.set(result.metricName, result);
-            }
-        }
+        const metricResults = resultsArray.filter((result) => result !== null) as MetricResult[];
 
         return [sourceFile, { fileType: sourceFile.fileType, metricResults, metricErrors }];
     }

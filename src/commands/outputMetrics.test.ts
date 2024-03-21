@@ -11,14 +11,14 @@ describe("outputMetrics", () => {
         });
 
         it("when metrics are present", () => {
-            const file1MetricResults = new Map<string, MetricResult>();
-            file1MetricResults.set("metric1", { metricName: "metric1", metricValue: 42 });
-            file1MetricResults.set("metric2", { metricName: "metric2", metricValue: 43 });
+            const file1MetricResults: MetricResult[] = [];
+            file1MetricResults.push({ metricName: "metric1", metricValue: 42 });
+            file1MetricResults.push({ metricName: "metric2", metricValue: 43 });
 
-            const file2MetricResults = new Map<string, MetricResult>();
-            file2MetricResults.set("metric1", { metricName: "metric1", metricValue: 44 });
-            const file2MetricErrors = new Map<string, MetricError>();
-            file2MetricErrors.set("metric2", { metricName: "metric2", error: new Error("Buh!") });
+            const file2MetricResults: MetricResult[] = [];
+            file2MetricResults.push({ metricName: "metric1", metricValue: 44 });
+            const file2MetricErrors: MetricError[] = [];
+            file2MetricErrors.push({ metricName: "metric2", error: new Error("Buh!") });
 
             const fileMetrics = new Map([
                 [
@@ -26,7 +26,7 @@ describe("outputMetrics", () => {
                     {
                         fileType: FileType.SourceCode,
                         metricResults: file1MetricResults,
-                        metricErrors: new Map(),
+                        metricErrors: [],
                     },
                 ],
                 [

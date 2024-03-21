@@ -65,10 +65,7 @@ async function mockedMetricsCalculator(
 ): Promise<[SourceFile, FileMetricResults]> {
     const file = await parsedFilePromise;
     if (isErrorFile(file)) {
-        return [
-            file,
-            { fileType: file.fileType, metricResults: new Map(), metricErrors: new Map() },
-        ];
+        return [file, { fileType: file.fileType, metricResults: [], metricErrors: [] }];
     }
     return [file, expectedFileMetricsResults];
 }
@@ -106,10 +103,8 @@ function spyOnCouplingCalculatorNoOp() {
 
 const expectedFileMetricsResults: FileMetricResults = {
     fileType: FileType.SourceCode,
-    metricResults: new Map([
-        [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
-    ]),
-    metricErrors: new Map(),
+    metricResults: [{ metricName: FileMetric.linesOfCode, metricValue: 5 }],
+    metricErrors: [],
 };
 
 let parser: Parser;
@@ -275,31 +270,14 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync();
         mockTreeParserParse();
 
-        const metricErrors: Map<string, MetricError> = new Map([
-            [
-                FileMetric.linesOfCode,
-                {
-                    metricName: FileMetric.linesOfCode,
-                    error: new Error("Buuuh!"),
-                },
-            ],
-        ]);
-
         const errorMetricsResults: FileMetricResults = {
             fileType: FileType.SourceCode,
-            metricResults: new Map(),
-            metricErrors,
+            metricResults: [],
+            metricErrors: [{ metricName: FileMetric.linesOfCode, error: new Error("Buuuh!") }],
         };
 
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
-            return [
-                await parsedFilePromise,
-                {
-                    fileType: FileType.SourceCode,
-                    metricResults: new Map(),
-                    metricErrors,
-                },
-            ];
+            return [await parsedFilePromise, errorMetricsResults];
         });
 
         const errorSpy = spyOnConsoleErrorNoOp();
@@ -327,20 +305,15 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync(mockedFindTwoFilesAsync);
         mockTreeParserParse();
 
-        const metricErrors: Map<string, MetricError> = new Map([
-            [
-                FileMetric.linesOfCode,
+        const errorMetricsResults: FileMetricResults = {
+            fileType: FileType.SourceCode,
+            metricResults: [],
+            metricErrors: [
                 {
                     metricName: FileMetric.linesOfCode,
                     error: new Error("I only accept cpp files!"),
                 },
             ],
-        ]);
-
-        const errorMetricsResults: FileMetricResults = {
-            fileType: FileType.SourceCode,
-            metricResults: new Map(),
-            metricErrors,
         };
 
         spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
@@ -379,32 +352,21 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync(mockedFindTwoFilesAsync);
         mockTreeParserParse();
 
-        const metricResults = new Map<string, MetricResult>([
-            [FileMetric.linesOfCode, { metricName: FileMetric.linesOfCode, metricValue: 5 }],
-            [
-                FileMetric.realLinesOfCode,
-                { metricName: FileMetric.realLinesOfCode, metricValue: 3 },
-            ],
-        ]);
+        const metricResults: MetricResult[] = [
+            { metricName: FileMetric.linesOfCode, metricValue: 5 },
+            { metricName: FileMetric.realLinesOfCode, metricValue: 3 },
+        ];
 
-        const metricErrors = new Map<string, MetricError>([
-            [
-                FileMetric.classes,
-                {
-                    metricName: FileMetric.classes,
-                    error: new Error("Classes metric is to difficult for this program!"),
-                },
-            ],
-            [
-                FileMetric.functions,
-                {
-                    metricName: FileMetric.functions,
-                    error: new Error(
-                        "Unable to call functions, because, well, it does not work, ok??",
-                    ),
-                },
-            ],
-        ]);
+        const metricErrors: MetricError[] = [
+            {
+                metricName: FileMetric.classes,
+                error: new Error("Classes metric is to difficult for this program!"),
+            },
+            {
+                metricName: FileMetric.functions,
+                error: new Error("Unable to call functions, because, well, it does not work, ok??"),
+            },
+        ];
 
         const partialErrorMetricsResults: FileMetricResults = {
             fileType: FileType.SourceCode,

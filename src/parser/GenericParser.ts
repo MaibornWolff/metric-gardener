@@ -101,7 +101,7 @@ export class GenericParser {
                     fileMetrics.set(printPath, fileMetricResults);
 
                     // Inform about errors that occurred while calculating (some) metrics on the syntax tree
-                    for (const metricError of fileMetricResults.metricErrors.values()) {
+                    for (const metricError of fileMetricResults.metricErrors) {
                         console.error(
                             "Error while calculating the metric " +
                                 metricError.metricName +

@@ -45,7 +45,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   C#
 -   C++
 -   Python
--   JavaScript
+-   [JavaScript](language-specific-doc/JavaScript.md)
 -   Kotlin
 -   JSON
 -   YAML

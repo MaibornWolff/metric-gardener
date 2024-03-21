@@ -22,7 +22,7 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "functions-and-methods.js",
                 FileMetric.complexity,
-                8,
+                12,
             );
         });
 
@@ -66,8 +66,11 @@ describe("JavaScript metrics tests", () => {
             testFileMetric(
                 jsTestResourcesPath + "functions-and-methods.js",
                 FileMetric.functions,
-                8,
+                11,
             );
+        });
+        it("should count all methods in object definition", () => {
+            testFileMetric(jsTestResourcesPath + "object-method.js", FileMetric.functions, 4);
         });
     });
 

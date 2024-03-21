@@ -5,9 +5,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "resolveJsonModule": true,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": true,
-        "strictNullChecks": true
+        "strict": true
     },
     "exclude": ["resources", "node_modules"]
 }

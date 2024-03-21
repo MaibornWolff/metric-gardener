@@ -85,12 +85,12 @@ function buildOutputObject(
 
     for (const [filePath, fileMetricResults] of fileMetrics.entries()) {
         const metrics = {};
-        if (fileMetricResults.metricErrors.size > 0) {
-            metricErrorsPerFile.set(filePath, fileMetricResults.metricErrors.values());
+        if (fileMetricResults.metricErrors.length > 0) {
+            metricErrorsPerFile.set(filePath, fileMetricResults.metricErrors);
         }
 
-        for (const [metricName, metricValue] of fileMetricResults.metricResults.entries()) {
-            metrics[metricName] = metricValue.metricValue;
+        for (const metricResult of fileMetricResults.metricResults) {
+            metrics[metricResult.metricName] = metricResult.metricValue;
         }
 
         const outputNode: OutputNode = {

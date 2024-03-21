@@ -19,8 +19,8 @@ export enum FileMetric {
  */
 export interface FileMetricResults {
     fileType: FileType;
-    metricResults: Map<string, MetricResult>;
-    metricErrors: Map<string, MetricError>;
+    metricResults: MetricResult[];
+    metricErrors: MetricError[];
 }
 
 /**

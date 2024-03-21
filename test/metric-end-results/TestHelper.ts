@@ -75,7 +75,7 @@ export function sortCouplingResults(couplingResult: CouplingResult) {
  * @param inputPath Path to test source file.
  * @param metric Name of the metric.
  * @param expected Expected test result.
- * */
+ */
 export async function parseAndTestFileMetric(
     inputPath: string,
     metric: FileMetric,
@@ -84,9 +84,8 @@ export async function parseAndTestFileMetric(
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(getTestConfiguration(realInputPath));
     const results = await parser.calculateMetrics();
-    expect(results.fileMetrics.get(realInputPath)?.metricResults.get(metric)?.metricValue).toBe(
-        expected,
-    );
+    const metricResults = results.fileMetrics.get(realInputPath);
+    expectMetric(metricResults, metric, expected);
 }
 
 /**
@@ -110,7 +109,7 @@ export async function parseAllFileMetrics(inputPath: string, parseHAsC = false) 
  * @param inputPath Relative or absolute path to test source file.
  * @param metric Name of the metric.
  * @param expected Expected metric value.
- * */
+ */
 export function expectFileMetric(
     results: Map<string, FileMetricResults>,
     inputPath: string,
@@ -118,7 +117,58 @@ export function expectFileMetric(
     expected: number,
 ) {
     const realInputPath = fs.realpathSync(inputPath);
-    expect(results.get(realInputPath)?.metricResults.get(metric)?.metricValue).toBe(expected);
+    const metricResults = results.get(realInputPath);
+    expectMetric(metricResults, metric, expected);
+}
+
+/**
+ * Tests if a specific metric has been calculated correctly.
+ * @param results The actual results of the metric calculation.
+ * @param metric Name of the metric.
+ * @param expected Expected metric value.
+ */
+export function expectMetric(
+    results: FileMetricResults | undefined,
+    metric: FileMetric,
+    expected: number,
+) {
+    const metricResults = results?.metricResults;
+    const metricValue = metricResults?.find(({ metricName }) => metricName === metric)?.metricValue;
+    expect(metricValue).toBe(expected);
+}
+
+/**
+ * Tests if a specific metric has not been calculated.
+ * @param results The actual results of the metric calculation.
+ * @param metric Name of the metric.
+ */
+export function expectNoMetric(results: FileMetricResults | undefined, metric: FileMetric) {
+    expect(results?.metricResults.find(({ metricName }) => metricName === metric)).toBeUndefined();
+}
+
+/**
+ * Tests if a specific metric has an expected error.
+ * @param results The actual results of the metric calculation.
+ * @param metric Name of the metric.
+ * @param expected Expected error.
+ */
+export function expectError(
+    results: FileMetricResults | undefined,
+    metric: FileMetric,
+    expected: Error,
+) {
+    const metricErrors = results?.metricErrors;
+    const error = metricErrors?.find(({ metricName }) => metricName === metric)?.error;
+    expect(error).toEqual(expected);
+}
+
+/**
+ * Test if no error occurred while calculating a specific metric.
+ * @param results The actual results of the metric calculation.
+ * @param metric Name of the metric.
+ */
+export function expectNoError(results: FileMetricResults | undefined, metric: FileMetric) {
+    expect(results?.metricErrors.find(({ metricName }) => metricName === metric)).toBeUndefined();
 }
 
 /**

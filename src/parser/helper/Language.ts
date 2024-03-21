@@ -1,17 +1,32 @@
+// @ts-expect-error module doesn't have types
 import CSharp from "tree-sitter-c-sharp";
+// @ts-expect-error module doesn't have types
 import CPlusPlus from "tree-sitter-cpp";
+// @ts-expect-error module doesn't have types
 import GO from "tree-sitter-go";
+// @ts-expect-error module doesn't have types
 import Java from "tree-sitter-java";
+// @ts-expect-error module doesn't have types
 import JavaScript from "tree-sitter-javascript";
+// @ts-expect-error module doesn't have types
 import Kotlin from "tree-sitter-kotlin";
+// @ts-expect-error module doesn't have types
 import PHP from "tree-sitter-php";
+// @ts-expect-error module doesn't have types
 import Python from "tree-sitter-python";
+// @ts-expect-error module doesn't have types
 import TypeScript from "tree-sitter-typescript";
+// @ts-expect-error module doesn't have types
 import Ruby from "tree-sitter-ruby";
+// @ts-expect-error module doesn't have types
 import Rust from "tree-sitter-rust";
+// @ts-expect-error module doesn't have types
 import Bash from "tree-sitter-bash";
+// @ts-expect-error module doesn't have types
 import C from "tree-sitter-c";
+// @ts-expect-error module doesn't have types
 import JSON from "tree-sitter-json";
+// @ts-expect-error module doesn't have types
 import YAML from "tree-sitter-yaml";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
 import { Configuration } from "../Configuration";
@@ -79,8 +94,11 @@ export const languageToGrammar = new Map([
     [Language.Java, Java],
     [Language.JavaScript, JavaScript],
     [Language.Kotlin, Kotlin],
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     [Language.PHP, PHP.php],
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     [Language.TypeScript, TypeScript.typescript],
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     [Language.TSX, TypeScript.tsx],
     [Language.Python, Python],
     [Language.Ruby, Ruby],
@@ -181,7 +199,7 @@ function shouldHBeParsedAsC(filePath: string, config: Configuration, pathModule 
         return true;
     }
     if (config.parseSomeHAsC.size > 0) {
-        // Use the path relative to the sources path to avoid the unintuitive behaviour
+        // Use the path relative to the sources path to avoid the unintuitive behavior
         // that higher-level folders are evaluated for this:
         const relativePath = pathModule.relative(config.sourcesPath, filePath);
         const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
@@ -200,7 +218,7 @@ function shouldHBeParsedAsC(filePath: string, config: Configuration, pathModule 
  * @param fileExtension The file extension to map.
  * @return The corresponding grammar if the file extension is supported, undefined otherwise.
  */
-export function fileExtensionToGrammar(fileExtension: string) {
+export function fileExtensionToGrammar(fileExtension: string): unknown {
     const language = fileExtensionToLanguage.get(fileExtension);
     if (language !== undefined) {
         return languageToGrammar.get(language);

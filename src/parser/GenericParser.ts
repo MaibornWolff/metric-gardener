@@ -43,7 +43,10 @@ export class GenericParser {
         const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
         const errorFiles: string[] = [];
-        let couplingMetrics = {} as CouplingResult;
+        let couplingMetrics: CouplingResult = {
+            relationships: [],
+            metrics: new Map(),
+        };
 
         try {
             const filePathGenerator = findFilesAsync(this.config);
@@ -67,7 +70,7 @@ export class GenericParser {
             // as we need to know the language of the file for that:
             const treeParseResults = await Promise.all(parsePromises);
 
-            dlog(" --- " + treeParseResults.length + " files detected", "\n\n");
+            dlog(" --- " + treeParseResults.length.toString() + " files detected", "\n\n");
 
             const filesForCouplingMetrics: ParsedFile[] = [];
 

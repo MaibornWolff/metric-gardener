@@ -260,7 +260,7 @@ export class Coupling implements CouplingMetric {
                 relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
                 relationship.toSource = formatPrintPath(relationship.toSource, this.config);
             }
-            const relCouplingMetrics = new Map();
+            const relCouplingMetrics = new Map<string, CouplingMetrics>();
             for (const [absolutePath, metricValues] of couplingMetrics) {
                 relCouplingMetrics.set(formatPrintPath(absolutePath, this.config), metricValues);
             }

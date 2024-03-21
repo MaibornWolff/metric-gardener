@@ -18,7 +18,7 @@ import { Functions } from "./metrics/Functions";
 import { LinesOfCode } from "./metrics/LinesOfCode";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
+import * as LinesOfCodeRawText from "./metrics/LinesOfCodeRawText";
 
 jest.mock("fs", () => ({
     promises: {
@@ -27,65 +27,65 @@ jest.mock("fs", () => ({
 }));
 
 function initiateSpies() {
-    jest.spyOn(Classes.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(Classes.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.classes,
         metricValue: 1,
     });
-    jest.spyOn(CommentLines.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(CommentLines.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.commentLines,
         metricValue: 2,
     });
-    jest.spyOn(Complexity.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(Complexity.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.complexity,
         metricValue: 3,
     });
-    jest.spyOn(Functions.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(Functions.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.functions,
         metricValue: 4,
     });
-    jest.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(LinesOfCode.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 5,
     });
-    jest.spyOn(MaxNestingLevel.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(MaxNestingLevel.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.maxNestingLevel,
         metricValue: 6,
     });
-    jest.spyOn(RealLinesOfCode.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(RealLinesOfCode.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.realLinesOfCode,
         metricValue: 7,
     });
-    jest.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
+    jest.spyOn(LinesOfCodeRawText, "calculateLinesOfCodeRawText").mockReturnValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 8,
     });
 }
 
 function initiateErrorSpies() {
-    jest.spyOn(Classes.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating classes metric"),
-    );
-    jest.spyOn(CommentLines.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating commentLines metric"),
-    );
-    jest.spyOn(Complexity.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating complexity metric"),
-    );
-    jest.spyOn(Functions.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(Classes.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating classes metric");
+    });
+    jest.spyOn(CommentLines.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating commentLines metric");
+    });
+    jest.spyOn(Complexity.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating complexity metric");
+    });
+    jest.spyOn(Functions.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.functions,
         metricValue: 1,
     });
-    jest.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
+    jest.spyOn(LinesOfCode.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 2,
     });
-    jest.spyOn(MaxNestingLevel.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating maxNestingLevel metric"),
-    );
-    jest.spyOn(RealLinesOfCode.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating realLinesOfCode metric"),
-    );
-    jest.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
+    jest.spyOn(MaxNestingLevel.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating maxNestingLevel metric");
+    });
+    jest.spyOn(RealLinesOfCode.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating realLinesOfCode metric");
+    });
+    jest.spyOn(LinesOfCodeRawText, "calculateLinesOfCodeRawText").mockReturnValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 8,
     });

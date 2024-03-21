@@ -6,8 +6,9 @@ describe("TypeScript metrics tests", () => {
 
     let results: Map<string, FileMetricResults>;
 
-    const testFileMetric = (inputPath, metric, expected) =>
+    function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
         expectFileMetric(results, inputPath, metric, expected);
+    }
 
     beforeAll(async () => {
         results = await parseAllFileMetrics(tsTestResourcesPath);

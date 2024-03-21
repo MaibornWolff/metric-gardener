@@ -6,8 +6,9 @@ describe("JavaScript metrics tests", () => {
 
     let results: Map<string, FileMetricResults>;
 
-    const testFileMetric = (inputPath, metric, expected) =>
+    function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
         expectFileMetric(results, inputPath, metric, expected);
+    }
 
     beforeAll(async () => {
         results = await parseAllFileMetrics(jsTestResourcesPath);
@@ -72,7 +73,7 @@ describe("JavaScript metrics tests", () => {
     });
 
     describe("parses JavaScript comment lines metric", () => {
-        it("should count comments properly, also counting file header, class description, html and doc block tag comment lines", async () => {
+        it("should count comments properly, also counting file header, class description, html and doc block tag comment lines", () => {
             testFileMetric(jsTestResourcesPath + "comments.js", FileMetric.commentLines, 18);
         });
 

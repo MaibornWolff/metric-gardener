@@ -1,9 +1,10 @@
 import fs from "fs";
 import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language";
-import Parser from "tree-sitter";
+import Parser, { SyntaxNode, Tree } from "tree-sitter";
 import { ErrorFile, ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric";
 import { Configuration } from "../Configuration";
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class TreeParser {
     private static cache: Map<string, SourceFile> = new Map();
 
@@ -36,7 +37,7 @@ export class TreeParser {
             const sourceCode = await fs.promises.readFile(filePath, { encoding: "utf8" });
             return this.#parseTree(sourceCode, filePath, config);
         } catch (error) {
-            return new ErrorFile(filePath, error);
+            return new ErrorFile(filePath, error as Error);
         }
     }
 
@@ -69,10 +70,10 @@ export class TreeParser {
 
         const tree = parser.parse(sourceCode);
 
-        if (tree === undefined) {
+        if ((tree as Tree | undefined) === undefined) {
             throw new Error("Syntax tree for file " + filePath + " is undefined!");
         }
-        if (tree.rootNode === undefined) {
+        if ((tree.rootNode as SyntaxNode | undefined) === undefined) {
             throw new Error("Root node of syntax tree for file " + filePath + " is undefined!");
         }
 

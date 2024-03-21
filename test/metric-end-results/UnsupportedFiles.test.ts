@@ -1,15 +1,21 @@
 import { expectFileMetric, getTestConfiguration } from "./TestHelper";
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
-import { FileMetric } from "../../src/parser/metrics/Metric";
+import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 
 describe("Test for handling unsupported files, with unknown or no file extension", () => {
     const unsupportedTestResourcesPath = "./resources/unsupported/";
 
-    let results;
+    let results: {
+        fileMetrics: Map<string, FileMetricResults>;
+        unsupportedFiles: string[];
+        errorFiles: string[];
+        couplingMetrics: CouplingResult;
+    };
 
-    const testFileMetric = (inputPath, metric, expected) =>
+    function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
         expectFileMetric(results.fileMetrics, inputPath, metric, expected);
+    }
 
     beforeAll(async () => {
         const realInputPath = fs.realpathSync(unsupportedTestResourcesPath);
@@ -18,21 +24,21 @@ describe("Test for handling unsupported files, with unknown or no file extension
     });
 
     describe("Include files with unknown or no file extension", () => {
-        it("should list files with unknown file extension as unsupported files", async () => {
+        it("should list files with unknown file extension as unsupported files", () => {
             const filePath = fs.realpathSync(
                 unsupportedTestResourcesPath + "example.unknownExtension",
             );
             expect(results.unsupportedFiles.includes(filePath)).toBe(true);
         });
 
-        it("should list files with no file extension as unsupported files", async () => {
+        it("should list files with no file extension as unsupported files", () => {
             const filePath = fs.realpathSync(
                 unsupportedTestResourcesPath + "ExampleWithoutExtension",
             );
             expect(results.unsupportedFiles.includes(filePath)).toBe(true);
         });
 
-        it("should calculate lines of code for files with unknown file extension", async () => {
+        it("should calculate lines of code for files with unknown file extension", () => {
             testFileMetric(
                 unsupportedTestResourcesPath + "example.unknownExtension",
                 FileMetric.linesOfCode,
@@ -40,7 +46,7 @@ describe("Test for handling unsupported files, with unknown or no file extension
             );
         });
 
-        it("should calculate lines of code for files with no file extension", async () => {
+        it("should calculate lines of code for files with no file extension", () => {
             testFileMetric(
                 unsupportedTestResourcesPath + "ExampleWithoutExtension",
                 FileMetric.linesOfCode,
@@ -48,11 +54,11 @@ describe("Test for handling unsupported files, with unknown or no file extension
             );
         });
 
-        it("should calculate lines of code for an empty, unsupported file", async () => {
+        it("should calculate lines of code for an empty, unsupported file", () => {
             testFileMetric(unsupportedTestResourcesPath + "empty", FileMetric.linesOfCode, 1);
         });
 
-        it("should still list files with known extension", async () => {
+        it("should still list files with known extension", () => {
             const filePath = fs.realpathSync(unsupportedTestResourcesPath + "known.java");
             expect(results.fileMetrics.has(filePath)).toBe(true);
         });

@@ -3,6 +3,7 @@ import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model";
 import { Configuration } from "../Configuration";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements";
+import { QueryCapture, Tree } from "tree-sitter";
 
 /**
  * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
@@ -51,12 +52,13 @@ export function mapAllIntoArray<KeyType, ValueType>(
     return result;
 }
 
-export function formatCaptures(tree, captures) {
+export function formatCaptures(tree: Tree, captures: QueryCapture[]) {
     return captures.map((c) => {
-        const node = c.node;
-        delete c.node;
-        c.text = tree.getText(node);
-        return c;
+        const { node, ...capture } = c;
+        // @ts-expect-error TODO fix this later
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        const text = tree.getText(node) as string;
+        return { ...capture, text };
     });
 }
 

@@ -53,7 +53,7 @@ export class MaxNestingLevel implements Metric {
         }
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { tree } = parsedFile;
 
         let maxNestingLevel = 0;
@@ -65,7 +65,7 @@ export class MaxNestingLevel implements Metric {
             maxNestingLevel = Math.max(maxNestingLevel - 1, 0);
         }
 
-        dlog(this.getName() + " - " + maxNestingLevel);
+        dlog(this.getName() + " - " + maxNestingLevel.toString());
 
         return {
             metricName: this.getName(),

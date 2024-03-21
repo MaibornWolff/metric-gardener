@@ -6,8 +6,9 @@ describe("Java metrics tests.", () => {
 
     let results: Map<string, FileMetricResults>;
 
-    const testFileMetric = (inputPath, metric, expected) =>
+    function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
         expectFileMetric(results, inputPath, metric, expected);
+    }
 
     beforeAll(async () => {
         results = await parseAllFileMetrics(javaTestResourcesPath);
@@ -219,8 +220,8 @@ describe("Java metrics tests.", () => {
                 3,
             );
         });
-        it("should count all initialization blocks as function declarations", async () => {
-            await testFileMetric(
+        it("should count all initialization blocks as function declarations", () => {
+            testFileMetric(
                 javaTestResourcesPath + "/InitializationBlock.java",
                 FileMetric.functions,
                 2,
@@ -284,8 +285,8 @@ describe("Java metrics tests.", () => {
                 6,
             );
         });
-        it("should count all initialization blocks", async () => {
-            await testFileMetric(
+        it("should count all initialization blocks", () => {
+            testFileMetric(
                 javaTestResourcesPath + "/InitializationBlock.java",
                 FileMetric.complexity,
                 2,

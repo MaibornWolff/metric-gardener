@@ -1,6 +1,12 @@
 import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
-import { Relationship, MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric";
+import {
+    Relationship,
+    MetricResult,
+    CouplingResult,
+    MetricError,
+    FileMetricResults,
+} from "../parser/metrics/Metric";
 import { FileType } from "../parser/helper/Language";
 
 describe("outputMetrics", () => {
@@ -81,8 +87,11 @@ describe("outputMetrics", () => {
         });
 
         it("when no metrics are present", () => {
-            const fileMetrics = new Map();
-            const relationShipMetrics = {} as CouplingResult;
+            const fileMetrics = new Map<string, FileMetricResults>();
+            const relationShipMetrics: CouplingResult = {
+                relationships: [],
+                metrics: new Map(),
+            };
 
             outputAsJson(fileMetrics, [], [], relationShipMetrics, "mocked-file.json", false);
 

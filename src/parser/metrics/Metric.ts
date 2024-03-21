@@ -53,8 +53,9 @@ export interface Relationship {
     toSource: string;
     fromClassName: string;
     toClassName: string;
-    usageType: string | "usage" | "extends" | "implements";
+    usageType: UsageType;
 }
+export type UsageType = "usage" | "extends" | "implements";
 
 export interface CouplingMetrics {
     outgoing_dependencies: number;
@@ -77,7 +78,7 @@ export interface Metric {
      * @param parsedFile Parsed source code file for which the metric value should be calculated.
      * @return A MetricResult containing the calculated metric value.
      */
-    calculate(parsedFile: ParsedFile): Promise<MetricResult>;
+    calculate(parsedFile: ParsedFile): MetricResult;
 
     /**
      * Returns the name of this metric.
@@ -137,6 +138,7 @@ export class ParsedFile extends SourceFile {
 }
 
 export function isParsedFile(file: SourceFile): file is ParsedFile {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return (file as ParsedFile).language !== undefined && (file as ParsedFile).tree !== undefined;
 }
 
@@ -153,5 +155,6 @@ export class ErrorFile extends SourceFile {
 }
 
 export function isErrorFile(file: SourceFile): file is ErrorFile {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return (file as ErrorFile).error !== undefined;
 }

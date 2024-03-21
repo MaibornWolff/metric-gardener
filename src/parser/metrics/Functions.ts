@@ -21,7 +21,7 @@ export class Functions implements Metric {
         );
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
         if (language === Language.Java) {
@@ -41,7 +41,7 @@ export class Functions implements Metric {
             matches = query.matches(tree.rootNode);
         }
 
-        dlog(this.getName() + " - " + matches.length);
+        dlog(this.getName() + " - " + matches.length.toString());
 
         return {
             metricName: this.getName(),

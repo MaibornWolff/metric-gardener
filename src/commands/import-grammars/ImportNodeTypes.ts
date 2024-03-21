@@ -3,6 +3,7 @@ import fs from "fs";
 import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { NodeTypesChangelog } from "./NodeTypesChangelog";
+import { NodeType, NodeTypes } from "./NodeTypes";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -78,7 +79,7 @@ export async function updateNodeTypesMappingFile() {
         // Make sure to write the change information before deleting any metric mapping.
         // If there is an error, catch that in the updateNodeMappings() and cancel the whole update.
         await changelog.writeChangelog(nodeTypeMappings);
-        await removeAbandonedNodeTypes();
+        removeAbandonedNodeTypes();
     } catch (e) {
         console.error("Error while updating the node mappings. Cancel update...");
         console.error(e);
@@ -100,7 +101,7 @@ function readNodeTypesJsons(): Map<string, Promise<string | null>> | null {
 
         languageAbbrToNodeTypePromises.set(
             languageAbbr,
-            fs.promises.readFile(fileLocation, "utf8").catch((reason) => {
+            fs.promises.readFile(fileLocation, "utf8").catch((reason: unknown) => {
                 console.error("Error while reading a node-types.json file from " + fileLocation);
                 console.error(reason);
                 return null; // To be handled when awaiting the result.
@@ -134,7 +135,7 @@ async function updateLanguage(
     presentNodes: Set<string>,
     nodeTypesPromise: Promise<string | null>,
 ) {
-    let grammarNodeTypes;
+    let grammarNodeTypes: NodeTypes;
     try {
         // Await reading node-types.json for the language:
         const nodeTypesJson = await nodeTypesPromise;
@@ -142,7 +143,7 @@ async function updateLanguage(
             return false;
         }
 
-        grammarNodeTypes = JSON.parse(nodeTypesJson);
+        grammarNodeTypes = JSON.parse(nodeTypesJson) as NodeTypes;
     } catch (e) {
         console.error("Error while parsing the node-types.json file for language " + languageAbbr);
         console.error(e);
@@ -166,7 +167,7 @@ async function updateLanguage(
         }
 
         if (grammarNodeType.type === "binary_expression") {
-            updateBinaryExpressions(languageAbbr, presentNodes, grammarNodeType, toRemove);
+            updateBinaryExpressions(languageAbbr, grammarNodeType, toRemove);
             continue;
         }
 
@@ -190,11 +191,10 @@ async function updateLanguage(
 
 function updateBinaryExpressions(
     languageAbbr: string,
-    presentNodes: Set<string>,
-    grammarNodeType,
+    grammarNodeType: NodeType,
     removedNodeTypes: Set<string>,
 ) {
-    if (grammarNodeType?.fields?.operator?.types !== undefined) {
+    if (grammarNodeType.fields?.operator?.types !== undefined) {
         for (const binaryOperatorType of grammarNodeType.fields.operator.types) {
             const { type: binaryOperator } = binaryOperatorType;
             const mapKey = grammarNodeType.type + "_" + binaryOperator;
@@ -225,7 +225,7 @@ function updateOrAddExpression(
     nodeTypeName: string,
     category: NodeTypeCategory = NodeTypeCategory.Other,
     grammarNodeTypeName?: string,
-    operator?,
+    operator?: string,
 ) {
     const nodeType = nodeTypeMappings.get(nodeTypeName);
 
@@ -260,7 +260,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
                 'Node type "' + nodeTypeName + '" was removed for language "' + languageAbbr + '".',
             );
             if (
-                nodeType.category !== "" &&
+                nodeType.category !== NodeTypeCategory.Other &&
                 (nodeType.activated_for_languages === undefined ||
                     nodeType.activated_for_languages.includes(languageAbbr))
             ) {
@@ -278,10 +278,10 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
     }
 }
 
-async function removeAbandonedNodeTypes(): Promise<void> {
+function removeAbandonedNodeTypes() {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (nodeType.languages.length === 0) {
-            if (nodeType.category !== "") {
+            if (nodeType.category !== NodeTypeCategory.Other) {
                 console.warn(
                     '#### Intervention required! Removing the node type "' +
                         nodeTypeName +

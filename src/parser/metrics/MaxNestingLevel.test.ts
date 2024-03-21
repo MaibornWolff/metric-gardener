@@ -31,7 +31,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         parser = new Parser();
     });
 
-    it("should calculate maximum nesting level for a JSON file correctly", async () => {
+    it("should calculate maximum nesting level for a JSON file correctly", () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.JSON));
         tree = parser.parse('{ "a": { "b": "c" } }');
@@ -39,7 +39,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         const parsedFile = new ParsedFile("test.json", Language.JSON, tree);
 
         // when
-        const result = await maxNestingLevel.calculate(parsedFile);
+        const result = maxNestingLevel.calculate(parsedFile);
 
         // then
         expect(result).toEqual({
@@ -48,7 +48,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         });
     });
 
-    it("should calculate maximum nesting level for a YAML file correctly", async () => {
+    it("should calculate maximum nesting level for a YAML file correctly", () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.YAML));
         tree = parser.parse("on:\n  push:\n    branches:\n      - main");
@@ -56,7 +56,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         const parsedFile = new ParsedFile("test.yaml", Language.YAML, tree);
 
         // when
-        const result = await maxNestingLevel.calculate(parsedFile);
+        const result = maxNestingLevel.calculate(parsedFile);
 
         // then
         expect(result).toEqual({
@@ -65,7 +65,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         });
     });
 
-    it("should calculate nothing if the language does not contain a nesting node", async () => {
+    it("should calculate nothing if the language does not contain a nesting node", () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
         tree = parser.parse('{ "a": { "b": "c" } }');
@@ -73,7 +73,7 @@ describe("MaxNestingLevel.calculate(...)", () => {
         const parsedFile = new ParsedFile("test.py", Language.Python, tree);
 
         // when
-        const result = await maxNestingLevel.calculate(parsedFile);
+        const result = maxNestingLevel.calculate(parsedFile);
 
         // then
         expect(result).toEqual({

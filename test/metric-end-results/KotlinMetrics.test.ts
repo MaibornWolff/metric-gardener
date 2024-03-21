@@ -6,8 +6,9 @@ describe("Kotlin metric tests", () => {
 
     let results: Map<string, FileMetricResults>;
 
-    const testFileMetric = (inputPath, metric, expected) =>
+    function testFileMetric(inputPath: string, metric: FileMetric, expected: number) {
         expectFileMetric(results, inputPath, metric, expected);
+    }
 
     beforeAll(async () => {
         results = await parseAllFileMetrics(kotlinTestResourcesPath);
@@ -26,7 +27,7 @@ describe("Kotlin metric tests", () => {
             testFileMetric(kotlinTestResourcesPath + "classes.kt", FileMetric.complexity, 4);
         });
 
-        it("should count when case statements correctly, but not else statements", async () => {
+        it("should count when case statements correctly, but not else statements", () => {
             testFileMetric(
                 kotlinTestResourcesPath + "case-statements.kt",
                 FileMetric.complexity,

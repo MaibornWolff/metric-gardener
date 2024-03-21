@@ -29,7 +29,7 @@ export class CommentLines implements Metric {
         );
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const additionalStatements: QueryStatementInterface[] = [];
         switch (language) {
@@ -76,7 +76,7 @@ export class CommentLines implements Metric {
             }
         }
 
-        dlog(this.getName() + " - " + numberOfLines);
+        dlog(this.getName() + " - " + numberOfLines.toString());
 
         return {
             metricName: this.getName(),

@@ -17,10 +17,7 @@ export function getAdditionalRelationships(
     let additionalRelationships: Relationship[] = [];
 
     for (const [filePath, callExpressions] of unresolvedCallExpressions) {
-        const fileDependencies = [...(tree.get(filePath) ?? [])];
-        if (!fileDependencies) {
-            continue;
-        }
+        const fileDependencies = tree.get(filePath) ?? [];
 
         dlog("RESOLVING:", fileDependencies);
 

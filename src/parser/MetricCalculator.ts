@@ -18,8 +18,7 @@ import {
 import nodeTypesConfig from "./config/nodeTypesConfig.json";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
-
-import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
+import { calculateLinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
 import fs from "fs";
 import { FileType } from "./helper/Language";
 
@@ -76,7 +75,6 @@ export class MetricCalculator {
         }
         const metricResults = new Map<string, MetricResult>();
         const metricErrors = new Map<string, MetricError>();
-        const resultPromises: Promise<MetricResult | null>[] = [];
 
         if (isParsedFile(sourceFile)) {
             dlog(
@@ -91,15 +89,14 @@ export class MetricCalculator {
                     : this.#structuredTextFileMetrics;
 
             for (const metric of metricsToCalculate) {
-                resultPromises.push(
-                    metric.calculate(sourceFile).catch((reason) => {
-                        metricErrors.set(metric.getName(), {
-                            metricName: metric.getName(),
-                            error: reason,
-                        });
-                        return null;
-                    }),
-                );
+                try {
+                    metricResults.set(metric.getName(), metric.calculate(sourceFile));
+                } catch (error) {
+                    metricErrors.set(metric.getName(), {
+                        metricName: metric.getName(),
+                        error: error as Error,
+                    });
+                }
             }
         } else {
             // Unsupported file: only calculate metrics based on the raw source code
@@ -108,19 +105,12 @@ export class MetricCalculator {
                 const sourceCode = await fs.promises.readFile(sourceFile.filePath, {
                     encoding: "utf8",
                 });
-                resultPromises.push(LinesOfCodeRawText.calculate(sourceCode)); // Should never throw
+                metricResults.set(FileMetric.linesOfCode, calculateLinesOfCodeRawText(sourceCode)); // Should never throw
             } catch (error) {
                 metricErrors.set(FileMetric.linesOfCode, {
                     metricName: FileMetric.linesOfCode,
-                    error,
+                    error: error as Error,
                 });
-            }
-        }
-
-        const resultsArray = await Promise.all(resultPromises);
-        for (const result of resultsArray) {
-            if (result !== null) {
-                metricResults.set(result.metricName, result);
             }
         }
 

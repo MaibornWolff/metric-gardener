@@ -32,20 +32,25 @@ import { Configuration } from "./Configuration";
 /*
  * Implementation of function mocks:
  */
+
+// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindFilesAsync() {
     yield "clearly/invalid/path.cpp";
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindTwoFilesAsync() {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/path2.cpp";
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindAlsoUnsupportedFilesAsync() {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/unsupported.unsupported";
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindFilesAsyncError() {
     yield "clearly/invalid/path.cpp";
     throw new Error("Hard drive crashed!");
@@ -249,8 +254,8 @@ describe("GenericParser.calculateMetrics()", () => {
          * Given:
          */
         mockFindFilesAsync();
-        mockTreeParserParse(async (filePath) => {
-            return new ErrorFile(filePath, new Error("Baaaaaah"));
+        mockTreeParserParse((filePath) => {
+            return Promise.resolve(new ErrorFile(filePath, new Error("Baaaaaah")));
         });
 
         const errorSpy = spyOnConsoleErrorNoOp();

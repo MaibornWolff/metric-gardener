@@ -15,8 +15,8 @@ export class QueryStrategy {
 
     getFullyQTNs(
         parsedFile: ParsedFile,
-        namespaceDelimiter,
-        namespacesQuery,
+        namespaceDelimiter: string,
+        namespacesQuery: string,
     ): Map<string, FullyQTN> {
         const { filePath, language, tree } = parsedFile;
 

@@ -26,7 +26,7 @@ export class CouplingCalculator {
         const nodeTypesJson = fs
             .readFileSync(fs.realpathSync("./src/parser/config/nodeTypesConfig.json"))
             .toString();
-        const allNodeTypes: NodeTypeConfig[] = JSON.parse(nodeTypesJson);
+        const allNodeTypes = JSON.parse(nodeTypesJson) as NodeTypeConfig[];
 
         this.namespaceCollector = new NamespaceCollector();
         this.publicAccessorCollector = new PublicAccessorCollector();
@@ -50,7 +50,7 @@ export class CouplingCalculator {
         dlog("----- Parsing Coupling of files in " + sourcesRoot + " recursively -----");
         dlog("\n\n");
 
-        dlog(" --- " + parsedFiles.length + " files detected", "\n\n");
+        dlog(" --- " + parsedFiles.length.toString() + " files detected", "\n\n");
 
         // TODO rewrite this to support multiple coupling metrics
         return this.comprisingMetrics[0].calculate(parsedFiles);

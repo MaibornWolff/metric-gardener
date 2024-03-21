@@ -72,7 +72,7 @@ export class RealLinesOfCode implements Metric {
         return realLinesOfCode;
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         let isCommentFunction: (node: SyntaxNode) => boolean = (node: SyntaxNode) =>
             this.isComment(node);
@@ -98,7 +98,7 @@ export class RealLinesOfCode implements Metric {
             rloc = realLinesOfCode.size;
         }
 
-        dlog(this.getName() + " - " + rloc);
+        dlog(this.getName() + " - " + rloc.toString());
 
         return {
             metricName: this.getName(),

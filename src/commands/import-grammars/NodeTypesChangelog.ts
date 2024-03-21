@@ -107,7 +107,7 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.addedLanguages) +
+                        Array.from(entry.addedLanguages).toString() +
                         EOL,
                 );
             }
@@ -143,11 +143,11 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.removedLanguages) +
+                        Array.from(entry.removedLanguages).toString() +
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
-                        activatedForLangOutput +
+                        activatedForLangOutput.toString() +
                         EOL,
                 );
             }
@@ -192,15 +192,15 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.addedLanguages) +
+                        Array.from(entry.addedLanguages).toString() +
                         csvSeparator +
-                        Array.from(entry.removedLanguages) +
+                        Array.from(entry.removedLanguages).toString() +
                         csvSeparator +
-                        Array.from(entry.remainingLanguages) +
+                        Array.from(entry.remainingLanguages).toString() +
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
-                        activatedForLangOutput +
+                        activatedForLangOutput.toString() +
                         EOL,
                 );
             }
@@ -220,7 +220,7 @@ export class NodeTypesChangelog {
             writeStream.on("error", (err) => {
                 console.error("Error while writing the changelog:");
                 console.error(err);
-                reject();
+                reject(err);
             });
             writeStream.on("finish", () => {
                 console.log("####################################");

@@ -14,7 +14,7 @@ If there are new syntax node types included in the grammars (e.g. because of a n
 If you want to support a completely new programming language, you have to perform additional steps after installing the grammar as a dependency of this project and before running the import script:
 
 -   Add the language, the file extension(s) of the source code files used by that language and an appropriate shortcut for that language to the enum and the maps inside [Language.ts](src%2Fparser%2Fhelper%2FLanguage.ts).
--   You also have to add the path to the `node-types.json` of the tree-sitter grammar for that language to [ImportNodeTypes.ts](src%2Fcommands%2Fimport-grammars%2FImportNodeTypes.ts).
+-   You also have to add the path to the [nodeTypesConfig.json](src/parser/config/nodeTypesConfig.json) of the tree-sitter grammar for that language to [ImportNodeTypes.ts](src%2Fcommands%2Fimport-grammars%2FImportNodeTypes.ts).
 -   After these steps, you can run the import script via `npm run start -- import-grammars` as mentioned above.
 -   You can now run metric-gardener on source code of that newly added language.
 

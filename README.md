@@ -75,6 +75,8 @@ The number of class definitions inside a file, also counting for enums, interfac
 **lines_of_code**<br>
 The total number of lines of a file, including empty lines, comments, etc.
 
+_Note: lines_of_code metric will be calculated for all input files, regardless of the languages they are written in._
+
 **comment_lines**<br>
 The number of comment lines inside a file. Does count for any kind of comment (except for python's special block comments).
 

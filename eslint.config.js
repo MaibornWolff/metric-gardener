@@ -5,6 +5,6 @@ const eslintConfigPrettier = require("eslint-config-prettier");
 module.exports = tseslint.config(
     eslint.configs.recommended,
     eslintConfigPrettier,
-    ...tseslint.configs.recommended,
+    ...tseslint.configs.strictTypeChecked,
     { languageOptions: { parserOptions: { project: "./tsconfig.json" } } },
 );

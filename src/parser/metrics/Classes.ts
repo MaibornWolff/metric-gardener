@@ -36,7 +36,7 @@ export class Classes implements Metric {
         this.addQueriesForJava();
     }
 
-    addQueriesForCAndCpp() {
+    addQueriesForCAndCpp(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(struct_specifier body: (field_declaration_list)) @struct_definition",
@@ -86,7 +86,7 @@ export class Classes implements Metric {
         );
     }
 
-    addQueriesForTSAndTSX() {
+    addQueriesForTSAndTSX(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(type_alias_declaration value: (object_type))",
@@ -94,7 +94,8 @@ export class Classes implements Metric {
             ),
         );
     }
-    addQueriesForJava() {
+
+    addQueriesForJava(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", [
                 "java",

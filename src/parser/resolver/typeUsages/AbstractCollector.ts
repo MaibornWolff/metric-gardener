@@ -51,7 +51,13 @@ export abstract class AbstractCollector {
 
     private importsBySuffixOrAlias = new Map<string, Map<string, ImportReference>>();
 
-    getUsageCandidates(parsedFile: ParsedFile, namespaceCollector: NamespaceCollector) {
+    getUsageCandidates(
+        parsedFile: ParsedFile,
+        namespaceCollector: NamespaceCollector,
+    ): {
+        candidates: TypeUsageCandidate[];
+        unresolvedCallExpressions: UnresolvedCallExpression[];
+    } {
         const filePath = parsedFile.filePath;
         this.importsBySuffixOrAlias.set(filePath, new Map());
 
@@ -140,7 +146,7 @@ export abstract class AbstractCollector {
         return importsOfFile;
     }
 
-    private getGroupedImports(parsedFile: ParsedFile) {
+    private getGroupedImports(parsedFile: ParsedFile): ImportReference[] {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);
@@ -212,7 +218,10 @@ export abstract class AbstractCollector {
         parsedFile: ParsedFile,
         namespaceCollector: NamespaceCollector,
         importReferences: ImportReference[],
-    ) {
+    ): {
+        candidates: TypeUsageCandidate[];
+        unresolvedCallExpressions: UnresolvedCallExpression[];
+    } {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);
@@ -487,7 +496,11 @@ export abstract class AbstractCollector {
         };
     }
 
-    private buildCallExpression(qualifiedName: string) {
+    private buildCallExpression(qualifiedName: string): {
+        name: string;
+        variableNameIncluded: boolean;
+        namespaceDelimiter: string;
+    } {
         return {
             name: qualifiedName,
             variableNameIncluded:

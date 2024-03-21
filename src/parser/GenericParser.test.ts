@@ -34,29 +34,29 @@ import { Configuration } from "./Configuration";
  */
 
 // eslint-disable-next-line @typescript-eslint/require-await
-async function* mockedFindFilesAsync() {
+async function* mockedFindFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path.cpp";
 }
 
 // eslint-disable-next-line @typescript-eslint/require-await
-async function* mockedFindTwoFilesAsync() {
+async function* mockedFindTwoFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/path2.cpp";
 }
 
 // eslint-disable-next-line @typescript-eslint/require-await
-async function* mockedFindAlsoUnsupportedFilesAsync() {
+async function* mockedFindAlsoUnsupportedFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/unsupported.unsupported";
 }
 
 // eslint-disable-next-line @typescript-eslint/require-await
-async function* mockedFindFilesAsyncError() {
+async function* mockedFindFilesAsyncError(): AsyncGenerator<string> {
     yield "clearly/invalid/path.cpp";
     throw new Error("Hard drive crashed!");
 }
 
-async function mockedTreeParserParse(filePath: string, config: Configuration) {
+async function mockedTreeParserParse(filePath: string, config: Configuration): Promise<SourceFile> {
     const language = assumeLanguageFromFilePath(filePath, config);
     if (language !== undefined) {
         return Promise.resolve(new ParsedFile(filePath, language, tree));
@@ -82,10 +82,12 @@ async function mockedMetricsCalculator(
  * Helper functions for creating mocks:
  */
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function mockFindFilesAsync(mockedFunction: () => AsyncGenerator<string> = mockedFindFilesAsync) {
     return jest.spyOn(HelperModule, "findFilesAsync").mockImplementation(mockedFunction);
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function mockTreeParserParse(
     implementation: (
         filePath: string,
@@ -95,10 +97,12 @@ function mockTreeParserParse(
     return jest.spyOn(TreeParser, "parse").mockImplementation(implementation);
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function spyOnMetricCalculator() {
     return jest.spyOn(MetricCalculator.prototype, "calculateMetrics");
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function spyOnCouplingCalculatorNoOp() {
     return jest
         .spyOn(CouplingCalculator.prototype, "calculateMetrics")

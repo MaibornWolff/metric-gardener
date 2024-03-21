@@ -31,7 +31,7 @@ export class NamespaceCollector {
         return packages;
     }
 
-    getAllNamespaces() {
+    getAllNamespaces(): IterableIterator<[Language, Map<string, Map<string, FullyQTN>>]> {
         return this.cache.entries();
     }
 }

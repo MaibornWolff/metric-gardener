@@ -47,7 +47,7 @@ export class Coupling implements CouplingMetric {
         this.publicAccessorCollector = publicAccessorCollector;
     }
 
-    calculate(parseFiles: ParsedFile[]) {
+    calculate(parseFiles: ParsedFile[]): CouplingResult {
         let namespaces: Map<string, FullyQTN> = new Map();
         const publicAccessors = new Map<string, Accessor[]>();
         let usagesCandidates: TypeUsageCandidate[] = [];
@@ -154,7 +154,10 @@ export class Coupling implements CouplingMetric {
     private buildDependencyTree(
         couplingResults: Relationship[],
         allCouplingMetrics: Map<string, CouplingMetrics>,
-    ) {
+    ): {
+        tree: Map<string, Relationship[]>;
+        rootFiles: string[];
+    } {
         const tree = new Map<string, Relationship[]>();
         for (const couplingItem of couplingResults) {
             const treeItem = tree.get(couplingItem.fromSource);
@@ -185,7 +188,9 @@ export class Coupling implements CouplingMetric {
         //console.log(tree, rootFiles);
     }
 
-    private calculateCouplingMetrics(couplingResults: Relationship[]) {
+    private calculateCouplingMetrics(
+        couplingResults: Relationship[],
+    ): Map<string, CouplingMetrics> {
         const couplingValues = new Map<string, CouplingMetrics>();
         for (const couplingItem of couplingResults) {
             this.updateMetricsForFile(couplingItem.fromSource, "outgoing", couplingValues);
@@ -200,7 +205,7 @@ export class Coupling implements CouplingMetric {
         filePath: string,
         direction: string,
         couplingValues: Map<string, CouplingMetrics>,
-    ) {
+    ): void {
         let couplingMetrics = couplingValues.get(filePath);
         if (couplingMetrics === undefined) {
             couplingMetrics = this.getNewCouplingMetrics();

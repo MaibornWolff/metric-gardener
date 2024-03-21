@@ -43,7 +43,7 @@ const changelog: NodeTypesChangelog = new NodeTypesChangelog();
  * Keeps the present mappings if the corresponding node type is still present in that language.
  * Removes all node types which are no longer present in the grammar.
  */
-export async function updateNodeTypesMappingFile() {
+export async function updateNodeTypesMappingFile(): Promise<void> {
     nodeTypeMappings.clear();
     changelog.clear();
 
@@ -134,7 +134,7 @@ async function updateLanguage(
     languageAbbr: string,
     presentNodes: Set<string>,
     nodeTypesPromise: Promise<string | null>,
-) {
+): Promise<boolean> {
     let grammarNodeTypes: NodeTypes;
     try {
         // Await reading node-types.json for the language:
@@ -193,7 +193,7 @@ function updateBinaryExpressions(
     languageAbbr: string,
     grammarNodeType: NodeType,
     removedNodeTypes: Set<string>,
-) {
+): void {
     if (grammarNodeType.fields?.operator?.types !== undefined) {
         for (const binaryOperatorType of grammarNodeType.fields.operator.types) {
             const { type: binaryOperator } = binaryOperatorType;
@@ -226,7 +226,7 @@ function updateOrAddExpression(
     category: NodeTypeCategory = NodeTypeCategory.Other,
     grammarNodeTypeName?: string,
     operator?: string,
-) {
+): void {
     const nodeType = nodeTypeMappings.get(nodeTypeName);
 
     if (nodeType !== undefined) {
@@ -249,7 +249,7 @@ function updateOrAddExpression(
     }
 }
 
-function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<string>) {
+function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<string>): void {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (removedNodeTypes.has(nodeTypeName)) {
             const index = nodeType.languages.indexOf(languageAbbr);
@@ -278,7 +278,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
     }
 }
 
-function removeAbandonedNodeTypes() {
+function removeAbandonedNodeTypes(): void {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (nodeType.languages.length === 0) {
             if (nodeType.category !== NodeTypeCategory.Other) {
@@ -300,7 +300,7 @@ function removeAbandonedNodeTypes() {
     }
 }
 
-async function writeNewNodeTypeMappings() {
+async function writeNewNodeTypeMappings(): Promise<void> {
     try {
         // Save the updated mappings:
         await fs.promises.writeFile(

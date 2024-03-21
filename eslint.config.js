@@ -7,4 +7,9 @@ module.exports = tseslint.config(
     eslintConfigPrettier,
     ...tseslint.configs.strictTypeChecked,
     { languageOptions: { parserOptions: { project: "./tsconfig.json" } } },
+    {
+        rules: {
+            "@typescript-eslint/explicit-function-return-type": "error",
+        },
+    },
 );

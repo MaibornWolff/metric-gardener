@@ -90,7 +90,7 @@ void yargs(hideBin(process.argv))
     .strictOptions()
     .parse();
 
-async function parseSourceCode(configuration: Configuration) {
+async function parseSourceCode(configuration: Configuration): Promise<void> {
     console.time("Time to complete");
 
     const parser = new GenericParser(configuration);

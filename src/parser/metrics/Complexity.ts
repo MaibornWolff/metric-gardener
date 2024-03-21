@@ -60,13 +60,13 @@ export class Complexity implements Metric {
         this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
     }
 
-    addBinaryExpressionQueryStatement(nodeType: NodeTypeConfig) {
+    addBinaryExpressionQueryStatement(nodeType: NodeTypeConfig): void {
         if (nodeType.operator !== undefined) {
             this.complexityStatementsSuperSet.push(new OperatorQueryStatement(nodeType));
         }
     }
 
-    addExpressionQueryStatement(nodeType: NodeTypeConfig) {
+    addExpressionQueryStatement(nodeType: NodeTypeConfig): void {
         this.complexityStatementsSuperSet.push(new NodeTypeQueryStatement(nodeType));
     }
 
@@ -76,7 +76,7 @@ export class Complexity implements Metric {
     addCaseLabelQueryStatements(
         caseNodeTypes: NodeTypeConfig[],
         languagesWithDefaultLabelAbbr: Set<string>,
-    ) {
+    ): void {
         for (const caseNodeType of caseNodeTypes) {
             const haveDefaultNodeType: string[] = [];
             const haveNoDefaultNodeType: string[] = [];
@@ -113,7 +113,7 @@ export class Complexity implements Metric {
     addCaseDefaultDifferentiatingQuery(
         noDefaultLangAbbrs: string[],
         caseDefaultNodeType: NodeTypeConfig,
-    ) {
+    ): void {
         if (caseDefaultNodeType.type_name == "case_statement") {
             // Special treatment for "case_statement" used by at least C++ and PHP.
             // This syntax node can have more than one child,

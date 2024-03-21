@@ -4,7 +4,7 @@ import { Configuration } from "./Configuration";
 import { Coupling } from "./metrics/coupling/Coupling";
 import { NamespaceCollector } from "./resolver/NamespaceCollector";
 import { UsagesCollector } from "./resolver/UsagesCollector";
-import { CouplingMetric, ParsedFile } from "./metrics/Metric";
+import { CouplingMetric, CouplingResult, ParsedFile } from "./metrics/Metric";
 import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
@@ -43,7 +43,7 @@ export class CouplingCalculator {
         ];
     }
 
-    calculateMetrics(parsedFiles: ParsedFile[]) {
+    calculateMetrics(parsedFiles: ParsedFile[]): CouplingResult {
         const sourcesRoot = this.config.sourcesPath;
 
         dlog("\n\n");

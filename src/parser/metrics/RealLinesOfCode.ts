@@ -41,7 +41,7 @@ export class RealLinesOfCode implements Metric {
         isComment: (node: SyntaxNode) => boolean,
         countAllLines: (node: SyntaxNode) => boolean,
         realLinesOfCode = new Set<number>(),
-    ) {
+    ): Set<number> {
         const { currentNode } = cursor;
         if (!isComment(currentNode)) {
             realLinesOfCode.add(currentNode.startPosition.row);
@@ -80,7 +80,7 @@ export class RealLinesOfCode implements Metric {
 
         switch (language) {
             case Language.Python:
-                isCommentFunction = (node: SyntaxNode) => this.isPythonComment(node);
+                isCommentFunction = (node: SyntaxNode): boolean => this.isPythonComment(node);
                 break;
             case Language.Bash:
                 countAllLinesFunction = countAllLinesBash;
@@ -106,15 +106,15 @@ export class RealLinesOfCode implements Metric {
         };
     }
 
-    isComment(node: SyntaxNode) {
+    isComment(node: SyntaxNode): boolean {
         return this.commentStatementsSet.has(node.type);
     }
 
-    isPythonComment(node: SyntaxNode) {
+    isPythonComment(node: SyntaxNode): boolean {
         return this.isComment(node) || this.isPythonMultilineComment(node);
     }
 
-    isPythonMultilineComment(node: SyntaxNode) {
+    isPythonMultilineComment(node: SyntaxNode): boolean {
         // Multiline comments in python are (multiline) strings that are
         // neither assigned to a variable nor used as a call parameter.
         return (

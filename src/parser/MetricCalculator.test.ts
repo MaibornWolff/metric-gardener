@@ -26,7 +26,7 @@ jest.mock("fs", () => ({
     },
 }));
 
-function initiateSpies() {
+function initiateSpies(): void {
     jest.spyOn(Classes.prototype, "calculate").mockReturnValue({
         metricName: FileMetric.classes,
         metricValue: 1,
@@ -61,7 +61,7 @@ function initiateSpies() {
     });
 }
 
-function initiateErrorSpies() {
+function initiateErrorSpies(): void {
     jest.spyOn(Classes.prototype, "calculate").mockImplementation(() => {
         throw new Error("something went wrong when calculating classes metric");
     });

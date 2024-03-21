@@ -42,7 +42,7 @@ export function outputAsJson(
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean,
-) {
+): void {
     const output = buildOutputObject(
         fileMetrics,
         unsupportedFiles,
@@ -68,7 +68,11 @@ function buildOutputObject(
     unknownFiles: string[],
     errorFiles: string[],
     relationshipMetrics: CouplingResult,
-) {
+): {
+    nodes: OutputNode[];
+    info: OutputInfoNode[];
+    relationships: OutputRelationship[];
+} {
     const output: {
         nodes: OutputNode[];
         info: OutputInfoNode[];
@@ -170,7 +174,7 @@ function buildOutputObject(
     return output;
 }
 
-function dumpCompressed(outputString: string, outputFilePath: string) {
+function dumpCompressed(outputString: string, outputFilePath: string): void {
     const readableStream = new Readable();
     readableStream.push(outputString);
     readableStream.push(null);

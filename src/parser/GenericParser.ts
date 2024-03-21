@@ -39,7 +39,12 @@ export class GenericParser {
     /**
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
-    async calculateMetrics() {
+    async calculateMetrics(): Promise<{
+        fileMetrics: Map<string, FileMetricResults>;
+        unsupportedFiles: string[];
+        errorFiles: string[];
+        couplingMetrics: CouplingResult;
+    }> {
         const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
         const errorFiles: string[] = [];

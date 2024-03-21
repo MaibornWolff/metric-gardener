@@ -33,7 +33,7 @@ export class MaxNestingLevel implements Metric {
      * this is the most efficient way to traverse a syntax tree.
      * @param cursor A {@link TreeCursor} for the syntax tree.
      */
-    walkTree(cursor: TreeCursor) {
+    walkTree(cursor: TreeCursor): number {
         let maxChildHeight = 0;
 
         if (cursor.gotoFirstChild()) {

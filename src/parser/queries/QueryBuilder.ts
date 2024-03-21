@@ -17,11 +17,11 @@ export class QueryBuilder {
         this.#language = language;
     }
 
-    setStatements(statements: QueryStatementInterface[]) {
+    setStatements(statements: QueryStatementInterface[]): void {
         this.#statements = statements;
     }
 
-    clear() {
+    clear(): void {
         this.#statements = [];
     }
 
@@ -74,7 +74,7 @@ export class QueryBuilder {
      * @return A query string.
      * @private
      */
-    #getStatementsQuery() {
+    #getStatementsQuery(): string {
         const statementQueries: string[] = [];
 
         for (const statement of this.#statements) {

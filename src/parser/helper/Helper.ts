@@ -16,7 +16,7 @@ export function mapAllFunctional<KeyType, ValueType>(
     iterator: Iterable<KeyType>,
     map: Map<KeyType, ValueType>,
     insertFunction: (v: ValueType) => void,
-) {
+): void {
     for (const key of iterator) {
         const mapResult = map.get(key);
         if (mapResult !== undefined) {
@@ -31,7 +31,7 @@ export function mapAllFunctional<KeyType, ValueType>(
  * @param key The key to look up after being converted to lower case. The passed object is not modified.
  * @return the value retrieved from the map, if any.
  */
-export function lookupLowerCase<V>(map: Map<string, V>, key: string) {
+export function lookupLowerCase<V>(map: Map<string, V>, key: string): V | undefined {
     const inLowerCase = key.toLowerCase();
     return map.get(inLowerCase);
 }
@@ -52,6 +52,7 @@ export function mapAllIntoArray<KeyType, ValueType>(
     return result;
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function formatCaptures(tree: Tree, captures: QueryCapture[]) {
     return captures.map((c) => {
         const { node, ...capture } = c;
@@ -69,7 +70,7 @@ export function formatCaptures(tree: Tree, captures: QueryCapture[]) {
  * @param b Second string.
  * @return negative value if a < b, a positive value if b < a, and 0 if a === b.
  */
-export function strcmp(a: string, b: string) {
+export function strcmp(a: string, b: string): 1 | -1 | 0 {
     if (a < b) {
         return -1;
     } else if (b < a) {
@@ -78,7 +79,7 @@ export function strcmp(a: string, b: string) {
     return 0;
 }
 
-export function replaceForwardWithBackwardSlashes(path: string) {
+export function replaceForwardWithBackwardSlashes(path: string): string {
     return path.replace(/\//g, "\\");
 }
 
@@ -173,7 +174,7 @@ export function findNodeTypesByCategories(
     allNodeTypes: NodeTypeConfig[],
     categories: Set<NodeTypeCategory>,
     callback: (nodeTypeConfig: NodeTypeConfig) => void,
-) {
+): void {
     for (const nodeTypeConfig of allNodeTypes) {
         if (categories.has(nodeTypeConfig.category)) {
             callback(nodeTypeConfig);
@@ -184,7 +185,7 @@ export function findNodeTypesByCategories(
 export function getQueryStatementsByCategories(
     allNodeTypes: NodeTypeConfig[],
     ...categories: NodeTypeCategory[]
-) {
+): NodeTypeQueryStatement[] {
     const statements: NodeTypeQueryStatement[] = [];
     findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeType) => {
         const queryStatement = new NodeTypeQueryStatement(nodeType);
@@ -197,7 +198,7 @@ export function getQueryStatementsByCategories(
 export function getNodeTypesByCategories(
     allNodeTypes: NodeTypeConfig[],
     ...categories: NodeTypeCategory[]
-) {
+): NodeTypeConfig[] {
     const types: NodeTypeConfig[] = [];
     findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeTypeConfig) =>
         types.push(nodeTypeConfig),
@@ -208,7 +209,7 @@ export function getNodeTypesByCategories(
 export function getNodeTypeNamesByCategories(
     allNodeTypes: NodeTypeConfig[],
     ...categories: NodeTypeCategory[]
-) {
+): string[] {
     const typeNames: string[] = [];
     findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeTypeConfig) => {
         typeNames.push(nodeTypeConfig.type_name);

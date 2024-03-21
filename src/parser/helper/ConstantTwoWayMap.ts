@@ -22,10 +22,10 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
         }
     }
 
-    getValueFor(key: KeyType) {
+    getValueFor(key: KeyType): ValueType | undefined {
         return this.map.get(key);
     }
-    getKeyFor(value: ValueType) {
+    getKeyFor(value: ValueType): KeyType | undefined {
         return this.reverseMap.get(value);
     }
 

@@ -150,7 +150,7 @@ export const enum FileType {
  */
 export const structuredTextLanguages = new Set([Language.JSON, Language.YAML]);
 
-export function languageToFileType(language: Language) {
+export function languageToFileType(language: Language): FileType {
     return structuredTextLanguages.has(language) ? FileType.StructuredText : FileType.SourceCode;
 }
 
@@ -174,7 +174,7 @@ export function assumeLanguageFromFilePath(
     filePath: string,
     config: Configuration,
     pathModule = path,
-) {
+): Language | undefined {
     const fileExtension: string = getFileExtension(filePath);
 
     if (fileExtension === "h") {

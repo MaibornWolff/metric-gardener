@@ -13,7 +13,7 @@ export function getAdditionalRelationships(
     unresolvedCallExpressions: Map<string, UnresolvedCallExpression[]>,
     publicAccessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>,
-) {
+): Relationship[] {
     let additionalRelationships: Relationship[] = [];
 
     for (const [filePath, callExpressions] of unresolvedCallExpressions) {
@@ -140,7 +140,7 @@ function resolveAccessorReturnType(
     tree: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>,
-) {
+): number {
     // TODO resolve return type (generics, etc.)
     dlog(
         "Lookup Status: ",

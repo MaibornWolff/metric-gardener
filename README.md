@@ -40,8 +40,8 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Go
 -   PHP
--   [TypeScript and TSX](TS_TSX.md)
--   [Java](Java.md)
+-   [TypeScript and TSX](language-specific-doc/TS_TSX.md)
+-   [Java](language-specific-doc/Java.md)
 -   C#
 -   C++
 -   Python

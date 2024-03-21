@@ -39,4 +39,4 @@ The "classes" metric counts:
 
 ### lines_of_code, comment_lines and real_lines_of_code
 
-see [README.md](README.md)
+see [README.md](../README.md)

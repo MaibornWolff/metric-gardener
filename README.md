@@ -40,12 +40,12 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 -   Go
 -   PHP
--   [TypeScript and TSX](language-specific-doc/TS_TSX.md)
--   [Java](language-specific-doc/Java.md)
+-   [TypeScript and TSX](docs/TS_TSX.md)
+-   [Java](docs/Java.md)
 -   C#
 -   C++
 -   Python
--   [JavaScript](language-specific-doc/JavaScript.md)
+-   [JavaScript](docs/JavaScript.md)
 -   Kotlin
 -   JSON
 -   YAML
@@ -75,7 +75,7 @@ The number of class definitions inside a file, also counting for enums, interfac
 **lines_of_code**<br>
 The total number of lines of a file, including empty lines, comments, etc.
 
-_Note: lines_of_code metric will be calculated for all input files, regardless of the languages they are written in._
+_Note: lines_of_code metric will be calculated for all input files with utf-8 encoding, regardless of the languages they are written in._
 
 **comment_lines**<br>
 The number of comment lines inside a file. Does count for any kind of comment (except for python's special block comments).
@@ -117,7 +117,7 @@ Performs a dependency analysis and appends the results to the output .json-file 
 
 ### Updating tree-sitter grammars and adding support for more languages
 
-Take a look at [UPDATE_GRAMMARS.md](UPDATE_GRAMMARS.md) for further information on what to do if you have updated the tree-sitter grammars installed as dependency of this project. You also find information about adding support for an additional programming language there.
+Take a look at [UPDATE_GRAMMARS.md](docs/UPDATE_GRAMMARS.md) for further information on what to do if you have updated the tree-sitter grammars installed as dependency of this project. You also find information about adding support for an additional programming language there.
 
 ### For contributors
 

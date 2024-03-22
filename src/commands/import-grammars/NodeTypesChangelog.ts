@@ -218,9 +218,7 @@ export class NodeTypesChangelog {
             const writeStream = fs.createWriteStream(pathToWriteChangelog);
 
             writeStream.on("error", (err) => {
-                console.error("Error while writing the changelog:");
-                console.error(err);
-                reject();
+                reject(new Error("Error while writing the changelog:\n" + err));
             });
             writeStream.on("finish", () => {
                 console.log("####################################");

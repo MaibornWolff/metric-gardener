@@ -12,7 +12,7 @@ The "complexity" metric counts:
     -   `for` loops
     -   `while` loops
     -   `do-while` loops
--   Logical binary operators `&&` and `||`, as well as their alternative representations `and` and `or`
+-   Logical binary operators `&&` and `||`
 -   `case` labels in switch-statements
 -   Structured Exception Handling (SEH) `__except` clauses
 -   Function declarations, exactly like they are considered for the ["functions" metric](#functions)
@@ -21,7 +21,7 @@ It does **not** count:
 
 -   Any function calls
 -   Any preprocessor directives, including `#if`, `#ifdef` and `#elif`
--   Bitwise binary operators, like `^` (`xor`), `&` (`bitand`), `|` (`bitor`), `&=` (`and_eq`) or `|=` (`or_eq`)
+-   Bitwise binary operators, like `^`, `&`, `|`, `&=` or `|=`
 
 ### functions
 

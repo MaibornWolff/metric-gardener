@@ -53,6 +53,14 @@ describe("PHP metrics tests", () => {
         it("should count loops properly", () => {
             testFileMetric(phpTestResourcesPath + "loops.php", FileMetric.complexity, 4);
         });
+
+        it("should count the logical operations &&, || and xor", () => {
+            testFileMetric(
+                phpTestResourcesPath + "logical_operations.php",
+                FileMetric.complexity,
+                3,
+            );
+        });
     });
 
     describe("parses PHP classes metric", () => {

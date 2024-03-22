@@ -21,6 +21,10 @@ describe("C metrics tests", () => {
         it("should be correct for a header file", () => {
             testFileMetric(cTestResourcesPath + "c-example-header.h", FileMetric.complexity, 1);
         });
+
+        it("should count the SEH except clause", () => {
+            testFileMetric(cTestResourcesPath + "seh_except.c", FileMetric.complexity, 2);
+        });
     });
 
     describe("Parsing the C classes metric", () => {
@@ -59,7 +63,7 @@ describe("C metrics tests", () => {
         });
 
         it("should count the lines of code correctly for a non-empty header file", () => {
-            testFileMetric(cTestResourcesPath + "c-example-header.h", FileMetric.linesOfCode, 71);
+            testFileMetric(cTestResourcesPath + "c-example-header.h", FileMetric.linesOfCode, 72);
         });
 
         it("should count one line for an empty file", () => {
@@ -76,7 +80,7 @@ describe("C metrics tests", () => {
             testFileMetric(
                 cTestResourcesPath + "c-example-header.h",
                 FileMetric.realLinesOfCode,
-                38,
+                39,
             );
         });
 

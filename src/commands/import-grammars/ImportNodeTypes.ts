@@ -48,62 +48,59 @@ export async function updateNodeTypesMappingFile() {
 
     try {
         const languageAbbrToNodeTypePromises = readNodeTypesJsons();
-        if (languageAbbrToNodeTypePromises === null) {
-            return; // Cancel whole update. Error message was already printed by readNodeTypesJsons()
-        }
-
         const languageToPresentNodeTypes = importPresentNodeTypeMappings();
 
         for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
-            let presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr);
-
-            if (presentNodeTypes === undefined) {
-                presentNodeTypes = new Set();
-            }
-
+            const presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr) ?? new Set();
             const nodeTypesPromise = languageAbbrToNodeTypePromises.get(languageAbbr);
-            let success = false;
 
-            if (nodeTypesPromise !== undefined) {
-                // This is synchronized on purpose to make the output comparable.
-                success = await updateLanguage(languageAbbr, presentNodeTypes, nodeTypesPromise);
+            // Await reading node-types.json for the language:
+            const nodeTypesJson = await nodeTypesPromise;
+            if (!nodeTypesJson) {
+                throw new Error("No node-types.json found for language " + languageAbbr);
             }
-
-            if (!success) {
-                console.error("Error while updating the node mappings. Cancel update...");
-                return;
+            if (nodeTypesJson instanceof Error) {
+                throw nodeTypesJson;
             }
+            updateLanguage(languageAbbr, presentNodeTypes, nodeTypesJson);
         }
 
         // Make sure to write the change information before deleting any metric mapping.
-        // If there is an error, catch that in the updateNodeMappings() and cancel the whole update.
         await changelog.writeChangelog(nodeTypeMappings);
-        await removeAbandonedNodeTypes();
+        removeAbandonedNodeTypes();
     } catch (e) {
         console.error("Error while updating the node mappings. Cancel update...");
         console.error(e);
         return;
     }
 
-    await writeNewNodeTypeMappings();
+    try {
+        await writeNewNodeTypeMappings();
+    } catch (e) {
+        console.error("Error while writing nodeTypesConfig.json");
+        console.error(e);
+        return;
+    }
 }
 
-function readNodeTypesJsons(): Map<string, Promise<string | null>> | null {
-    const languageAbbrToNodeTypePromises = new Map<string, Promise<string | null>>();
+function readNodeTypesJsons(): Map<string, Promise<string | Error>> {
+    const languageAbbrToNodeTypePromises = new Map<string, Promise<string | Error>>();
 
     for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
         const fileLocation = languageAbbreviationToNodeTypeFiles.get(languageAbbr);
         if (fileLocation === undefined) {
-            console.error("No file path found for language " + languageAbbr + ". Cancel update...");
-            return null; // Cancel whole update.
+            throw new Error("No file path found for language " + languageAbbr);
         }
 
         languageAbbrToNodeTypePromises.set(
             languageAbbr,
             fs.promises.readFile(fileLocation, "utf8").catch((reason) => {
-                console.error("Error while reading a node-types.json file from " + fileLocation);
-                console.error(reason);
-                return null; // To be handled when awaiting the result.
+                return new Error(
+                    "Error while reading a node-types.json file from " +
+                        fileLocation +
+                        ":\n" +
+                        reason,
+                ); // To be handled when awaiting the result.
             }),
         );
     }
@@ -129,28 +126,10 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     return presentNodeTypesForLanguage;
 }
 
-async function updateLanguage(
-    languageAbbr: string,
-    presentNodes: Set<string>,
-    nodeTypesPromise: Promise<string | null>,
-) {
-    let grammarNodeTypes;
-    try {
-        // Await reading node-types.json for the language:
-        const nodeTypesJson = await nodeTypesPromise;
-        if (nodeTypesJson === null) {
-            return false;
-        }
-
-        grammarNodeTypes = JSON.parse(nodeTypesJson);
-    } catch (e) {
-        console.error("Error while parsing the node-types.json file for language " + languageAbbr);
-        console.error(e);
-        return false;
-    }
+function updateLanguage(languageAbbr: string, presentNodes: Set<string>, nodeTypesJson: string) {
+    const grammarNodeTypes = JSON.parse(nodeTypesJson);
 
     const toRemove: Set<string> = new Set(presentNodes);
-
     for (const grammarNodeType of grammarNodeTypes) {
         // Ignore all unnamed syntax nodes that are no binary expressions (as we require them) to get a "kind of"
         // abstract syntax tree by removing syntax details.
@@ -185,7 +164,6 @@ async function updateLanguage(
     }
 
     removeNodeTypesForLanguage(languageAbbr, toRemove);
-    return true;
 }
 
 function updateBinaryExpressions(
@@ -278,7 +256,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
     }
 }
 
-async function removeAbandonedNodeTypes(): Promise<void> {
+function removeAbandonedNodeTypes(): void {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (nodeType.languages.length === 0) {
             if (nodeType.category !== "") {
@@ -301,21 +279,14 @@ async function removeAbandonedNodeTypes(): Promise<void> {
 }
 
 async function writeNewNodeTypeMappings() {
-    try {
-        // Save the updated mappings:
-        await fs.promises.writeFile(
-            pathToNodeTypesConfig,
-            JSON.stringify(Array.from(nodeTypeMappings.values()), null, 4),
-        );
-        console.log("####################################");
-        console.log(
-            'Successfully updated node type mappings. File saved to "' +
-                pathToNodeTypesConfig +
-                '".',
-        );
-        console.log("####################################");
-    } catch (e) {
-        console.error("Error while writing nodeTypesConfig.json");
-        console.error(e);
-    }
+    // Save the updated mappings:
+    await fs.promises.writeFile(
+        pathToNodeTypesConfig,
+        JSON.stringify(Array.from(nodeTypeMappings.values()), null, 4),
+    );
+    console.log("####################################");
+    console.log(
+        'Successfully updated node type mappings. File saved to "' + pathToNodeTypesConfig + '".',
+    );
+    console.log("####################################");
 }

@@ -30,7 +30,7 @@ It does **not** count:
 The "functions" metric counts function declarations in both header and source files. This also includes the definition of functions in source or header files that were already declared before. The metric is tested to account for:
 
 -   general functions
--   member functions, including constructors, (pure) virtual functions, default functions and deleted functions
+-   member functions, including constructors, destructors, (pure) virtual functions, default functions and deleted functions
 -   lambda expressions
 
 ### classes

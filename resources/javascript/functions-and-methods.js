@@ -13,15 +13,15 @@ class FunctionsAndMethods {
     static #testFunction3() {    // complexity +1
         return 2;
     }
-    get latest() {
+    get latest() {  // complexity +1
         return 3;
     }
-    set latest(age) {
+    set latest(age) {   // complexity +1
         this.#age = age;
     }
-    *more(){
+    *more(){    // complexity +1
         let index = 0;
-        while (true) {
+        while (true) {  // complexity +1
             yield index++;
     }
 }

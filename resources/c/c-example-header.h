@@ -8,6 +8,7 @@ enum Food_C23: int { Pizza, Pasta, Fish, Steak };
 
 // Should not count as struct, as it defines just an alias.
 typedef enum Food Food;
+typedef int number_without_comma;
 
 struct not_easily_usable {
     int a;

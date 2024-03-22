@@ -26,7 +26,7 @@
     "dependencies": {
         "copyfiles": "2.4.1",
         "tree-sitter": "0.20.6",
-        "tree-sitter-bash": "0.20.5",
+        "tree-sitter-bash": "0.21.0",
         "tree-sitter-c": "0.20.8",
         "tree-sitter-c-sharp": "0.20.0",
         "tree-sitter-cpp": "0.20.5",

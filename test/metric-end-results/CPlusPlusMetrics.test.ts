@@ -65,6 +65,14 @@ describe("C++ metrics tests", () => {
                 6,
             );
         });
+
+        it("should count only &&, ||, and and or logical operations, not xor or ^", () => {
+            testFileMetric(
+                cppTestResourcesPath + "logical_operation.cpp",
+                FileMetric.complexity,
+                11,
+            );
+        });
     });
 
     describe("parses C++ classes metric", () => {

@@ -44,7 +44,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   [Java](docs/Java.md)
 -   C#
 -   [C++](docs/CPP.md)
--   Python
+-   [Python](docs/Python.md)
 -   [JavaScript](docs/JavaScript.md)
 -   Kotlin
 -   JSON

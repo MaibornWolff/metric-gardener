@@ -15,7 +15,7 @@ describe("Python metrics test", () => {
 
     describe("parses Python Complexity metric", () => {
         it("should count loops properly", () => {
-            testFileMetric(pythonTestResourcesPath + "loops.py", FileMetric.complexity, 4);
+            testFileMetric(pythonTestResourcesPath + "loops.py", FileMetric.complexity, 6);
         });
 
         it("should count if statements correctly", () => {
@@ -26,11 +26,11 @@ describe("Python metrics test", () => {
             testFileMetric(pythonTestResourcesPath + "classes.py", FileMetric.complexity, 1);
         });
 
-        it("should count switch case labels, but no default labels", () => {
+        it("should count switch case labels and guards, but no default labels", () => {
             testFileMetric(
                 pythonTestResourcesPath + "case-statements.py",
                 FileMetric.complexity,
-                3,
+                5,
             );
         });
 
@@ -38,7 +38,7 @@ describe("Python metrics test", () => {
             testFileMetric(
                 pythonTestResourcesPath + "functions-and-methods.py",
                 FileMetric.complexity,
-                6,
+                9,
             );
         });
 
@@ -66,11 +66,11 @@ describe("Python metrics test", () => {
     });
 
     describe("parses Python functions metric", () => {
-        it("should count functions and methods properly", () => {
+        it("should count functions, methods properly", () => {
             testFileMetric(
                 pythonTestResourcesPath + "functions-and-methods.py",
                 FileMetric.functions,
-                6,
+                9,
             );
         });
     });
@@ -117,7 +117,7 @@ describe("Python metrics test", () => {
         });
 
         it("should count correctly for a non-empty file with nested loops and comments", () => {
-            testFileMetric(pythonTestResourcesPath + "loops.py", FileMetric.realLinesOfCode, 8);
+            testFileMetric(pythonTestResourcesPath + "loops.py", FileMetric.realLinesOfCode, 17);
         });
 
         it("should count correctly in the presence of block comments", () => {

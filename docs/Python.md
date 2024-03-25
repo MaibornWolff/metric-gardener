@@ -25,7 +25,6 @@ The "functions" metric counts:
 -   general functions
 -   method definitions in classes incl. static methods, class methods and constructors
 -   lambda functions
--   initialization block (static and non-static)
 
 It does **not** count:
 

@@ -10,7 +10,7 @@ The "complexity" metric counts:
 -   ternary operators
 -   `for`, `for...else`, `while` and `while...else` loops
 -   `case` labels in match-statements and their guards, **but not** `case _:`
--   `except` clauses in `try`-statement
+-   `except` clauses in `try`-statements
 -   logical binary operations `and` and `or`
 -   everything counted for the "functions" metric
 
@@ -28,7 +28,7 @@ The "functions" metric counts:
 
 It does **not** count:
 
--   functions definitions in `exec()` function calls
+-   function definitions in `exec()` function calls
 
 ### classes
 

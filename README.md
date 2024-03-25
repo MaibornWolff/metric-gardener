@@ -39,7 +39,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 ### Supported Languages
 
 -   Go
--   PHP
+-   [PHP](docs/PHP.md)
 -   [TypeScript and TSX](docs/TS_TSX.md)
 -   [Java](docs/Java.md)
 -   C#

@@ -23,3 +23,4 @@ x = x > 100 ? 101 : 99;    // complexity +1
 x = x + y;
 
 z = x > 0 ? x : false;    // complexity +1
+const foo = null ?? 'default string'; // complexity +1

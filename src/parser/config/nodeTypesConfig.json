@@ -2959,7 +2959,7 @@
     },
     {
         "type_name": "trait_declaration",
-        "category": "",
+        "category": "trait_definition",
         "languages": ["php"]
     },
     {
@@ -4669,12 +4669,12 @@
     },
     {
         "type_name": "match_conditional_expression",
-        "category": "",
+        "category": "case_label",
         "languages": ["php"]
     },
     {
         "type_name": "match_default_expression",
-        "category": "",
+        "category": "default_label",
         "languages": ["php"]
     },
     {

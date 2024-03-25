@@ -14,7 +14,7 @@ describe("TypeScript metrics tests", () => {
     });
 
     describe("parses TypeScript Complexity metric", () => {
-        it("should count if statements correctly", () => {
+        it("should count if statements, ternary operators, nullish coalescing operators and logical operations (&& and ||) correctly", () => {
             testFileMetric(tsTestResourcesPath + "if-statements.ts", FileMetric.complexity, 8);
         });
 

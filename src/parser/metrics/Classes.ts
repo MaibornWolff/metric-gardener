@@ -95,6 +95,7 @@ export class Classes implements Metric {
             ),
         );
     }
+
     addQueriesForJava() {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", [
@@ -102,6 +103,7 @@ export class Classes implements Metric {
             ]),
         );
     }
+
     addQueriesForPHP() {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(`(object_creation_expression "new" "class")`, [
@@ -109,6 +111,7 @@ export class Classes implements Metric {
             ]),
         );
     }
+
     async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);

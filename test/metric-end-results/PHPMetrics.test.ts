@@ -41,6 +41,7 @@ describe("PHP metrics tests", () => {
         it("should count case labels correctly", () => {
             testFileMetric(phpTestResourcesPath + "case-statements.php", FileMetric.complexity, 3);
         });
+
         it("should count all conditional expressions in match expression", () => {
             testFileMetric(phpTestResourcesPath + "match-expression.php", FileMetric.complexity, 3);
         });
@@ -80,6 +81,7 @@ describe("PHP metrics tests", () => {
                 10,
             );
         });
+
         it("should count all arrow functions.", () => {
             testFileMetric(phpTestResourcesPath + "arrow-functions.php", FileMetric.functions, 8);
         });

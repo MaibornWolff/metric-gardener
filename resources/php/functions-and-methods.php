@@ -28,17 +28,15 @@ function outOfScope(): int {
     return 3;
 }
 
-$greet = function($name)
-{
+$greet = function($name) {
     printf("Hallo %s\r\n", $name);
 };
 
-abstract class AbstractClass
-{
+abstract class AbstractClass {
     abstract protected function getValue();
     abstract protected function prefixValue($prefix);
 
     public function printOut() {
-     print $this->getValue() . "\n";
+        print $this->getValue() . "\n";
     }
 }

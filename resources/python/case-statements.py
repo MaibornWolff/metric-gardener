@@ -1,7 +1,7 @@
 status = 403
 flag = False
 match status:
-    case 400: #+1 complexity
+    case 400 if flag: #+2 complexity
         print("Bad request")
     case 401 | 403 | 404: #+1 complexity
         print("Not allowed")

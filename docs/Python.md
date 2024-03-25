@@ -1,6 +1,6 @@
-# File Metrics for Java
+# File Metrics for Python
 
-This document outlines the definition of file metrics for Java.
+This document outlines the definition of file metrics for Python.
 
 ### complexity
 

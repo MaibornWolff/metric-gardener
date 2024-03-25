@@ -34,6 +34,7 @@ export class Classes implements Metric {
         this.addQueriesForTSAndTSX();
         this.addQueriesForCAndCpp();
         this.addQueriesForJava();
+        this.addQueriesForPHP();
     }
 
     addQueriesForCAndCpp() {
@@ -98,6 +99,13 @@ export class Classes implements Metric {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", [
                 "java",
+            ]),
+        );
+    }
+    addQueriesForPHP() {
+        this.statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(`(object_creation_expression "new" "class")`, [
+                "php",
             ]),
         );
     }

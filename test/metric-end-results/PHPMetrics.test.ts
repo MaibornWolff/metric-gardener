@@ -22,7 +22,7 @@ describe("PHP metrics tests", () => {
             testFileMetric(
                 phpTestResourcesPath + "functions-and-methods.php",
                 FileMetric.complexity,
-                7,
+                10,
             );
         });
 
@@ -35,11 +35,14 @@ describe("PHP metrics tests", () => {
         });
 
         it("should not count any class declaration", () => {
-            testFileMetric(phpTestResourcesPath + "classes.php", FileMetric.complexity, 0);
+            testFileMetric(phpTestResourcesPath + "classes.php", FileMetric.complexity, 5);
         });
 
-        it("should count case statements correctly", () => {
+        it("should count case labels correctly", () => {
             testFileMetric(phpTestResourcesPath + "case-statements.php", FileMetric.complexity, 3);
+        });
+        it("should count all conditional expressions in match expression", () => {
+            testFileMetric(phpTestResourcesPath + "match-expression.php", FileMetric.complexity, 3);
         });
 
         it("should count try-catch-finally properly by only counting the catch-block", () => {
@@ -65,17 +68,20 @@ describe("PHP metrics tests", () => {
 
     describe("parses PHP classes metric", () => {
         it("should count class declarations", () => {
-            testFileMetric(phpTestResourcesPath + "classes.php", FileMetric.classes, 3);
+            testFileMetric(phpTestResourcesPath + "classes.php", FileMetric.classes, 8);
         });
     });
 
     describe("parses PHP functions metric", () => {
-        it("should count function declarations", () => {
+        it("should count function declarations and definitions", () => {
             testFileMetric(
                 phpTestResourcesPath + "functions-and-methods.php",
                 FileMetric.functions,
-                7,
+                10,
             );
+        });
+        it("should count all arrow functions.", () => {
+            testFileMetric(phpTestResourcesPath + "arrow-functions.php", FileMetric.functions, 8);
         });
     });
 

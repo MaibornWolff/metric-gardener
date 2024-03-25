@@ -56,7 +56,7 @@ describe("PHP metrics tests", () => {
 
         it("should count the logical operations &&, || and xor", () => {
             testFileMetric(
-                phpTestResourcesPath + "logical_operations.php",
+                phpTestResourcesPath + "logical-operations.php",
                 FileMetric.complexity,
                 3,
             );

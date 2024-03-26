@@ -24,12 +24,7 @@ import { LinesOfCode } from "./metrics/LinesOfCode";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
-
-vi.mock("fs", () => ({
-    promises: {
-        readFile: vi.fn(),
-    },
-}));
+import { promises } from "fs";
 
 function initiateSpies() {
     vi.spyOn(Classes.prototype, "calculate").mockResolvedValue({
@@ -111,6 +106,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     beforeEach(() => {
         // Clear all mock implementations, reset them to original implementation:
         vi.restoreAllMocks();
+        vi.spyOn(promises, "readFile").mockReset(); // empty function
         spyOnConsoleErrorNoOp();
     });
 

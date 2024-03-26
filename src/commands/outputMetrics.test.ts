@@ -84,6 +84,8 @@ describe("outputMetrics", () => {
             const fileMetrics = new Map();
             const relationShipMetrics = {} as CouplingResult;
 
+            vi.spyOn(fs, "writeFileSync").mockReset(); // empty mock implementation
+
             outputAsJson(fileMetrics, [], [], relationShipMetrics, "mocked-file.json", false);
 
             expect(fs.writeFileSync).toHaveBeenCalledWith(

@@ -105,8 +105,6 @@ describe("MetricCalculator.calculateMetrics()", () => {
     });
 
     beforeEach(() => {
-        // Clear all mock implementations, reset them to original implementation:
-        vi.restoreAllMocks();
         vi.spyOn(promises, "readFile").mockReset(); // empty function
         spyOnConsoleErrorNoOp();
     });

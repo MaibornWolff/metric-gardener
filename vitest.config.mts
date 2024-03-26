@@ -9,6 +9,6 @@ export default defineConfig({
         },
         isolate: false,
         pool: "forks",
-        // restoreMocks: true,
+        restoreMocks: true,
     },
 });

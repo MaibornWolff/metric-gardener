@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { GenericParser } from "./GenericParser";
 import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
@@ -117,11 +117,6 @@ beforeAll(() => {
 });
 
 describe("GenericParser.calculateMetrics()", () => {
-    beforeEach(() => {
-        // Clear all mock implementations, reset them to original implementation:
-        vi.restoreAllMocks();
-    });
-
     it("should call MetricCalculator.calculateMetrics() and return the result when there is no error", async () => {
         /*
          * Given:

@@ -44,48 +44,16 @@ export function getTestConfiguration(
     return new Configuration(configParams);
 }
 
-export function spyOnConsoleErrorNoOp() {
-    return vi.spyOn(console, "error").mockImplementation(() => {
-        /* Do nothing */
-    });
+export function mockConsole() {
+    const log = vi.spyOn(console, "log").mockReset();
+    const error = vi.spyOn(console, "error").mockReset();
+    return { log, error };
 }
 
-/**
- * Sorts the contents of the specified {@link CouplingResult} in a deterministic way.
- * This is necessary as there can be deviations concerning the order
- * in which files are found on different platforms.
- * @param couplingResult The CouplingResult whose contents should be sorted.
- */
-export function sortCouplingResults(couplingResult: CouplingResult) {
-    // Sort the metrics in ascending order of the file paths
-    couplingResult.metrics = new Map(
-        [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0])),
-    );
-    couplingResult.relationships.sort((a, b) => {
-        // Unique ID for relationships adapted from metrics/coupling/Coupling.ts getRelationships(...)
-        const uniqueIdA = a.toNamespace + a.fromNamespace;
-        const uniqueIdB = b.toNamespace + b.fromNamespace;
-        return strcmp(uniqueIdA, uniqueIdB);
-    });
-}
-
-/**
- * Invokes the calculation of the file metrics for the specified file.
- * Tests if the file metric is calculated correctly.
- * @param inputPath Path to test source file.
- * @param metric Name of the metric.
- * @param expected Expected test result.
- */
-export async function parseAndTestFileMetric(
-    inputPath: string,
-    metric: FileMetric,
-    expected: number,
-) {
-    const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getTestConfiguration(realInputPath));
-    const results = await parser.calculateMetrics();
-    const metricResults = results.fileMetrics.get(realInputPath);
-    expectMetric(metricResults, metric, expected);
+export function mockFs() {
+    const writeFileSync = vi.spyOn(fs, "writeFileSync").mockReset();
+    const readFile = vi.spyOn(fs.promises, "readFile").mockReset();
+    return { writeFileSync, promises: { readFile } };
 }
 
 /**
@@ -117,69 +85,9 @@ export function expectFileMetric(
     expected: number,
 ) {
     const realInputPath = fs.realpathSync(inputPath);
-    const metricResults = results.get(realInputPath);
-    expectMetric(metricResults, metric, expected);
-}
-
-/**
- * Tests if a specific metric has been calculated correctly.
- * @param results The actual results of the metric calculation.
- * @param metric Name of the metric.
- * @param expected Expected metric value.
- */
-export function expectMetric(
-    results: FileMetricResults | undefined,
-    metric: FileMetric,
-    expected: number,
-) {
-    const metricResults = results?.metricResults;
+    const metricResults = results.get(realInputPath)?.metricResults;
     const metricValue = metricResults?.find(({ metricName }) => metricName === metric)?.metricValue;
     expect(metricValue).toBe(expected);
-}
-
-/**
- * Tests if a specific metric has not been calculated.
- * @param results The actual results of the metric calculation.
- * @param metric Name of the metric.
- */
-export function expectNoMetric(results: FileMetricResults | undefined, metric: FileMetric) {
-    expect(results?.metricResults.find(({ metricName }) => metricName === metric)).toBeUndefined();
-}
-
-/**
- * Tests if a specific metric has an expected error.
- * @param results The actual results of the metric calculation.
- * @param metric Name of the metric.
- * @param expected Expected error.
- */
-export function expectError(
-    results: FileMetricResults | undefined,
-    metric: FileMetric,
-    expected: Error,
-) {
-    const metricErrors = results?.metricErrors;
-    const error = metricErrors?.find(({ metricName }) => metricName === metric)?.error;
-    expect(error).toEqual(expected);
-}
-
-/**
- * Test if no error occurred while calculating a specific metric.
- * @param results The actual results of the metric calculation.
- * @param metric Name of the metric.
- */
-export function expectNoError(results: FileMetricResults | undefined, metric: FileMetric) {
-    expect(results?.metricErrors.find(({ metricName }) => metricName === metric)).toBeUndefined();
-}
-
-/**
- * Gets the metrics for the specified test source files.
- * @param inputPath Path to the test source files.
- * @return The calculated metrics.
- */
-export async function getFileMetrics(inputPath: string) {
-    const realInputPath = fs.realpathSync(inputPath);
-    const parser = new GenericParser(getTestConfiguration(realInputPath));
-    return await parser.calculateMetrics();
 }
 
 /**
@@ -197,4 +105,23 @@ export async function getCouplingMetrics(inputPath: string) {
     sortCouplingResults(couplingResult);
 
     return couplingResult;
+}
+
+/**
+ * Sorts the contents of the specified {@link CouplingResult} in a deterministic way.
+ * This is necessary as there can be deviations concerning the order
+ * in which files are found on different platforms.
+ * @param couplingResult The CouplingResult whose contents should be sorted.
+ */
+function sortCouplingResults(couplingResult: CouplingResult) {
+    // Sort the metrics in ascending order of the file paths
+    couplingResult.metrics = new Map(
+        [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0])),
+    );
+    couplingResult.relationships.sort((a, b) => {
+        // Unique ID for relationships adapted from metrics/coupling/Coupling.ts getRelationships(...)
+        const uniqueIdA = a.toNamespace + a.fromNamespace;
+        const uniqueIdB = b.toNamespace + b.fromNamespace;
+        return strcmp(uniqueIdA, uniqueIdB);
+    });
 }

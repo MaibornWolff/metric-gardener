@@ -1,12 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { MetricCalculator } from "./MetricCalculator";
-import {
-    expectError,
-    expectMetric,
-    expectNoError,
-    expectNoMetric,
-    spyOnConsoleErrorNoOp,
-} from "../../test/metric-end-results/TestHelper";
+import { mockConsole, mockFs } from "../../test/metric-end-results/TestHelper";
 import {
     ErrorFile,
     FileMetric,
@@ -25,7 +19,6 @@ import { LinesOfCode } from "./metrics/LinesOfCode";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
-import { promises } from "fs";
 
 function initiateSpies() {
     vi.spyOn(Classes.prototype, "calculate").mockResolvedValue({
@@ -94,10 +87,7 @@ function initiateErrorSpies() {
 
 describe("MetricCalculator.calculateMetrics()", () => {
     let metricCalculator: MetricCalculator;
-    let parsedFile: ParsedFile;
-    let parsedFilePromise: Promise<SourceFile>;
     let parser: Parser;
-    let tree: Parser.Tree;
 
     beforeAll(() => {
         metricCalculator = new MetricCalculator();
@@ -105,18 +95,16 @@ describe("MetricCalculator.calculateMetrics()", () => {
     });
 
     beforeEach(() => {
-        vi.spyOn(promises, "readFile").mockReset(); // empty function
-        spyOnConsoleErrorNoOp();
+        mockFs();
+        mockConsole();
     });
 
     it("should calculate all metrics of type source code for a python file", async () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
-        tree = parser.parse("sum(range(4))");
-        parsedFile = new ParsedFile("test.py", Language.Python, tree);
-        parsedFilePromise = new Promise<ParsedFile>((resolve) => {
-            resolve(parsedFile);
-        });
+        const tree = parser.parse("sum(range(4))");
+        const parsedFile = new ParsedFile("test.py", Language.Python, tree);
+        const parsedFilePromise = Promise.resolve(parsedFile);
 
         initiateSpies();
 
@@ -126,24 +114,15 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         // then
         expect(sourceFile).toEqual(parsedFile);
-        expect(fileMetricResults.fileType).toEqual(FileType.SourceCode);
-        expectMetric(fileMetricResults, FileMetric.classes, 1);
-        expectMetric(fileMetricResults, FileMetric.commentLines, 2);
-        expectMetric(fileMetricResults, FileMetric.complexity, 3);
-        expectMetric(fileMetricResults, FileMetric.functions, 4);
-        expectMetric(fileMetricResults, FileMetric.linesOfCode, 5);
-        expectMetric(fileMetricResults, FileMetric.realLinesOfCode, 7);
-        expectNoMetric(fileMetricResults, FileMetric.maxNestingLevel);
+        expect(fileMetricResults).toMatchSnapshot();
     });
 
     it("should calculate lines of code and maximum nesting level for a JSON file", async () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.JSON));
-        tree = parser.parse('{ "a": { "b": "c" } }');
-        parsedFile = new ParsedFile("test.json", Language.JSON, tree);
-        parsedFilePromise = new Promise<ParsedFile>((resolve) => {
-            resolve(parsedFile);
-        });
+        const tree = parser.parse('{ "a": { "b": "c" } }');
+        const parsedFile = new ParsedFile("test.json", Language.JSON, tree);
+        const parsedFilePromise = Promise.resolve(parsedFile);
 
         initiateSpies();
 
@@ -153,22 +132,13 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         // then
         expect(sourceFile).toEqual(parsedFile);
-        expect(fileMetricResults.fileType).toEqual(FileType.StructuredText);
-        expectNoMetric(fileMetricResults, FileMetric.classes);
-        expectNoMetric(fileMetricResults, FileMetric.commentLines);
-        expectNoMetric(fileMetricResults, FileMetric.complexity);
-        expectNoMetric(fileMetricResults, FileMetric.functions);
-        expectMetric(fileMetricResults, FileMetric.linesOfCode, 5);
-        expectNoMetric(fileMetricResults, FileMetric.realLinesOfCode);
-        expectMetric(fileMetricResults, FileMetric.maxNestingLevel, 6);
+        expect(fileMetricResults).toMatchSnapshot();
     });
 
     it("should calculate lines of code for a text file", async () => {
         // given
         const unsupportedFile = new UnsupportedFile("test.txt");
-        const unsupportedFilePromise = new Promise<UnsupportedFile>((resolve) => {
-            resolve(unsupportedFile);
-        });
+        const unsupportedFilePromise = Promise.resolve(unsupportedFile);
 
         initiateSpies();
 
@@ -178,14 +148,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         // then
         expect(sourceFile).toEqual(unsupportedFile);
-        expect(fileMetricResults.fileType).toEqual(FileType.Unsupported);
-        expectNoMetric(fileMetricResults, FileMetric.classes);
-        expectNoMetric(fileMetricResults, FileMetric.commentLines);
-        expectNoMetric(fileMetricResults, FileMetric.complexity);
-        expectNoMetric(fileMetricResults, FileMetric.functions);
-        expectMetric(fileMetricResults, FileMetric.linesOfCode, 8);
-        expectNoMetric(fileMetricResults, FileMetric.realLinesOfCode);
-        expectNoMetric(fileMetricResults, FileMetric.maxNestingLevel);
+        expect(fileMetricResults).toMatchSnapshot();
     });
 
     it("should return an empty map of metrics when the source file is an error file", async () => {
@@ -197,12 +160,10 @@ describe("MetricCalculator.calculateMetrics()", () => {
             ),
         );
 
-        parsedFilePromise = new Promise<SourceFile>((resolve) => {
-            resolve(errorFile);
-        });
+        const errorFilePromise = Promise.resolve(errorFile);
 
         // when
-        const result = await metricCalculator.calculateMetrics(parsedFilePromise);
+        const result = await metricCalculator.calculateMetrics(errorFilePromise);
 
         // then
         const expectedResult: [SourceFile, FileMetricResults] = [
@@ -215,11 +176,9 @@ describe("MetricCalculator.calculateMetrics()", () => {
     it("should include an error object in the result when an error is thrown while calculating any metric on a source file", async () => {
         // given
         parser.setLanguage(languageToGrammar.get(Language.Python));
-        tree = parser.parse("sum(range(4))");
-        parsedFile = new ParsedFile("test.py", Language.Python, tree);
-        parsedFilePromise = new Promise<ParsedFile>((resolve) => {
-            resolve(parsedFile);
-        });
+        const tree = parser.parse("sum(range(4))");
+        const parsedFile = new ParsedFile("test.py", Language.Python, tree);
+        const parsedFilePromise = Promise.resolve(parsedFile);
 
         initiateErrorSpies();
 
@@ -229,39 +188,6 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         // then
         expect(sourceFile).toEqual(parsedFile);
-        expect(fileMetricResults.fileType).toEqual(FileType.SourceCode);
-        expectNoMetric(fileMetricResults, FileMetric.classes);
-        expectNoMetric(fileMetricResults, FileMetric.commentLines);
-        expectNoMetric(fileMetricResults, FileMetric.complexity);
-        expectMetric(fileMetricResults, FileMetric.functions, 1);
-        expectMetric(fileMetricResults, FileMetric.linesOfCode, 2);
-        expectNoMetric(fileMetricResults, FileMetric.realLinesOfCode);
-        expectNoMetric(fileMetricResults, FileMetric.maxNestingLevel);
-
-        expectError(
-            fileMetricResults,
-            FileMetric.classes,
-            new Error("something went wrong when calculating classes metric"),
-        );
-        expectError(
-            fileMetricResults,
-            FileMetric.commentLines,
-            new Error("something went wrong when calculating commentLines metric"),
-        );
-        expectError(
-            fileMetricResults,
-            FileMetric.complexity,
-            new Error("something went wrong when calculating complexity metric"),
-        );
-        expectNoError(fileMetricResults, FileMetric.functions);
-        expectNoError(fileMetricResults, FileMetric.linesOfCode);
-        expectError(
-            fileMetricResults,
-            FileMetric.realLinesOfCode,
-            new Error("something went wrong when calculating realLinesOfCode metric"),
-        );
-
-        // Should not have been tried to calculate on source code in the first place:
-        expectNoMetric(fileMetricResults, FileMetric.maxNestingLevel);
+        expect(fileMetricResults).toMatchSnapshot();
     });
 });

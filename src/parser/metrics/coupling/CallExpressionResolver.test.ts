@@ -97,21 +97,8 @@ describe("CallExpressionResolver", () => {
                 publicAccessors,
                 new Set<string>(),
             );
-            expect(additionalRelationships.length).toBe(2);
 
-            expect(additionalRelationships[0].fromNamespace).toBe(firstItem.fromNamespace);
-            expect(additionalRelationships[0].fromSource).toBe(firstItem.fromSource);
-            expect(additionalRelationships[0].toNamespace).toBe("ThirdItemNamespace.ThirdItem");
-            expect(additionalRelationships[0].toSource).toBe("ThirdItem");
-            expect(additionalRelationships[0].toClassName).toBe("ThirdItem");
-            expect(additionalRelationships[0].usageType).toBe("usage");
-
-            expect(additionalRelationships[1].fromNamespace).toBe(firstItem.fromNamespace);
-            expect(additionalRelationships[1].fromSource).toBe(firstItem.fromSource);
-            expect(additionalRelationships[1].toNamespace).toBe("FourthItemNamespace.FourthItem");
-            expect(additionalRelationships[1].toSource).toBe("FourthItem");
-            expect(additionalRelationships[1].toClassName).toBe("FourthItem");
-            expect(additionalRelationships[1].usageType).toBe("usage");
+            expect(additionalRelationships).toMatchSnapshot();
         });
     });
 });

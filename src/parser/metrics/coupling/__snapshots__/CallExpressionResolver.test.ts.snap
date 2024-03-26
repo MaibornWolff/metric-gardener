@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CallExpressionResolver > resolves call expressions and retrieves additional and transitive relationships > when call expressions with save calls, public accessors and the right dependencies are given 1`] = `
+[
+  {
+    "fromClassName": "ThirdItem",
+    "fromNamespace": "FirstItemNamespace.FirstItem",
+    "fromSource": "FirstItem",
+    "toClassName": "ThirdItem",
+    "toNamespace": "ThirdItemNamespace.ThirdItem",
+    "toSource": "ThirdItem",
+    "usageType": "usage",
+  },
+  {
+    "fromClassName": "FourthItem",
+    "fromNamespace": "FirstItemNamespace.FirstItem",
+    "fromSource": "FirstItem",
+    "toClassName": "FourthItem",
+    "toNamespace": "FourthItemNamespace.FourthItem",
+    "toSource": "FourthItem",
+    "usageType": "usage",
+  },
+]
+`;

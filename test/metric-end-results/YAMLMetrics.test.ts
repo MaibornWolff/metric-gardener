@@ -7,8 +7,9 @@ describe("YAML metrics tests", () => {
 
     let results: Map<string, FileMetricResults>;
 
-    const testFileMetric = (inputPath, metric, expected) =>
-        expectFileMetric(results, inputPath, metric, expected);
+    function testFileMetric(path: string, metric: FileMetric, expected: number) {
+        expectFileMetric(results, yamlTestResourcesPath + path, metric, expected);
+    }
 
     beforeAll(async () => {
         results = await parseAllFileMetrics(yamlTestResourcesPath);
@@ -16,23 +17,23 @@ describe("YAML metrics tests", () => {
 
     describe("parses YAML nesting level metric", () => {
         it("should calculate nesting level", () => {
-            testFileMetric(yamlTestResourcesPath + "example.yaml", FileMetric.maxNestingLevel, 3);
+            testFileMetric("example.yaml", FileMetric.maxNestingLevel, 3);
         });
 
         it("should correctly calculate nesting level of a more complex yaml", () => {
-            testFileMetric(yamlTestResourcesPath + "tests.yml", FileMetric.maxNestingLevel, 6);
+            testFileMetric("tests.yml", FileMetric.maxNestingLevel, 6);
         });
 
         it("should correctly calculate nesting level of a yaml file with only one line", () => {
-            testFileMetric(yamlTestResourcesPath + "one-line.yaml", FileMetric.maxNestingLevel, 0);
+            testFileMetric("one-line.yaml", FileMetric.maxNestingLevel, 0);
         });
 
         it("should correctly calculate nesting level of a yaml file with only one non-empty line", () => {
-            testFileMetric(yamlTestResourcesPath + "one-line.yaml", FileMetric.maxNestingLevel, 0);
+            testFileMetric("one-line.yaml", FileMetric.maxNestingLevel, 0);
         });
 
         it("should correctly calculate nesting level of an empty yaml file", () => {
-            testFileMetric(yamlTestResourcesPath + "empty.yml", FileMetric.maxNestingLevel, 0);
+            testFileMetric("empty.yml", FileMetric.maxNestingLevel, 0);
         });
     });
 });

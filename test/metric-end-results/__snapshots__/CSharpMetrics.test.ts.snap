@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`C# metric tests parsing C# dependencies should calculate the right dependencies and coupling metrics 1`] = `
+exports[`C# metric tests > parsing C# dependencies > should calculate the right dependencies and coupling metrics 1`] = `
 {
   "metrics": Map {
     "BlubController.cs" => {

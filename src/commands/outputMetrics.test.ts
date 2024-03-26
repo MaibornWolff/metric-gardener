@@ -6,8 +6,8 @@ import { FileType } from "../parser/helper/Language";
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
         beforeEach(() => {
-            jest.resetAllMocks();
-            console.log = jest.fn();
+            vi.resetAllMocks();
+            console.log = vi.fn();
         });
 
         it("when metrics are present", () => {
@@ -65,7 +65,7 @@ describe("outputMetrics", () => {
                 ]),
             } as CouplingResult;
 
-            jest.spyOn(fs, "writeFileSync").mockImplementation((fileName, jsonString) => {
+            vi.spyOn(fs, "writeFileSync").mockImplementation((fileName, jsonString) => {
                 expect(fileName).toBe("mocked-file.json");
                 expect(jsonString).toMatchSnapshot();
             });

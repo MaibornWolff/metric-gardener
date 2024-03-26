@@ -1,4 +1,3 @@
-import { expect, jest } from "@jest/globals";
 import { GenericParser } from "./GenericParser";
 import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
@@ -75,7 +74,7 @@ async function mockedMetricsCalculator(
  */
 
 function mockFindFilesAsync(mockedFunction: () => AsyncGenerator<string> = mockedFindFilesAsync) {
-    return jest.spyOn(HelperModule, "findFilesAsync").mockImplementation(mockedFunction);
+    return vi.spyOn(HelperModule, "findFilesAsync").mockImplementation(mockedFunction);
 }
 
 function mockTreeParserParse(
@@ -84,15 +83,15 @@ function mockTreeParserParse(
         config: Configuration,
     ) => Promise<ParsedFile | UnsupportedFile> = mockedTreeParserParse,
 ) {
-    return jest.spyOn(TreeParser, "parse").mockImplementation(implementation);
+    return vi.spyOn(TreeParser, "parse").mockImplementation(implementation);
 }
 
 function spyOnMetricCalculator() {
-    return jest.spyOn(MetricCalculator.prototype, "calculateMetrics");
+    return vi.spyOn(MetricCalculator.prototype, "calculateMetrics");
 }
 
 function spyOnCouplingCalculatorNoOp() {
-    return jest
+    return vi
         .spyOn(CouplingCalculator.prototype, "calculateMetrics")
         .mockReturnValue({ relationships: [], metrics: new Map() });
 }
@@ -119,7 +118,7 @@ beforeAll(() => {
 describe("GenericParser.calculateMetrics()", () => {
     beforeEach(() => {
         // Clear all mock implementations, reset them to original implementation:
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     it("should call MetricCalculator.calculateMetrics() and return the result when there is no error", async () => {

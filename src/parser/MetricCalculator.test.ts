@@ -1,4 +1,3 @@
-import { expect, jest } from "@jest/globals";
 import { MetricCalculator } from "./MetricCalculator";
 import {
     expectError,
@@ -26,72 +25,72 @@ import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
 import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
 
-jest.mock("fs", () => ({
+vi.mock("fs", () => ({
     promises: {
-        readFile: jest.fn(),
+        readFile: vi.fn(),
     },
 }));
 
 function initiateSpies() {
-    jest.spyOn(Classes.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(Classes.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.classes,
         metricValue: 1,
     });
-    jest.spyOn(CommentLines.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(CommentLines.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.commentLines,
         metricValue: 2,
     });
-    jest.spyOn(Complexity.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(Complexity.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.complexity,
         metricValue: 3,
     });
-    jest.spyOn(Functions.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(Functions.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.functions,
         metricValue: 4,
     });
-    jest.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 5,
     });
-    jest.spyOn(MaxNestingLevel.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(MaxNestingLevel.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.maxNestingLevel,
         metricValue: 6,
     });
-    jest.spyOn(RealLinesOfCode.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(RealLinesOfCode.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.realLinesOfCode,
         metricValue: 7,
     });
-    jest.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
+    vi.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 8,
     });
 }
 
 function initiateErrorSpies() {
-    jest.spyOn(Classes.prototype, "calculate").mockRejectedValue(
+    vi.spyOn(Classes.prototype, "calculate").mockRejectedValue(
         new Error("something went wrong when calculating classes metric"),
     );
-    jest.spyOn(CommentLines.prototype, "calculate").mockRejectedValue(
+    vi.spyOn(CommentLines.prototype, "calculate").mockRejectedValue(
         new Error("something went wrong when calculating commentLines metric"),
     );
-    jest.spyOn(Complexity.prototype, "calculate").mockRejectedValue(
+    vi.spyOn(Complexity.prototype, "calculate").mockRejectedValue(
         new Error("something went wrong when calculating complexity metric"),
     );
-    jest.spyOn(Functions.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(Functions.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.functions,
         metricValue: 1,
     });
-    jest.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
+    vi.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 2,
     });
-    jest.spyOn(MaxNestingLevel.prototype, "calculate").mockRejectedValue(
+    vi.spyOn(MaxNestingLevel.prototype, "calculate").mockRejectedValue(
         new Error("something went wrong when calculating maxNestingLevel metric"),
     );
-    jest.spyOn(RealLinesOfCode.prototype, "calculate").mockRejectedValue(
+    vi.spyOn(RealLinesOfCode.prototype, "calculate").mockRejectedValue(
         new Error("something went wrong when calculating realLinesOfCode metric"),
     );
-    jest.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
+    vi.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
         metricName: FileMetric.linesOfCode,
         metricValue: 8,
     });
@@ -111,7 +110,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
     beforeEach(() => {
         // Clear all mock implementations, reset them to original implementation:
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
         spyOnConsoleErrorNoOp();
     });
 

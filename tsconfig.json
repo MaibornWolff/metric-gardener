@@ -9,7 +9,8 @@
         "resolveJsonModule": true,
         "strictFunctionTypes": true,
         "strictPropertyInitialization": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "types": ["vitest/globals"]
     },
     "exclude": ["resources", "node_modules"],
     "lib": ["es2015"]

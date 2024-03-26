@@ -3,7 +3,6 @@ import { GenericParser } from "../../src/parser/GenericParser";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";
 import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 import { strcmp } from "../../src/parser/helper/Helper";
-import { jest } from "@jest/globals";
 
 /**
  * Gets a configuration for test cases.
@@ -45,7 +44,7 @@ export function getTestConfiguration(
 }
 
 export function spyOnConsoleErrorNoOp() {
-    return jest.spyOn(console, "error").mockImplementation(() => {
+    return vi.spyOn(console, "error").mockImplementation(() => {
         /* Do nothing */
     });
 }

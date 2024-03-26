@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it } from "vitest";
 import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
 

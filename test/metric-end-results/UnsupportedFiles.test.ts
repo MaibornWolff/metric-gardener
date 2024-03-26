@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it } from "vitest";
 import { expectFileMetric, getTestConfiguration } from "./TestHelper";
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";

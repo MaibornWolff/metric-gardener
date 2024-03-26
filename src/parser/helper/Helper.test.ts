@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper";
+import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
 import {
     formatPrintPath,
     getNodeTypeNamesByCategories,
     getNodeTypesByCategories,
     getQueryStatementsByCategories,
-} from "./Helper";
+} from "./Helper.js";
 import path from "path";
-import { NodeTypeCategory, NodeTypeConfig } from "./Model";
-import { NodeTypeQueryStatement } from "../queries/QueryStatements";
+import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
+import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
 
 describe("Helper.ts", () => {
     describe("formatPrintPath(...)", () => {

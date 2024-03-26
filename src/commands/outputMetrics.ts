@@ -1,8 +1,8 @@
-import fs from "fs";
+import * as fs from "fs";
 import { Readable } from "stream";
 import zlib from "zlib";
-import { CouplingResult, FileMetricResults, MetricError } from "../parser/metrics/Metric";
-import { FileType } from "../parser/helper/Language";
+import { CouplingResult, FileMetricResults, MetricError } from "../parser/metrics/Metric.js";
+import { FileType } from "../parser/helper/Language.js";
 
 interface OutputNode {
     name: string;

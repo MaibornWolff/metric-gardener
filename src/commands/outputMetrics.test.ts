@@ -1,17 +1,25 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { outputAsJson } from "./outputMetrics";
-import { MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric";
-import { FileType } from "../parser/helper/Language";
-import { mockConsole, mockFs } from "../../test/metric-end-results/TestHelper";
+import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { outputAsJson } from "./outputMetrics.js";
+import { MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric.js";
+import { FileType } from "../parser/helper/Language.js";
+import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
+
+const writeFileSync = vi.hoisted(() => vi.fn());
+vi.mock("fs", async (importOriginal) => {
+    const actual = await importOriginal<typeof import("fs")>();
+    return { ...actual, writeFileSync };
+});
 
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
         let console: ReturnType<typeof mockConsole>;
-        let fs: ReturnType<typeof mockFs>;
 
         beforeEach(() => {
             console = mockConsole();
-            fs = mockFs();
+        });
+
+        afterAll(() => {
+            vi.resetModules();
         });
 
         it("when metrics are present", () => {
@@ -83,8 +91,8 @@ describe("outputMetrics", () => {
             expect(console.log).toHaveBeenCalledTimes(1);
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
-            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-            const [file, data, options] = fs.writeFileSync.mock.lastCall!;
+            expect(writeFileSync).toHaveBeenCalledTimes(1);
+            const [file, data, options] = writeFileSync.mock.lastCall!;
             expect(file).toBe("mocked-file.json");
             expect(data).toMatchSnapshot();
             expect(options).toBeUndefined();
@@ -98,8 +106,8 @@ describe("outputMetrics", () => {
             expect(console.log).toHaveBeenCalledTimes(1);
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
-            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-            expect(fs.writeFileSync).toHaveBeenCalledWith(
+            expect(writeFileSync).toHaveBeenCalledTimes(1);
+            expect(writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",
                 '{"nodes":[],"info":[],"relationships":[]}',
             );

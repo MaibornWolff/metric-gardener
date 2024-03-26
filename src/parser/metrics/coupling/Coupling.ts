@@ -1,11 +1,11 @@
-import { NodeTypeConfig } from "../../helper/Model";
-import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector";
+import { NodeTypeConfig } from "../../helper/Model.js";
+import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
 import {
     UnresolvedCallExpression,
     TypeUsageCandidate,
-} from "../../resolver/typeUsages/AbstractCollector";
-import { NamespaceCollector } from "../../resolver/NamespaceCollector";
-import { UsagesCollector } from "../../resolver/UsagesCollector";
+} from "../../resolver/typeUsages/AbstractCollector.js";
+import { NamespaceCollector } from "../../resolver/NamespaceCollector.js";
+import { UsagesCollector } from "../../resolver/UsagesCollector.js";
 import {
     CouplingMetric,
     Relationship,
@@ -13,14 +13,14 @@ import {
     CouplingMetrics,
     CouplingResult,
     isParsedFile,
-} from "../Metric";
-import { formatPrintPath } from "../../helper/Helper";
-import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector";
-import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
-import { getAdditionalRelationships } from "./CallExpressionResolver";
+} from "../Metric.js";
+import { formatPrintPath } from "../../helper/Helper.js";
+import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector.js";
+import { Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
+import { getAdditionalRelationships } from "./CallExpressionResolver.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Configuration } from "../../Configuration";
-import { TreeParser } from "../../helper/TreeParser";
+import { Configuration } from "../../Configuration.js";
+import { TreeParser } from "../../helper/TreeParser.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

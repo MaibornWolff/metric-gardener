@@ -7,8 +7,9 @@
     "engines": {
         "node": ">=18"
     },
+    "type": "module",
     "scripts": {
-        "start": "tsc && node dist/src/app.js",
+        "start": "tsc && node --no-warnings=ExperimentalWarning dist/src/app.js",
         "test": "vitest run",
         "format": "prettier --write \"./**/*\"",
         "format:quick": "pretty-quick --staged",

@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper";
-import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
+import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper.js";
+import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("C# metric tests", () => {
     const csharpTestResourcesPath = "./resources/c-sharp/";

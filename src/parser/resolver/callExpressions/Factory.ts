@@ -1,8 +1,8 @@
-import { AbstractCollector } from "./AbstractCollector";
-import { PHPCollector } from "./PHPCollector";
-import { CSharpCollector } from "./CSharpCollector";
-import { ParsedFile } from "../../metrics/Metric";
-import { Language } from "../../helper/Language";
+import { AbstractCollector } from "./AbstractCollector.js";
+import { PHPCollector } from "./PHPCollector.js";
+import { CSharpCollector } from "./CSharpCollector.js";
+import { ParsedFile } from "../../metrics/Metric.js";
+import { Language } from "../../helper/Language.js";
 
 export class Factory {
     private collectors = new Map<Language, AbstractCollector>();

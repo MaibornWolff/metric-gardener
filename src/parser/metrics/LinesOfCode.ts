@@ -1,4 +1,4 @@
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

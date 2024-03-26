@@ -1,8 +1,8 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
-import { NodeTypeCategory, NodeTypeConfig } from "./Model";
-import { Configuration } from "../Configuration";
-import { NodeTypeQueryStatement } from "../queries/QueryStatements";
+import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
+import { Configuration } from "../Configuration.js";
+import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
 
 /**
  * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
@@ -134,7 +134,7 @@ export function getFileExtension(filePath: string): string {
  */
 export async function* findFilesAsync(config: Configuration): AsyncGenerator<string> {
     // Handle special case: if the specified sourcePath is a single file, just yield the file.
-    if ((await fs.promises.lstat(config.sourcesPath)).isFile()) {
+    if ((await fs.lstat(config.sourcesPath)).isFile()) {
         yield config.sourcesPath;
     } else {
         // sourcePath points to a directory, so use recursive function to find all files.
@@ -148,7 +148,7 @@ async function* findFilesAsyncRecursive(
     dir: string,
     excludedFolders: Set<string>,
 ): AsyncGenerator<string> {
-    const openedDir = await fs.promises.opendir(dir);
+    const openedDir = await fs.opendir(dir);
 
     for await (const currentEntry of openedDir) {
         const currentPath = path.join(dir, currentEntry.name);

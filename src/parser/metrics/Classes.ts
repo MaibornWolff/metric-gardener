@@ -1,13 +1,13 @@
-import { QueryBuilder } from "../queries/QueryBuilder";
-import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
+import { QueryBuilder } from "../queries/QueryBuilder.js";
+import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import {
     QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
-} from "../queries/QueryStatements";
-import { getQueryStatementsByCategories } from "../helper/Helper";
+} from "../queries/QueryStatements.js";
+import { getQueryStatementsByCategories } from "../helper/Helper.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

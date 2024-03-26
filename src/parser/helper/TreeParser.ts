@@ -1,8 +1,9 @@
-import fs from "fs";
-import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language";
-import Parser from "tree-sitter";
-import { ErrorFile, ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric";
-import { Configuration } from "../Configuration";
+import fs from "fs/promises";
+import { readFileSync } from "fs";
+import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language.js";
+import Parser = require("tree-sitter");
+import { ErrorFile, ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric.js";
+import { Configuration } from "../Configuration.js";
 
 export class TreeParser {
     private static cache: Map<string, SourceFile> = new Map();
@@ -13,7 +14,7 @@ export class TreeParser {
             return cachedItem;
         }
 
-        const sourceCode = fs.readFileSync(filePath, { encoding: "utf8" });
+        const sourceCode = readFileSync(filePath, { encoding: "utf8" });
         return this.#parseTree(sourceCode, filePath, config);
     }
 
@@ -33,7 +34,7 @@ export class TreeParser {
         }
 
         try {
-            const sourceCode = await fs.promises.readFile(filePath, { encoding: "utf8" });
+            const sourceCode = await fs.readFile(filePath, { encoding: "utf8" });
             return this.#parseTree(sourceCode, filePath, config);
         } catch (error) {
             return new ErrorFile(filePath, error);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { LinesOfCodeRawText } from "./LinesOfCodeRawText";
-import { FileMetric } from "./Metric";
+import { LinesOfCodeRawText } from "./LinesOfCodeRawText.js";
+import { FileMetric } from "./Metric.js";
 
 describe("LinesOfCodeRawText.calculate(...)", () => {
     it("should calculate lines of code correctly for a file with multiple lines", () => {

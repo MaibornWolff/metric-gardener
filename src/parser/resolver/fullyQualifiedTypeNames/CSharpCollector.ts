@@ -1,4 +1,4 @@
-import { AbstractCollector, NamespaceResolvingStrategy } from "./AbstractCollector";
+import { AbstractCollector, NamespaceResolvingStrategy } from "./AbstractCollector.js";
 
 export class CSharpCollector extends AbstractCollector {
     protected getNamespaceResolvingStrategy(): NamespaceResolvingStrategy {
@@ -20,7 +20,7 @@ export class CSharpCollector extends AbstractCollector {
                         (declaration_list
                             (class_declaration
                                 name: (identifier) @class_name
-                                bases: (base_list                            
+                                bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
                                 body: (declaration_list
@@ -32,7 +32,7 @@ export class CSharpCollector extends AbstractCollector {
                             (interface_declaration
                                 "interface" @class_type
                                 name: (identifier) @class_name
-                                bases: (base_list                            
+                                bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
                             )
@@ -40,7 +40,7 @@ export class CSharpCollector extends AbstractCollector {
                         (declaration_list
                             (enum_declaration
                                 name: (identifier) @class_name
-                                bases: (base_list                            
+                                bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
                             )
@@ -48,7 +48,7 @@ export class CSharpCollector extends AbstractCollector {
                         (declaration_list
                             (struct_declaration
                                 name: (identifier) @class_name
-                                bases: (base_list                            
+                                bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
                             )

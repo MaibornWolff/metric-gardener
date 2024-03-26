@@ -1,7 +1,7 @@
-import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector";
-import { Factory as NamespaceCollectorFactory } from "./fullyQualifiedTypeNames/Factory";
-import { ParsedFile } from "../metrics/Metric";
-import { Language } from "../helper/Language";
+import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector.js";
+import { Factory as NamespaceCollectorFactory } from "./fullyQualifiedTypeNames/Factory.js";
+import { ParsedFile } from "../metrics/Metric.js";
+import { Language } from "../helper/Language.js";
 
 export class NamespaceCollector {
     private namespaceCollectorFactory = new NamespaceCollectorFactory();

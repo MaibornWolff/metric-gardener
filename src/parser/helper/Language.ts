@@ -13,9 +13,9 @@ import Bash from "tree-sitter-bash";
 import C from "tree-sitter-c";
 import JSON from "tree-sitter-json";
 import YAML from "tree-sitter-yaml";
-import { ConstantTwoWayMap } from "./ConstantTwoWayMap";
-import { Configuration } from "../Configuration";
-import { getFileExtension, lookupLowerCase, replaceForwardWithBackwardSlashes } from "./Helper";
+import { ConstantTwoWayMap } from "./ConstantTwoWayMap.js";
+import { Configuration } from "../Configuration.js";
+import { getFileExtension, lookupLowerCase, replaceForwardWithBackwardSlashes } from "./Helper.js";
 import path from "path";
 
 /**

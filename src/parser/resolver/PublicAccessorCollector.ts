@@ -1,7 +1,7 @@
-import { Factory as AccessorCollectorFactory } from "./callExpressions/Factory";
-import { ParsedFile } from "../metrics/Metric";
-import { Accessor } from "./callExpressions/AbstractCollector";
-import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector";
+import { Factory as AccessorCollectorFactory } from "./callExpressions/Factory.js";
+import { ParsedFile } from "../metrics/Metric.js";
+import { Accessor } from "./callExpressions/AbstractCollector.js";
+import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector.js";
 
 export class PublicAccessorCollector {
     private accessorCollectorFactory = new AccessorCollectorFactory();

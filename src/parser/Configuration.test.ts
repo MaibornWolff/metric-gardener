@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getTestConfiguration } from "../../test/metric-end-results/TestHelper";
+import { getTestConfiguration } from "../../test/metric-end-results/TestHelper.js";
 
 describe("Configuration", () => {
     describe("the constructor", () => {

@@ -1,6 +1,6 @@
-import { QueryBuilder } from "../queries/QueryBuilder";
-import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
+import { QueryBuilder } from "../queries/QueryBuilder.js";
+import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import {
@@ -9,8 +9,8 @@ import {
     QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
     SimpleQueryStatement,
-} from "../queries/QueryStatements";
-import { Language } from "../helper/Language";
+} from "../queries/QueryStatements.js";
+import { Language } from "../helper/Language.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

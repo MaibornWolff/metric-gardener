@@ -1,5 +1,5 @@
-import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
+import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeCursor } from "tree-sitter";
 

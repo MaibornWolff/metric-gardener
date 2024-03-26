@@ -1,10 +1,10 @@
-import { QueryBuilder } from "../../queries/QueryBuilder";
-import { formatCaptures } from "../../helper/Helper";
-import { NamespaceCollector } from "../NamespaceCollector";
-import { ParsedFile } from "../../metrics/Metric";
+import { QueryBuilder } from "../../queries/QueryBuilder.js";
+import { formatCaptures } from "../../helper/Helper.js";
+import { NamespaceCollector } from "../NamespaceCollector.js";
+import { ParsedFile } from "../../metrics/Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
-import { SimpleQueryStatement } from "../../queries/QueryStatements";
+import { SimpleQueryStatement } from "../../queries/QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

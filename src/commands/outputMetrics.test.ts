@@ -7,7 +7,6 @@ import { FileType } from "../parser/helper/Language";
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
         beforeEach(() => {
-            vi.resetAllMocks();
             console.log = vi.fn();
         });
 

@@ -1,9 +1,7 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "es6",
-        "moduleResolution": "node",
+        "module": "Node16",
+        "target": "ES2022",
         "sourceMap": true,
         "outDir": "dist",
         "resolveJsonModule": true,
@@ -12,6 +10,5 @@
         "strictNullChecks": true,
         "types": ["vitest/globals"]
     },
-    "exclude": ["resources", "node_modules"],
-    "lib": ["es2015"]
+    "exclude": ["resources", "node_modules"]
 }

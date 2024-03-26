@@ -3,10 +3,7 @@ import { GenericParser } from "./GenericParser";
 import { getFileExtension } from "./helper/Helper";
 import * as HelperModule from "./helper/Helper";
 import { TreeParser } from "./helper/TreeParser";
-import {
-    getTestConfiguration,
-    spyOnConsoleErrorNoOp,
-} from "../../test/metric-end-results/TestHelper";
+import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper";
 import {
     assumeLanguageFromFilePath,
     FileType,
@@ -32,6 +29,7 @@ import { Configuration } from "./Configuration";
 /*
  * Implementation of function mocks:
  */
+
 async function* mockedFindFilesAsync() {
     yield "clearly/invalid/path.cpp";
 }
@@ -107,11 +105,9 @@ const expectedFileMetricsResults: FileMetricResults = {
     metricErrors: [],
 };
 
-let parser: Parser;
 let tree: Parser.Tree;
-
 beforeAll(() => {
-    parser = new Parser();
+    const parser = new Parser();
     parser.setLanguage(languageToGrammar.get(Language.CPlusPlus));
     tree = parser.parse("int main() { return 0; }");
 });
@@ -243,7 +239,7 @@ describe("GenericParser.calculateMetrics()", () => {
             return new ErrorFile(filePath, new Error("Baaaaaah"));
         });
 
-        const errorSpy = spyOnConsoleErrorNoOp();
+        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
         /*
@@ -275,7 +271,7 @@ describe("GenericParser.calculateMetrics()", () => {
             return [await parsedFilePromise, errorMetricsResults];
         });
 
-        const errorSpy = spyOnConsoleErrorNoOp();
+        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
@@ -319,7 +315,7 @@ describe("GenericParser.calculateMetrics()", () => {
             return [file, expectedFileMetricsResults];
         });
 
-        const errorSpy = spyOnConsoleErrorNoOp();
+        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
@@ -377,7 +373,7 @@ describe("GenericParser.calculateMetrics()", () => {
             return [file, expectedFileMetricsResults];
         });
 
-        const errorSpy = spyOnConsoleErrorNoOp();
+        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
@@ -405,7 +401,7 @@ describe("GenericParser.calculateMetrics()", () => {
         mockFindFilesAsync(mockedFindFilesAsyncError);
         mockTreeParserParse();
 
-        const errorSpy = spyOnConsoleErrorNoOp();
+        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 

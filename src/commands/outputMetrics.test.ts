@@ -1,13 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { outputAsJson } from "./outputMetrics";
-import fs from "fs";
-import { Relationship, MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric";
+import { MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric";
 import { FileType } from "../parser/helper/Language";
+import { mockConsole, mockFs } from "../../test/metric-end-results/TestHelper";
 
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
+        let console: ReturnType<typeof mockConsole>;
+        let fs: ReturnType<typeof mockFs>;
+
         beforeEach(() => {
-            console.log = vi.fn();
+            console = mockConsole();
+            fs = mockFs();
         });
 
         it("when metrics are present", () => {
@@ -40,10 +44,9 @@ describe("outputMetrics", () => {
             ]);
 
             const unknownFiles = ["/file/path3.unknown", "/file/noExtension"];
-
             const errorFiles = ["/file/path4.error"];
 
-            const relationShipMetrics = {
+            const relationShipMetrics: CouplingResult = {
                 relationships: [
                     {
                         fromNamespace: "fromNamespace",
@@ -51,7 +54,9 @@ describe("outputMetrics", () => {
                         usageType: "usage",
                         fromSource: "/file/path2.test",
                         toSource: "/file/path1.test",
-                    } as Relationship,
+                        fromClassName: "ClassA",
+                        toClassName: "ClassB",
+                    },
                 ],
                 metrics: new Map([
                     [
@@ -60,15 +65,11 @@ describe("outputMetrics", () => {
                             outgoing_dependencies: 3,
                             incoming_dependencies: 2,
                             instability: 0.6,
+                            coupling_between_objects: 2,
                         },
                     ],
                 ]),
-            } as CouplingResult;
-
-            vi.spyOn(fs, "writeFileSync").mockImplementation((fileName, jsonString) => {
-                expect(fileName).toBe("mocked-file.json");
-                expect(jsonString).toMatchSnapshot();
-            });
+            };
 
             outputAsJson(
                 fileMetrics,
@@ -78,16 +79,26 @@ describe("outputMetrics", () => {
                 "mocked-file.json",
                 false,
             );
+
+            expect(console.log).toHaveBeenCalledTimes(1);
+            expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
+
+            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+            const [file, data, options] = fs.writeFileSync.mock.lastCall!;
+            expect(file).toBe("mocked-file.json");
+            expect(data).toMatchSnapshot();
+            expect(options).toBeUndefined();
         });
 
         it("when no metrics are present", () => {
-            const fileMetrics = new Map();
-            const relationShipMetrics = {} as CouplingResult;
+            const relationShipMetrics: CouplingResult = { relationships: [], metrics: new Map() };
 
-            vi.spyOn(fs, "writeFileSync").mockReset(); // empty mock implementation
+            outputAsJson(new Map(), [], [], relationShipMetrics, "mocked-file.json", false);
 
-            outputAsJson(fileMetrics, [], [], relationShipMetrics, "mocked-file.json", false);
+            expect(console.log).toHaveBeenCalledTimes(1);
+            expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
+            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
             expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",
                 '{"nodes":[],"info":[],"relationships":[]}',

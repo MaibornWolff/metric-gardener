@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { assumeLanguageFromFilePath, Language } from "./Language";
 import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper";
 import path from "path";

@@ -7,7 +7,6 @@ export default defineConfig({
             reportsDirectory: "./dist/coverage/",
             include: ["src/**"],
         },
-        globals: true,
         isolate: false,
         pool: "forks",
         // restoreMocks: true,

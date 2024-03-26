@@ -1,3 +1,4 @@
+import { expect, vi } from "vitest";
 import fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";

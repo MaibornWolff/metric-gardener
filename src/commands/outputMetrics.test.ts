@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { outputAsJson } from "./outputMetrics";
 import fs from "fs";
 import { Relationship, MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric";

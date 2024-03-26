@@ -1,3 +1,4 @@
+import { beforeAll, describe, expect, it } from "vitest";
 import { MaxNestingLevel } from "./MaxNestingLevel";
 import Parser from "tree-sitter";
 import { Language, languageToGrammar } from "../helper/Language";

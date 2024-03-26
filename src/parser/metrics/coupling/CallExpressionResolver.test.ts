@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { Relationship } from "../Metric";
 import { getAdditionalRelationships } from "./CallExpressionResolver";
 import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector";

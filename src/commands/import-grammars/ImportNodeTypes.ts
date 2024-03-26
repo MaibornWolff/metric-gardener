@@ -1,8 +1,8 @@
-import { NodeTypeConfig, NodeTypeCategory } from "../../parser/helper/Model";
-import fs from "fs";
-import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json";
+import { NodeTypeConfig, NodeTypeCategory } from "../../parser/helper/Model.js";
+import fs from "fs/promises";
+import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json" with { type: "json" };
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { NodeTypesChangelog } from "./NodeTypesChangelog";
+import { NodeTypesChangelog } from "./NodeTypesChangelog.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -94,7 +94,7 @@ function readNodeTypesJsons(): Map<string, Promise<string | Error>> {
 
         languageAbbrToNodeTypePromises.set(
             languageAbbr,
-            fs.promises.readFile(fileLocation, "utf8").catch((reason) => {
+            fs.readFile(fileLocation, "utf8").catch((reason) => {
                 return new Error(
                     "Error while reading a node-types.json file from " +
                         fileLocation +
@@ -280,7 +280,7 @@ function removeAbandonedNodeTypes(): void {
 
 async function writeNewNodeTypeMappings() {
     // Save the updated mappings:
-    await fs.promises.writeFile(
+    await fs.writeFile(
         pathToNodeTypesConfig,
         JSON.stringify(Array.from(nodeTypeMappings.values()), null, 4),
     );

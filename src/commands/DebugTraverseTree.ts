@@ -1,9 +1,10 @@
-import Parser, { TreeCursor } from "tree-sitter";
-import { Language, languageToGrammar } from "../parser/helper/Language";
-import fs from "fs";
+import Parser = require("tree-sitter");
+import { TreeCursor } from "tree-sitter";
+import { Language, languageToGrammar } from "../parser/helper/Language.js";
+import * as fs from "fs";
 
 if (require.main === module) {
-    traverseTree("./resources/c++/TEST.hpp", Language.CPlusPlus);
+    traverseTree("./resources/c++/TEST.hpp.js", Language.CPlusPlus);
 }
 
 /**

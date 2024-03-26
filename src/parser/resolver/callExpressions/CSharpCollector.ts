@@ -1,4 +1,4 @@
-import { AbstractCollector } from "./AbstractCollector";
+import { AbstractCollector } from "./AbstractCollector.js";
 
 export class CSharpCollector extends AbstractCollector {
     protected getAccessorsQuery(): string {

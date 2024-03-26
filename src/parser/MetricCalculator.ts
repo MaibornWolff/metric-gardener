@@ -1,10 +1,10 @@
-import { Complexity } from "./metrics/Complexity";
-import { Functions } from "./metrics/Functions";
-import { Classes } from "./metrics/Classes";
-import { LinesOfCode } from "./metrics/LinesOfCode";
-import { CommentLines } from "./metrics/CommentLines";
-import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { NodeTypeConfig } from "./helper/Model";
+import { Complexity } from "./metrics/Complexity.js";
+import { Functions } from "./metrics/Functions.js";
+import { Classes } from "./metrics/Classes.js";
+import { LinesOfCode } from "./metrics/LinesOfCode.js";
+import { CommentLines } from "./metrics/CommentLines.js";
+import { RealLinesOfCode } from "./metrics/RealLinesOfCode.js";
+import { NodeTypeConfig } from "./helper/Model.js";
 import {
     FileMetric,
     FileMetricResults,
@@ -14,14 +14,13 @@ import {
     MetricError,
     MetricResult,
     SourceFile,
-} from "./metrics/Metric";
-import nodeTypesConfig from "./config/nodeTypesConfig.json";
+} from "./metrics/Metric.js";
+import nodeTypesConfig from "./config/nodeTypesConfig.json" with { type: "json" };
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
-
-import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
-import fs from "fs";
-import { FileType } from "./helper/Language";
+import { MaxNestingLevel } from "./metrics/MaxNestingLevel.js";
+import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText.js";
+import fs from "fs/promises";
+import { FileType } from "./helper/Language.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -98,9 +97,7 @@ export class MetricCalculator {
             // Unsupported file: only calculate metrics based on the raw source code
             try {
                 // Reading a file might fail, catch that
-                const sourceCode = await fs.promises.readFile(sourceFile.filePath, {
-                    encoding: "utf8",
-                });
+                const sourceCode = await fs.readFile(sourceFile.filePath, { encoding: "utf8" });
                 resultPromises.push(LinesOfCodeRawText.calculate(sourceCode)); // Should never throw
             } catch (error) {
                 metricErrors.push({ metricName: FileMetric.linesOfCode, error });

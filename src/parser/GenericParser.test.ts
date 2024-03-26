@@ -1,16 +1,16 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { GenericParser } from "./GenericParser";
-import { getFileExtension } from "./helper/Helper";
-import * as HelperModule from "./helper/Helper";
-import { TreeParser } from "./helper/TreeParser";
-import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper";
+import { GenericParser } from "./GenericParser.js";
+import { getFileExtension } from "./helper/Helper.js";
+import * as HelperModule from "./helper/Helper.js";
+import { TreeParser } from "./helper/TreeParser.js";
+import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import {
     assumeLanguageFromFilePath,
     FileType,
     Language,
     languageToGrammar,
-} from "./helper/Language";
-import Parser from "tree-sitter";
+} from "./helper/Language.js";
+import Parser = require("tree-sitter");
 import {
     SourceFile,
     FileMetric,
@@ -21,10 +21,10 @@ import {
     ErrorFile,
     MetricError,
     MetricResult,
-} from "./metrics/Metric";
-import { MetricCalculator } from "./MetricCalculator";
-import { CouplingCalculator } from "./CouplingCalculator";
-import { Configuration } from "./Configuration";
+} from "./metrics/Metric.js";
+import { MetricCalculator } from "./MetricCalculator.js";
+import { CouplingCalculator } from "./CouplingCalculator.js";
+import { Configuration } from "./Configuration.js";
 
 /*
  * Implementation of function mocks:

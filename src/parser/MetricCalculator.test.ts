@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { MetricCalculator } from "./MetricCalculator";
-import { mockConsole, mockFs } from "../../test/metric-end-results/TestHelper";
+import { MetricCalculator } from "./MetricCalculator.js";
+import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import {
     ErrorFile,
     FileMetric,
@@ -8,17 +8,18 @@ import {
     ParsedFile,
     SourceFile,
     UnsupportedFile,
-} from "./metrics/Metric";
-import { FileType, Language, languageToGrammar } from "./helper/Language";
-import Parser from "tree-sitter";
-import { Classes } from "./metrics/Classes";
-import { CommentLines } from "./metrics/CommentLines";
-import { Complexity } from "./metrics/Complexity";
-import { Functions } from "./metrics/Functions";
-import { LinesOfCode } from "./metrics/LinesOfCode";
-import { MaxNestingLevel } from "./metrics/MaxNestingLevel";
-import { RealLinesOfCode } from "./metrics/RealLinesOfCode";
-import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText";
+} from "./metrics/Metric.js";
+import { FileType, Language, languageToGrammar } from "./helper/Language.js";
+import Parser = require("tree-sitter");
+import { Classes } from "./metrics/Classes.js";
+import { CommentLines } from "./metrics/CommentLines.js";
+import { Complexity } from "./metrics/Complexity.js";
+import { Functions } from "./metrics/Functions.js";
+import { LinesOfCode } from "./metrics/LinesOfCode.js";
+import { MaxNestingLevel } from "./metrics/MaxNestingLevel.js";
+import { RealLinesOfCode } from "./metrics/RealLinesOfCode.js";
+import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText.js";
+import fs from "fs/promises";
 
 function initiateSpies() {
     vi.spyOn(Classes.prototype, "calculate").mockResolvedValue({
@@ -95,7 +96,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     });
 
     beforeEach(() => {
-        mockFs();
+        vi.spyOn(fs, "readFile").mockReset();
         mockConsole();
     });
 

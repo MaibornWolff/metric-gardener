@@ -1,7 +1,7 @@
-import { findFilesAsync, formatPrintPath } from "./helper/Helper";
-import { Configuration } from "./Configuration";
-import { MetricCalculator } from "./MetricCalculator";
-import { CouplingCalculator } from "./CouplingCalculator";
+import { findFilesAsync, formatPrintPath } from "./helper/Helper.js";
+import { Configuration } from "./Configuration.js";
+import { MetricCalculator } from "./MetricCalculator.js";
+import { CouplingCalculator } from "./CouplingCalculator.js";
 import {
     SourceFile,
     CouplingResult,
@@ -9,9 +9,9 @@ import {
     ParsedFile,
     FileMetricResults,
     isErrorFile,
-} from "./metrics/Metric";
+} from "./metrics/Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { TreeParser } from "./helper/TreeParser";
+import { TreeParser } from "./helper/TreeParser.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

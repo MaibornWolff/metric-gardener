@@ -1,10 +1,10 @@
-import { FullyQTN } from "../AbstractCollector";
-import { QueryBuilder } from "../../../queries/QueryBuilder";
-import { formatCaptures } from "../../../helper/Helper";
-import { ParsedFile } from "../../../metrics/Metric";
+import { FullyQTN } from "../AbstractCollector.js";
+import { QueryBuilder } from "../../../queries/QueryBuilder.js";
+import { formatCaptures } from "../../../helper/Helper.js";
+import { ParsedFile } from "../../../metrics/Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryCapture } from "tree-sitter";
-import { SimpleQueryStatement } from "../../../queries/QueryStatements";
+import { SimpleQueryStatement } from "../../../queries/QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

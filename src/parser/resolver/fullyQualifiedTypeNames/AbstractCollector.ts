@@ -1,6 +1,6 @@
-import { QueryStrategy } from "./resolverStrategy/QueryStrategy";
-import { FilenameStrategy } from "./resolverStrategy/FilenameResolver";
-import { ParsedFile } from "../../metrics/Metric";
+import { QueryStrategy } from "./resolverStrategy/QueryStrategy.js";
+import { FilenameStrategy } from "./resolverStrategy/FilenameResolver.js";
+import { ParsedFile } from "../../metrics/Metric.js";
 
 export interface FullyQTN {
     namespace: string;

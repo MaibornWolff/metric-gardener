@@ -1,11 +1,11 @@
-import { NodeTypeConfig } from "../../parser/helper/Model";
-import fs from "fs";
+import { NodeTypeConfig } from "../../parser/helper/Model.js";
+import * as fs from "fs";
 import { EOL } from "os";
 
 /**
  * Path to which the changelog is written.
  */
-const pathToWriteChangelog = "./nodeTypesChanges.csv";
+const pathToWriteChangelog = "./nodeTypesChanges.csv.js";
 
 /**
  * Separator to use for writing a CSV-file of the changelog.

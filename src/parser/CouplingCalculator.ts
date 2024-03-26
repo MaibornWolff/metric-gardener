@@ -1,11 +1,11 @@
-import fs from "fs";
-import { NodeTypeConfig } from "./helper/Model";
-import { Configuration } from "./Configuration";
-import { Coupling } from "./metrics/coupling/Coupling";
-import { NamespaceCollector } from "./resolver/NamespaceCollector";
-import { UsagesCollector } from "./resolver/UsagesCollector";
-import { CouplingMetric, ParsedFile } from "./metrics/Metric";
-import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector";
+import * as fs from "fs";
+import { NodeTypeConfig } from "./helper/Model.js";
+import { Configuration } from "./Configuration.js";
+import { Coupling } from "./metrics/coupling/Coupling.js";
+import { NamespaceCollector } from "./resolver/NamespaceCollector.js";
+import { UsagesCollector } from "./resolver/UsagesCollector.js";
+import { CouplingMetric, ParsedFile } from "./metrics/Metric.js";
+import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

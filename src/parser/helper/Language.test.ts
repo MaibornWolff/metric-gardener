@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { assumeLanguageFromFilePath, Language } from "./Language";
-import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper";
+import { assumeLanguageFromFilePath, Language } from "./Language.js";
+import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
 import path from "path";
 
 describe("assumeLanguageFromFilePath(...)", () => {

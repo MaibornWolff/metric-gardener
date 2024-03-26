@@ -1,7 +1,7 @@
 import { Query } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Language, languageToGrammar } from "../helper/Language";
-import { QueryStatementInterface } from "./QueryStatements";
+import { Language, languageToGrammar } from "../helper/Language.js";
+import { QueryStatementInterface } from "./QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

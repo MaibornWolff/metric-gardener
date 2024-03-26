@@ -1,9 +1,9 @@
 import { expect, vi } from "vitest";
-import fs from "fs";
-import { GenericParser } from "../../src/parser/GenericParser";
-import { ConfigurationParams, Configuration } from "../../src/parser/Configuration";
-import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
-import { strcmp } from "../../src/parser/helper/Helper";
+import * as fs from "fs";
+import { GenericParser } from "../../src/parser/GenericParser.js";
+import { ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
+import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
+import { strcmp } from "../../src/parser/helper/Helper.js";
 
 /**
  * Gets a configuration for test cases.
@@ -48,12 +48,6 @@ export function mockConsole() {
     const log = vi.spyOn(console, "log").mockReset();
     const error = vi.spyOn(console, "error").mockReset();
     return { log, error };
-}
-
-export function mockFs() {
-    const writeFileSync = vi.spyOn(fs, "writeFileSync").mockReset();
-    const readFile = vi.spyOn(fs.promises, "readFile").mockReset();
-    return { writeFileSync, promises: { readFile } };
 }
 
 /**

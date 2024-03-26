@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-import { GenericParser } from "./parser/GenericParser";
-import { Configuration } from "./parser/Configuration";
+import { GenericParser } from "./parser/GenericParser.js";
+import { Configuration } from "./parser/Configuration.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { updateNodeTypesMappingFile } from "./commands/import-grammars/ImportNodeTypes";
-import { outputAsJson } from "./commands/outputMetrics";
-import fs from "fs";
+import { updateNodeTypesMappingFile } from "./commands/import-grammars/ImportNodeTypes.js";
+import { outputAsJson } from "./commands/outputMetrics.js";
+import fs from "fs/promises";
 
 yargs(hideBin(process.argv))
     .command(
@@ -80,7 +80,7 @@ yargs(hideBin(process.argv))
 
 async function parseSourceCode(argv) {
     const configuration = new Configuration({
-        sourcesPath: await fs.promises.realpath(argv["sources-path"]),
+        sourcesPath: await fs.realpath(argv["sources-path"]),
         outputPath: argv["output-path"],
         parseDependencies: argv["parse-dependencies"],
         exclusions: argv["exclusions"],

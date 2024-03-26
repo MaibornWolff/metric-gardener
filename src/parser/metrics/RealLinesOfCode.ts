@@ -1,9 +1,9 @@
-import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric";
+import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
+import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { SyntaxNode, TreeCursor } from "tree-sitter";
-import { getNodeTypeNamesByCategories } from "../helper/Helper";
+import { getNodeTypeNamesByCategories } from "../helper/Helper.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Language } from "../helper/Language";
+import { Language } from "../helper/Language.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

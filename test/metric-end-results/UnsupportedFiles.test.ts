@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { expectFileMetric, getTestConfiguration } from "./TestHelper";
-import fs from "fs";
-import { GenericParser } from "../../src/parser/GenericParser";
-import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric";
+import { expectFileMetric, getTestConfiguration } from "./TestHelper.js";
+import * as fs from "fs";
+import { GenericParser } from "../../src/parser/GenericParser.js";
+import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("Test for handling unsupported files, with unknown or no file extension", () => {
     const unsupportedTestResourcesPath = "./resources/unsupported/";

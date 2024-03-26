@@ -1,7 +1,7 @@
-import { Relationship } from "../Metric";
-import { Accessor } from "../../resolver/callExpressions/AbstractCollector";
-import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector";
-import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector";
+import { Relationship } from "../Metric.js";
+import { Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
+import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector.js";
+import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

@@ -32,7 +32,7 @@ describe("PHP metrics tests", () => {
             testFileMetric("classes.php", FileMetric.complexity, 5);
         });
 
-        it("should count case statements correctly", () => {
+        it("should count case labels correctly", () => {
             testFileMetric("case-statements.php", FileMetric.complexity, 3);
         });
 
@@ -60,7 +60,7 @@ describe("PHP metrics tests", () => {
     });
 
     describe("parses PHP functions metric", () => {
-        it("should count function declarations", () => {
+        it("should count function declarations and definitions", () => {
             testFileMetric("functions-and-methods.php", FileMetric.functions, 10);
         });
 

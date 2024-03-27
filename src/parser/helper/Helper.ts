@@ -64,11 +64,7 @@ export function formatPrintPath(
  * @return The file extension (or empty string).
  */
 export function getFileExtension(filePath: string): string {
-    const splitted = filePath.split(".");
-    if (splitted.length >= 2) {
-        return splitted[splitted.length - 1].toLowerCase();
-    }
-    return "";
+    return filePath.match(/\.(?<extension>\w*)$/i)?.groups?.extension ?? "";
 }
 
 /**

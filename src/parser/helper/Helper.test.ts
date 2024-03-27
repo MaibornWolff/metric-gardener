@@ -6,6 +6,7 @@ import {
     getNodeTypesByCategories,
     getQueryStatementsByCategories,
     lookupLowerCase,
+    replaceForwardWithBackwardSlashes,
 } from "./Helper.js";
 import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
@@ -44,6 +45,29 @@ describe("Helper.ts", () => {
 
         it("should return undefined for a key that is not in the map in lower case", () => {
             expect(lookupLowerCase(noLowerCaseKey, "KEY")).toBeUndefined();
+        });
+    });
+
+    describe("replaceForwardWithBackwardSlashes(...)", () => {
+        it("should replace all forward slashes with backward slashes", () => {
+            const forwardSlashPath = "/some/path/for/the/test.extension";
+            expect(replaceForwardWithBackwardSlashes(forwardSlashPath)).toEqual(
+                "\\some\\path\\for\\the\\test.extension",
+            );
+        });
+
+        it("should not replace backward slashes", () => {
+            const backwardSlashPath = "C:\\Users\\user\\documents\\code\\file.extension";
+            expect(replaceForwardWithBackwardSlashes(backwardSlashPath)).toEqual(
+                "C:\\Users\\user\\documents\\code\\file.extension",
+            );
+        });
+
+        it("should replace all forward slashes with backward slashes in a mixed path", () => {
+            const mixedSlashPath = "/some/path\\for\\the/test.extension";
+            expect(replaceForwardWithBackwardSlashes(mixedSlashPath)).toEqual(
+                "\\some\\path\\for\\the\\test.extension",
+            );
         });
     });
 

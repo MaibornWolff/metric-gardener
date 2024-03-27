@@ -5,12 +5,48 @@ import {
     getNodeTypeNamesByCategories,
     getNodeTypesByCategories,
     getQueryStatementsByCategories,
+    lookupLowerCase,
 } from "./Helper.js";
 import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
 
 describe("Helper.ts", () => {
+    describe("lookupLowerCase<V>(...)", () => {
+        const numbers = new Map<string, number>([
+            ["key", 1],
+            ["KEY", 2],
+            ["kEy", 3],
+        ]);
+        const strings = new Map<string, string>([
+            ["key", "value"],
+            ["KEY", "VALUE"],
+            ["kEy", "VaLuE"],
+        ]);
+        const noLowerCaseKey = new Map<string, object>([["KEY", { key: "value" }]]);
+
+        it("should return the value for a key that is in the map", () => {
+            expect(lookupLowerCase(numbers, "key")).toBe(1);
+            expect(lookupLowerCase(strings, "key")).toBe("value");
+        });
+
+        it("should return the value for a key that is in the map, regardless of the case", () => {
+            expect(lookupLowerCase(numbers, "KEY")).toBe(1);
+            expect(lookupLowerCase(strings, "KEY")).toBe("value");
+            expect(lookupLowerCase(numbers, "kEy")).toBe(1);
+            expect(lookupLowerCase(strings, "kEy")).toBe("value");
+        });
+
+        it("should return undefined for a key that is not in the map", () => {
+            expect(lookupLowerCase(numbers, "not in map")).toBeUndefined();
+            expect(lookupLowerCase(strings, "not in map")).toBeUndefined();
+        });
+
+        it("should return undefined for a key that is not in the map in lower case", () => {
+            expect(lookupLowerCase(noLowerCaseKey, "KEY")).toBeUndefined();
+        });
+    });
+
     describe("formatPrintPath(...)", () => {
         it("should change nothing when the config does not say otherwise", () => {
             const filePath = "/some/path/for/the/test.extension";

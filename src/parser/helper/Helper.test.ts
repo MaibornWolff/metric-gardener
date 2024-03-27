@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
 import {
+    findFilesAsync,
     formatPrintPath,
     getFileExtension,
     getNodeTypeNamesByCategories,
@@ -12,6 +13,9 @@ import {
 import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
+import fs from "fs/promises";
+import { ConfigurationParams } from "../Configuration.js";
+import { Dir, Stats } from "fs";
 
 describe("Helper.ts", () => {
     describe("lookupLowerCase<V>(...)", () => {
@@ -195,6 +199,102 @@ describe("Helper.ts", () => {
             expect(getFileExtension(filePath3)).toEqual("");
             expect(getFileExtension(filePath4)).toEqual("");
         });
+    });
+
+    describe("findFilesAsync(...)", () => {
+        it("should find one file, if the sourcePath is a single file", async () => {
+            vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
+            await expectFiles("/some/path");
+        });
+
+        it("should find all files in a directory", async () => {
+            vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => false } as Stats);
+            vi.spyOn(fs, "opendir").mockResolvedValue(
+                (async function* () {
+                    yield { name: "file1", isDirectory: () => false };
+                    yield { name: "file2", isDirectory: () => false };
+                })() as unknown as Dir,
+            );
+
+            await expectFiles("/some/path/file1", "/some/path/file2");
+        });
+
+        it("should find all files in a directory and its subdirectories", async () => {
+            vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => false } as Stats);
+            vi.spyOn(fs, "opendir")
+                .mockResolvedValueOnce(
+                    (async function* () {
+                        yield { name: "file1", isDirectory: () => false };
+                        yield { name: "subdir", isDirectory: () => true };
+                    })() as unknown as Dir,
+                )
+                .mockResolvedValueOnce(
+                    (async function* () {
+                        yield { name: "file2", isDirectory: () => false };
+                        yield { name: "file3", isDirectory: () => false };
+                    })() as unknown as Dir,
+                );
+
+            await expectFiles(
+                "/some/path/file1",
+                "/some/path/subdir/file2",
+                "/some/path/subdir/file3",
+            );
+        });
+
+        it("should not include excluded files", async () => {
+            vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => false } as Stats);
+            vi.spyOn(fs, "opendir")
+                .mockResolvedValueOnce(
+                    (async function* () {
+                        yield { name: "file1", isDirectory: () => false };
+                        yield { name: "subdir", isDirectory: () => true };
+                        yield { name: "subdir2", isDirectory: () => true };
+                    })() as unknown as Dir,
+                )
+                .mockResolvedValueOnce(
+                    (async function* () {
+                        yield { name: "file2", isDirectory: () => false };
+                        yield { name: "excluded", isDirectory: () => true };
+                    })() as unknown as Dir,
+                )
+                .mockResolvedValueOnce(
+                    (async function* () {
+                        yield { name: "file3", isDirectory: () => false };
+                    })() as unknown as Dir,
+                );
+
+            await expectFilesWithConfig(
+                { exclusions: "subdir, excluded" },
+                "/some/path/file1",
+                "/some/path/subdir2/file2",
+            );
+        });
+
+        it("should throw an error, if the sourcePath is not a file or directory", () => {
+            const config = getTestConfiguration("/invalid/path");
+
+            expect(findFilesAsync(config).next()).rejects.toThrowError(
+                new Error("ENOENT: no such file or directory, lstat '/invalid/path'"),
+            );
+        });
+
+        async function expectFiles(...files: string[]) {
+            await expectFilesWithConfig(undefined, ...files);
+        }
+        async function expectFilesWithConfig(
+            configOverrides?: Partial<ConfigurationParams>,
+            ...files: string[]
+        ) {
+            const config = getTestConfiguration("/some/path", configOverrides);
+
+            const result: string[] = [];
+            for await (const file of findFilesAsync(config)) {
+                result.push(file);
+            }
+
+            expect(result).toEqual(files);
+        }
     });
 
     describe("Helper for node types", () => {

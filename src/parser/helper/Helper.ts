@@ -5,26 +5,6 @@ import { Configuration } from "../Configuration.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
 
 /**
- * Maps all elements of the specified iterable using the specified map. Calls the specified function for all
- * mapped values, skipping elements for which there is no value available in the map.
- * @param iterator Iterable of elements to map.
- * @param map Map to use for mapping.
- * @param insertFunction Function to call with the retrieved values.
- */
-export function mapAllFunctional<KeyType, ValueType>(
-    iterator: Iterable<KeyType>,
-    map: Map<KeyType, ValueType>,
-    insertFunction: (v: ValueType) => void,
-) {
-    for (const key of iterator) {
-        const mapResult = map.get(key);
-        if (mapResult !== undefined) {
-            insertFunction(mapResult);
-        }
-    }
-}
-
-/**
  * Looks up the passed string key converted to lower case in the passed map. Returns the retrieved value (if any).
  * @param map Map from which to retrieve the value.
  * @param key The key to look up after being converted to lower case. The passed object is not modified.
@@ -35,22 +15,6 @@ export function lookupLowerCase<V>(map: Map<string, V>, key: string) {
     return map.get(inLowerCase);
 }
 
-/**
- * Maps all elements of the specified iterable using the specified map. Returns an array of all mapped values,
- * skipping elements for which there is no value available in the map.
- * @param iterator Iterable of elements to map.
- * @param map Map to use for mapping.
- * @return Array of the mapped elements.
- */
-export function mapAllIntoArray<KeyType, ValueType>(
-    iterator: Iterable<KeyType>,
-    map: Map<KeyType, ValueType>,
-): ValueType[] {
-    const result: ValueType[] = [];
-    mapAllFunctional(iterator, map, (value) => result.push(value));
-    return result;
-}
-
 export function formatCaptures(tree, captures) {
     return captures.map((c) => {
         const node = c.node;
@@ -58,22 +22,6 @@ export function formatCaptures(tree, captures) {
         c.text = tree.getText(node);
         return c;
     });
-}
-
-/**
- * Similar to strcmp in C, this compares two strings and returns a negative value if a < b, a positive value if b < a,
- * and 0 if a === b.
- * @param a First string.
- * @param b Second string.
- * @return negative value if a < b, a positive value if b < a, and 0 if a === b.
- */
-export function strcmp(a: string, b: string) {
-    if (a < b) {
-        return -1;
-    } else if (b < a) {
-        return 1;
-    }
-    return 0;
 }
 
 export function replaceForwardWithBackwardSlashes(path: string) {
@@ -167,7 +115,7 @@ async function* findFilesAsyncRecursive(
     } // End of for await (directory entries)
 }
 
-export function findNodeTypesByCategories(
+function findNodeTypesByCategories(
     allNodeTypes: NodeTypeConfig[],
     categories: Set<NodeTypeCategory>,
     callback: (nodeTypeConfig: NodeTypeConfig) => void,

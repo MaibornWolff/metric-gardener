@@ -3,7 +3,6 @@ import * as fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser.js";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
 import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
-import { strcmp } from "../../src/parser/helper/Helper.js";
 
 /**
  * Gets a configuration for test cases.
@@ -118,4 +117,20 @@ function sortCouplingResults(couplingResult: CouplingResult) {
         const uniqueIdB = b.toNamespace + b.fromNamespace;
         return strcmp(uniqueIdA, uniqueIdB);
     });
+}
+
+/**
+ * Similar to strcmp in C, this compares two strings and returns a negative value if a < b, a positive value if b < a,
+ * and 0 if a === b.
+ * @param a First string.
+ * @param b Second string.
+ * @return negative value if a < b, a positive value if b < a, and 0 if a === b.
+ */
+function strcmp(a: string, b: string) {
+    if (a < b) {
+        return -1;
+    } else if (b < a) {
+        return 1;
+    }
+    return 0;
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
 import {
     formatPrintPath,
+    getFileExtension,
     getNodeTypeNamesByCategories,
     getNodeTypesByCategories,
     getQueryStatementsByCategories,
@@ -156,6 +157,43 @@ describe("Helper.ts", () => {
             expect(formatPrintPath(filePath, config, path.win32)).toEqual(
                 "more-code\\file.extension",
             );
+        });
+    });
+
+    describe("getFileExtension(...)", () => {
+        it("should return the file extension of a file path", () => {
+            const filePath1 = "/some/path/for/the/test.extension";
+            const filePath2 = "/some/path/for/the/test.EXTENSION";
+            const filePath3 = "/some/path/for/the/test.7z";
+            expect(getFileExtension(filePath1)).toEqual("extension");
+            expect(getFileExtension(filePath2)).toEqual("EXTENSION");
+            expect(getFileExtension(filePath3)).toEqual("7z");
+        });
+
+        it("should return the file extension of a file path with multiple dots", () => {
+            const filePath = "/some/path/for/the/test.with.multiple.dots.extension";
+            expect(getFileExtension(filePath)).toEqual("extension");
+        });
+
+        it("should return the file extension of a file path with a dot at the beginning", () => {
+            const filePath = "/some/path/for/the/.dotfile";
+            expect(getFileExtension(filePath)).toEqual("dotfile");
+        });
+
+        it("should return an empty string if there is no file extension", () => {
+            const filePath = "/some/path/for/the/test";
+            expect(getFileExtension(filePath)).toEqual("");
+        });
+
+        it("should return an empty string for relative paths with no file extension", () => {
+            const filePath1 = "./some/relative/path";
+            const filePath2 = "../../some/relative/path";
+            const filePath3 = ".\\some\\relative\\path";
+            const filePath4 = "..\\..\\some\\relative\\path";
+            expect(getFileExtension(filePath1)).toEqual("");
+            expect(getFileExtension(filePath2)).toEqual("");
+            expect(getFileExtension(filePath3)).toEqual("");
+            expect(getFileExtension(filePath4)).toEqual("");
         });
     });
 

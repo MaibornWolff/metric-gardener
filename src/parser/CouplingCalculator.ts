@@ -1,5 +1,3 @@
-import * as fs from "fs";
-import { NodeTypeConfig } from "./helper/Model.js";
 import { Configuration } from "./Configuration.js";
 import { Coupling } from "./metrics/coupling/Coupling.js";
 import { NamespaceCollector } from "./resolver/NamespaceCollector.js";
@@ -22,20 +20,12 @@ export class CouplingCalculator {
 
     constructor(configuration: Configuration) {
         this.config = configuration;
-
-        const nodeTypesJson = fs
-            .readFileSync(fs.realpathSync("./src/parser/config/nodeTypesConfig.json"))
-            .toString();
-        const allNodeTypes: NodeTypeConfig[] = JSON.parse(nodeTypesJson);
-
         this.namespaceCollector = new NamespaceCollector();
         this.publicAccessorCollector = new PublicAccessorCollector();
         this.usageCollector = new UsagesCollector();
-
         this.comprisingMetrics = [
             new Coupling(
                 this.config,
-                allNodeTypes,
                 this.namespaceCollector,
                 this.usageCollector,
                 this.publicAccessorCollector,

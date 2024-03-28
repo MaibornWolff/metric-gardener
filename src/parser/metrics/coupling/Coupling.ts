@@ -12,7 +12,6 @@ import {
     ParsedFile,
     CouplingMetrics,
     CouplingResult,
-    isParsedFile,
 } from "../Metric.js";
 import { formatPrintPath } from "../../helper/Helper.js";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector.js";
@@ -208,7 +207,7 @@ export class Coupling implements CouplingMetric {
         }
 
         const parsedFile = TreeParser.parseSync(filePath, this.config);
-        if (!isParsedFile(parsedFile)) {
+        if (!(parsedFile instanceof ParsedFile)) {
             return;
         }
 

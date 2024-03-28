@@ -6,13 +6,13 @@ import { CommentLines } from "./metrics/CommentLines.js";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode.js";
 import { NodeTypeConfig } from "./helper/Model.js";
 import {
+    ErrorFile,
     FileMetric,
     FileMetricResults,
-    isErrorFile,
-    isParsedFile,
     Metric,
     MetricError,
     MetricResult,
+    ParsedFile,
     SourceFile,
 } from "./metrics/Metric.js";
 import nodeTypesConfig from "./config/nodeTypesConfig.json" with { type: "json" };
@@ -63,7 +63,7 @@ export class MetricCalculator {
     ): Promise<[SourceFile, FileMetricResults]> {
         const sourceFile = await parsedFilePromise;
 
-        if (isErrorFile(sourceFile)) {
+        if (sourceFile instanceof ErrorFile) {
             return [
                 sourceFile,
                 { fileType: sourceFile.fileType, metricResults: [], metricErrors: [] },
@@ -73,7 +73,7 @@ export class MetricCalculator {
         const metricErrors: MetricError[] = [];
         const resultPromises: Promise<MetricResult | null>[] = [];
 
-        if (isParsedFile(sourceFile)) {
+        if (sourceFile instanceof ParsedFile) {
             dlog(
                 " ------------ Parsing file metrics for file " +
                     sourceFile.filePath +

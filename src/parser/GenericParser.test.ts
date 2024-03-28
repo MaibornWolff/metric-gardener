@@ -17,7 +17,6 @@ import {
     ParsedFile,
     UnsupportedFile,
     FileMetricResults,
-    isErrorFile,
     ErrorFile,
     MetricError,
     MetricResult,
@@ -62,7 +61,7 @@ async function mockedMetricsCalculator(
     parsedFilePromise: Promise<SourceFile>,
 ): Promise<[SourceFile, FileMetricResults]> {
     const file = await parsedFilePromise;
-    if (isErrorFile(file)) {
+    if (file instanceof ErrorFile) {
         return [file, { fileType: file.fileType, metricResults: [], metricErrors: [] }];
     }
     return [file, expectedFileMetricsResults];

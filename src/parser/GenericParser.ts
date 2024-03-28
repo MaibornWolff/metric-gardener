@@ -5,10 +5,10 @@ import { CouplingCalculator } from "./CouplingCalculator.js";
 import {
     SourceFile,
     CouplingResult,
-    isParsedFile,
     ParsedFile,
     FileMetricResults,
-    isErrorFile,
+    ErrorFile,
+    UnsupportedFile,
 } from "./metrics/Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeParser } from "./helper/TreeParser.js";
@@ -72,13 +72,13 @@ export class GenericParser {
             const filesForCouplingMetrics: ParsedFile[] = [];
 
             for (const sourceFile of treeParseResults) {
-                if (isErrorFile(sourceFile)) {
+                if (sourceFile instanceof ErrorFile) {
                     const printPath = formatPrintPath(sourceFile.filePath, this.config);
                     errorFiles.push(printPath);
 
                     console.error("Error while parsing the syntax tree for the file " + printPath);
                     console.error(sourceFile.error);
-                } else if (isParsedFile(sourceFile)) {
+                } else if (sourceFile instanceof ParsedFile) {
                     // Do only include files for calculating the coupling metrics
                     // that are supported and have been parsed successfully:
                     filesForCouplingMetrics.push(sourceFile);
@@ -97,7 +97,7 @@ export class GenericParser {
 
             for (const [sourceFile, fileMetricResults] of promisesResults) {
                 const printPath = formatPrintPath(sourceFile.filePath, this.config);
-                if (!isErrorFile(sourceFile)) {
+                if (!(sourceFile instanceof ErrorFile)) {
                     fileMetrics.set(printPath, fileMetricResults);
 
                     // Inform about errors that occurred while calculating (some) metrics on the syntax tree
@@ -110,7 +110,7 @@ export class GenericParser {
                         );
                         console.error(metricError.error);
                     }
-                    if (!isParsedFile(sourceFile)) {
+                    if (sourceFile instanceof UnsupportedFile) {
                         unsupportedFiles.push(printPath);
                     }
                 }

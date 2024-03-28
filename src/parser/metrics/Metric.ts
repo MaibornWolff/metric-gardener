@@ -136,10 +136,6 @@ export class ParsedFile extends SourceFile {
     }
 }
 
-export function isParsedFile(file: SourceFile): file is ParsedFile {
-    return (file as ParsedFile).language !== undefined && (file as ParsedFile).tree !== undefined;
-}
-
 export class ErrorFile extends SourceFile {
     /**
      * Error that occurred while processing the file.
@@ -150,8 +146,4 @@ export class ErrorFile extends SourceFile {
         super(filePath, FileType.Error);
         this.error = error;
     }
-}
-
-export function isErrorFile(file: SourceFile): file is ErrorFile {
-    return (file as ErrorFile).error !== undefined;
 }

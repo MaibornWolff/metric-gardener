@@ -1,4 +1,3 @@
-import { NodeTypeConfig } from "../../helper/Model.js";
 import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
 import {
     UnresolvedCallExpression,
@@ -35,7 +34,6 @@ export class Coupling implements CouplingMetric {
 
     constructor(
         config: Configuration,
-        allNodeTypes: NodeTypeConfig[],
         namespaceCollector: NamespaceCollector,
         usageCollector: UsagesCollector,
         publicAccessorCollector: PublicAccessorCollector,

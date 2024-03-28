@@ -4,7 +4,7 @@ import { Language, languageToGrammar } from "../parser/helper/Language.js";
 import * as fs from "fs";
 
 if (require.main === module) {
-    traverseTree("./resources/c++/TEST.hpp.js", Language.CPlusPlus);
+    traverseTree("./resources/c++/TEST.hpp", Language.CPlusPlus);
 }
 
 /**

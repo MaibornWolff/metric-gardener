@@ -52,10 +52,8 @@ export function outputAsJson(
     const outputString = JSON.stringify(output).toString();
 
     if (compress) {
-        dumpCompressed(
-            outputString,
-            outputFilePath.endsWith(".gz") ? outputFilePath : outputFilePath + ".gz",
-        );
+        outputFilePath = outputFilePath.endsWith(".gz") ? outputFilePath : outputFilePath + ".gz";
+        dumpCompressed(outputString, outputFilePath);
     } else {
         fs.writeFileSync(outputFilePath, outputString);
     }

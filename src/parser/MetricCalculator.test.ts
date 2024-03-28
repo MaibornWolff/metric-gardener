@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { MetricCalculator } from "./MetricCalculator.js";
+import { calculateMetrics } from "./MetricCalculator.js";
 import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import {
     ErrorFile,
@@ -87,11 +87,9 @@ function initiateErrorSpies() {
 }
 
 describe("MetricCalculator.calculateMetrics()", () => {
-    let metricCalculator: MetricCalculator;
     let parser: Parser;
 
     beforeAll(() => {
-        metricCalculator = new MetricCalculator();
         parser = new Parser();
     });
 
@@ -105,13 +103,12 @@ describe("MetricCalculator.calculateMetrics()", () => {
         parser.setLanguage(languageToGrammar.get(Language.Python));
         const tree = parser.parse("sum(range(4))");
         const parsedFile = new ParsedFile("test.py", Language.Python, tree);
-        const parsedFilePromise = Promise.resolve(parsedFile);
+        const parsedFilePromise = parsedFile;
 
         initiateSpies();
 
         // when
-        const [sourceFile, fileMetricResults] =
-            await metricCalculator.calculateMetrics(parsedFilePromise);
+        const [sourceFile, fileMetricResults] = await calculateMetrics(parsedFilePromise);
 
         // then
         expect(sourceFile).toEqual(parsedFile);
@@ -123,13 +120,12 @@ describe("MetricCalculator.calculateMetrics()", () => {
         parser.setLanguage(languageToGrammar.get(Language.JSON));
         const tree = parser.parse('{ "a": { "b": "c" } }');
         const parsedFile = new ParsedFile("test.json", Language.JSON, tree);
-        const parsedFilePromise = Promise.resolve(parsedFile);
+        const parsedFilePromise = parsedFile;
 
         initiateSpies();
 
         // when
-        const [sourceFile, fileMetricResults] =
-            await metricCalculator.calculateMetrics(parsedFilePromise);
+        const [sourceFile, fileMetricResults] = await calculateMetrics(parsedFilePromise);
 
         // then
         expect(sourceFile).toEqual(parsedFile);
@@ -139,13 +135,12 @@ describe("MetricCalculator.calculateMetrics()", () => {
     it("should calculate lines of code for a text file", async () => {
         // given
         const unsupportedFile = new UnsupportedFile("test.txt");
-        const unsupportedFilePromise = Promise.resolve(unsupportedFile);
+        const unsupportedFilePromise = unsupportedFile;
 
         initiateSpies();
 
         // when
-        const [sourceFile, fileMetricResults] =
-            await metricCalculator.calculateMetrics(unsupportedFilePromise);
+        const [sourceFile, fileMetricResults] = await calculateMetrics(unsupportedFilePromise);
 
         // then
         expect(sourceFile).toEqual(unsupportedFile);
@@ -161,10 +156,10 @@ describe("MetricCalculator.calculateMetrics()", () => {
             ),
         );
 
-        const errorFilePromise = Promise.resolve(errorFile);
+        const errorFilePromise = errorFile;
 
         // when
-        const result = await metricCalculator.calculateMetrics(errorFilePromise);
+        const result = await calculateMetrics(errorFilePromise);
 
         // then
         const expectedResult: [SourceFile, FileMetricResults] = [
@@ -179,13 +174,12 @@ describe("MetricCalculator.calculateMetrics()", () => {
         parser.setLanguage(languageToGrammar.get(Language.Python));
         const tree = parser.parse("sum(range(4))");
         const parsedFile = new ParsedFile("test.py", Language.Python, tree);
-        const parsedFilePromise = Promise.resolve(parsedFile);
+        const parsedFilePromise = parsedFile;
 
         initiateErrorSpies();
 
         // when
-        const [sourceFile, fileMetricResults] =
-            await metricCalculator.calculateMetrics(parsedFilePromise);
+        const [sourceFile, fileMetricResults] = await calculateMetrics(parsedFilePromise);
 
         // then
         expect(sourceFile).toEqual(parsedFile);

@@ -1,5 +1,5 @@
 import { beforeAll, describe, it } from "vitest";
-import { expectFileMetric, parseAllFileMetrics } from "./TestHelper.js";
+import { expectFileMetric, mockConsole, parseAllFileMetrics } from "./TestHelper.js";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("YAML metrics tests", () => {
@@ -12,6 +12,7 @@ describe("YAML metrics tests", () => {
     }
 
     beforeAll(async () => {
+        mockConsole();
         results = await parseAllFileMetrics(yamlTestResourcesPath);
     });
 

@@ -60,11 +60,6 @@ export class Configuration {
     /**
      * Whether dependencies should be analyzed.
      */
-    readonly parseMetrics: boolean;
-
-    /**
-     * Folders to exclude from being searched for files to be parsed.
-     */
     readonly parseDependencies: boolean;
 
     /**
@@ -106,7 +101,6 @@ export class Configuration {
     constructor(parameters: ConfigurationParams) {
         this.sourcesPath = parameters.sourcesPath;
         this.outputPath = parameters.outputPath;
-        this.parseMetrics = true;
         this.parseDependencies = parameters.parseDependencies;
 
         this.exclusions = new Set(

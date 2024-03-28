@@ -79,32 +79,39 @@ yargs(hideBin(process.argv))
     .parseSync();
 
 async function parseSourceCode(argv) {
-    const configuration = new Configuration({
-        sourcesPath: await fs.realpath(argv["sources-path"]),
-        outputPath: argv["output-path"],
-        parseDependencies: argv["parse-dependencies"],
-        exclusions: argv["exclusions"],
-        parseAllHAsC: argv["parse-h-as-c"],
-        parseSomeHAsC: argv["parse-some-h-as-c"],
-        compress: argv["compress"],
-        relativePaths: argv["relative-paths"],
-    });
+    try {
+        const configuration = new Configuration({
+            sourcesPath: await fs.realpath(argv["sources-path"]),
+            outputPath: argv["output-path"],
+            parseDependencies: argv["parse-dependencies"],
+            exclusions: argv["exclusions"],
+            parseAllHAsC: argv["parse-h-as-c"],
+            parseSomeHAsC: argv["parse-some-h-as-c"],
+            compress: argv["compress"],
+            relativePaths: argv["relative-paths"],
+        });
 
-    console.time("Time to complete");
+        console.time("Time to complete");
 
-    const parser = new GenericParser(configuration);
-    const results = await parser.calculateMetrics();
+        const parser = new GenericParser(configuration);
+        const results = await parser.calculateMetrics();
 
-    console.log("#####################################");
-    console.log("Metrics calculation finished.");
-    console.timeEnd("Time to complete");
+        console.log("#####################################");
+        console.log("Metrics calculation finished.");
+        console.timeEnd("Time to complete");
 
-    outputAsJson(
-        results.fileMetrics,
-        results.unsupportedFiles,
-        results.errorFiles,
-        results.couplingMetrics,
-        configuration.outputPath,
-        configuration.compress,
-    );
+        outputAsJson(
+            results.fileMetrics,
+            results.unsupportedFiles,
+            results.errorFiles,
+            results.couplingMetrics,
+            configuration.outputPath,
+            configuration.compress,
+        );
+    } catch (e) {
+        console.error("#####################################");
+        console.error("#####################################");
+        console.error("Metrics calculation failed with the following error:");
+        console.error(e);
+    }
 }

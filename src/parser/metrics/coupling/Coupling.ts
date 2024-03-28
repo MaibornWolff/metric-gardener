@@ -32,6 +32,11 @@ export class Coupling implements CouplingMetric {
     private filesWithMultipleNamespaces: ParsedFile[] = [];
     private alreadyAddedRelationships = new Set<string>();
 
+    private namespaces: Map<string, FullyQTN> = new Map();
+    private publicAccessors = new Map<string, Accessor[]>();
+    private usagesCandidates: TypeUsageCandidate[] = [];
+    private unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
+
     constructor(
         config: Configuration,
         namespaceCollector: NamespaceCollector,
@@ -44,50 +49,41 @@ export class Coupling implements CouplingMetric {
         this.publicAccessorCollector = publicAccessorCollector;
     }
 
-    calculate(parseFiles: ParsedFile[]) {
-        let namespaces: Map<string, FullyQTN> = new Map();
-        const publicAccessors = new Map<string, Accessor[]>();
-        let usagesCandidates: TypeUsageCandidate[] = [];
-        const unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
-
+    processFile(parsedFile: ParsedFile) {
         // preprocessing
-        for (const parseFile of parseFiles) {
-            namespaces = new Map([
-                ...namespaces,
-                ...this.namespaceCollector.getNamespaces(parseFile),
-            ]);
+        const moreNamespaces = this.namespaceCollector.getNamespaces(parsedFile);
+        this.namespaces = new Map([...this.namespaces, ...moreNamespaces]);
 
-            const moreAccessors = this.publicAccessorCollector.getPublicAccessors(
-                parseFile,
-                this.namespaceCollector.getNamespaces(parseFile),
-            );
-            for (const [accessorName, accessors] of moreAccessors) {
-                const existingAccessors = publicAccessors.get(accessorName);
-                if (existingAccessors !== undefined) {
-                    existingAccessors.push(...accessors);
-                } else {
-                    publicAccessors.set(accessorName, accessors);
-                }
+        const moreAccessors = this.publicAccessorCollector.getPublicAccessors(
+            parsedFile,
+            moreNamespaces,
+        );
+        for (const [accessorName, accessors] of moreAccessors) {
+            const existingAccessors = this.publicAccessors.get(accessorName);
+            if (existingAccessors !== undefined) {
+                existingAccessors.push(...accessors);
+            } else {
+                this.publicAccessors.set(accessorName, accessors);
             }
         }
 
         // processing
-        for (const parseFile of parseFiles) {
-            const { candidates, unresolvedCallExpressions: callExpressionsOfFile } =
-                this.usageCollector.getUsageCandidates(parseFile, this.namespaceCollector);
-            usagesCandidates = usagesCandidates.concat(candidates);
-            unresolvedCallExpressions.set(parseFile.filePath, callExpressionsOfFile);
-        }
+        const { candidates, unresolvedCallExpressions: callExpressionsOfFile } =
+            this.usageCollector.getUsageCandidates(parsedFile, this.namespaceCollector);
+        this.usagesCandidates = this.usagesCandidates.concat(candidates);
+        this.unresolvedCallExpressions.set(parsedFile.filePath, callExpressionsOfFile);
+    }
 
+    calculate() {
         // postprocessing
 
         dlog("\n\n");
-        dlog("namespaces", namespaces, "\n\n");
-        dlog("usages", usagesCandidates);
-        dlog("\n\n", "unresolved call expressions", unresolvedCallExpressions, "\n\n");
-        dlog("\n\n", "publicAccessors", publicAccessors, "\n\n");
+        dlog("namespaces", this.namespaces, "\n\n");
+        dlog("usages", this.usagesCandidates);
+        dlog("\n\n", "unresolved call expressions", this.unresolvedCallExpressions, "\n\n");
+        dlog("\n\n", "publicAccessors", this.publicAccessors, "\n\n");
 
-        let relationships = this.getRelationships(namespaces, usagesCandidates);
+        let relationships = this.getRelationships(this.namespaces, this.usagesCandidates);
         dlog("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
@@ -95,8 +91,8 @@ export class Coupling implements CouplingMetric {
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
-            unresolvedCallExpressions,
-            publicAccessors,
+            this.unresolvedCallExpressions,
+            this.publicAccessors,
             this.alreadyAddedRelationships,
         );
         relationships = relationships.concat(additionalRelationships);

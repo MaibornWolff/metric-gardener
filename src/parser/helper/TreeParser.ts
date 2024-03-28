@@ -23,11 +23,9 @@ export class TreeParser {
      * @param filePath Path of the file.
      * @param config Configuration to apply.
      * @return A {@link ParsedFile} if the language is supported, an {@link UnsupportedFile} otherwise.
+     * If an error occurs while reading the file, an {@link ErrorFile} is returned.
      */
-    static async parse(
-        filePath: string,
-        config: Configuration,
-    ): Promise<ParsedFile | UnsupportedFile> {
+    static async parse(filePath: string, config: Configuration): Promise<SourceFile> {
         const cachedItem = TreeParser.cache.get(filePath);
         if (cachedItem !== undefined) {
             return cachedItem;

@@ -1,5 +1,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper.js";
+import {
+    expectFileMetric,
+    getCouplingMetrics,
+    mockConsole,
+    parseAllFileMetrics,
+} from "./TestHelper.js";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("PHP metrics tests", () => {
@@ -12,6 +17,7 @@ describe("PHP metrics tests", () => {
     }
 
     beforeAll(async () => {
+        mockConsole();
         results = await parseAllFileMetrics(phpTestResourcesPath);
     });
 
@@ -117,10 +123,10 @@ describe("PHP metrics tests", () => {
 
     describe("parsing PHP dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
+            mockConsole();
             const couplingResult = await getCouplingMetrics(
                 phpTestResourcesPath + "coupling-examples/",
             );
-
             expect(couplingResult).toMatchSnapshot();
         });
     });

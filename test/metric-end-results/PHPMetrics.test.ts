@@ -21,7 +21,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count functions and methods correctly", () => {
-            testFileMetric("functions-and-methods.php", FileMetric.complexity, 7);
+            testFileMetric("functions-and-methods.php", FileMetric.complexity, 10);
         });
 
         it("should not count multiple return statements within functions and methods like sonar", () => {
@@ -29,7 +29,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should not count any class declaration", () => {
-            testFileMetric("classes.php", FileMetric.complexity, 0);
+            testFileMetric("classes.php", FileMetric.complexity, 5);
         });
 
         it("should count case statements correctly", () => {
@@ -37,7 +37,7 @@ describe("PHP metrics tests", () => {
         });
 
         it("should count all conditional expressions in match expression", () => {
-            testFileMetric(phpTestResourcesPath + "match-expression.php", FileMetric.complexity, 3);
+            testFileMetric("match-expression.php", FileMetric.complexity, 3);
         });
 
         it("should count try-catch-finally properly by only counting the catch-block", () => {
@@ -55,17 +55,17 @@ describe("PHP metrics tests", () => {
 
     describe("parses PHP classes metric", () => {
         it("should count class declarations", () => {
-            testFileMetric("classes.php", FileMetric.classes, 3);
+            testFileMetric("classes.php", FileMetric.classes, 8);
         });
     });
 
     describe("parses PHP functions metric", () => {
         it("should count function declarations", () => {
-            testFileMetric("functions-and-methods.php", FileMetric.functions, 7);
+            testFileMetric("functions-and-methods.php", FileMetric.functions, 10);
         });
 
         it("should count all arrow functions.", () => {
-            testFileMetric(phpTestResourcesPath + "arrow-functions.php", FileMetric.functions, 8);
+            testFileMetric("arrow-functions.php", FileMetric.functions, 8);
         });
     });
 

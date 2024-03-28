@@ -1,5 +1,5 @@
 import { beforeAll, describe, it } from "vitest";
-import { expectFileMetric, parseAllFileMetrics } from "./TestHelper.js";
+import { expectFileMetric, mockConsole, parseAllFileMetrics } from "./TestHelper.js";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("Python metrics test", () => {
@@ -12,6 +12,7 @@ describe("Python metrics test", () => {
     }
 
     beforeAll(async () => {
+        mockConsole();
         results = await parseAllFileMetrics(pythonTestResourcesPath);
     });
 

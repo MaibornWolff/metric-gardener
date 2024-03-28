@@ -44,9 +44,10 @@ export function getTestConfiguration(
 }
 
 export function mockConsole() {
+    const write = vi.spyOn(process.stdout, "write").mockReset();
     const log = vi.spyOn(console, "log").mockReset();
     const error = vi.spyOn(console, "error").mockReset();
-    return { log, error };
+    return { write, log, error };
 }
 
 /**

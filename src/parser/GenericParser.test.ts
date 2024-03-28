@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { MockInstance, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { GenericParser } from "./GenericParser.js";
 import { getFileExtension } from "./helper/Helper.js";
 import * as HelperModule from "./helper/Helper.js";
@@ -21,7 +21,7 @@ import {
     MetricError,
     MetricResult,
 } from "./metrics/Metric.js";
-import { MetricCalculator } from "./MetricCalculator.js";
+import * as MetricCalculator from "./MetricCalculator.js";
 import { CouplingCalculator } from "./CouplingCalculator.js";
 import { Configuration } from "./Configuration.js";
 
@@ -57,10 +57,7 @@ async function mockedTreeParserParse(filePath: string, config: Configuration) {
     }
 }
 
-async function mockedMetricsCalculator(
-    parsedFilePromise: Promise<SourceFile>,
-): Promise<[SourceFile, FileMetricResults]> {
-    const file = await parsedFilePromise;
+async function mockedMetricsCalculator(file: SourceFile): Promise<[SourceFile, FileMetricResults]> {
     if (file instanceof ErrorFile) {
         return [file, { fileType: file.fileType, metricResults: [], metricErrors: [] }];
     }
@@ -79,19 +76,23 @@ function mockTreeParserParse(
     implementation: (
         filePath: string,
         config: Configuration,
-    ) => Promise<ParsedFile | UnsupportedFile> = mockedTreeParserParse,
+    ) => Promise<SourceFile> = mockedTreeParserParse,
 ) {
     return vi.spyOn(TreeParser, "parse").mockImplementation(implementation);
 }
 
 function spyOnMetricCalculator() {
-    return vi.spyOn(MetricCalculator.prototype, "calculateMetrics");
+    return vi.spyOn(MetricCalculator, "calculateMetrics");
 }
 
 function spyOnCouplingCalculatorNoOp() {
-    return vi
+    const couplingProcessFileSpied = vi
+        .spyOn(CouplingCalculator.prototype, "processFile")
+        .mockReset();
+    const couplingCalculateSpied = vi
         .spyOn(CouplingCalculator.prototype, "calculateMetrics")
         .mockReturnValue({ relationships: [], metrics: new Map() });
+    return { couplingProcessFileSpied, couplingCalculateSpied };
 }
 
 /*
@@ -112,6 +113,11 @@ beforeAll(() => {
 });
 
 describe("GenericParser.calculateMetrics()", () => {
+    let errorSpy: MockInstance<[message?: unknown, ...optionalParams: unknown[]], void>;
+    beforeEach(() => {
+        errorSpy = mockConsole().error;
+    });
+
     it("should call MetricCalculator.calculateMetrics() and return the result when there is no error", async () => {
         /*
          * Given:
@@ -121,7 +127,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const calculateMetricsSpied =
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
-        const couplingSpied = spyOnCouplingCalculatorNoOp();
+        const { couplingProcessFileSpied, couplingCalculateSpied } = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
@@ -136,7 +142,8 @@ describe("GenericParser.calculateMetrics()", () => {
             new Map([["clearly/invalid/path.cpp", expectedFileMetricsResults]]),
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(1);
-        expect(couplingSpied).toHaveBeenCalledTimes(0);
+        expect(couplingProcessFileSpied).toHaveBeenCalledTimes(1);
+        expect(couplingCalculateSpied).toHaveBeenCalledTimes(1);
         expect(treeParserSpied).toHaveBeenCalledTimes(1);
     });
 
@@ -149,7 +156,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const calculateMetricsSpied =
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
-        const couplingSpied = spyOnCouplingCalculatorNoOp();
+        const { couplingProcessFileSpied, couplingCalculateSpied } = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
@@ -167,7 +174,8 @@ describe("GenericParser.calculateMetrics()", () => {
             ]),
         );
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
-        expect(couplingSpied).toHaveBeenCalledTimes(0);
+        expect(couplingProcessFileSpied).toHaveBeenCalledTimes(2);
+        expect(couplingCalculateSpied).toHaveBeenCalledTimes(1);
         expect(treeParserSpied).toHaveBeenCalledTimes(2);
     });
 
@@ -180,7 +188,7 @@ describe("GenericParser.calculateMetrics()", () => {
 
         const calculateMetricsSpied =
             spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
-        const couplingSpied = spyOnCouplingCalculatorNoOp();
+        const { couplingProcessFileSpied, couplingCalculateSpied } = spyOnCouplingCalculatorNoOp();
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
@@ -200,32 +208,8 @@ describe("GenericParser.calculateMetrics()", () => {
         expect(actualResult.unsupportedFiles).toEqual(["clearly/invalid/unsupported.unsupported"]);
 
         expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
-        expect(couplingSpied).toHaveBeenCalledTimes(0);
-        expect(treeParserSpied).toHaveBeenCalledTimes(2);
-    });
-
-    it("should call CouplingCalculator.calculateMetrics() when parseDependencies is set.", async () => {
-        /*
-         * Given:
-         */
-        mockFindFilesAsync(mockedFindTwoFilesAsync);
-        const treeParserSpied = mockTreeParserParse();
-        const calculateMetricsSpied =
-            spyOnMetricCalculator().mockImplementation(mockedMetricsCalculator);
-        const couplingSpied = spyOnCouplingCalculatorNoOp();
-
-        const parser = new GenericParser(
-            getTestConfiguration("clearly/invalid/path.cpp", { parseDependencies: true }),
-        );
-        /*
-         * when:
-         */
-        await parser.calculateMetrics();
-        /*
-         * then:
-         */
-        expect(calculateMetricsSpied).toHaveBeenCalledTimes(2);
-        expect(couplingSpied).toHaveBeenCalledTimes(1);
+        expect(couplingProcessFileSpied).toHaveBeenCalledTimes(2);
+        expect(couplingCalculateSpied).toHaveBeenCalledTimes(1);
         expect(treeParserSpied).toHaveBeenCalledTimes(2);
     });
 
@@ -237,8 +221,6 @@ describe("GenericParser.calculateMetrics()", () => {
         mockTreeParserParse(async (filePath) => {
             return new ErrorFile(filePath, new Error("Baaaaaah"));
         });
-
-        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
         /*
@@ -266,11 +248,9 @@ describe("GenericParser.calculateMetrics()", () => {
             metricErrors: [{ metricName: FileMetric.linesOfCode, error: new Error("Buuuh!") }],
         };
 
-        spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
-            return [await parsedFilePromise, errorMetricsResults];
+        spyOnMetricCalculator().mockImplementation(async (file) => {
+            return [file, errorMetricsResults];
         });
-
-        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
@@ -306,15 +286,12 @@ describe("GenericParser.calculateMetrics()", () => {
             ],
         };
 
-        spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
-            const file = await parsedFilePromise;
+        spyOnMetricCalculator().mockImplementation(async (file) => {
             if (getFileExtension(file.filePath) !== "cpp") {
                 return [file, errorMetricsResults];
             }
             return [file, expectedFileMetricsResults];
         });
-
-        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
@@ -364,15 +341,12 @@ describe("GenericParser.calculateMetrics()", () => {
             metricErrors,
         };
 
-        spyOnMetricCalculator().mockImplementation(async (parsedFilePromise) => {
-            const file = await parsedFilePromise;
+        spyOnMetricCalculator().mockImplementation(async (file) => {
             if (getFileExtension(file.filePath) === "cpp") {
                 return [file, partialErrorMetricsResults];
             }
             return [file, expectedFileMetricsResults];
         });
-
-        const errorSpy = mockConsole().error;
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
@@ -393,25 +367,12 @@ describe("GenericParser.calculateMetrics()", () => {
         expect(errorSpy).toHaveBeenCalled();
     });
 
-    it("should fail gracefully if findFilesAsync throws an error", async () => {
-        /*
-         * Given:
-         */
+    it("should fail if findFilesAsync throws an error", async () => {
         mockFindFilesAsync(mockedFindFilesAsyncError);
         mockTreeParserParse();
-
-        const errorSpy = mockConsole().error;
-
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
-        /*
-         * when:
-         */
-        const actualResult = await parser.calculateMetrics();
-        /*
-         * then:
-         */
-        expect(actualResult.fileMetrics).toEqual(new Map());
-        expect(errorSpy).toHaveBeenCalled();
+        expect(parser.calculateMetrics()).rejects.toThrowError("Hard drive crashed!");
+        expect(errorSpy).not.toHaveBeenCalled();
     });
 });

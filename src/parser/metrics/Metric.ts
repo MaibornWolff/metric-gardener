@@ -87,7 +87,8 @@ export interface Metric {
 }
 
 export interface CouplingMetric {
-    calculate(files: ParsedFile[]): CouplingResult;
+    processFile(file: ParsedFile): void;
+    calculate(): CouplingResult;
     getName(): string;
 }
 

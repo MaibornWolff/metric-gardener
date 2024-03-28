@@ -1,21 +1,10 @@
 import { findFilesAsync, formatPrintPath } from "./helper/Helper.js";
 import { Configuration } from "./Configuration.js";
-import { MetricCalculator } from "./MetricCalculator.js";
+import { calculateMetrics } from "./MetricCalculator.js";
 import { CouplingCalculator } from "./CouplingCalculator.js";
-import {
-    SourceFile,
-    CouplingResult,
-    ParsedFile,
-    FileMetricResults,
-    ErrorFile,
-    UnsupportedFile,
-} from "./metrics/Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
+import { SourceFile, FileMetricResults, ErrorFile, UnsupportedFile } from "./metrics/Metric.js";
 import { TreeParser } from "./helper/TreeParser.js";
-
-let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
-    dlog = logger;
-});
+import pMap from "p-map";
 
 /**
  * Arranges the parsing of files and calculation of metrics as specified by the stored configuration.
@@ -40,100 +29,95 @@ export class GenericParser {
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
     async calculateMetrics() {
+        const filePaths = await this.loadFilePaths();
+
+        const couplingParser = new CouplingCalculator(this.config);
+
+        let parsed = 0;
+        const results = await pMap(
+            filePaths,
+            async (filePath) => {
+                const sourceFile = await TreeParser.parse(filePath, this.config);
+                couplingParser.processFile(sourceFile);
+
+                const progress = Math.floor((parsed++ / filePaths.length) * 100);
+                showProgressBar(progress);
+
+                return calculateMetrics(sourceFile);
+            },
+            { concurrency: 10 },
+        );
+        clearProgressBar();
+
+        const couplingMetrics = couplingParser.calculateMetrics();
+        return { ...this.processResults(results), couplingMetrics };
+    }
+
+    private async loadFilePaths(): Promise<string[]> {
+        const filePaths: string[] = [];
+
+        for await (const filePath of findFilesAsync(this.config)) {
+            filePaths.push(filePath);
+            if (filePaths.length % 1000 === 0) {
+                process.stdout.write(`\rfiles: ${filePaths.length}`);
+            }
+        }
+        console.log(`\rfiles: ${filePaths.length}`);
+
+        return filePaths;
+    }
+
+    private processResults(results: [SourceFile, FileMetricResults][]) {
         const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
         const errorFiles: string[] = [];
-        let couplingMetrics = {} as CouplingResult;
 
-        try {
-            const filePathGenerator = findFilesAsync(this.config);
-            const parsePromises: Promise<SourceFile>[] = [];
+        for (const [sourceFile, fileMetricResults] of results) {
+            const printPath = formatPrintPath(sourceFile.filePath, this.config);
 
-            for await (const filePath of filePathGenerator) {
-                parsePromises.push(TreeParser.parse(filePath, this.config));
-            }
+            if (sourceFile instanceof ErrorFile) {
+                errorFiles.push(printPath);
+                console.error("Error while parsing the syntax tree for the file " + printPath);
+                console.error(sourceFile.error);
+            } else {
+                fileMetrics.set(printPath, fileMetricResults);
 
-            const fileMetricPromises: Promise<[SourceFile, FileMetricResults]>[] = [];
+                // Inform about errors that occurred while calculating (some) metrics on the syntax tree
+                for (const metricError of fileMetricResults.metricErrors) {
+                    console.error(
+                        "Error while calculating the metric " +
+                            metricError.metricName +
+                            " on the file " +
+                            sourceFile.filePath,
+                    );
+                    console.error(metricError.error);
+                }
 
-            if (this.config.parseMetrics) {
-                const metricsParser = new MetricCalculator();
-
-                for (const parsePromise of parsePromises) {
-                    fileMetricPromises.push(metricsParser.calculateMetrics(parsePromise));
+                if (sourceFile instanceof UnsupportedFile) {
+                    unsupportedFiles.push(printPath);
                 }
             }
-
-            // We need to ensure that all trees have been parsed before calculating the coupling metrics,
-            // as we need to know the language of the file for that:
-            const treeParseResults = await Promise.all(parsePromises);
-
-            dlog(" --- " + treeParseResults.length + " files detected", "\n\n");
-
-            const filesForCouplingMetrics: ParsedFile[] = [];
-
-            for (const sourceFile of treeParseResults) {
-                if (sourceFile instanceof ErrorFile) {
-                    const printPath = formatPrintPath(sourceFile.filePath, this.config);
-                    errorFiles.push(printPath);
-
-                    console.error("Error while parsing the syntax tree for the file " + printPath);
-                    console.error(sourceFile.error);
-                } else if (sourceFile instanceof ParsedFile) {
-                    // Do only include files for calculating the coupling metrics
-                    // that are supported and have been parsed successfully:
-                    filesForCouplingMetrics.push(sourceFile);
-                }
-            }
-
-            if (this.config.parseDependencies) {
-                const couplingParser = new CouplingCalculator(this.config);
-                couplingMetrics = couplingParser.calculateMetrics(filesForCouplingMetrics);
-            }
-
-            dlog("Final Coupling Metrics", couplingMetrics);
-
-            // Await completion of file metric calculations:
-            const promisesResults = await Promise.all(fileMetricPromises);
-
-            for (const [sourceFile, fileMetricResults] of promisesResults) {
-                const printPath = formatPrintPath(sourceFile.filePath, this.config);
-                if (!(sourceFile instanceof ErrorFile)) {
-                    fileMetrics.set(printPath, fileMetricResults);
-
-                    // Inform about errors that occurred while calculating (some) metrics on the syntax tree
-                    for (const metricError of fileMetricResults.metricErrors) {
-                        console.error(
-                            "Error while calculating the metric " +
-                                metricError.metricName +
-                                " on the file " +
-                                sourceFile.filePath,
-                        );
-                        console.error(metricError.error);
-                    }
-                    if (sourceFile instanceof UnsupportedFile) {
-                        unsupportedFiles.push(printPath);
-                    }
-                }
-            }
-
-            return {
-                fileMetrics,
-                unsupportedFiles,
-                errorFiles,
-                couplingMetrics,
-            };
-        } catch (e) {
-            console.error("#####################################");
-            console.error("#####################################");
-            console.error("Metrics calculation failed with the following error:");
-            console.error(e);
-
-            return {
-                fileMetrics,
-                unsupportedFiles,
-                errorFiles,
-                couplingMetrics,
-            };
         }
+
+        return {
+            fileMetrics,
+            unsupportedFiles,
+            errorFiles,
+        };
     }
+}
+
+let progress = 0;
+function showProgressBar(i: number) {
+    if (i > progress) {
+        progress = i;
+        const dots = ".".repeat(i);
+        const left = 100 - i;
+        const empty = " ".repeat(left);
+        process.stdout.write(`\r[${dots}${empty}] ${i}%`);
+    }
+}
+function clearProgressBar() {
+    process.stdout.write("\r" + " ".repeat(110) + "\r");
+    progress = 0;
 }

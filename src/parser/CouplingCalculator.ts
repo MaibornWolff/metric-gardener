@@ -2,13 +2,8 @@ import { Configuration } from "./Configuration.js";
 import { Coupling } from "./metrics/coupling/Coupling.js";
 import { NamespaceCollector } from "./resolver/NamespaceCollector.js";
 import { UsagesCollector } from "./resolver/UsagesCollector.js";
-import { CouplingMetric, ParsedFile } from "./metrics/Metric.js";
+import { CouplingMetric, CouplingResult, ParsedFile, SourceFile } from "./metrics/Metric.js";
 import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-
-let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
-    dlog = logger;
-});
 
 export class CouplingCalculator {
     private readonly comprisingMetrics: CouplingMetric[] = [];
@@ -33,16 +28,19 @@ export class CouplingCalculator {
         ];
     }
 
-    calculateMetrics(parsedFiles: ParsedFile[]) {
-        const sourcesRoot = this.config.sourcesPath;
+    processFile(sourceFile: SourceFile) {
+        if (this.config.parseDependencies && sourceFile instanceof ParsedFile) {
+            this.comprisingMetrics[0].processFile(sourceFile);
+        }
+    }
 
-        dlog("\n\n");
-        dlog("----- Parsing Coupling of files in " + sourcesRoot + " recursively -----");
-        dlog("\n\n");
-
-        dlog(" --- " + parsedFiles.length + " files detected", "\n\n");
-
-        // TODO rewrite this to support multiple coupling metrics
-        return this.comprisingMetrics[0].calculate(parsedFiles);
+    calculateMetrics(): CouplingResult {
+        if (this.config.parseDependencies) {
+            console.log("Calculating coupling metrics...");
+            // TODO rewrite this to support multiple coupling metrics
+            return this.comprisingMetrics[0].calculate();
+        } else {
+            return { relationships: [], metrics: new Map() };
+        }
     }
 }

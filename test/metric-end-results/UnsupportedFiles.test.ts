@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { expectFileMetric, getTestConfiguration } from "./TestHelper.js";
+import { expectFileMetric, getTestConfiguration, mockConsole } from "./TestHelper.js";
 import * as fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser.js";
 import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
@@ -28,6 +28,7 @@ describe("Test for handling unsupported files, with unknown or no file extension
     }
 
     beforeAll(async () => {
+        mockConsole();
         const realInputPath = fs.realpathSync(unsupportedTestResourcesPath);
         const parser = new GenericParser(getTestConfiguration(realInputPath));
         results = await parser.calculateMetrics();

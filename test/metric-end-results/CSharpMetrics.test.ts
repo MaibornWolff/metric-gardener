@@ -1,5 +1,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { expectFileMetric, getCouplingMetrics, parseAllFileMetrics } from "./TestHelper.js";
+import {
+    expectFileMetric,
+    getCouplingMetrics,
+    mockConsole,
+    parseAllFileMetrics,
+} from "./TestHelper.js";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("C# metric tests", () => {
@@ -12,11 +17,13 @@ describe("C# metric tests", () => {
     }
 
     beforeAll(async () => {
+        mockConsole();
         results = await parseAllFileMetrics(csharpTestResourcesPath);
     });
 
     describe("parsing C# dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
+            mockConsole();
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "coupling-examples/",
             );

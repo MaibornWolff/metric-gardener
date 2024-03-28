@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
 import {
     findFilesAsync,
@@ -202,6 +202,10 @@ describe("Helper.ts", () => {
     });
 
     describe("findFilesAsync(...)", () => {
+        beforeEach(() => {
+            vi.spyOn(path, "join").mockImplementation((...paths: string[]) => paths.join("/"));
+        });
+
         it("should find one file, if the sourcePath is a single file", async () => {
             vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
             await expectFiles("/some/path");

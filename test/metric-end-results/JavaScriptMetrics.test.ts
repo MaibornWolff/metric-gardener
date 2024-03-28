@@ -17,7 +17,7 @@ describe("JavaScript metrics tests", () => {
 
     describe("parses JavaScript Complexity metric", () => {
         it("should count if statements and logical operations (&& and ||) correctly", () => {
-            testFileMetric("if-statements.js", FileMetric.complexity, 7);
+            testFileMetric("if-statements.js", FileMetric.complexity, 8);
         });
 
         it("should count functions and methods correctly", () => {

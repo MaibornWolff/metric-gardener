@@ -9,11 +9,9 @@ vi.mock("fs", async (importOriginal) => {
     const actual = await importOriginal<typeof import("fs")>();
     return { ...actual, writeFileSync };
 });
-
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
         let console: ReturnType<typeof mockConsole>;
-
         beforeEach(() => {
             console = mockConsole();
         });
@@ -93,13 +91,17 @@ describe("outputMetrics", () => {
 
             expect(writeFileSync).toHaveBeenCalledTimes(1);
             const [file, data, options] = writeFileSync.mock.lastCall!;
+
             expect(file).toBe("mocked-file.json");
             expect(data).toMatchSnapshot();
             expect(options).toBeUndefined();
         });
 
         it("when no metrics are present", () => {
-            const relationShipMetrics: CouplingResult = { relationships: [], metrics: new Map() };
+            const relationShipMetrics: CouplingResult = {
+                relationships: [],
+                metrics: new Map(),
+            };
 
             outputAsJson(new Map(), [], [], relationShipMetrics, "mocked-file.json", false);
 

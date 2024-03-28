@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
 import {
     findFilesAsync,
@@ -202,6 +202,10 @@ describe("Helper.ts", () => {
     });
 
     describe("findFilesAsync(...)", () => {
+        beforeEach(() => {
+            vi.spyOn(path, "join").mockImplementation((...paths: string[]) => paths.join("/"));
+        });
+
         it("should find one file, if the sourcePath is a single file", async () => {
             vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
             await expectFiles("/some/path");
@@ -272,11 +276,12 @@ describe("Helper.ts", () => {
         });
 
         it("should throw an error, if the sourcePath is not a file or directory", () => {
+            const error = new Error("ENOENT: no such file or directory, lstat '/invalid/path'");
+            vi.spyOn(fs, "lstat").mockRejectedValue(error);
+
             const config = getTestConfiguration("/invalid/path");
 
-            expect(findFilesAsync(config).next()).rejects.toThrowError(
-                new Error("ENOENT: no such file or directory, lstat '/invalid/path'"),
-            );
+            expect(findFilesAsync(config).next()).rejects.toThrowError(error);
         });
 
         async function expectFiles(...files: string[]) {

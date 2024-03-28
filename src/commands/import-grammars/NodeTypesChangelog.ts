@@ -5,7 +5,7 @@ import { EOL } from "os";
 /**
  * Path to which the changelog is written.
  */
-const pathToWriteChangelog = "./nodeTypesChanges.csv.js";
+const pathToWriteChangelog = "./nodeTypesChanges.csv";
 
 /**
  * Separator to use for writing a CSV-file of the changelog.

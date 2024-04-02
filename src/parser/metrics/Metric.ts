@@ -12,6 +12,7 @@ export type MetricName =
     | "complexity"
     | "real_lines_of_code"
     | "max_nesting_level"
+    | "keywords_in_comments"
     | "coupling";
 
 /**
@@ -55,6 +56,7 @@ export interface Relationship {
     toClassName: string;
     usageType: UsageType;
 }
+
 export type UsageType = "usage" | "extends" | "implements";
 
 export interface CouplingMetrics {
@@ -89,7 +91,9 @@ export interface Metric {
 
 export interface CouplingMetric {
     processFile(file: ParsedFile): void;
+
     calculate(): CouplingResult;
+
     getName(): MetricName;
 }
 

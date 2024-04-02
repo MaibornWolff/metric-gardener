@@ -1,0 +1,19 @@
+{
+    "nodes": [
+        {
+            "name": "/Users/alexandardimitrov.mochev/metric-gardener-2/resources/python/testCommentKeywords.py",
+            "type": "source_code",
+            "metrics": {
+                "complexity": 0,
+                "functions": 0,
+                "classes": 0,
+                "lines_of_code": 8,
+                "comment_lines": 8,
+                "real_lines_of_code": 0,
+                "CommentKeywords": 0
+            }
+        }
+    ],
+    "info": [],
+    "relationships": []
+}

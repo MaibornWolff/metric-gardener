@@ -2946,7 +2946,7 @@
         "type_name": "function_definition",
         "category": "function",
         "deactivated_for_languages": ["cpp", "c"],
-        "languages": ["php", "py", "cpp", "sh", "c"]
+        "languages": ["php", "py", "cpp", "sh", "c", "pl"]
     },
     {
         "type_name": "function_static_declaration",

@@ -1110,7 +1110,7 @@
     {
         "type_name": "variable_declarator",
         "category": "",
-        "languages": ["cs", "java", "js", "ts", "tsx", "pl"]
+        "languages": ["cs", "java", "js", "ts", "tsx"]
     },
     {
         "type_name": "when_clause",
@@ -5472,7 +5472,7 @@
     {
         "type_name": "hash",
         "category": "",
-        "languages": ["rb", "pl"]
+        "languages": ["rb"]
     },
     {
         "type_name": "if",
@@ -6607,11 +6607,6 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "arrow_notation",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "backtick_quoted",
         "category": "",
         "languages": ["pl"]
@@ -6774,16 +6769,6 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "empty_parenthesized_argument",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "empty_parenthesized_expression",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "for_simple_statement",
         "category": "loop",
         "languages": ["pl"]
@@ -6810,11 +6795,6 @@
     },
     {
         "type_name": "goto_expression",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "grep_or_map_function",
         "category": "",
         "languages": ["pl"]
     },
@@ -6851,11 +6831,6 @@
     {
         "type_name": "if_simple_statement",
         "category": "if",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "join_function",
-        "category": "",
         "languages": ["pl"]
     },
     {
@@ -6929,11 +6904,6 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "push_function",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "regex_pattern_qr",
         "category": "",
         "languages": ["pl"]
@@ -6964,28 +6934,8 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "single_var_declaration",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "sort_function",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "special_array_variable",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "special_block",
         "category": "function",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "special_hash_variable",
-        "category": "",
         "languages": ["pl"]
     },
     {
@@ -7054,16 +7004,6 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "type_glob",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "type_glob_declaration",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "unless_simple_statement",
         "category": "conditional_expression",
         "languages": ["pl"]
@@ -7071,11 +7011,6 @@
     {
         "type_name": "unless_statement",
         "category": "conditional_expression",
-        "languages": ["pl"]
-    },
-    {
-        "type_name": "unpack_function",
-        "category": "",
         "languages": ["pl"]
     },
     {
@@ -7174,11 +7109,6 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "function",
-        "category": "function",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "grep",
         "category": "",
         "languages": ["pl"]
@@ -7264,11 +7194,6 @@
         "languages": ["pl"]
     },
     {
-        "type_name": "semi_colon",
-        "category": "",
-        "languages": ["pl"]
-    },
-    {
         "type_name": "separator_delimiter",
         "category": "",
         "languages": ["pl"]
@@ -7285,6 +7210,26 @@
     },
     {
         "type_name": "start_delimiter_qw",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "array_access_in_interpolation",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "call_expression_with_bareword",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "hash_access_in_interpolation",
+        "category": "",
+        "languages": ["pl"]
+    },
+    {
+        "type_name": "function_name",
         "category": "",
         "languages": ["pl"]
     }

@@ -25,7 +25,7 @@
         "src/**/*.ts": "eslint --max-warnings=0"
     },
     "dependencies": {
-        "@ganezdragon/tree-sitter-perl": "https://github.com/ganezdragon/tree-sitter-perl/tarball/v0.4.0",
+        "@ganezdragon/tree-sitter-perl": "1.1.0",
         "tree-sitter": "0.20.6",
         "tree-sitter-bash": "0.20.5",
         "tree-sitter-c": "0.20.8",

@@ -24,47 +24,24 @@ export function formatCaptures(tree, captures) {
     });
 }
 
-export function replaceForwardWithBackwardSlashes(path: string) {
-    return path.replace(/\//g, "\\");
-}
-
 /**
  * Formats the specified file path for being output in the way it is configured for this parser run.
  * @param filePath The file path.
  * @param config The configuration for this parser run.
- * @param pathModule ONLY FOR TESTING PURPOSES: overrides the platform-specific path module.
  */
-export function formatPrintPath(
-    filePath: string,
-    config: Configuration,
-    pathModule = path,
-): string {
+export function formatPrintPath(filePath: string, config: Configuration): string {
     let result = filePath;
     if (config.relativePaths) {
         // Return the file path relative to the specified base directory, or the name of the file,
         // if the base path points to this single file.
-        result = pathModule.relative(config.sourcesPath, filePath);
+        result = path.relative(config.sourcesPath, filePath);
         if (result.length === 0) {
             // The path specified by the user points to a single file,
             // so return the name of the file as path to print.
-            result = pathModule.basename(filePath);
+            result = path.basename(filePath);
         }
     }
-    if (config.enforceBackwardSlash) {
-        result = replaceForwardWithBackwardSlashes(result);
-    }
     return result;
-}
-
-/**
- * Checks if there is a file extension in the specified path.
- * If so, this function returns the file extension.
- *
- * @param filePath Path that should be checked.
- * @return The file extension (or empty string).
- */
-export function getFileExtension(filePath: string): string {
-    return filePath.match(/\.(?<extension>\w*)$/i)?.groups?.extension ?? "";
 }
 
 /**

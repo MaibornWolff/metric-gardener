@@ -248,7 +248,7 @@ export class Coupling implements CouplingMetric {
         relationships: Relationship[],
         couplingMetrics: Map<string, CouplingMetrics>,
     ): CouplingResult {
-        if (this.config.needsPrintPathFormatting()) {
+        if (this.config.relativePaths) {
             for (const relationship of relationships) {
                 relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
                 relationship.toSource = formatPrintPath(relationship.toSource, this.config);

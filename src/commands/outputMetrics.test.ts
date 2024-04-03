@@ -11,9 +11,8 @@ vi.mock("fs", async (importOriginal) => {
 });
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
-        let console: ReturnType<typeof mockConsole>;
         beforeEach(() => {
-            console = mockConsole();
+            mockConsole();
         });
 
         afterAll(() => {

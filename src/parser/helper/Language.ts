@@ -15,7 +15,7 @@ import JSON from "tree-sitter-json";
 import YAML from "tree-sitter-yaml";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap.js";
 import { Configuration } from "../Configuration.js";
-import { getFileExtension, lookupLowerCase, replaceForwardWithBackwardSlashes } from "./Helper.js";
+import { lookupLowerCase } from "./Helper.js";
 import path from "path";
 
 /**
@@ -150,17 +150,12 @@ const caseSensitiveFileExtensionToLanguage = new Map([
  * Estimates the language of a file based upon the file extension and file path.
  * @param filePath Path to the file, including the file extension.
  * @param config Configuration to apply.
- * @param pathModule ONLY FOR TESTING PURPOSES: overrides the platform-specific path module.
  */
-export function assumeLanguageFromFilePath(
-    filePath: string,
-    config: Configuration,
-    pathModule = path,
-) {
-    const fileExtension: string = getFileExtension(filePath);
+export function assumeLanguageFromFilePath(filePath: string, config: Configuration) {
+    const fileExtension = path.extname(filePath).slice(1);
 
     if (fileExtension === "h") {
-        if (shouldHBeParsedAsC(filePath, config, pathModule)) {
+        if (shouldHBeParsedAsC(filePath, config)) {
             return Language.C;
         }
         return Language.CPlusPlus;
@@ -176,17 +171,15 @@ export function assumeLanguageFromFilePath(
 /**
  * Handling of the parse .h as C option.
  */
-function shouldHBeParsedAsC(filePath: string, config: Configuration, pathModule = path): boolean {
+function shouldHBeParsedAsC(filePath: string, config: Configuration): boolean {
     if (config.parseAllHAsC) {
         return true;
     }
     if (config.parseSomeHAsC.size > 0) {
-        // Use the path relative to the sources path to avoid the unintuitive behaviour
+        // Use the path relative to the sources path to avoid the unintuitive behavior
         // that higher-level folders are evaluated for this:
-        const relativePath = pathModule.relative(config.sourcesPath, filePath);
-        const backwardSlashRelpath = replaceForwardWithBackwardSlashes(relativePath);
-        const relpathSplitted = backwardSlashRelpath.split("\\");
-        for (const pathElement of relpathSplitted) {
+        const relativePath = path.relative(config.sourcesPath, filePath);
+        for (const pathElement of relativePath.split(path.sep)) {
             if (config.parseSomeHAsC.has(pathElement)) {
                 return true;
             }

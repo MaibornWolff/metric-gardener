@@ -3,6 +3,7 @@ import {
     expectFileMetric,
     getCouplingMetrics,
     mockConsole,
+    mockWin32Path,
     parseAllFileMetrics,
 } from "./TestHelper.js";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
@@ -24,6 +25,7 @@ describe("C# metric tests", () => {
     describe("parsing C# dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
             mockConsole();
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "coupling-examples/",
             );

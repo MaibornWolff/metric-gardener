@@ -1,6 +1,5 @@
-import { MockInstance, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { GenericParser } from "./GenericParser.js";
-import { getFileExtension } from "./helper/Helper.js";
 import * as HelperModule from "./helper/Helper.js";
 import { TreeParser } from "./helper/TreeParser.js";
 import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper.js";
@@ -24,6 +23,7 @@ import {
 import * as MetricCalculator from "./MetricCalculator.js";
 import { CouplingCalculator } from "./CouplingCalculator.js";
 import { Configuration } from "./Configuration.js";
+import path from "path";
 
 /*
  * Implementation of function mocks:
@@ -113,9 +113,8 @@ beforeAll(() => {
 });
 
 describe("GenericParser.calculateMetrics()", () => {
-    let errorSpy: MockInstance<[message?: unknown, ...optionalParams: unknown[]], void>;
     beforeEach(() => {
-        errorSpy = mockConsole().error;
+        mockConsole();
     });
 
     it("should call MetricCalculator.calculateMetrics() and return the result when there is no error", async () => {
@@ -232,7 +231,7 @@ describe("GenericParser.calculateMetrics()", () => {
          */
         expect(actualResult.fileMetrics).toEqual(new Map());
         expect(actualResult.errorFiles).toEqual(["clearly/invalid/path.cpp"]);
-        expect(errorSpy).toHaveBeenCalled();
+        expect(console.error).toHaveBeenCalled();
     });
 
     it("should return the appropriate error object and print to the error output when there is an error while calculating metrics", async () => {
@@ -265,7 +264,7 @@ describe("GenericParser.calculateMetrics()", () => {
             new Map([["clearly/invalid/path.cpp", errorMetricsResults]]),
         );
         expect(actualResult.errorFiles).toEqual([]);
-        expect(errorSpy).toHaveBeenCalled();
+        expect(console.error).toHaveBeenCalled();
     });
 
     it("should return the successfully calculated metrics and an appropriate error object when there is an error for only the first of two files while calculating metrics", async () => {
@@ -287,7 +286,7 @@ describe("GenericParser.calculateMetrics()", () => {
         };
 
         spyOnMetricCalculator().mockImplementation(async (file) => {
-            if (getFileExtension(file.filePath) !== "cpp") {
+            if (path.posix.extname(file.filePath) !== ".cpp") {
                 return [file, errorMetricsResults];
             }
             return [file, expectedFileMetricsResults];
@@ -309,7 +308,7 @@ describe("GenericParser.calculateMetrics()", () => {
             ]),
         );
         expect(actualResult.errorFiles).toEqual([]);
-        expect(errorSpy).toHaveBeenCalled();
+        expect(console.error).toHaveBeenCalled();
     });
 
     it("should return the successfully calculated metrics and an appropriate error object when there is an error for only some of the metrics of a file", async () => {
@@ -342,7 +341,7 @@ describe("GenericParser.calculateMetrics()", () => {
         };
 
         spyOnMetricCalculator().mockImplementation(async (file) => {
-            if (getFileExtension(file.filePath) === "cpp") {
+            if (path.posix.extname(file.filePath) === ".cpp") {
                 return [file, partialErrorMetricsResults];
             }
             return [file, expectedFileMetricsResults];
@@ -364,7 +363,7 @@ describe("GenericParser.calculateMetrics()", () => {
             ]),
         );
         expect(actualResult.errorFiles).toEqual([]);
-        expect(errorSpy).toHaveBeenCalled();
+        expect(console.error).toHaveBeenCalled();
     });
 
     it("should fail if findFilesAsync throws an error", async () => {
@@ -373,6 +372,6 @@ describe("GenericParser.calculateMetrics()", () => {
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         expect(parser.calculateMetrics()).rejects.toThrowError("Hard drive crashed!");
-        expect(errorSpy).not.toHaveBeenCalled();
+        expect(console.error).not.toHaveBeenCalled();
     });
 });

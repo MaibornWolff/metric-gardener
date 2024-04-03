@@ -1,16 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getTestConfiguration } from "../../../test/metric-end-results/TestHelper.js";
+import {
+    getTestConfiguration,
+    mockPosixPath,
+    mockWin32Path,
+} from "../../../test/metric-end-results/TestHelper.js";
 import {
     findFilesAsync,
     formatPrintPath,
-    getFileExtension,
     getNodeTypeNamesByCategories,
     getNodeTypesByCategories,
     getQueryStatementsByCategories,
     lookupLowerCase,
-    replaceForwardWithBackwardSlashes,
 } from "./Helper.js";
-import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
 import fs from "fs/promises";
@@ -53,157 +54,58 @@ describe("Helper.ts", () => {
         });
     });
 
-    describe("replaceForwardWithBackwardSlashes(...)", () => {
-        it("should replace all forward slashes with backward slashes", () => {
-            const forwardSlashPath = "/some/path/for/the/test.extension";
-            expect(replaceForwardWithBackwardSlashes(forwardSlashPath)).toEqual(
-                "\\some\\path\\for\\the\\test.extension",
-            );
-        });
-
-        it("should not replace backward slashes", () => {
-            const backwardSlashPath = "C:\\Users\\user\\documents\\code\\file.extension";
-            expect(replaceForwardWithBackwardSlashes(backwardSlashPath)).toEqual(
-                "C:\\Users\\user\\documents\\code\\file.extension",
-            );
-        });
-
-        it("should replace all forward slashes with backward slashes in a mixed path", () => {
-            const mixedSlashPath = "/some/path\\for\\the/test.extension";
-            expect(replaceForwardWithBackwardSlashes(mixedSlashPath)).toEqual(
-                "\\some\\path\\for\\the\\test.extension",
-            );
-        });
-    });
-
     describe("formatPrintPath(...)", () => {
         it("should change nothing when the config does not say otherwise", () => {
+            mockPosixPath();
             const filePath = "/some/path/for/the/test.extension";
             const config = getTestConfiguration("/some/path");
 
-            expect(formatPrintPath(filePath, config, path.posix)).toEqual(filePath);
-        });
-
-        it("should replace forward slashes when enforceBackwardSlash is set", () => {
-            const filePath = "/some/path/for/the/test.extension";
-            const config = getTestConfiguration("/some/path", { enforceBackwardSlash: true });
-
-            expect(formatPrintPath(filePath, config, path.posix)).toEqual(
-                "\\some\\path\\for\\the\\test.extension",
-            );
-        });
-
-        it("should not replace backward slashes when enforceBackwardSlash is set", () => {
-            const filePath = "C:\\Users\\user\\documents\\code\\file.extension";
-            const config = getTestConfiguration("C:\\Users\\user\\documents\\code", {
-                enforceBackwardSlash: true,
-            });
-
-            expect(formatPrintPath(filePath, config, path.win32)).toEqual(filePath);
+            expect(formatPrintPath(filePath, config)).toEqual(filePath);
         });
 
         it("should create UNIX-style relative paths when relativePaths is set", () => {
+            mockPosixPath();
             const filePath = "/some/path/for/the/test.extension";
             const config = getTestConfiguration("/some/path", { relativePaths: true });
 
-            expect(formatPrintPath(filePath, config, path.posix)).toEqual("for/the/test.extension");
+            expect(formatPrintPath(filePath, config)).toEqual("for/the/test.extension");
         });
 
         it("should create DOS-style relative paths when relativePaths is set", () => {
+            mockWin32Path();
             const filePath = "C:\\Users\\user\\documents\\code\\more-code\\file.extension";
             const config = getTestConfiguration("C:\\Users\\user\\documents\\code", {
                 relativePaths: true,
             });
 
-            expect(formatPrintPath(filePath, config, path.win32)).toEqual(
-                "more-code\\file.extension",
-            );
+            expect(formatPrintPath(filePath, config)).toEqual("more-code\\file.extension");
         });
 
         it("should return the file name if the file path equals the sources path when relativePaths is set (UNIX-style)", () => {
+            mockPosixPath();
             const filePath = "/some/path/for/the/test.extension";
             const config = getTestConfiguration("/some/path/for/the/test.extension", {
                 relativePaths: true,
             });
 
-            expect(formatPrintPath(filePath, config, path.posix)).toEqual("test.extension");
+            expect(formatPrintPath(filePath, config)).toEqual("test.extension");
         });
 
         it("should return the file name if the file path equals the sources path when relativePaths is set (DOS-style)", () => {
+            mockWin32Path();
             const filePath = "C:\\Users\\user\\documents\\code\\more-code\\file.extension";
             const config = getTestConfiguration(
                 "C:\\Users\\user\\documents\\code\\more-code\\file.extension",
                 { relativePaths: true },
             );
 
-            expect(formatPrintPath(filePath, config, path.win32)).toEqual("file.extension");
-        });
-
-        it("should both create relative paths and replace forward slashes in an UNIX-style path when both relativePaths and enforceBackwardSlash are set", () => {
-            const filePath = "/some/path/for/the/test.extension";
-            const config = getTestConfiguration("/some/path", {
-                relativePaths: true,
-                enforceBackwardSlash: true,
-            });
-
-            expect(formatPrintPath(filePath, config, path.posix)).toEqual(
-                "for\\the\\test.extension",
-            );
-        });
-
-        it("should only create relative paths for a DOS-style path when both relativePaths and enforceBackwardSlash are set", () => {
-            const filePath = "C:\\Users\\user\\documents\\code\\more-code\\file.extension";
-            const config = getTestConfiguration("C:\\Users\\user\\documents\\code", {
-                relativePaths: true,
-                enforceBackwardSlash: true,
-            });
-
-            expect(formatPrintPath(filePath, config, path.win32)).toEqual(
-                "more-code\\file.extension",
-            );
-        });
-    });
-
-    describe("getFileExtension(...)", () => {
-        it("should return the file extension of a file path", () => {
-            const filePath1 = "/some/path/for/the/test.extension";
-            const filePath2 = "/some/path/for/the/test.EXTENSION";
-            const filePath3 = "/some/path/for/the/test.7z";
-            expect(getFileExtension(filePath1)).toEqual("extension");
-            expect(getFileExtension(filePath2)).toEqual("EXTENSION");
-            expect(getFileExtension(filePath3)).toEqual("7z");
-        });
-
-        it("should return the file extension of a file path with multiple dots", () => {
-            const filePath = "/some/path/for/the/test.with.multiple.dots.extension";
-            expect(getFileExtension(filePath)).toEqual("extension");
-        });
-
-        it("should return the file extension of a file path with a dot at the beginning", () => {
-            const filePath = "/some/path/for/the/.dotfile";
-            expect(getFileExtension(filePath)).toEqual("dotfile");
-        });
-
-        it("should return an empty string if there is no file extension", () => {
-            const filePath = "/some/path/for/the/test";
-            expect(getFileExtension(filePath)).toEqual("");
-        });
-
-        it("should return an empty string for relative paths with no file extension", () => {
-            const filePath1 = "./some/relative/path";
-            const filePath2 = "../../some/relative/path";
-            const filePath3 = ".\\some\\relative\\path";
-            const filePath4 = "..\\..\\some\\relative\\path";
-            expect(getFileExtension(filePath1)).toEqual("");
-            expect(getFileExtension(filePath2)).toEqual("");
-            expect(getFileExtension(filePath3)).toEqual("");
-            expect(getFileExtension(filePath4)).toEqual("");
+            expect(formatPrintPath(filePath, config)).toEqual("file.extension");
         });
     });
 
     describe("findFilesAsync(...)", () => {
         beforeEach(() => {
-            vi.spyOn(path, "join").mockImplementation((...paths: string[]) => paths.join("/"));
+            mockPosixPath();
         });
 
         it("should find one file, if the sourcePath is a single file", async () => {

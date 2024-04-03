@@ -3,28 +3,21 @@ import * as fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser.js";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
 import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
+import path, { PlatformPath } from "path";
 
 /**
  * Gets a configuration for test cases.
  * @param sourcesPath Path to the source files.
  * @param customOverrides Partial {@link ConfigurationParams} object for overriding parts of the default test configuration.
- * @param formatFilePaths Whether to format the output file paths to be independent of project location and platform.
- * If set to true, it sets the necessary configuration options and may override custom overrides.
- * When using this option, do not forget to also format the file path when accessing metric results from the output.
- * You should use {@link formatPrintPath} for this, e.g.:
- * <pre><code>
- * results.fileMetrics.get(formatPrintPath(inputPath, config))
- * </code></pre>
  *
  * @return A configuration for testing purposes.
  */
 export function getTestConfiguration(
     sourcesPath: string,
     customOverrides: Partial<ConfigurationParams> = {},
-    formatFilePaths = false,
 ) {
-    let configParams: ConfigurationParams = {
-        sourcesPath: sourcesPath,
+    let defaultParams: ConfigurationParams = {
+        sourcesPath,
         outputPath: "invalid/output/path",
         parseDependencies: false,
         exclusions: "",
@@ -33,21 +26,34 @@ export function getTestConfiguration(
         compress: false,
         relativePaths: false,
     };
-    configParams = { ...configParams, ...customOverrides };
-
-    if (formatFilePaths) {
-        configParams.relativePaths = true;
-        configParams.enforceBackwardSlash = true;
-    }
-
-    return new Configuration(configParams);
+    return new Configuration({ ...defaultParams, ...customOverrides });
 }
 
 export function mockConsole() {
-    const write = vi.spyOn(process.stdout, "write").mockReset();
-    const log = vi.spyOn(console, "log").mockReset();
-    const error = vi.spyOn(console, "error").mockReset();
-    return { write, log, error };
+    for (const key of Object.keys(console)) {
+        vi.spyOn(console, key as any).mockReset();
+    }
+    vi.spyOn(process.stdout, "write").mockReset();
+}
+
+export function mockPosixPath({ skip }: { skip?: (keyof PlatformPath)[] } = {}) {
+    mockPath(path.posix, skip);
+}
+export function mockWin32Path({ skip }: { skip?: (keyof PlatformPath)[] } = {}) {
+    mockPath(path.win32, skip);
+}
+function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = []) {
+    for (const [key, value] of Object.entries(platformPath)) {
+        if (skip.includes(key as any)) {
+            continue;
+        }
+        console.log(key);
+        if (typeof value === "function") {
+            vi.spyOn(path, key as any).mockImplementation(value);
+        } else if (typeof value === "string") {
+            vi.spyOn(path, key as any, "get").mockReturnValue(value);
+        }
+    }
 }
 
 /**
@@ -91,7 +97,7 @@ export function expectFileMetric(
 export async function getCouplingMetrics(inputPath: string) {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(
-        getTestConfiguration(realInputPath, { parseDependencies: true }, true),
+        getTestConfiguration(realInputPath, { parseDependencies: true, relativePaths: true }),
     );
 
     const results = await parser.calculateMetrics();

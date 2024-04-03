@@ -35,12 +35,6 @@ export interface ConfigurationParams {
      * Whether to include the relative file paths or absolute paths of the analyzed files in the output.
      */
     relativePaths: boolean;
-    /**
-     * Whether to replace all forward slashes in file paths by backward slashes
-     * in the output.
-     * FOR PLATFORM-INDEPENDENT TESTING PURPOSES ONLY: this option should not be exposed to the user.
-     */
-    enforceBackwardSlash?: boolean;
 }
 
 /**
@@ -88,12 +82,6 @@ export class Configuration {
     readonly relativePaths: boolean;
 
     /**
-     * Whether to replace all forward slashes in file paths by backward slashes in the output.
-     * FOR PLATFORM-INDEPENDENT TESTING PURPOSES ONLY: this option should not be exposed to the user.
-     */
-    readonly enforceBackwardSlash: boolean;
-
-    /**
      * Constructs a new {@link Configuration} object by specifying the configuration options passed by the user
      * as command line arguments.
      * @param parameters {@link Parameters} object containing the configuration options.
@@ -121,15 +109,5 @@ export class Configuration {
 
         this.compress = parameters.compress;
         this.relativePaths = parameters.relativePaths;
-        this.enforceBackwardSlash =
-            parameters.enforceBackwardSlash === undefined ? false : parameters.enforceBackwardSlash;
-    }
-
-    /**
-     * Checks if there is a need to format the file paths with {@link formatPrintPath} before outputting them.
-     * @return Whether there is a need to format the file paths.
-     */
-    needsPrintPathFormatting(): boolean {
-        return this.relativePaths || this.enforceBackwardSlash;
     }
 }

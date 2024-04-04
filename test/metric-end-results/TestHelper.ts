@@ -47,7 +47,6 @@ function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = [])
         if (skip.includes(key as any)) {
             continue;
         }
-        console.log(key);
         if (typeof value === "function") {
             vi.spyOn(path, key as any).mockImplementation(value);
         } else if (typeof value === "string") {

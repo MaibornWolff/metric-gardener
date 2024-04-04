@@ -5,3 +5,6 @@ coverage
 resources/**/weird-lines.*
 resources/**/line-break.*
 resources/**/one-line.*
+
+# SyntaxError (HTML comment):
+resources/javascript/comments.js

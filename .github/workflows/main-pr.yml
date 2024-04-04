@@ -11,6 +11,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: npm test
       - uses: davelosert/vitest-coverage-report-action@v2
+        if: always()
 
   format:
     runs-on: ubuntu-latest

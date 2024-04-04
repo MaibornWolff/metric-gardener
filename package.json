@@ -11,10 +11,10 @@
     "scripts": {
         "start": "tsc && node --no-warnings=ExperimentalWarning dist/src/app.js",
         "test": "vitest run",
-        "format": "prettier --write \"./**/*\"",
+        "format": "prettier . --write",
         "format:quick": "pretty-quick --staged",
-        "format:check": "prettier --check \"./**/*\"",
-        "lint": "eslint \"src/**/*.ts\"",
+        "format:check": "prettier . --check",
+        "lint": "eslint .",
         "lint:fix": "npm run lint -- --fix",
         "lint:quick": "npm run precommit",
         "prepare": "husky",

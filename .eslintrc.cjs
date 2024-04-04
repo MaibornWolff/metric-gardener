@@ -6,6 +6,7 @@ module.exports = {
     },
     plugins: ["@typescript-eslint", "unused-imports"],
     extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+    ignorePatterns: ["dist", "resources"],
     rules: {
         "no-empty": ["error", { allowEmptyCatch: true }],
         "@typescript-eslint/no-unused-vars": "off",

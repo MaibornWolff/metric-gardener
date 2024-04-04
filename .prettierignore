@@ -1,6 +1,2 @@
-# Ignore artifacts:
-!src/*
-resources
-.*
+.idea
 dist
-__snapshots__

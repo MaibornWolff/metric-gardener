@@ -3,21 +3,21 @@ class Empty
 data class DataClass(val x: Int)
 
 abstract class Polygon {
-    abstract fun draw()  // complexity +1
+    abstract fun draw()
 }
 
 public class Rectangle : Polygon() {
-    override fun draw() {  // complexity +1
+    override fun draw() {
         println("¯\\_(ツ)_/¯")
     }
 }
 
 interface MyInterface {
-    fun foo()  // complexity +1
+    fun foo()
 }
 
 private class Child : MyInterface {
-    override fun foo() {  // complexity +1
+    override fun foo() {
         println("bar")
     }
 }

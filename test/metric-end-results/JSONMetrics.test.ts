@@ -29,12 +29,12 @@ describe("JSON metrics tests", () => {
             testFileMetric("deep.json", FileMetric.maxNestingLevel, 12);
         });
 
-        it("should correctly calculate the maximum nesting level for a unformatted JSON file", () => {
-            testFileMetric("unformatted.json", FileMetric.maxNestingLevel, 3);
+        it("should correctly calculate the maximum nesting level for a JSON file written in one line", () => {
+            testFileMetric("one-line.json", FileMetric.maxNestingLevel, 3);
         });
 
-        it("should correctly calculate the maximum nesting level for a JSON file with one non-empty line", () => {
-            testFileMetric("one-line.json", FileMetric.maxNestingLevel, 0);
+        it("should correctly calculate the maximum nesting level for a JSON file with one empty object", () => {
+            testFileMetric("empty-object.json", FileMetric.maxNestingLevel, 0);
         });
 
         it("should correctly calculate the maximum nesting level for an empty JSON file", () => {

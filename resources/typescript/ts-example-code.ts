@@ -83,7 +83,7 @@ export class ArtificialIntelligenceController
         private $rootScope: IRootScopeService,
         private storeService: StoreService,
         private threeOrbitControlsService: ThreeOrbitControlsService,
-        private threeCameraService: ThreeCameraService
+        private threeCameraService: ThreeCameraService,
     ) {
         "ngInject";
         FilesService.subscribe(this.$rootScope, this);
@@ -99,7 +99,7 @@ export class ArtificialIntelligenceController
             configId,
             this.storeService,
             this.threeCameraService,
-            this.threeOrbitControlsService
+            this.threeOrbitControlsService,
         );
     }
 
@@ -194,7 +194,7 @@ export class ArtificialIntelligenceController
         const metricValues = this.getSortedMetricValues(fileState, programmingLanguage);
         const metricAssessmentResults = this.findGoodAndBadMetrics(
             metricValues,
-            programmingLanguage
+            programmingLanguage,
         );
 
         const noticeableMetricSuggestionLinks = new Map<string, MetricSuggestionParameters>();
@@ -204,7 +204,7 @@ export class ArtificialIntelligenceController
             const suspiciousMetricConfig = this.createOrUpdateCustomConfig(
                 `Suspicious Files - Metric ${metricName.toUpperCase()} - (AI)`,
                 this.prepareOverviewConfigState(metricName, colorRange.from, colorRange.to),
-                fileState
+                fileState,
             );
 
             newCustomConfigs.push(suspiciousMetricConfig);
@@ -222,9 +222,9 @@ export class ArtificialIntelligenceController
                     this.prepareOutlierConfigState(
                         metricName,
                         outlierThreshold - 1,
-                        outlierThreshold
+                        outlierThreshold,
                     ),
-                    fileState
+                    fileState,
                 );
 
                 newCustomConfigs.push(highRiskMetricConfig);
@@ -274,7 +274,7 @@ export class ArtificialIntelligenceController
                 if (maxMetricValue > thresholdConfig.percentile90) {
                     metricAssessmentResults.outliersThresholds.set(
                         metricName,
-                        thresholdConfig.percentile90
+                        thresholdConfig.percentile90,
                     );
                 }
             }
@@ -287,7 +287,7 @@ export class ArtificialIntelligenceController
         const customConfig = CustomConfigHelper.getCustomConfigByName(
             CustomConfigMapSelectionMode.SINGLE,
             [fileState.file.fileMeta.fileName],
-            configName
+            configName,
         );
 
         // If it exists, create a fresh one with current thresholds
@@ -301,7 +301,7 @@ export class ArtificialIntelligenceController
     private prepareOverviewConfigState(
         metricName: string,
         colorRangeFrom: number,
-        colorRangeTo: number
+        colorRangeTo: number,
     ) {
         const state = klona(this.storeService.getState());
 
@@ -326,7 +326,7 @@ export class ArtificialIntelligenceController
     private prepareOutlierConfigState(
         metricName: string,
         colorRangeFrom: number,
-        colorRangeTo: number
+        colorRangeTo: number,
     ) {
         const state = klona(this.storeService.getState());
 

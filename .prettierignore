@@ -1,2 +1,6 @@
 .idea
 dist
+
+resources/**/weird-lines.*
+resources/**/line-break.*
+resources/**/one-line.*

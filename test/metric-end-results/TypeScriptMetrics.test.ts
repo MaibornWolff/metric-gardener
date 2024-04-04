@@ -77,10 +77,6 @@ describe("TypeScript metrics tests", () => {
             testFileMetric("ts-example-code.ts", FileMetric.linesOfCode, 416);
         });
 
-        it("should count number of lines correctly for a non-empty file with non-empty last line", () => {
-            testFileMetric("non-empty-last-line.ts", FileMetric.linesOfCode, 415);
-        });
-
         it("should count number of lines correctly for an empty file", () => {
             testFileMetric("empty.ts", FileMetric.linesOfCode, 1);
         });

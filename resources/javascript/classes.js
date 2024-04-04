@@ -1,6 +1,6 @@
 // Declaration
 class Rectangle1 {
-    constructor(height, width) {  // complexity +1
+    constructor(height, width) {
         this.height = height;
         this.width = width;
     }
@@ -8,7 +8,7 @@ class Rectangle1 {
 
 // Expression; the class is anonymous but assigned to a variable
 const rec1 = class {
-    constructor(height, width) {  // complexity +1
+    constructor(height, width) {
         this.height = height;
         this.width = width;
     }
@@ -16,7 +16,7 @@ const rec1 = class {
 
 // Expression; the class has its own name
 const rec2 = class Rectangle2 {
-    constructor(height, width) {  // complexity +1
+    constructor(height, width) {
         this.height = height;
         this.width = width;
     }

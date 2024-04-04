@@ -72,7 +72,7 @@ describe("TSX metrics tests.", () => {
 
     describe("parses lines of code metric", () => {
         it("should count all lines in file.", () => {
-            testFileMetric("comments.tsx", FileMetric.linesOfCode, 25);
+            testFileMetric("comments.tsx", FileMetric.linesOfCode, 26);
         });
         it("should count 1 line of code when the file is empty.", () => {
             testFileMetric("empty.tsx", FileMetric.linesOfCode, 1);

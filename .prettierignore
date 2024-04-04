@@ -1,5 +1,6 @@
 .idea
 dist
+coverage
 
 resources/**/weird-lines.*
 resources/**/line-break.*

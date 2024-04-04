@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, it } from "vitest";
+import { beforeAll, describe, it } from "vitest";
 import { expectFileMetric, mockConsole, parseAllFileMetrics } from "./TestHelper.js";
 import { FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 

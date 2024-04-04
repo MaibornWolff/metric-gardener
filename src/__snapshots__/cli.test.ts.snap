@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`cli > import-grammars command > should offer help 1`] = `
+"process.js import-grammars
+
+(re-)import grammar expression types for supported languages
+
+Options:
+  --help     Show help                                                 [boolean]
+  --version  Show version number                                       [boolean]"
+`;
+
+exports[`cli > should offer help 1`] = `
+"process.js <command>
+
+Commands:
+  process.js import-grammars       (re-)import grammar expression types for supp
+                                   orted languages
+  process.js parse [sources-path]  parse file or folders recursively by given pa
+                                   th and calculate metrics
+
+Options:
+  --help     Show help                                                 [boolean]
+  --version  Show version number                                       [boolean]"
+`;

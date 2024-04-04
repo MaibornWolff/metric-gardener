@@ -1,9 +1,4 @@
 .idea
 node_modules
-.clinic
-.DS_Store
-
 dist
-
-./resources/output.json
 nodeTypesChanges.csv

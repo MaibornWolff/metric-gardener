@@ -7,26 +7,26 @@ class Test2 {}
 class Test3 {}
 
 abstract class AbstractClass {
-    abstract protected function getValue(); //complexity +1
+    abstract protected function getValue();
 
-    public function printOut() { //complexity +1
+    public function printOut() {
         print $this->getValue() . "\n";
     }
 }
 
 interface Template {
-    public function setVariable($name, $var); //complexity +1
+    public function setVariable($name, $var);
 }
 
 trait SayWorld {
-    public function sayHello() { //complexity +1
+    public function sayHello() {
         parent::sayHello();
         echo 'World!';
     }
 }
 
 var_dump(new class { // anonymous class
-    public function log($msg) { //complexity +1
+    public function log($msg) {
         echo $msg;
     }
 });

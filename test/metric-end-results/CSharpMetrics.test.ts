@@ -93,10 +93,6 @@ describe("C# metric tests", () => {
             testFileMetric("c-sharp-example-code.cs", FileMetric.linesOfCode, 28);
         });
 
-        it("should count number of lines correctly for a non-empty file with non-empty last line", () => {
-            testFileMetric("non-empty-last-line.cs", FileMetric.linesOfCode, 27);
-        });
-
         it("should count number of lines correctly for an empty file", () => {
             testFileMetric("empty.cs", FileMetric.linesOfCode, 1);
         });

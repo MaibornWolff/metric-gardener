@@ -1,9 +1,9 @@
 let x, b, y, z, yz, myList;
 
-if (x > b) {  // complexity +1
-    if ((x > 100 && x <= 122) || !x) {    // complexity +3
+if (x > b) {
+    if ((x > 100 && x <= 122) || !x) {
         x = 2;
-    } else if (x > 122) {    // complexity +1
+    } else if (x > 122) {
         x = 300;
     } else {
         x = 1;
@@ -11,7 +11,7 @@ if (x > b) {  // complexity +1
     x = 1;
 }
 
-x = x > 100 ? 101 : 99;    // complexity +1
+x = x > 100 ? 101 : 99;
 
 /*
     if (not) {
@@ -22,5 +22,5 @@ x = x > 100 ? 101 : 99;    // complexity +1
 
 x = x + y;
 
-z = x > 0 ? x : false;    // complexity +1
-const foo = null ?? 'default string'; // complexity +1
+z = x > 0 ? x : false;
+const foo = null ?? "default string";

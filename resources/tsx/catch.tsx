@@ -1,16 +1,15 @@
-
 const parsePromises = new Set<Promise<string | null>>();
 
 parsePromises.add(
-    fetchData("www.google.com").catch((reason) => { //+0 complexity
+    fetchData("www.google.com").catch((reason) => {
         return null;
     }),
 );
-async function waiting(){
+async function waiting() {
     try {
         await fetchData("google.com");
-    }catch (e){ //+1 complexity
-        console.log("fail")
+    } catch (e) {
+        console.log("fail");
     }
 }
 async function fetchData(url: string): Promise<string> {

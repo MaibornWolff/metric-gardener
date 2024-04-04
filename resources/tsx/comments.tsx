@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 const MyComponent = () => {
     const x = 10; //inline
@@ -19,7 +19,7 @@ const MyComponent = () => {
     );
 };
 /*comment
-*/export default MyComponent; /*more comment
+ */ export default MyComponent; /*more comment
 more
 more */
 //last comment

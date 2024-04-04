@@ -1,40 +1,44 @@
 class FunctionsAndMethods {
     #age = 1;
-    constructor() {}    // complexity +1
+    constructor() {}
 
-    testFunction1(x, y) {    // complexity +1
+    testFunction1(x, y) {
         return 1;
     }
 
-    #testFunction2(x, y) {    // complexity +1
+    #testFunction2(x, y) {
         return 1;
     }
 
-    static #testFunction3() {    // complexity +1
+    static #testFunction3() {
         return 2;
     }
-    get latest() {  // complexity +1
+
+    get latest() {
         return 3;
     }
-    set latest(age) {   // complexity +1
+
+    set latest(age) {
         this.#age = age;
     }
-    *more(){    // complexity +1
+
+    *more() {
         let index = 0;
-        while (true) {  // complexity +1
+
+        while (true) {
             yield index++;
+        }
     }
 }
-}
 
-function testMethod() {}    // complexity +1
+function testMethod() {}
 
-function outOfScope() {    // complexity +1
+function outOfScope() {
     return 3;
 }
 
-const myFunction = function myFunctionDefinition() {    // complexity +1
+const myFunction = function myFunctionDefinition() {
     return 42;
 };
 
-const x = (x, y) => x * y;    // complexity +1
+const x = (x, y) => x * y;

@@ -1,0 +1,18 @@
+name: prepare
+description: sets up node and installs dependencies
+inputs:
+  install-options:
+    description: options to pass to npm ci
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: "18"
+        cache: npm
+    - run: npm ci $INSTALL_OPTIONS
+      shell: bash
+      env:
+        INSTALL_OPTIONS: ${{ inputs.install-options }}

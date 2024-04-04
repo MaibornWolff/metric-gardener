@@ -46,3 +46,21 @@ export class CommentKeyword implements Metric {
         return "keywords_in_comments";
     }
 }
+
+
+// static method test if word in input
+// copie regex
+// output
+
+export class Test {
+    public containsWord(keyword: string, input: string): boolean {
+        //const regularexpression = "?i" + keyword + "(?-i)";
+
+        return input.includes(keyword);
+
+        //const queryStatementsByKeywords =
+        // `((comment) @constant(#match? @constant "` + regularexpression + `"))`;
+        //new SimpleQueryStatement(queryStatementsByKeywords);
+    }
+}
+

@@ -5,7 +5,7 @@ import { ParsedFile } from "../../metrics/Metric.js";
 export interface FullyQTN {
     namespace: string;
     className: string;
-    classType: string | "interface" | "class";
+    classType: "interface" | "class";
     source: string;
     namespaceDelimiter: string;
     extendedClass?: string;
@@ -36,7 +36,8 @@ export abstract class AbstractCollector {
         }
 
         throw Error(
-            "Unsupported Namespace Resolving Strategy " + this.getNamespaceResolvingStrategy(),
+            "Unsupported Namespace Resolving Strategy " +
+                this.getNamespaceResolvingStrategy().toString(),
         );
     }
 }

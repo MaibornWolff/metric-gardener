@@ -4,7 +4,7 @@ import { MetricResult, CouplingResult, MetricError } from "../parser/metrics/Met
 import { FileType } from "../parser/helper/Language.js";
 import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
 
-const writeFileSync = vi.hoisted(() => vi.fn());
+const writeFileSync = vi.hoisted(() => vi.fn<Parameters<typeof import("fs").writeFileSync>>());
 vi.mock("fs", async (importOriginal) => {
     const actual = await importOriginal<typeof import("fs")>();
     return { ...actual, writeFileSync };
@@ -21,13 +21,13 @@ describe("outputMetrics", () => {
 
         it("when metrics are present", () => {
             const file1MetricResults: MetricResult[] = [];
-            file1MetricResults.push({ metricName: "metric1", metricValue: 42 });
-            file1MetricResults.push({ metricName: "metric2", metricValue: 43 });
+            file1MetricResults.push({ metricName: "real_lines_of_code", metricValue: 42 });
+            file1MetricResults.push({ metricName: "lines_of_code", metricValue: 43 });
 
             const file2MetricResults: MetricResult[] = [];
-            file2MetricResults.push({ metricName: "metric1", metricValue: 44 });
+            file2MetricResults.push({ metricName: "real_lines_of_code", metricValue: 44 });
             const file2MetricErrors: MetricError[] = [];
-            file2MetricErrors.push({ metricName: "metric2", error: new Error("Buh!") });
+            file2MetricErrors.push({ metricName: "lines_of_code", error: new Error("Buh!") });
 
             const fileMetrics = new Map([
                 [
@@ -89,6 +89,7 @@ describe("outputMetrics", () => {
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
             expect(writeFileSync).toHaveBeenCalledTimes(1);
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const [file, data, options] = writeFileSync.mock.lastCall!;
 
             expect(file).toBe("mocked-file.json");

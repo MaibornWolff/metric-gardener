@@ -11,8 +11,7 @@ export class PublicAccessorCollector {
         namespacesOfFile: Map<string, FullyQTN>,
     ): Map<string, Accessor[]> {
         const collector = this.accessorCollectorFactory.getCollector(parsedFile);
-        return collector !== undefined
-            ? collector.getAccessors(parsedFile, namespacesOfFile)
-            : new Map();
+        const accessors = collector?.getAccessors(parsedFile, namespacesOfFile);
+        return accessors ?? new Map<string, Accessor[]>();
     }
 }

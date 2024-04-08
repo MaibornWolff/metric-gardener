@@ -2,8 +2,14 @@ import { findFilesAsync, formatPrintPath } from "./helper/Helper.js";
 import { Configuration } from "./Configuration.js";
 import { calculateMetrics } from "./MetricCalculator.js";
 import { CouplingCalculator } from "./CouplingCalculator.js";
-import { SourceFile, FileMetricResults, ErrorFile, UnsupportedFile } from "./metrics/Metric.js";
-import { TreeParser } from "./helper/TreeParser.js";
+import {
+    SourceFile,
+    FileMetricResults,
+    ErrorFile,
+    UnsupportedFile,
+    CouplingResult,
+} from "./metrics/Metric.js";
+import { parse } from "./helper/TreeParser.js";
 import pMap from "p-map";
 
 /**
@@ -28,7 +34,12 @@ export class GenericParser {
     /**
      * Parses files and calculates metrics as specified by the configuration of this {@link GenericParser} object.
      */
-    async calculateMetrics() {
+    async calculateMetrics(): Promise<{
+        couplingMetrics: CouplingResult;
+        fileMetrics: Map<string, FileMetricResults>;
+        unsupportedFiles: string[];
+        errorFiles: string[];
+    }> {
         const filePaths = await this.loadFilePaths();
 
         const couplingParser = new CouplingCalculator(this.config);
@@ -37,7 +48,7 @@ export class GenericParser {
         const results = await pMap(
             filePaths,
             async (filePath) => {
-                const sourceFile = await TreeParser.parse(filePath, this.config);
+                const sourceFile = await parse(filePath, this.config);
                 couplingParser.processFile(sourceFile);
 
                 const progress = Math.floor((parsed++ / filePaths.length) * 100);
@@ -59,15 +70,19 @@ export class GenericParser {
         for await (const filePath of findFilesAsync(this.config)) {
             filePaths.push(filePath);
             if (filePaths.length % 1000 === 0) {
-                process.stdout.write(`\rfiles: ${filePaths.length}`);
+                process.stdout.write(`\rfiles: ${filePaths.length.toString()}`);
             }
         }
-        console.log(`\rfiles: ${filePaths.length}`);
+        console.log(`\rfiles: ${filePaths.length.toString()}`);
 
         return filePaths;
     }
 
-    private processResults(results: [SourceFile, FileMetricResults][]) {
+    private processResults(results: [SourceFile, FileMetricResults][]): {
+        fileMetrics: Map<string, FileMetricResults>;
+        unsupportedFiles: string[];
+        errorFiles: string[];
+    } {
         const fileMetrics = new Map<string, FileMetricResults>();
         const unsupportedFiles: string[] = [];
         const errorFiles: string[] = [];
@@ -108,16 +123,16 @@ export class GenericParser {
 }
 
 let progress = 0;
-function showProgressBar(i: number) {
+function showProgressBar(i: number): void {
     if (i > progress) {
         progress = i;
         const dots = ".".repeat(i);
         const left = 100 - i;
         const empty = " ".repeat(left);
-        process.stdout.write(`\r[${dots}${empty}] ${i}%`);
+        process.stdout.write(`\r[${dots}${empty}] ${i.toString()}%`);
     }
 }
-function clearProgressBar() {
+function clearProgressBar(): void {
     process.stdout.write("\r" + " ".repeat(110) + "\r");
     progress = 0;
 }

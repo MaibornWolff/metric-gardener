@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder.js";
 import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import {
@@ -60,13 +60,13 @@ export class Complexity implements Metric {
         this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
     }
 
-    addBinaryExpressionQueryStatement(nodeType: NodeTypeConfig) {
+    addBinaryExpressionQueryStatement(nodeType: NodeTypeConfig): void {
         if (nodeType.operator !== undefined) {
             this.complexityStatementsSuperSet.push(new OperatorQueryStatement(nodeType));
         }
     }
 
-    addExpressionQueryStatement(nodeType: NodeTypeConfig) {
+    addExpressionQueryStatement(nodeType: NodeTypeConfig): void {
         this.complexityStatementsSuperSet.push(new NodeTypeQueryStatement(nodeType));
     }
 
@@ -76,7 +76,7 @@ export class Complexity implements Metric {
     addCaseLabelQueryStatements(
         caseNodeTypes: NodeTypeConfig[],
         languagesWithDefaultLabelAbbr: Set<string>,
-    ) {
+    ): void {
         for (const caseNodeType of caseNodeTypes) {
             const haveDefaultNodeType: string[] = [];
             const haveNoDefaultNodeType: string[] = [];
@@ -113,8 +113,8 @@ export class Complexity implements Metric {
     addCaseDefaultDifferentiatingQuery(
         noDefaultLangAbbrs: string[],
         caseDefaultNodeType: NodeTypeConfig,
-    ) {
-        if (caseDefaultNodeType.type_name == "case_statement") {
+    ): void {
+        if (caseDefaultNodeType.type_name === "case_statement") {
             // Special treatment for "case_statement" used by at least C++ and PHP.
             // This syntax node can have more than one child,
             // because it also has the content of the case block as child(s).
@@ -128,7 +128,7 @@ export class Complexity implements Metric {
                     caseDefaultNodeType.deactivated_for_languages,
                 ),
             );
-        } else if (caseDefaultNodeType.type_name == "when_entry") {
+        } else if (caseDefaultNodeType.type_name === "when_entry") {
             // Special treatment for the "when_entry" used by Kotlin. Can also have more than one child.
             //
             // A conditional when_entry can be differentiated from an else when_entry by checking
@@ -140,7 +140,7 @@ export class Complexity implements Metric {
                     caseDefaultNodeType.deactivated_for_languages,
                 ),
             );
-        } else if (caseDefaultNodeType.type_name == "match_arm") {
+        } else if (caseDefaultNodeType.type_name === "match_arm") {
             // Special treatment for the "match_arm" used by Rust.
             //
             // A conditional match_arm can be differentiated from a default label by checking
@@ -164,7 +164,7 @@ export class Complexity implements Metric {
         }
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
 
@@ -185,7 +185,7 @@ export class Complexity implements Metric {
             matches = query.matches(tree.rootNode);
         }
 
-        dlog(this.getName() + " - " + matches.length);
+        dlog(this.getName() + " - " + matches.length.toString());
 
         return {
             metricName: this.getName(),
@@ -193,7 +193,7 @@ export class Complexity implements Metric {
         };
     }
 
-    getName(): string {
-        return FileMetric.complexity;
+    getName(): MetricName {
+        return "complexity";
     }
 }

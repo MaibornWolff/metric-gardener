@@ -12,27 +12,30 @@ describe("CallExpressionResolver", () => {
                 fromSource: "FirstItem",
                 toSource: "SecondItem",
                 toNamespace: "SecondItemNamespace.SecondItem",
+                fromClassName: "FirstItem",
                 toClassName: "SecondItem",
                 usageType: "usage",
-            } as Relationship;
+            };
 
             const secondItem: Relationship = {
                 fromNamespace: "SecondItemNamespace.SecondItem",
                 fromSource: "SecondItem",
                 toSource: "ThirdItem",
                 toNamespace: "ThirdItemNamespace.ThirdItem",
+                fromClassName: "FirstItem",
                 toClassName: "ThirdItem",
                 usageType: "usage",
-            } as Relationship;
+            };
 
             const thirdItem: Relationship = {
                 fromNamespace: "ThirdItemNamespace.ThirdItem",
                 fromSource: "ThirdItem",
                 toSource: "FourthItem",
                 toNamespace: "FourthItemNamespace.FourthItem",
+                fromClassName: "FirstItem",
                 toClassName: "FourthItem",
                 usageType: "usage",
-            } as Relationship;
+            };
 
             const dependencyTree = new Map<string, Relationship[]>();
             dependencyTree.set(firstItem.fromSource, [firstItem]);

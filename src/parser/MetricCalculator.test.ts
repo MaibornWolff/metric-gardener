@@ -3,7 +3,6 @@ import { calculateMetrics } from "./MetricCalculator.js";
 import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import {
     ErrorFile,
-    FileMetric,
     FileMetricResults,
     ParsedFile,
     SourceFile,
@@ -18,70 +17,70 @@ import { Functions } from "./metrics/Functions.js";
 import { LinesOfCode } from "./metrics/LinesOfCode.js";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel.js";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode.js";
-import { LinesOfCodeRawText } from "./metrics/LinesOfCodeRawText.js";
+import * as LinesOfCodeRawText from "./metrics/LinesOfCodeRawText.js";
 import fs from "fs/promises";
 
-function initiateSpies() {
-    vi.spyOn(Classes.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.classes,
+function initiateSpies(): void {
+    vi.spyOn(Classes.prototype, "calculate").mockReturnValue({
+        metricName: "classes",
         metricValue: 1,
     });
-    vi.spyOn(CommentLines.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.commentLines,
+    vi.spyOn(CommentLines.prototype, "calculate").mockReturnValue({
+        metricName: "comment_lines",
         metricValue: 2,
     });
-    vi.spyOn(Complexity.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.complexity,
+    vi.spyOn(Complexity.prototype, "calculate").mockReturnValue({
+        metricName: "complexity",
         metricValue: 3,
     });
-    vi.spyOn(Functions.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.functions,
+    vi.spyOn(Functions.prototype, "calculate").mockReturnValue({
+        metricName: "functions",
         metricValue: 4,
     });
-    vi.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.linesOfCode,
+    vi.spyOn(LinesOfCode.prototype, "calculate").mockReturnValue({
+        metricName: "lines_of_code",
         metricValue: 5,
     });
-    vi.spyOn(MaxNestingLevel.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.maxNestingLevel,
+    vi.spyOn(MaxNestingLevel.prototype, "calculate").mockReturnValue({
+        metricName: "max_nesting_level",
         metricValue: 6,
     });
-    vi.spyOn(RealLinesOfCode.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.realLinesOfCode,
+    vi.spyOn(RealLinesOfCode.prototype, "calculate").mockReturnValue({
+        metricName: "real_lines_of_code",
         metricValue: 7,
     });
-    vi.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
-        metricName: FileMetric.linesOfCode,
+    vi.spyOn(LinesOfCodeRawText, "calculateLinesOfCodeRawText").mockReturnValue({
+        metricName: "lines_of_code",
         metricValue: 8,
     });
 }
 
-function initiateErrorSpies() {
-    vi.spyOn(Classes.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating classes metric"),
-    );
-    vi.spyOn(CommentLines.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating commentLines metric"),
-    );
-    vi.spyOn(Complexity.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating complexity metric"),
-    );
-    vi.spyOn(Functions.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.functions,
+function initiateErrorSpies(): void {
+    vi.spyOn(Classes.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating classes metric");
+    });
+    vi.spyOn(CommentLines.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating commentLines metric");
+    });
+    vi.spyOn(Complexity.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating complexity metric");
+    });
+    vi.spyOn(Functions.prototype, "calculate").mockReturnValue({
+        metricName: "functions",
         metricValue: 1,
     });
-    vi.spyOn(LinesOfCode.prototype, "calculate").mockResolvedValue({
-        metricName: FileMetric.linesOfCode,
+    vi.spyOn(LinesOfCode.prototype, "calculate").mockReturnValue({
+        metricName: "lines_of_code",
         metricValue: 2,
     });
-    vi.spyOn(MaxNestingLevel.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating maxNestingLevel metric"),
-    );
-    vi.spyOn(RealLinesOfCode.prototype, "calculate").mockRejectedValue(
-        new Error("something went wrong when calculating realLinesOfCode metric"),
-    );
-    vi.spyOn(LinesOfCodeRawText, "calculate").mockResolvedValue({
-        metricName: FileMetric.linesOfCode,
+    vi.spyOn(MaxNestingLevel.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating maxNestingLevel metric");
+    });
+    vi.spyOn(RealLinesOfCode.prototype, "calculate").mockImplementation(() => {
+        throw new Error("something went wrong when calculating realLinesOfCode metric");
+    });
+    vi.spyOn(LinesOfCodeRawText, "calculateLinesOfCodeRawText").mockReturnValue({
+        metricName: "lines_of_code",
         metricValue: 8,
     });
 }

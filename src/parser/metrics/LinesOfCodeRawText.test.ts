@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LinesOfCodeRawText } from "./LinesOfCodeRawText.js";
-import { FileMetric } from "./Metric.js";
+import { calculateLinesOfCodeRawText } from "./LinesOfCodeRawText.js";
 
 describe("LinesOfCodeRawText.calculate(...)", () => {
     it("should calculate lines of code correctly for a file with multiple lines", () => {
@@ -53,9 +52,9 @@ May add line six as friend, it would be quite near.`;
         expectLinesOfCode("one-line", 1);
     });
 
-    function expectLinesOfCode(sourceCode: string, expectedLines: number) {
-        expect(LinesOfCodeRawText.calculate(sourceCode)).resolves.toEqual({
-            metricName: FileMetric.linesOfCode,
+    function expectLinesOfCode(sourceCode: string, expectedLines: number): void {
+        expect(calculateLinesOfCodeRawText(sourceCode)).toEqual({
+            metricName: "lines_of_code",
             metricValue: expectedLines,
         });
     }

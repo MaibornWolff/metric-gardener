@@ -42,7 +42,7 @@ export function outputAsJson(
     relationshipMetrics: CouplingResult,
     outputFilePath: string,
     compress: boolean,
-) {
+): void {
     const output = buildOutputObject(
         fileMetrics,
         unsupportedFiles,
@@ -66,7 +66,11 @@ function buildOutputObject(
     unknownFiles: string[],
     errorFiles: string[],
     relationshipMetrics: CouplingResult,
-) {
+): {
+    nodes: OutputNode[];
+    info: OutputInfoNode[];
+    relationships: OutputRelationship[];
+} {
     const output: {
         nodes: OutputNode[];
         info: OutputInfoNode[];
@@ -82,7 +86,7 @@ function buildOutputObject(
     const metricErrorsPerFile = new Map<string, Iterable<MetricError>>();
 
     for (const [filePath, fileMetricResults] of fileMetrics.entries()) {
-        const metrics = {};
+        const metrics: { [key: string]: number } = {};
         if (fileMetricResults.metricErrors.length > 0) {
             metricErrorsPerFile.set(filePath, fileMetricResults.metricErrors);
         }
@@ -140,29 +144,22 @@ function buildOutputObject(
     }
 
     // merge relationship metrics with existing nodes or add new node
-    const couplingMetrics = relationshipMetrics.metrics?.entries() ?? [];
+    const couplingMetrics = relationshipMetrics.metrics.entries();
     for (const [filePath, metricsMap] of couplingMetrics) {
         const existingOutputNode = outputNodeReferenceLookUp.get(filePath);
         if (existingOutputNode !== undefined) {
-            for (const couplingMetric of Object.keys(metricsMap)) {
-                existingOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
-            }
+            existingOutputNode.metrics = { ...existingOutputNode.metrics, ...metricsMap };
         } else {
             const newOutputNode: OutputNode = {
                 name: filePath,
                 type: FileType.SourceCode,
-                metrics: {},
+                metrics: { ...metricsMap },
             };
-
             output.nodes.push(newOutputNode);
-
-            for (const couplingMetric of Object.keys(metricsMap)) {
-                newOutputNode.metrics[couplingMetric] = metricsMap[couplingMetric];
-            }
         }
     }
 
-    const couplingMetricResults = relationshipMetrics.relationships || [];
+    const couplingMetricResults = relationshipMetrics.relationships;
 
     for (const couplingMetricResult of couplingMetricResults) {
         output.relationships.push({
@@ -175,7 +172,7 @@ function buildOutputObject(
     return output;
 }
 
-function dumpCompressed(outputString, outputFilePath) {
+function dumpCompressed(outputString: string, outputFilePath: string): void {
     const readableStream = new Readable();
     readableStream.push(outputString);
     readableStream.push(null);

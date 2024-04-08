@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder.js";
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
 import { getQueryStatementsByCategories } from "../helper/Helper.js";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import { Language } from "../helper/Language.js";
@@ -21,7 +21,7 @@ export class Functions implements Metric {
         );
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
         if (language === Language.Java) {
@@ -41,7 +41,7 @@ export class Functions implements Metric {
             matches = query.matches(tree.rootNode);
         }
 
-        dlog(this.getName() + " - " + matches.length);
+        dlog(this.getName() + " - " + matches.length.toString());
 
         return {
             metricName: this.getName(),
@@ -49,7 +49,7 @@ export class Functions implements Metric {
         };
     }
 
-    getName(): string {
-        return FileMetric.functions;
+    getName(): MetricName {
+        return "functions";
     }
 }

@@ -17,7 +17,7 @@ const csvSeparator = ";";
  * @param s The string to escape.
  * @returns An escaped version of the string, without CSV special characters.
  */
-export function escapeForCsv(s: string) {
+export function escapeForCsv(s: string): string {
     const escaped = s.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/"/g, '""');
     return '"' + escaped + '"';
 }
@@ -33,14 +33,14 @@ export class NodeTypesChangelog {
      * Gets the changes for one node type.
      * @param nodeType
      */
-    get(nodeType: string) {
+    get(nodeType: string): NodeTypesChangelogEntry | undefined {
         return this.changelog.get(nodeType);
     }
 
     /**
      * Clear the changelog.
      */
-    clear() {
+    clear(): void {
         this.changelog.clear();
     }
 
@@ -51,7 +51,7 @@ export class NodeTypesChangelog {
      * @param nodeTypeConfig The node type configuration, in the state before the change is applied.
      * @param languageAbbr Abbreviation of the language.
      */
-    addedNodeToLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string) {
+    addedNodeToLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string): void {
         // There is no changelog entry for this node type yet, so create it.
         if (!this.changelog.has(nodeTypeConfig.type_name)) {
             this.changelog.set(
@@ -71,7 +71,7 @@ export class NodeTypesChangelog {
      * @param nodeTypeName Name of the node type.
      * @param languageAbbr Abbreviation of the language to which this node was added.
      */
-    addedNewNode(nodeTypeName: string, languageAbbr: string) {
+    addedNewNode(nodeTypeName: string, languageAbbr: string): void {
         const entry = new NodeTypesChangelogEntry(nodeTypeName, true);
         entry.addedToLanguage(languageAbbr);
         this.changelog.set(nodeTypeName, entry);
@@ -84,7 +84,7 @@ export class NodeTypesChangelog {
      * @param nodeTypeConfig The node type configuration, in the state before the change is applied.
      * @param languageAbbr Abbreviation of the language.
      */
-    removedNodeFromLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string) {
+    removedNodeFromLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string): void {
         if (!this.changelog.has(nodeTypeConfig.type_name)) {
             this.changelog.set(
                 nodeTypeConfig.type_name,
@@ -98,7 +98,7 @@ export class NodeTypesChangelog {
         this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(languageAbbr);
     }
 
-    writeNewNodes(writeStream: fs.WriteStream) {
+    writeNewNodes(writeStream: fs.WriteStream): void {
         writeStream.write("New syntax nodes:" + EOL + EOL);
         writeStream.write("Name:" + csvSeparator + "Added to language(s):" + EOL);
 
@@ -107,14 +107,17 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.addedLanguages) +
+                        Array.from(entry.addedLanguages).toString() +
                         EOL,
                 );
             }
         }
     }
 
-    writeRemovedNodes(writeStream: fs.WriteStream, metricMappings: Map<string, NodeTypeConfig>) {
+    writeRemovedNodes(
+        writeStream: fs.WriteStream,
+        metricMappings: Map<string, NodeTypeConfig>,
+    ): void {
         writeStream.write("Removed syntax nodes:" + EOL + EOL);
         writeStream.write(
             "Name:" +
@@ -143,18 +146,21 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.removedLanguages) +
+                        Array.from(entry.removedLanguages).toString() +
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
-                        activatedForLangOutput +
+                        activatedForLangOutput.toString() +
                         EOL,
                 );
             }
         }
     }
 
-    writeModifiedNodes(writeStream: fs.WriteStream, metricMappings: Map<string, NodeTypeConfig>) {
+    writeModifiedNodes(
+        writeStream: fs.WriteStream,
+        metricMappings: Map<string, NodeTypeConfig>,
+    ): void {
         writeStream.write(
             "Already known and still used syntax nodes which were removed from or added to some language(s):" +
                 EOL +
@@ -192,15 +198,15 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.addedLanguages) +
+                        Array.from(entry.addedLanguages).toString() +
                         csvSeparator +
-                        Array.from(entry.removedLanguages) +
+                        Array.from(entry.removedLanguages).toString() +
                         csvSeparator +
-                        Array.from(entry.remainingLanguages) +
+                        Array.from(entry.remainingLanguages).toString() +
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
-                        activatedForLangOutput +
+                        activatedForLangOutput.toString() +
                         EOL,
                 );
             }
@@ -213,12 +219,12 @@ export class NodeTypesChangelog {
      * are currently calculated with the changed syntax node(s).
      * @return Promise that fulfills once the changelog has been written successfully.
      */
-    writeChangelog(metricMappings: Map<string, NodeTypeConfig>) {
+    writeChangelog(metricMappings: Map<string, NodeTypeConfig>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const writeStream = fs.createWriteStream(pathToWriteChangelog);
 
             writeStream.on("error", (err) => {
-                reject(new Error("Error while writing the changelog:\n" + err));
+                reject(new Error("Error while writing the changelog:\n" + err.toString()));
             });
             writeStream.on("finish", () => {
                 console.log("####################################");
@@ -297,7 +303,7 @@ class NodeTypesChangelogEntry {
      * Logs that this node type was added to a language.
      * @param languageAbbr Abbreviation of the language to which this node was added.
      */
-    addedToLanguage(languageAbbr: string) {
+    addedToLanguage(languageAbbr: string): void {
         this.addedLanguages.add(languageAbbr);
     }
 
@@ -305,7 +311,7 @@ class NodeTypesChangelogEntry {
      * Logs that this node type was removed from a language.
      * @param languageAbbr Abbreviation of the language from which this node was removed.
      */
-    removedFromLanguage(languageAbbr: string) {
+    removedFromLanguage(languageAbbr: string): void {
         this.removedLanguages.add(languageAbbr);
         this.remainingLanguages.delete(languageAbbr);
     }
@@ -314,7 +320,7 @@ class NodeTypesChangelogEntry {
      * Checks whether the current state of this changelog entry indicates that the node type was removed from all languages.
      * @return true if the node was removed from all languages, false if not.
      */
-    isRemovedNode() {
+    isRemovedNode(): boolean {
         return this.remainingLanguages.size + this.addedLanguages.size === 0;
     }
 
@@ -323,7 +329,7 @@ class NodeTypesChangelogEntry {
      * is neither new nor removed from all languages, but added or removed to some languages.
      * @return true if this is a modified node, false otherwise.
      */
-    isModifiedNode() {
+    isModifiedNode(): boolean {
         return !this.isNewNode && !this.isRemovedNode();
     }
 }

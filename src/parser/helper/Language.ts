@@ -1,17 +1,32 @@
+// @ts-expect-error module doesn't have types
 import CSharp from "tree-sitter-c-sharp";
+// @ts-expect-error module doesn't have types
 import CPlusPlus from "tree-sitter-cpp";
+// @ts-expect-error module doesn't have types
 import GO from "tree-sitter-go";
+// @ts-expect-error module doesn't have types
 import Java from "tree-sitter-java";
+// @ts-expect-error module doesn't have types
 import JavaScript from "tree-sitter-javascript";
+// @ts-expect-error module doesn't have types
 import Kotlin from "tree-sitter-kotlin";
-import PHP from "tree-sitter-php";
+// @ts-expect-error module doesn't have types
+import { php } from "tree-sitter-php";
+// @ts-expect-error module doesn't have types
 import Python from "tree-sitter-python";
-import TypeScript from "tree-sitter-typescript";
+// @ts-expect-error module doesn't have types
+import { typescript, tsx } from "tree-sitter-typescript";
+// @ts-expect-error module doesn't have types
 import Ruby from "tree-sitter-ruby";
+// @ts-expect-error module doesn't have types
 import Rust from "tree-sitter-rust";
+// @ts-expect-error module doesn't have types
 import Bash from "tree-sitter-bash";
+// @ts-expect-error module doesn't have types
 import C from "tree-sitter-c";
+// @ts-expect-error module doesn't have types
 import JSON from "tree-sitter-json";
+// @ts-expect-error module doesn't have types
 import YAML from "tree-sitter-yaml";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap.js";
 import { Configuration } from "../Configuration.js";
@@ -45,8 +60,8 @@ export const enum Language {
  * The string value corresponding to the language is equivalent to the abbreviation used in the node mappings file.
  *
  * Note that this is not necessarily identical to the file extension of a file of the corresponding language,
- * as there can be multiple file extensions for one language. Use {@link fileExtensionToLanguage}
- * or {@link fileExtensionToGrammar} for mapping file extensions.
+ * as there can be multiple file extensions for one language.
+ * Use {@link fileExtensionToLanguage} for mapping file extensions.
  */
 export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
     new Map([
@@ -79,9 +94,9 @@ export const languageToGrammar = new Map([
     [Language.Java, Java],
     [Language.JavaScript, JavaScript],
     [Language.Kotlin, Kotlin],
-    [Language.PHP, PHP.php],
-    [Language.TypeScript, TypeScript.typescript],
-    [Language.TSX, TypeScript.tsx],
+    [Language.PHP, php],
+    [Language.TypeScript, typescript],
+    [Language.TSX, tsx],
     [Language.Python, Python],
     [Language.Ruby, Ruby],
     [Language.Rust, Rust],
@@ -132,7 +147,7 @@ export const enum FileType {
  */
 export const structuredTextLanguages = new Set([Language.JSON, Language.YAML]);
 
-export function languageToFileType(language: Language) {
+export function languageToFileType(language: Language): FileType {
     return structuredTextLanguages.has(language) ? FileType.StructuredText : FileType.SourceCode;
 }
 
@@ -151,7 +166,10 @@ const caseSensitiveFileExtensionToLanguage = new Map([
  * @param filePath Path to the file, including the file extension.
  * @param config Configuration to apply.
  */
-export function assumeLanguageFromFilePath(filePath: string, config: Configuration) {
+export function assumeLanguageFromFilePath(
+    filePath: string,
+    config: Configuration,
+): Language | undefined {
     const fileExtension = path.extname(filePath).slice(1);
 
     if (fileExtension === "h") {
@@ -186,18 +204,4 @@ function shouldHBeParsedAsC(filePath: string, config: Configuration): boolean {
         }
     }
     return false;
-}
-
-/**
- * Maps supported file extensions to the corresponding language grammar.
- * @param fileExtension The file extension to map.
- * @return The corresponding grammar if the file extension is supported, undefined otherwise.
- */
-export function fileExtensionToGrammar(fileExtension: string) {
-    const language = fileExtensionToLanguage.get(fileExtension);
-    if (language !== undefined) {
-        return languageToGrammar.get(language);
-    } else {
-        return undefined;
-    }
 }

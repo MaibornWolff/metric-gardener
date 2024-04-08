@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json" with { type: "json" };
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { NodeTypesChangelog } from "./NodeTypesChangelog.js";
+import { NodeType, NodeTypes } from "./NodeTypes.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -42,7 +43,7 @@ const changelog: NodeTypesChangelog = new NodeTypesChangelog();
  * Keeps the present mappings if the corresponding node type is still present in that language.
  * Removes all node types which are no longer present in the grammar.
  */
-export async function updateNodeTypesMappingFile() {
+export async function updateNodeTypesMappingFile(): Promise<void> {
     nodeTypeMappings.clear();
     changelog.clear();
 
@@ -94,12 +95,9 @@ function readNodeTypesJsons(): Map<string, Promise<string | Error>> {
 
         languageAbbrToNodeTypePromises.set(
             languageAbbr,
-            fs.readFile(fileLocation, "utf8").catch((reason) => {
+            fs.readFile(fileLocation, "utf8").catch((reason: unknown) => {
                 return new Error(
-                    "Error while reading a node-types.json file from " +
-                        fileLocation +
-                        ":\n" +
-                        reason,
+                    `Error while reading a node-types.json file from ${fileLocation}:\n${String(reason)}`,
                 ); // To be handled when awaiting the result.
             }),
         );
@@ -126,8 +124,12 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     return presentNodeTypesForLanguage;
 }
 
-function updateLanguage(languageAbbr: string, presentNodes: Set<string>, nodeTypesJson: string) {
-    const grammarNodeTypes = JSON.parse(nodeTypesJson);
+function updateLanguage(
+    languageAbbr: string,
+    presentNodes: Set<string>,
+    nodeTypesJson: string,
+): void {
+    const grammarNodeTypes = JSON.parse(nodeTypesJson) as NodeTypes;
 
     const toRemove: Set<string> = new Set(presentNodes);
     for (const grammarNodeType of grammarNodeTypes) {
@@ -145,7 +147,7 @@ function updateLanguage(languageAbbr: string, presentNodes: Set<string>, nodeTyp
         }
 
         if (grammarNodeType.type === "binary_expression") {
-            updateBinaryExpressions(languageAbbr, presentNodes, grammarNodeType, toRemove);
+            updateBinaryExpressions(languageAbbr, grammarNodeType, toRemove);
             continue;
         }
 
@@ -168,11 +170,10 @@ function updateLanguage(languageAbbr: string, presentNodes: Set<string>, nodeTyp
 
 function updateBinaryExpressions(
     languageAbbr: string,
-    presentNodes: Set<string>,
-    grammarNodeType,
+    grammarNodeType: NodeType,
     removedNodeTypes: Set<string>,
-) {
-    if (grammarNodeType?.fields?.operator?.types !== undefined) {
+): void {
+    if (grammarNodeType.fields?.operator?.types !== undefined) {
         for (const binaryOperatorType of grammarNodeType.fields.operator.types) {
             const { type: binaryOperator } = binaryOperatorType;
             const mapKey = grammarNodeType.type + "_" + binaryOperator;
@@ -203,8 +204,8 @@ function updateOrAddExpression(
     nodeTypeName: string,
     category: NodeTypeCategory = NodeTypeCategory.Other,
     grammarNodeTypeName?: string,
-    operator?,
-) {
+    operator?: string,
+): void {
     const nodeType = nodeTypeMappings.get(nodeTypeName);
 
     if (nodeType !== undefined) {
@@ -227,7 +228,7 @@ function updateOrAddExpression(
     }
 }
 
-function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<string>) {
+function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<string>): void {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (removedNodeTypes.has(nodeTypeName)) {
             const index = nodeType.languages.indexOf(languageAbbr);
@@ -238,7 +239,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
                 'Node type "' + nodeTypeName + '" was removed for language "' + languageAbbr + '".',
             );
             if (
-                nodeType.category !== "" &&
+                nodeType.category !== NodeTypeCategory.Other &&
                 (nodeType.deactivated_for_languages === undefined ||
                     nodeType.deactivated_for_languages.includes(languageAbbr))
             ) {
@@ -259,7 +260,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
 function removeAbandonedNodeTypes(): void {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (nodeType.languages.length === 0) {
-            if (nodeType.category !== "") {
+            if (nodeType.category !== NodeTypeCategory.Other) {
                 console.warn(
                     '#### Intervention required! Removing the node type "' +
                         nodeTypeName +
@@ -278,7 +279,7 @@ function removeAbandonedNodeTypes(): void {
     }
 }
 
-async function writeNewNodeTypeMappings() {
+async function writeNewNodeTypeMappings(): Promise<void> {
     // Save the updated mappings:
     await fs.writeFile(
         pathToNodeTypesConfig,

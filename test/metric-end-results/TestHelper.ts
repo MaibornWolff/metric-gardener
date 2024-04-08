@@ -16,7 +16,7 @@ export function getTestConfiguration(
     sourcesPath: string,
     customOverrides: Partial<ConfigurationParams> = {},
 ) {
-    let defaultParams: ConfigurationParams = {
+    const defaultParams: ConfigurationParams = {
         sourcesPath,
         outputPath: "invalid/output/path",
         parseDependencies: false,
@@ -30,8 +30,8 @@ export function getTestConfiguration(
 }
 
 export function mockConsole() {
-    for (const key of Object.keys(console)) {
-        vi.spyOn(console, key as any).mockReset();
+    for (const key of Object.keys(console) as (keyof typeof console)[]) {
+        vi.spyOn(console, key).mockReset();
     }
     vi.spyOn(process.stdout, "write").mockReset();
 }
@@ -43,14 +43,16 @@ export function mockWin32Path({ skip }: { skip?: (keyof PlatformPath)[] } = {}) 
     mockPath(path.win32, skip);
 }
 function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = []) {
-    for (const [key, value] of Object.entries(platformPath)) {
-        if (skip.includes(key as any)) {
+    for (const [key, value] of Object.entries(platformPath) as [keyof PlatformPath, unknown][]) {
+        if (skip.includes(key)) {
             continue;
         }
         if (typeof value === "function") {
-            vi.spyOn(path, key as any).mockImplementation(value);
+            // @ts-expect-error TS cannot handle the above check
+            vi.spyOn(path, key).mockImplementation(value);
         } else if (typeof value === "string") {
-            vi.spyOn(path, key as any, "get").mockReturnValue(value);
+            // @ts-expect-error TS cannot handle the above check
+            vi.spyOn(path, key, "get").mockReturnValue(value);
         }
     }
 }

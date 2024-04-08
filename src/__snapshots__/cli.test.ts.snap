@@ -10,6 +10,37 @@ Options:
   --version  Show version number                                       [boolean]"
 `;
 
+exports[`cli > parse command > should offer help 1`] = `
+"process.js parse [sources-path]
+
+parse file or folders recursively by given path and calculate metrics
+
+Positionals:
+  sources-path  path to sources                              [string] [required]
+
+Options:
+      --help                      Show help                            [boolean]
+      --version                   Show version number                  [boolean]
+  -o, --output-path               Output file path (required)[string] [required]
+  -r, --relative-paths            Write relative instead of absolute paths to th
+                                  e analyzed files in the output
+                                                      [boolean] [default: false]
+  -e, --exclusions                Exclude folders from scanning for files (comma
+                                   separated list)
+                  [string] [default: "node_modules,.idea,dist,build,out,vendor"]
+      --parse-h-as-c, --hc        Parse all .h files as C instead of C++ (defaul
+                                  ts to C++)          [boolean] [default: false]
+      --parse-some-h-as-c, --shc  For the specified folders/files (comma separat
+                                  ed list), parse .h files as C instead of C++.
+                                  Ignored if parse-h-as-c is set.
+                                                          [string] [default: ""]
+  -c, --compress                  output .gz-zipped file
+                                                      [boolean] [default: false]
+      --parse-dependencies        EXPERIMENTAL: flag to enable dependency parsin
+                                  g (dependencies will be appended to the output
+                                   file)              [boolean] [default: false]"
+`;
+
 exports[`cli > should offer help 1`] = `
 "process.js <command>
 

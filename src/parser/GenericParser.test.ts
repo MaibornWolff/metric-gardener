@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { GenericParser } from "./GenericParser.js";
 import * as HelperModule from "./helper/Helper.js";
-import { TreeParser } from "./helper/TreeParser.js";
+import * as TreeParser from "./helper/TreeParser.js";
 import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import {
     assumeLanguageFromFilePath,
@@ -10,9 +10,9 @@ import {
     languageToGrammar,
 } from "./helper/Language.js";
 import Parser = require("tree-sitter");
+import { Tree } from "tree-sitter";
 import {
     SourceFile,
-    FileMetric,
     ParsedFile,
     UnsupportedFile,
     FileMetricResults,
@@ -29,49 +29,59 @@ import path from "path";
  * Implementation of function mocks:
  */
 
-async function* mockedFindFilesAsync() {
+// eslint-disable-next-line @typescript-eslint/require-await
+async function* mockedFindFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path.cpp";
 }
 
-async function* mockedFindTwoFilesAsync() {
+// eslint-disable-next-line @typescript-eslint/require-await
+async function* mockedFindTwoFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/path2.cpp";
 }
 
-async function* mockedFindAlsoUnsupportedFilesAsync() {
+// eslint-disable-next-line @typescript-eslint/require-await
+async function* mockedFindAlsoUnsupportedFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/unsupported.unsupported";
 }
 
-async function* mockedFindFilesAsyncError() {
+// eslint-disable-next-line @typescript-eslint/require-await
+async function* mockedFindFilesAsyncError(): AsyncGenerator<string> {
     yield "clearly/invalid/path.cpp";
     throw new Error("Hard drive crashed!");
 }
 
-async function mockedTreeParserParse(filePath: string, config: Configuration) {
+function mockedTreeParserParse(filePath: string, config: Configuration): Promise<SourceFile> {
     const language = assumeLanguageFromFilePath(filePath, config);
     if (language !== undefined) {
         return Promise.resolve(new ParsedFile(filePath, language, tree));
     } else {
-        return new UnsupportedFile(filePath);
+        return Promise.resolve(new UnsupportedFile(filePath));
     }
 }
 
-async function mockedMetricsCalculator(file: SourceFile): Promise<[SourceFile, FileMetricResults]> {
+function mockedMetricsCalculator(file: SourceFile): Promise<[SourceFile, FileMetricResults]> {
     if (file instanceof ErrorFile) {
-        return [file, { fileType: file.fileType, metricResults: [], metricErrors: [] }];
+        return Promise.resolve([
+            file,
+            { fileType: file.fileType, metricResults: [], metricErrors: [] },
+        ]);
+    } else {
+        return Promise.resolve([file, expectedFileMetricsResults]);
     }
-    return [file, expectedFileMetricsResults];
 }
 
 /*
  * Helper functions for creating mocks:
  */
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function mockFindFilesAsync(mockedFunction: () => AsyncGenerator<string> = mockedFindFilesAsync) {
     return vi.spyOn(HelperModule, "findFilesAsync").mockImplementation(mockedFunction);
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function mockTreeParserParse(
     implementation: (
         filePath: string,
@@ -81,10 +91,12 @@ function mockTreeParserParse(
     return vi.spyOn(TreeParser, "parse").mockImplementation(implementation);
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function spyOnMetricCalculator() {
     return vi.spyOn(MetricCalculator, "calculateMetrics");
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function spyOnCouplingCalculatorNoOp() {
     const couplingProcessFileSpied = vi
         .spyOn(CouplingCalculator.prototype, "processFile")
@@ -101,11 +113,11 @@ function spyOnCouplingCalculatorNoOp() {
 
 const expectedFileMetricsResults: FileMetricResults = {
     fileType: FileType.SourceCode,
-    metricResults: [{ metricName: FileMetric.linesOfCode, metricValue: 5 }],
+    metricResults: [{ metricName: "lines_of_code", metricValue: 5 }],
     metricErrors: [],
 };
 
-let tree: Parser.Tree;
+let tree: Tree;
 beforeAll(() => {
     const parser = new Parser();
     parser.setLanguage(languageToGrammar.get(Language.CPlusPlus));
@@ -217,8 +229,8 @@ describe("GenericParser.calculateMetrics()", () => {
          * Given:
          */
         mockFindFilesAsync();
-        mockTreeParserParse(async (filePath) => {
-            return new ErrorFile(filePath, new Error("Baaaaaah"));
+        mockTreeParserParse((filePath) => {
+            return Promise.resolve(new ErrorFile(filePath, new Error("Baaaaaah")));
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
@@ -244,11 +256,11 @@ describe("GenericParser.calculateMetrics()", () => {
         const errorMetricsResults: FileMetricResults = {
             fileType: FileType.SourceCode,
             metricResults: [],
-            metricErrors: [{ metricName: FileMetric.linesOfCode, error: new Error("Buuuh!") }],
+            metricErrors: [{ metricName: "lines_of_code", error: new Error("Buuuh!") }],
         };
 
-        spyOnMetricCalculator().mockImplementation(async (file) => {
-            return [file, errorMetricsResults];
+        spyOnMetricCalculator().mockImplementation((file) => {
+            return Promise.resolve([file, errorMetricsResults]);
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
@@ -279,17 +291,18 @@ describe("GenericParser.calculateMetrics()", () => {
             metricResults: [],
             metricErrors: [
                 {
-                    metricName: FileMetric.linesOfCode,
+                    metricName: "lines_of_code",
                     error: new Error("I only accept cpp files!"),
                 },
             ],
         };
 
-        spyOnMetricCalculator().mockImplementation(async (file) => {
+        spyOnMetricCalculator().mockImplementation((file) => {
             if (path.posix.extname(file.filePath) !== ".cpp") {
-                return [file, errorMetricsResults];
+                return Promise.resolve([file, errorMetricsResults]);
+            } else {
+                return Promise.resolve([file, expectedFileMetricsResults]);
             }
-            return [file, expectedFileMetricsResults];
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
@@ -319,17 +332,17 @@ describe("GenericParser.calculateMetrics()", () => {
         mockTreeParserParse();
 
         const metricResults: MetricResult[] = [
-            { metricName: FileMetric.linesOfCode, metricValue: 5 },
-            { metricName: FileMetric.realLinesOfCode, metricValue: 3 },
+            { metricName: "lines_of_code", metricValue: 5 },
+            { metricName: "real_lines_of_code", metricValue: 3 },
         ];
 
         const metricErrors: MetricError[] = [
             {
-                metricName: FileMetric.classes,
+                metricName: "classes",
                 error: new Error("Classes metric is to difficult for this program!"),
             },
             {
-                metricName: FileMetric.functions,
+                metricName: "functions",
                 error: new Error("Unable to call functions, because, well, it does not work, ok??"),
             },
         ];
@@ -342,9 +355,10 @@ describe("GenericParser.calculateMetrics()", () => {
 
         spyOnMetricCalculator().mockImplementation(async (file) => {
             if (path.posix.extname(file.filePath) === ".cpp") {
-                return [file, partialErrorMetricsResults];
+                return Promise.resolve([file, partialErrorMetricsResults]);
+            } else {
+                return Promise.resolve([file, expectedFileMetricsResults]);
             }
-            return [file, expectedFileMetricsResults];
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
@@ -366,11 +380,12 @@ describe("GenericParser.calculateMetrics()", () => {
         expect(console.error).toHaveBeenCalled();
     });
 
-    it("should fail if findFilesAsync throws an error", async () => {
+    it("should fail if findFilesAsync throws an error", () => {
         mockFindFilesAsync(mockedFindFilesAsyncError);
         mockTreeParserParse();
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         expect(parser.calculateMetrics()).rejects.toThrowError("Hard drive crashed!");
         expect(console.error).not.toHaveBeenCalled();
     });

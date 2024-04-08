@@ -18,7 +18,6 @@ class App extends React.Component<MyProps, MyState> {
     render() {
         return (
             //this is React specific
-            // @ts-ignore
             <div>
                 {this.props.message} {this.state.count}
             </div>

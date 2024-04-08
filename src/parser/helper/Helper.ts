@@ -3,6 +3,7 @@ import path from "path";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
 import { Configuration } from "../Configuration.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
+import { QueryCapture, Tree } from "tree-sitter";
 
 /**
  * Looks up the passed string key converted to lower case in the passed map. Returns the retrieved value (if any).
@@ -10,17 +11,25 @@ import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
  * @param key The key to look up after being converted to lower case. The passed object is not modified.
  * @return the value retrieved from the map, if any.
  */
-export function lookupLowerCase<V>(map: Map<string, V>, key: string) {
+export function lookupLowerCase<V>(map: Map<string, V>, key: string): V | undefined {
     const inLowerCase = key.toLowerCase();
     return map.get(inLowerCase);
 }
 
-export function formatCaptures(tree, captures) {
+/**
+ * This was once used for debugging,
+ * so that one can see which program code tree-sitter has found via the query
+ * or which program code is behind a nodeType.
+ * @deprecated TODO: rewrite and fix this function or remove it
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function formatCaptures(tree: Tree, captures: QueryCapture[]) {
     return captures.map((c) => {
-        const node = c.node;
-        delete c.node;
-        c.text = tree.getText(node);
-        return c;
+        const { node, ...capture } = c;
+        // @ts-expect-error TODO fix this
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        const text = tree.getText(node) as string;
+        return { ...capture, text };
     });
 }
 
@@ -92,7 +101,7 @@ function findNodeTypesByCategories(
     allNodeTypes: NodeTypeConfig[],
     categories: Set<NodeTypeCategory>,
     callback: (nodeTypeConfig: NodeTypeConfig) => void,
-) {
+): void {
     for (const nodeTypeConfig of allNodeTypes) {
         if (categories.has(nodeTypeConfig.category)) {
             callback(nodeTypeConfig);
@@ -103,7 +112,7 @@ function findNodeTypesByCategories(
 export function getQueryStatementsByCategories(
     allNodeTypes: NodeTypeConfig[],
     ...categories: NodeTypeCategory[]
-) {
+): NodeTypeQueryStatement[] {
     const statements: NodeTypeQueryStatement[] = [];
     findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeType) => {
         const queryStatement = new NodeTypeQueryStatement(nodeType);
@@ -116,7 +125,7 @@ export function getQueryStatementsByCategories(
 export function getNodeTypesByCategories(
     allNodeTypes: NodeTypeConfig[],
     ...categories: NodeTypeCategory[]
-) {
+): NodeTypeConfig[] {
     const types: NodeTypeConfig[] = [];
     findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeTypeConfig) =>
         types.push(nodeTypeConfig),
@@ -127,7 +136,7 @@ export function getNodeTypesByCategories(
 export function getNodeTypeNamesByCategories(
     allNodeTypes: NodeTypeConfig[],
     ...categories: NodeTypeCategory[]
-) {
+): string[] {
     const typeNames: string[] = [];
     findNodeTypesByCategories(allNodeTypes, new Set(categories), (nodeTypeConfig) => {
         typeNames.push(nodeTypeConfig.type_name);

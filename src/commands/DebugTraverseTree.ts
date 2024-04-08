@@ -13,7 +13,7 @@ if (require.main === module) {
  * @param filePath Path to the file.
  * @param language Language to use for parsing.
  */
-export function traverseTree(filePath: string, language: Language) {
+export function traverseTree(filePath: string, language: Language): void {
     const text: string = fs.readFileSync(filePath, { encoding: "utf8" });
 
     const parser = new Parser();
@@ -24,7 +24,7 @@ export function traverseTree(filePath: string, language: Language) {
     walkTree(tree.walk());
 }
 
-function walkTree(cursor: TreeCursor) {
+function walkTree(cursor: TreeCursor): void {
     const { currentNode } = cursor;
     console.log(currentNode);
 

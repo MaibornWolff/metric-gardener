@@ -1,7 +1,7 @@
 import { QueryBuilder } from "../queries/QueryBuilder.js";
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
 import { getQueryStatementsByCategories } from "../helper/Helper.js";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { QueryMatch, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Language } from "../helper/Language.js";
@@ -29,7 +29,7 @@ export class CommentLines implements Metric {
         );
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const additionalStatements: QueryStatementInterface[] = [];
         switch (language) {
@@ -76,7 +76,7 @@ export class CommentLines implements Metric {
             }
         }
 
-        dlog(this.getName() + " - " + numberOfLines);
+        dlog(this.getName() + " - " + numberOfLines.toString());
 
         return {
             metricName: this.getName(),
@@ -84,7 +84,7 @@ export class CommentLines implements Metric {
         };
     }
 
-    getName(): string {
-        return FileMetric.commentLines;
+    getName(): MetricName {
+        return "comment_lines";
     }
 }

@@ -2,7 +2,7 @@ import { expect, vi } from "vitest";
 import * as fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser.js";
 import { ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
-import { CouplingResult, FileMetric, FileMetricResults } from "../../src/parser/metrics/Metric.js";
+import { CouplingResult, MetricName, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 import path, { PlatformPath } from "path";
 
 /**
@@ -15,7 +15,7 @@ import path, { PlatformPath } from "path";
 export function getTestConfiguration(
     sourcesPath: string,
     customOverrides: Partial<ConfigurationParams> = {},
-) {
+): Configuration {
     const defaultParams: ConfigurationParams = {
         sourcesPath,
         outputPath: "invalid/output/path",
@@ -29,29 +29,29 @@ export function getTestConfiguration(
     return new Configuration({ ...defaultParams, ...customOverrides });
 }
 
-export function mockConsole() {
-    for (const key of Object.keys(console) as (keyof typeof console)[]) {
+export function mockConsole(): void {
+    for (const key of Object.keys(console) as (keyof Console)[]) {
         vi.spyOn(console, key).mockReset();
     }
     vi.spyOn(process.stdout, "write").mockReset();
 }
 
-export function mockPosixPath({ skip }: { skip?: (keyof PlatformPath)[] } = {}) {
+export function mockPosixPath({ skip }: { skip?: (keyof PlatformPath)[] } = {}): void {
     mockPath(path.posix, skip);
 }
-export function mockWin32Path({ skip }: { skip?: (keyof PlatformPath)[] } = {}) {
+export function mockWin32Path({ skip }: { skip?: (keyof PlatformPath)[] } = {}): void {
     mockPath(path.win32, skip);
 }
-function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = []) {
+function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = []): void {
     for (const [key, value] of Object.entries(platformPath) as [keyof PlatformPath, unknown][]) {
         if (skip.includes(key)) {
             continue;
         }
         if (typeof value === "function") {
-            // @ts-expect-error TS cannot handle the above check
+            // @ts-expect-error TS cannot handle the check above
             vi.spyOn(path, key).mockImplementation(value);
         } else if (typeof value === "string") {
-            // @ts-expect-error TS cannot handle the above check
+            // @ts-expect-error TS cannot handle the check above
             vi.spyOn(path, key, "get").mockReturnValue(value);
         }
     }
@@ -63,7 +63,10 @@ function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = [])
  * @param parseHAsC Whether to parse all .h files as C instead of C++ files.
  * @return Map that maps the absolute file paths to the corresponding map of calculated file metric results.
  */
-export async function parseAllFileMetrics(inputPath: string, parseHAsC = false) {
+export async function parseAllFileMetrics(
+    inputPath: string,
+    parseHAsC = false,
+): Promise<Map<string, FileMetricResults>> {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(
         getTestConfiguration(realInputPath, { parseAllHAsC: parseHAsC }),
@@ -82,9 +85,9 @@ export async function parseAllFileMetrics(inputPath: string, parseHAsC = false) 
 export function expectFileMetric(
     results: Map<string, FileMetricResults>,
     inputPath: string,
-    metric: FileMetric,
+    metric: MetricName,
     expected: number,
-) {
+): void {
     const realInputPath = fs.realpathSync(inputPath);
     const metricResults = results.get(realInputPath)?.metricResults;
     const metricValue = metricResults?.find(({ metricName }) => metricName === metric)?.metricValue;
@@ -95,7 +98,7 @@ export function expectFileMetric(
  * Gets the coupling metrics for the specified path.
  * @param inputPath Path to the test source files.
  */
-export async function getCouplingMetrics(inputPath: string) {
+export async function getCouplingMetrics(inputPath: string): Promise<CouplingResult> {
     const realInputPath = fs.realpathSync(inputPath);
     const parser = new GenericParser(
         getTestConfiguration(realInputPath, { parseDependencies: true, relativePaths: true }),
@@ -114,7 +117,7 @@ export async function getCouplingMetrics(inputPath: string) {
  * in which files are found on different platforms.
  * @param couplingResult The CouplingResult whose contents should be sorted.
  */
-function sortCouplingResults(couplingResult: CouplingResult) {
+function sortCouplingResults(couplingResult: CouplingResult): void {
     // Sort the metrics in ascending order of the file paths
     couplingResult.metrics = new Map(
         [...couplingResult.metrics.entries()].sort((a, b) => strcmp(a[0], b[0])),
@@ -134,7 +137,7 @@ function sortCouplingResults(couplingResult: CouplingResult) {
  * @param b Second string.
  * @return negative value if a < b, a positive value if b < a, and 0 if a === b.
  */
-function strcmp(a: string, b: string) {
+function strcmp(a: string, b: string): 1 | 0 | -1 {
     if (a < b) {
         return -1;
     } else if (b < a) {

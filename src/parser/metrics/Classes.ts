@@ -1,6 +1,6 @@
 import { QueryBuilder } from "../queries/QueryBuilder.js";
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { QueryMatch } from "tree-sitter";
 import {
@@ -37,7 +37,7 @@ export class Classes implements Metric {
         this.addQueriesForPHP();
     }
 
-    addQueriesForCAndCpp() {
+    addQueriesForCAndCpp(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(struct_specifier body: (field_declaration_list)) @struct_definition",
@@ -87,7 +87,7 @@ export class Classes implements Metric {
         );
     }
 
-    addQueriesForTSAndTSX() {
+    addQueriesForTSAndTSX(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(type_alias_declaration value: (object_type))",
@@ -96,7 +96,7 @@ export class Classes implements Metric {
         );
     }
 
-    addQueriesForJava() {
+    addQueriesForJava(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", [
                 "java",
@@ -104,7 +104,7 @@ export class Classes implements Metric {
         );
     }
 
-    addQueriesForPHP() {
+    addQueriesForPHP(): void {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(`(object_creation_expression "new" "class")`, [
                 "php",
@@ -112,7 +112,7 @@ export class Classes implements Metric {
         );
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements(this.statementsSuperSet);
@@ -123,7 +123,7 @@ export class Classes implements Metric {
             matches = query.matches(tree.rootNode);
         }
 
-        dlog(this.getName() + " - " + matches.length);
+        dlog(this.getName() + " - " + matches.length.toString());
 
         return {
             metricName: this.getName(),
@@ -131,7 +131,7 @@ export class Classes implements Metric {
         };
     }
 
-    getName(): string {
-        return FileMetric.classes;
+    getName(): MetricName {
+        return "classes";
     }
 }

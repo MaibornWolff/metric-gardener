@@ -11,6 +11,7 @@ import {
     ParsedFile,
     CouplingMetrics,
     CouplingResult,
+    MetricName,
 } from "../Metric.js";
 import { formatPrintPath } from "../../helper/Helper.js";
 import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector.js";
@@ -18,7 +19,7 @@ import { Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
 import { getAdditionalRelationships } from "./CallExpressionResolver.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { Configuration } from "../../Configuration.js";
-import { TreeParser } from "../../helper/TreeParser.js";
+import { parseSync } from "../../helper/TreeParser.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -49,7 +50,7 @@ export class Coupling implements CouplingMetric {
         this.publicAccessorCollector = publicAccessorCollector;
     }
 
-    processFile(parsedFile: ParsedFile) {
+    processFile(parsedFile: ParsedFile): void {
         // preprocessing
         const moreNamespaces = this.namespaceCollector.getNamespaces(parsedFile);
         this.namespaces = new Map([...this.namespaces, ...moreNamespaces]);
@@ -74,7 +75,7 @@ export class Coupling implements CouplingMetric {
         this.unresolvedCallExpressions.set(parsedFile.filePath, callExpressionsOfFile);
     }
 
-    calculate() {
+    calculate(): CouplingResult {
         // postprocessing
 
         dlog("\n\n");
@@ -147,7 +148,10 @@ export class Coupling implements CouplingMetric {
     private buildDependencyTree(
         couplingResults: Relationship[],
         allCouplingMetrics: Map<string, CouplingMetrics>,
-    ) {
+    ): {
+        tree: Map<string, Relationship[]>;
+        rootFiles: string[];
+    } {
         const tree = new Map<string, Relationship[]>();
         for (const couplingItem of couplingResults) {
             const treeItem = tree.get(couplingItem.fromSource);
@@ -178,7 +182,9 @@ export class Coupling implements CouplingMetric {
         //console.log(tree, rootFiles);
     }
 
-    private calculateCouplingMetrics(couplingResults: Relationship[]) {
+    private calculateCouplingMetrics(
+        couplingResults: Relationship[],
+    ): Map<string, CouplingMetrics> {
         const couplingValues = new Map<string, CouplingMetrics>();
         for (const couplingItem of couplingResults) {
             this.updateMetricsForFile(couplingItem.fromSource, "outgoing", couplingValues);
@@ -193,14 +199,14 @@ export class Coupling implements CouplingMetric {
         filePath: string,
         direction: string,
         couplingValues: Map<string, CouplingMetrics>,
-    ) {
+    ): void {
         let couplingMetrics = couplingValues.get(filePath);
         if (couplingMetrics === undefined) {
             couplingMetrics = this.getNewCouplingMetrics();
             couplingValues.set(filePath, couplingMetrics);
         }
 
-        const parsedFile = TreeParser.parseSync(filePath, this.config);
+        const parsedFile = parseSync(filePath, this.config);
         if (!(parsedFile instanceof ParsedFile)) {
             return;
         }
@@ -253,7 +259,7 @@ export class Coupling implements CouplingMetric {
                 relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
                 relationship.toSource = formatPrintPath(relationship.toSource, this.config);
             }
-            const relCouplingMetrics = new Map();
+            const relCouplingMetrics = new Map<string, CouplingMetrics>();
             for (const [absolutePath, metricValues] of couplingMetrics) {
                 relCouplingMetrics.set(formatPrintPath(absolutePath, this.config), metricValues);
             }
@@ -262,7 +268,7 @@ export class Coupling implements CouplingMetric {
         return { relationships: relationships, metrics: couplingMetrics };
     }
 
-    getName(): string {
+    getName(): MetricName {
         return "coupling";
     }
 }

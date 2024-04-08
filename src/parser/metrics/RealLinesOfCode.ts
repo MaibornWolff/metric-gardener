@@ -1,5 +1,5 @@
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { SyntaxNode, TreeCursor } from "tree-sitter";
 import { getNodeTypeNamesByCategories } from "../helper/Helper.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
@@ -41,7 +41,7 @@ export class RealLinesOfCode implements Metric {
         isComment: (node: SyntaxNode) => boolean,
         countAllLines: (node: SyntaxNode) => boolean,
         realLinesOfCode = new Set<number>(),
-    ) {
+    ): Set<number> {
         const { currentNode } = cursor;
         if (!isComment(currentNode)) {
             realLinesOfCode.add(currentNode.startPosition.row);
@@ -72,7 +72,7 @@ export class RealLinesOfCode implements Metric {
         return realLinesOfCode;
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         let isCommentFunction: (node: SyntaxNode) => boolean = (node: SyntaxNode) =>
             this.isComment(node);
@@ -80,7 +80,7 @@ export class RealLinesOfCode implements Metric {
 
         switch (language) {
             case Language.Python:
-                isCommentFunction = (node: SyntaxNode) => this.isPythonComment(node);
+                isCommentFunction = (node: SyntaxNode): boolean => this.isPythonComment(node);
                 break;
             case Language.Bash:
                 countAllLinesFunction = countAllLinesBash;
@@ -98,7 +98,7 @@ export class RealLinesOfCode implements Metric {
             rloc = realLinesOfCode.size;
         }
 
-        dlog(this.getName() + " - " + rloc);
+        dlog(this.getName() + " - " + rloc.toString());
 
         return {
             metricName: this.getName(),
@@ -106,15 +106,15 @@ export class RealLinesOfCode implements Metric {
         };
     }
 
-    isComment(node: SyntaxNode) {
+    isComment(node: SyntaxNode): boolean {
         return this.commentStatementsSet.has(node.type);
     }
 
-    isPythonComment(node: SyntaxNode) {
+    isPythonComment(node: SyntaxNode): boolean {
         return this.isComment(node) || this.isPythonMultilineComment(node);
     }
 
-    isPythonMultilineComment(node: SyntaxNode) {
+    isPythonMultilineComment(node: SyntaxNode): boolean {
         // Multiline comments in python are (multiline) strings that are
         // neither assigned to a variable nor used as a call parameter.
         return (
@@ -124,8 +124,8 @@ export class RealLinesOfCode implements Metric {
         );
     }
 
-    getName(): string {
-        return FileMetric.realLinesOfCode;
+    getName(): MetricName {
+        return "real_lines_of_code";
     }
 }
 

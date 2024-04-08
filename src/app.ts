@@ -7,13 +7,13 @@ import { updateNodeTypesMappingFile } from "./commands/import-grammars/ImportNod
 import { outputAsJson } from "./commands/outputMetrics.js";
 import fs from "fs/promises";
 
-yargs(hideBin(process.argv))
+void yargs(hideBin(process.argv))
     .command(
         "import-grammars",
         "(re-)import grammar expression types for supported languages",
         {},
-        (_argv) => {
-            updateNodeTypesMappingFile();
+        async () => {
+            await updateNodeTypesMappingFile();
         },
     )
     .command(
@@ -23,6 +23,7 @@ yargs(hideBin(process.argv))
             return cmdYargs
                 .positional("sources-path", {
                     describe: "path to sources",
+                    type: "string",
                 })
                 .option("output-path", {
                     alias: "o",
@@ -32,6 +33,7 @@ yargs(hideBin(process.argv))
                 .option("relative-paths", {
                     alias: "r",
                     type: "boolean",
+                    default: false,
                     description:
                         "Write relative instead of absolute paths to the analyzed files in the output",
                 })
@@ -69,28 +71,27 @@ yargs(hideBin(process.argv))
                 })
                 .demandOption(["sources-path", "output-path"]);
         },
-        (argv) => {
-            parseSourceCode(argv);
+        async (argv) => {
+            const configuration = new Configuration({
+                sourcesPath: await fs.realpath(argv["sources-path"]),
+                outputPath: argv["output-path"],
+                parseDependencies: argv["parse-dependencies"],
+                exclusions: argv["exclusions"],
+                parseAllHAsC: argv["parse-h-as-c"],
+                parseSomeHAsC: argv["parse-some-h-as-c"],
+                compress: argv["compress"],
+                relativePaths: argv["relative-paths"],
+            });
+            await parseSourceCode(configuration);
         },
     )
     .demandCommand()
     .strictCommands()
     .strictOptions()
-    .parseSync();
+    .parse();
 
-async function parseSourceCode(argv) {
+async function parseSourceCode(configuration: Configuration): Promise<void> {
     try {
-        const configuration = new Configuration({
-            sourcesPath: await fs.realpath(argv["sources-path"]),
-            outputPath: argv["output-path"],
-            parseDependencies: argv["parse-dependencies"],
-            exclusions: argv["exclusions"],
-            parseAllHAsC: argv["parse-h-as-c"],
-            parseSomeHAsC: argv["parse-some-h-as-c"],
-            compress: argv["compress"],
-            relativePaths: argv["relative-paths"],
-        });
-
         console.time("Time to complete");
 
         const parser = new GenericParser(configuration);

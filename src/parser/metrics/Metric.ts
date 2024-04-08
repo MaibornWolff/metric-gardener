@@ -4,15 +4,15 @@ import { FileType, Language, languageToFileType } from "../helper/Language.js";
 /**
  * Names of all available file metrics.
  */
-export enum FileMetric {
-    classes = "classes",
-    commentLines = "comment_lines",
-    functions = "functions",
-    linesOfCode = "lines_of_code",
-    complexity = "complexity",
-    realLinesOfCode = "real_lines_of_code",
-    maxNestingLevel = "max_nesting_level",
-}
+export type MetricName =
+    | "classes"
+    | "comment_lines"
+    | "functions"
+    | "lines_of_code"
+    | "complexity"
+    | "real_lines_of_code"
+    | "max_nesting_level"
+    | "coupling";
 
 /**
  * Interface for carrying the results of the metric calculations for a file.
@@ -30,7 +30,7 @@ export interface MetricResult {
     /**
      * Name of the metric.
      */
-    metricName: string;
+    metricName: MetricName;
 
     /**
      * Value of the metric.
@@ -42,7 +42,7 @@ export interface MetricResult {
  * Represents an error that occurred during the metric calculation process.
  */
 export interface MetricError {
-    metricName: string;
+    metricName: MetricName;
     error: Error;
 }
 
@@ -53,8 +53,9 @@ export interface Relationship {
     toSource: string;
     fromClassName: string;
     toClassName: string;
-    usageType: string | "usage" | "extends" | "implements";
+    usageType: UsageType;
 }
+export type UsageType = "usage" | "extends" | "implements";
 
 export interface CouplingMetrics {
     outgoing_dependencies: number;
@@ -77,19 +78,19 @@ export interface Metric {
      * @param parsedFile Parsed source code file for which the metric value should be calculated.
      * @return A MetricResult containing the calculated metric value.
      */
-    calculate(parsedFile: ParsedFile): Promise<MetricResult>;
+    calculate(parsedFile: ParsedFile): MetricResult;
 
     /**
      * Returns the name of this metric.
      * @return The name of this metric.
      */
-    getName(): string;
+    getName(): MetricName;
 }
 
 export interface CouplingMetric {
     processFile(file: ParsedFile): void;
     calculate(): CouplingResult;
-    getName(): string;
+    getName(): MetricName;
 }
 
 export abstract class SourceFile {

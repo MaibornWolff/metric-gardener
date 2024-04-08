@@ -28,7 +28,7 @@ export class CouplingCalculator {
         ];
     }
 
-    processFile(sourceFile: SourceFile) {
+    processFile(sourceFile: SourceFile): void {
         if (this.config.parseDependencies && sourceFile instanceof ParsedFile) {
             this.comprisingMetrics[0].processFile(sourceFile);
         }

@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { MaxNestingLevel } from "./MaxNestingLevel.js";
 import Parser = require("tree-sitter");
 import { Language, languageToGrammar } from "../helper/Language.js";
-import { FileMetric, ParsedFile } from "./Metric.js";
+import { ParsedFile } from "./Metric.js";
 import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
 
 describe("MaxNestingLevel.calculate(...)", () => {
@@ -43,14 +43,14 @@ describe("MaxNestingLevel.calculate(...)", () => {
         expectMaxNestingLevel('{ "a": { "b": "c" } }', Language.Python, 0);
     });
 
-    function expectMaxNestingLevel(input: string, language: Language, expected: number) {
+    function expectMaxNestingLevel(input: string, language: Language, expected: number): void {
         parser.setLanguage(languageToGrammar.get(language));
         const tree = parser.parse(input);
 
         const parsedFile = new ParsedFile("filename", language, tree);
 
-        expect(maxNestingLevel.calculate(parsedFile)).resolves.toEqual({
-            metricName: FileMetric.maxNestingLevel,
+        expect(maxNestingLevel.calculate(parsedFile)).toEqual({
+            metricName: "max_nesting_level",
             metricValue: expected,
         });
     }

@@ -1,5 +1,5 @@
 import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { TreeCursor } from "tree-sitter";
 
@@ -33,7 +33,7 @@ export class MaxNestingLevel implements Metric {
      * this is the most efficient way to traverse a syntax tree.
      * @param cursor A {@link TreeCursor} for the syntax tree.
      */
-    walkTree(cursor: TreeCursor) {
+    walkTree(cursor: TreeCursor): number {
         let maxChildHeight = 0;
 
         if (cursor.gotoFirstChild()) {
@@ -53,7 +53,7 @@ export class MaxNestingLevel implements Metric {
         }
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const { tree } = parsedFile;
 
         let maxNestingLevel = 0;
@@ -65,7 +65,7 @@ export class MaxNestingLevel implements Metric {
             maxNestingLevel = Math.max(maxNestingLevel - 1, 0);
         }
 
-        dlog(this.getName() + " - " + maxNestingLevel);
+        dlog(this.getName() + " - " + maxNestingLevel.toString());
 
         return {
             metricName: this.getName(),
@@ -73,7 +73,7 @@ export class MaxNestingLevel implements Metric {
         };
     }
 
-    getName(): string {
-        return FileMetric.maxNestingLevel;
+    getName(): MetricName {
+        return "max_nesting_level";
     }
 }

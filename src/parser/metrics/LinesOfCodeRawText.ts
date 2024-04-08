@@ -1,4 +1,4 @@
-import { FileMetric, MetricResult } from "./Metric.js";
+import { MetricResult } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -8,14 +8,13 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 /**
  * Counts the number of lines in a file, including empty lines, without the need to use a language grammar.
  */
-export class LinesOfCodeRawText {
-    static async calculate(sourceCode: string): Promise<MetricResult> {
-        const loc = sourceCode.split(/\r\n|\r|\n/g).length;
-        dlog(FileMetric.linesOfCode + " - raw text - " + loc);
+export function calculateLinesOfCodeRawText(sourceCode: string): MetricResult {
+    const loc = sourceCode.split(/\r\n|\r|\n/g).length;
 
-        return {
-            metricName: FileMetric.linesOfCode,
-            metricValue: loc,
-        };
-    }
+    dlog("lines_of_code" + " - raw text - " + loc.toString());
+
+    return {
+        metricName: "lines_of_code",
+        metricValue: loc,
+    };
 }

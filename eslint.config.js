@@ -13,4 +13,9 @@ export default tseslint.config(
         },
     },
     { ignores: ["**/*js", "resources", "node_modules"] },
+    {
+        rules: {
+            "@typescript-eslint/explicit-function-return-type": "error",
+        },
+    },
 );

@@ -58,6 +58,7 @@ export class Complexity implements Metric {
             }
         }
         this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
+        this.addQueriesForCSharp();
     }
 
     addBinaryExpressionQueryStatement(nodeType: NodeTypeConfig): void {
@@ -162,6 +163,15 @@ export class Complexity implements Metric {
                 ),
             );
         }
+    }
+    addQueriesForCSharp(): void {
+        this.complexityStatementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(`(assignment_operator "??=")`, ["cs"]),
+            new SimpleLanguageSpecificQueryStatement(
+                `(switch_expression_arm . (_) @default (#not-eq? @default "_"))`,
+                ["cs"],
+            ),
+        );
     }
 
     calculate(parsedFile: ParsedFile): MetricResult {

@@ -7,8 +7,8 @@ public record Person
 public readonly record struct Point(double X, double Y, double Z);
 public record struct Circle
 {
-    public double X { get; init; }
-    public double Y { get; init; }
+    public double X { get; set; }
+    public double Y { get; set; }
 
 }
 public record class Ocean(string Address);

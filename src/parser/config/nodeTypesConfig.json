@@ -1029,7 +1029,7 @@
     },
     {
         "type_name": "switch_expression_arm",
-        "category": "conditional_expression",
+        "category": "",
         "languages": ["cs"]
     },
     {

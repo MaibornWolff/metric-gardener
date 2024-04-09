@@ -19,3 +19,25 @@ public class Test {
 class AnotherTest {}
 
 internal class InternalClassTest {}
+
+interface Animal
+{
+  void animalSound(); // interface method (does not have a body)
+  void run(); // interface method (does not have a body)
+}
+
+public abstract class Country
+{
+    public abstract string Currency { get; }
+
+    public virtual void Move()
+    {
+        Console.WriteLine("Moving...");
+    }
+}
+enum Level
+{
+  Low,
+  Medium,
+  High
+}

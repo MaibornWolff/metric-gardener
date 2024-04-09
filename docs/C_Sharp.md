@@ -17,7 +17,7 @@ The "complexity" metric counts:
 -   Not-default switch expression arms in switch expressions `x switch { value1 => expression1, ...}`
 -   `catch` blocks
 -   logical binary operations `&&` and `||`
--   pattern combinators `and` and `or` in `is`-expression, switch statements and switch expressions
+-   pattern combinators `and` and `or`
 -   everything counted for the ["functions" metric](#functions)
 
 It does **not** count:

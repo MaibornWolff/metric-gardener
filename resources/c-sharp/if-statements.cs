@@ -34,3 +34,5 @@ myBool = (x is 1 and 5); // this should
 int? x = (x > 100) ? 12 : null;
 
 string Answer = Answer1 ?? Answer2 ?? Answer3 ?? Answer4;
+List<int>? numbers = null;
+(numbers ??= new List<int>()).Add(5);

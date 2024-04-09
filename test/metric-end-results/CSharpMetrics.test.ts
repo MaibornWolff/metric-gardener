@@ -39,15 +39,23 @@ describe("C# metric tests", () => {
         });
 
         it("should count if statements correctly", () => {
-            testFileMetric("if-statements.cs", "complexity", 11);
+            testFileMetric("if-statements.cs", "complexity", 12);
+        });
+
+        it("should count all switch statement arms", () => {
+            testFileMetric("switch-expression.cs", "complexity", 8);
+        });
+
+        it("should count all pattern combinators and and or", () => {
+            testFileMetric("pattern-combinators.cs", "complexity", 11);
         });
 
         it("should not count any class declaration", () => {
-            testFileMetric("classes.cs", "complexity", 1);
+            testFileMetric("classes.cs", "complexity", 5);
         });
 
         it("should count switch case labels, but no default labels", () => {
-            testFileMetric("case-statements.cs", "complexity", 4);
+            testFileMetric("case-statements.cs", "complexity", 5);
         });
 
         it("should count functions and methods correctly", () => {
@@ -65,8 +73,9 @@ describe("C# metric tests", () => {
 
     describe("parses C# classes metric", () => {
         it("should count class declarations", () => {
-            testFileMetric("classes.cs", "classes", 6);
+            testFileMetric("classes.cs", "classes", 9);
         });
+
         it("should count record declarations", () => {
             testFileMetric("records.cs", "classes", 5);
         });
@@ -75,6 +84,14 @@ describe("C# metric tests", () => {
     describe("parses C# functions metric", () => {
         it("should count functions and methods properly", () => {
             testFileMetric("functions-and-methods.cs", "functions", 8);
+        });
+
+        it("should count all methods in classes, abstract classes and interfaces", () => {
+            testFileMetric("classes.cs", "functions", 5);
+        });
+
+        it("should count all methods in records", () => {
+            testFileMetric("records.cs", "functions", 8);
         });
     });
 

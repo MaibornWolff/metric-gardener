@@ -14,6 +14,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  */
 export class RealLinesOfCode implements Metric {
     private commentStatementsSet: Set<string>;
+    private lastCountedLine = -1;
 
     /**
      * Constructs a new instance of {@link RealLinesOfCode}.
@@ -34,37 +35,36 @@ export class RealLinesOfCode implements Metric {
      * @param cursor A {@link TreeCursor} for the syntax tree.
      * @param isComment Function that checks whether a node is a comment or not.
      * @param countAllLines Function that checks whether to count all lines of a node.
-     * @param realLinesOfCode A set in which the line numbers of the found code lines are stored.
      */
     walkTree(
         cursor: TreeCursor,
         isComment: (node: SyntaxNode) => boolean,
         countAllLines: (node: SyntaxNode) => boolean,
-        realLinesOfCode = new Set<number>(),
-    ): Set<number> {
+    ): number {
+        let realLinesOfCode = 0;
         const { currentNode } = cursor;
         if (!isComment(currentNode)) {
-            realLinesOfCode.add(currentNode.startPosition.row);
+            if (currentNode.startPosition.row > this.lastCountedLine) {
+                this.lastCountedLine = currentNode.startPosition.row;
+                realLinesOfCode++;
+            }
 
             // This is a leaf node, so add further lines if it spans over multiple lines and is no line ending:
             if (countAllLines(currentNode)) {
-                for (
-                    let i = currentNode.startPosition.row + 1;
-                    i <= currentNode.endPosition.row;
-                    i++
-                ) {
-                    realLinesOfCode.add(i);
+                if (currentNode.endPosition.row > this.lastCountedLine) {
+                    realLinesOfCode += currentNode.endPosition.row - currentNode.startPosition.row;
+                    this.lastCountedLine = currentNode.endPosition.row;
                 }
             } else if (currentNode.endPosition.row > currentNode.startPosition.row) {
                 // Recurse, depth-first
                 if (cursor.gotoFirstChild()) {
-                    this.walkTree(cursor, isComment, countAllLines, realLinesOfCode);
+                    realLinesOfCode += this.walkTree(cursor, isComment, countAllLines);
                 }
             }
         }
 
         if (cursor.gotoNextSibling()) {
-            this.walkTree(cursor, isComment, countAllLines, realLinesOfCode);
+            realLinesOfCode += this.walkTree(cursor, isComment, countAllLines);
         } else {
             // Completed searching this part of the tree, so go up now.
             cursor.gotoParent();
@@ -87,22 +87,21 @@ export class RealLinesOfCode implements Metric {
                 break;
         }
 
-        let rloc = 0;
+        let realLinesOfCode = 0;
         const cursor = tree.walk();
 
         // Assume the root node is always some kind of program/file/compilation_unit stuff.
         // So if there are no child nodes, the file is empty.
         if (cursor.gotoFirstChild()) {
-            const realLinesOfCode = this.walkTree(cursor, isCommentFunction, countAllLinesFunction);
-            dlog("Included lines for rloc: ", realLinesOfCode);
-            rloc = realLinesOfCode.size;
+            this.lastCountedLine = -1;
+            realLinesOfCode = this.walkTree(cursor, isCommentFunction, countAllLinesFunction);
         }
 
-        dlog(this.getName() + " - " + rloc.toString());
+        dlog(this.getName() + " - " + realLinesOfCode.toString());
 
         return {
             metricName: this.getName(),
-            metricValue: rloc,
+            metricValue: realLinesOfCode,
         };
     }
 

@@ -13,7 +13,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Maps the abbreviations of all available languages (as they are used inside the nodeTypesConfig.json) to
  * the location of the node-types.json of the corresponding grammar.
  */
-export const languageAbbreviationToNodeTypeFiles = new Map([
+const languageAbbreviationToNodeTypeFiles = new Map([
     ["cs", "./node_modules/tree-sitter-c-sharp/src/node-types.json"],
     ["go", "./node_modules/tree-sitter-go/src/node-types.json"],
     ["java", "./node_modules/tree-sitter-java/src/node-types.json"],
@@ -32,10 +32,10 @@ export const languageAbbreviationToNodeTypeFiles = new Map([
     ["yaml", "./node_modules/tree-sitter-yaml/src/node-types.json"],
 ]);
 
-export const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";
+const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";
 
-const nodeTypeMappings: Map<string, NodeTypeConfig> = new Map();
-const changelog: NodeTypesChangelog = new NodeTypesChangelog();
+const nodeTypeMappings = new Map<string, NodeTypeConfig>();
+const changelog = new NodeTypesChangelog();
 
 /**
  * Updates the node mappings for calculating metrics by importing the node-types.json files of the currently
@@ -48,12 +48,12 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
     changelog.clear();
 
     try {
-        const languageAbbrToNodeTypePromises = readNodeTypesJsons();
+        const languageToNodeTypePromises = readNodeTypesJsons();
         const languageToPresentNodeTypes = importPresentNodeTypeMappings();
 
         for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
-            const presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr) ?? new Set();
-            const nodeTypesPromise = languageAbbrToNodeTypePromises.get(languageAbbr);
+            const presentNodeTypes = languageToPresentNodeTypes.get(languageAbbr);
+            const nodeTypesPromise = languageToNodeTypePromises.get(languageAbbr);
 
             // Await reading node-types.json for the language:
             const nodeTypesJson = await nodeTypesPromise;
@@ -87,26 +87,20 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
 function readNodeTypesJsons(): Map<string, Promise<string | Error>> {
     const languageAbbrToNodeTypePromises = new Map<string, Promise<string | Error>>();
 
-    for (const languageAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
-        const fileLocation = languageAbbreviationToNodeTypeFiles.get(languageAbbr);
-        if (fileLocation === undefined) {
-            throw new Error("No file path found for language " + languageAbbr);
-        }
-
-        languageAbbrToNodeTypePromises.set(
-            languageAbbr,
-            fs.readFile(fileLocation, "utf8").catch((reason: unknown) => {
-                return new Error(
-                    `Error while reading a node-types.json file from ${fileLocation}:\n${String(reason)}`,
-                ); // To be handled when awaiting the result.
-            }),
-        );
+    for (const [languageAbbr, fileLocation] of languageAbbreviationToNodeTypeFiles.entries()) {
+        const json = fs.readFile(fileLocation, "utf8").catch((reason: unknown) => {
+            return new Error(
+                `Error while reading a node-types.json file from ${fileLocation}:\n${String(reason)}`,
+            ); // To be handled when awaiting the result.
+        });
+        languageAbbrToNodeTypePromises.set(languageAbbr, json);
     }
+
     return languageAbbrToNodeTypePromises;
 }
 
 function importPresentNodeTypeMappings(): Map<string, Set<string>> {
-    const presentNodeTypesForLanguage: Map<string, Set<string>> = new Map();
+    const presentNodeTypesForLanguage = new Map<string, Set<string>>();
     for (const langAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
         presentNodeTypesForLanguage.set(langAbbr, new Set());
     }
@@ -126,7 +120,7 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
 
 function updateLanguage(
     languageAbbr: string,
-    presentNodes: Set<string>,
+    presentNodes: Set<string> | undefined,
     nodeTypesJson: string,
 ): void {
     const grammarNodeTypes = JSON.parse(nodeTypesJson) as NodeTypes;
@@ -137,12 +131,7 @@ function updateLanguage(
         // abstract syntax tree by removing syntax details.
         // See also https://tree-sitter.github.io/tree-sitter/using-parsers#named-vs-anonymous-nodes
         if (!grammarNodeType.named) {
-            dlog(
-                "Excluded unnamed node type " +
-                    grammarNodeType.type +
-                    " for language " +
-                    languageAbbr,
-            );
+            dlog(`Excluded unnamed node type ${grammarNodeType.type} for language ${languageAbbr}`);
             continue;
         }
 
@@ -219,8 +208,7 @@ function updateOrAddExpression(
             type_name: nodeTypeName,
             category: category,
             languages: [languageAbbr],
-            grammar_type_name:
-                grammarNodeTypeName === nodeTypeName ? undefined : grammarNodeTypeName,
+            grammar_type_name: grammarNodeTypeName,
             operator: operator,
         });
         changelog.addedNewNode(nodeTypeName, languageAbbr);
@@ -240,8 +228,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
             );
             if (
                 nodeType.category !== NodeTypeCategory.Other &&
-                (nodeType.deactivated_for_languages === undefined ||
-                    nodeType.deactivated_for_languages.includes(languageAbbr))
+                !nodeType.deactivated_for_languages?.includes(languageAbbr)
             ) {
                 console.warn(
                     '## Attention required! Language "' +
@@ -271,9 +258,7 @@ function removeAbandonedNodeTypes(): void {
             }
             nodeTypeMappings.delete(nodeTypeName);
             dlog(
-                "Removed node type " +
-                    nodeTypeName +
-                    " as it is no longer used in any language grammar",
+                `Removed node type ${nodeTypeName} as it is no longer used in any language grammar`,
             );
         }
     }

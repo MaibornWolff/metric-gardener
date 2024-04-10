@@ -17,7 +17,7 @@ const csvSeparator = ";";
  * @param s The string to escape.
  * @returns An escaped version of the string, without CSV special characters.
  */
-export function escapeForCsv(s: string): string {
+function escapeForCsv(s: string): string {
     const escaped = s.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/"/g, '""');
     return '"' + escaped + '"';
 }
@@ -28,14 +28,6 @@ export function escapeForCsv(s: string): string {
  */
 export class NodeTypesChangelog {
     private changelog = new Map<string, NodeTypesChangelogEntry>();
-
-    /**
-     * Gets the changes for one node type.
-     * @param nodeType
-     */
-    get(nodeType: string): NodeTypesChangelogEntry | undefined {
-        return this.changelog.get(nodeType);
-    }
 
     /**
      * Clear the changelog.
@@ -98,7 +90,7 @@ export class NodeTypesChangelog {
         this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(languageAbbr);
     }
 
-    writeNewNodes(writeStream: fs.WriteStream): void {
+    private writeNewNodes(writeStream: fs.WriteStream): void {
         writeStream.write("New syntax nodes:" + EOL + EOL);
         writeStream.write("Name:" + csvSeparator + "Added to language(s):" + EOL);
 
@@ -114,7 +106,7 @@ export class NodeTypesChangelog {
         }
     }
 
-    writeRemovedNodes(
+    private writeRemovedNodes(
         writeStream: fs.WriteStream,
         metricMappings: Map<string, NodeTypeConfig>,
     ): void {
@@ -126,23 +118,13 @@ export class NodeTypesChangelog {
                 csvSeparator +
                 "Mapped to category:" +
                 csvSeparator +
-                "Was explicitly only activated for language(s):" +
+                "Was explicitly deactivated for language(s):" +
                 EOL,
         );
 
         for (const entry of this.changelog.values()) {
             if (entry.isRemovedNode()) {
-                const mapping = metricMappings.get(entry.nodeTypeName);
-                if (mapping === undefined) {
-                    throw new Error(
-                        "Programming mistake: No existing node type configuration for a syntax node type that is not new: " +
-                            entry.nodeTypeName,
-                    );
-                }
-                const activatedForLangOutput =
-                    mapping.deactivated_for_languages === undefined
-                        ? ""
-                        : mapping.deactivated_for_languages;
+                const mapping = metricMappings.get(entry.nodeTypeName)!;
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
@@ -150,14 +132,14 @@ export class NodeTypesChangelog {
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
-                        activatedForLangOutput.toString() +
+                        (mapping.deactivated_for_languages ?? "").toString() +
                         EOL,
                 );
             }
         }
     }
 
-    writeModifiedNodes(
+    private writeModifiedNodes(
         writeStream: fs.WriteStream,
         metricMappings: Map<string, NodeTypeConfig>,
     ): void {
@@ -175,26 +157,15 @@ export class NodeTypesChangelog {
                 csvSeparator +
                 "Remains in language(s):" +
                 csvSeparator +
-                "Mapped to category::" +
+                "Mapped to category:" +
                 csvSeparator +
-                "Was explicitly only activated for language(s):" +
+                "Was explicitly deactivated for language(s):" +
                 EOL,
         );
 
         for (const entry of this.changelog.values()) {
             if (entry.isModifiedNode()) {
-                const mapping = metricMappings.get(entry.nodeTypeName);
-                if (mapping === undefined) {
-                    throw new Error(
-                        "Programming mistake: No existing node type configuration for a syntax node type that is not new: " +
-                            entry.nodeTypeName,
-                    );
-                }
-
-                const activatedForLangOutput =
-                    mapping.deactivated_for_languages === undefined
-                        ? ""
-                        : mapping.deactivated_for_languages;
+                const mapping = metricMappings.get(entry.nodeTypeName)!;
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
@@ -206,7 +177,7 @@ export class NodeTypesChangelog {
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
-                        activatedForLangOutput.toString() +
+                        (mapping.deactivated_for_languages ?? "").toString() +
                         EOL,
                 );
             }

@@ -11,13 +11,8 @@ vi.mock("fs", async (importOriginal) => {
 });
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
-        beforeEach(() => {
-            mockConsole();
-        });
-
-        afterAll(() => {
-            vi.resetModules();
-        });
+        beforeEach(mockConsole);
+        afterAll(() => void vi.resetModules());
 
         it("when metrics are present", () => {
             const file1MetricResults: MetricResult[] = [];
@@ -89,7 +84,6 @@ describe("outputMetrics", () => {
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
             expect(writeFileSync).toHaveBeenCalledTimes(1);
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const [file, data, options] = writeFileSync.mock.lastCall!;
 
             expect(file).toBe("mocked-file.json");

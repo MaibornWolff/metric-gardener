@@ -29,9 +29,7 @@ vi.mock("./parser/GenericParser.js", () => ({
 }));
 
 describe("cli", () => {
-    afterAll(() => {
-        vi.resetModules();
-    });
+    afterAll(() => void vi.resetModules());
 
     itShouldOfferHelp();
 

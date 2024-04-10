@@ -125,9 +125,7 @@ beforeAll(() => {
 });
 
 describe("GenericParser.calculateMetrics()", () => {
-    beforeEach(() => {
-        mockConsole();
-    });
+    beforeEach(mockConsole);
 
     it("should call MetricCalculator.calculateMetrics() and return the result when there is no error", async () => {
         /*

@@ -16,6 +16,7 @@ export default tseslint.config(
     {
         rules: {
             "@typescript-eslint/explicit-function-return-type": "error",
+            "@typescript-eslint/no-non-null-assertion": "off",
         },
     },
 );

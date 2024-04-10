@@ -14,7 +14,7 @@ import { MaxNestingLevel } from "./metrics/MaxNestingLevel.js";
 import { calculateLinesOfCodeRawText } from "./metrics/LinesOfCodeRawText.js";
 import fs from "fs/promises";
 import { FileType } from "./helper/Language.js";
-import { CommentKeyword } from "./metrics/CommentKeyword.js";
+import { KeywordsInComments } from "./metrics/KeywordsInComments.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

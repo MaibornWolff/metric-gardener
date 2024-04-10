@@ -155,4 +155,10 @@ describe("C++ metrics tests", () => {
             testFileMetric("weird_lines.cpp", "real_lines_of_code", 89);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.cpp", FileMetric.KeywordsInComments, 8);
+        });
+    });
 });

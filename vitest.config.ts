@@ -8,10 +8,10 @@ export default defineConfig({
             include: ["src/**"],
             reportOnFailure: true,
             thresholds: {
-                statements: 75,
-                branches: 85,
+                statements: 90,
+                branches: 90,
                 functions: 90,
-                lines: 75,
+                lines: 90,
             },
         },
         isolate: false,

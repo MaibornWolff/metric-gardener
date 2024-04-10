@@ -36,6 +36,7 @@ const pathToNodeTypesConfig = "./src/parser/config/nodeTypesConfig.json";
 
 const nodeTypeMappings = new Map<string, NodeTypeConfig>();
 const changelog = new NodeTypesChangelog();
+const obsoleteDeactivatedLanguages = new Map<string, string[]>();
 
 /**
  * Updates the node mappings for calculating metrics by importing the node-types.json files of the currently
@@ -68,7 +69,7 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
 
         // Make sure to write the change information before deleting any metric mapping.
         await changelog.writeChangelog(nodeTypeMappings);
-        removeAbandonedNodeTypes();
+        removeObsolete();
     } catch (e) {
         console.error("Error while updating the node mappings. Cancel update...");
         console.error(e);
@@ -240,11 +241,17 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
                         ". You may have to add a new node of that language to this category in nodeTypesConfig.json. ##",
                 );
             }
+
+            if (nodeType.deactivated_for_languages?.includes(languageAbbr)) {
+                const obsolete = obsoleteDeactivatedLanguages.get(nodeTypeName) || [];
+                obsolete.push(languageAbbr);
+                obsoleteDeactivatedLanguages.set(nodeTypeName, obsolete);
+            }
         }
     }
 }
 
-function removeAbandonedNodeTypes(): void {
+function removeObsolete(): void {
     for (const [nodeTypeName, nodeType] of nodeTypeMappings) {
         if (nodeType.languages.length === 0) {
             if (nodeType.category !== NodeTypeCategory.Other) {
@@ -260,6 +267,14 @@ function removeAbandonedNodeTypes(): void {
             dlog(
                 `Removed node type ${nodeTypeName} as it is no longer used in any language grammar`,
             );
+        } else {
+            const obsolete = obsoleteDeactivatedLanguages.get(nodeTypeName);
+            nodeType.deactivated_for_languages = nodeType.deactivated_for_languages?.filter(
+                (lang) => !obsolete?.includes(lang),
+            );
+            if (nodeType.deactivated_for_languages?.length === 0) {
+                delete nodeType.deactivated_for_languages;
+            }
         }
     }
 }

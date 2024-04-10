@@ -107,4 +107,10 @@ describe("Go metric tests", () => {
             testFileMetric("if-statements.go", "real_lines_of_code", 19);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.go", FileMetric.KeywordsInComments, 8);
+        });
+    });
 });

@@ -85,4 +85,10 @@ describe("Bash metrics tests", () => {
             testFileMetric("comment.sh", "comment_lines", 9);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.sh", FileMetric.KeywordsInComments, 9);
+        });
+    });
 });

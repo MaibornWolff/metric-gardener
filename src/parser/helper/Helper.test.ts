@@ -1,16 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-    getTestConfiguration,
-    mockPosixPath,
-    mockWin32Path,
+    getTestConfiguration, mockPosixPath, mockWin32Path
 } from "../../../test/metric-end-results/TestHelper.js";
 import {
     findFilesAsync,
+    createRegexFor,
     formatPrintPath,
     getNodeTypeNamesByCategories,
     getNodeTypesByCategories,
     getQueryStatementsByCategories,
-    lookupLowerCase,
+    lookupLowerCase
 } from "./Helper.js";
 import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
@@ -20,16 +19,8 @@ import { Dir, Dirent, Stats } from "fs";
 
 describe("Helper.ts", () => {
     describe("lookupLowerCase<V>(...)", () => {
-        const numbers = new Map<string, number>([
-            ["key", 1],
-            ["KEY", 2],
-            ["kEy", 3],
-        ]);
-        const strings = new Map<string, string>([
-            ["key", "value"],
-            ["KEY", "VALUE"],
-            ["kEy", "VaLuE"],
-        ]);
+        const numbers = new Map<string, number>([["key", 1], ["KEY", 2], ["kEy", 3]]);
+        const strings = new Map<string, string>([["key", "value"], ["KEY", "VALUE"], ["kEy", "VaLuE"]]);
         const noLowerCaseKey = new Map<string, object>([["KEY", { key: "value" }]]);
 
         it("should return the value for a key that is in the map", () => {
@@ -75,7 +66,7 @@ describe("Helper.ts", () => {
             mockWin32Path();
             const filePath = "C:\\Users\\user\\documents\\code\\more-code\\file.extension";
             const config = getTestConfiguration("C:\\Users\\user\\documents\\code", {
-                relativePaths: true,
+                relativePaths: true
             });
 
             expect(formatPrintPath(filePath, config)).toEqual("more-code\\file.extension");
@@ -85,7 +76,7 @@ describe("Helper.ts", () => {
             mockPosixPath();
             const filePath = "/some/path/for/the/test.extension";
             const config = getTestConfiguration("/some/path/for/the/test.extension", {
-                relativePaths: true,
+                relativePaths: true
             });
 
             expect(formatPrintPath(filePath, config)).toEqual("test.extension");
@@ -94,10 +85,7 @@ describe("Helper.ts", () => {
         it("should return the file name if the file path equals the sources path when relativePaths is set (DOS-style)", () => {
             mockWin32Path();
             const filePath = "C:\\Users\\user\\documents\\code\\more-code\\file.extension";
-            const config = getTestConfiguration(
-                "C:\\Users\\user\\documents\\code\\more-code\\file.extension",
-                { relativePaths: true },
-            );
+            const config = getTestConfiguration("C:\\Users\\user\\documents\\code\\more-code\\file.extension", { relativePaths: true });
 
             expect(formatPrintPath(filePath, config)).toEqual("file.extension");
         });
@@ -120,24 +108,12 @@ describe("Helper.ts", () => {
 
         it("should find all files in a directory and its subdirectories", async () => {
             mockFs(["file1", { subdir: ["file2", "file3"] }]);
-            await expectFiles(
-                "/some/path/file1",
-                "/some/path/subdir/file2",
-                "/some/path/subdir/file3",
-            );
+            await expectFiles("/some/path/file1", "/some/path/subdir/file2", "/some/path/subdir/file3");
         });
 
         it("should not include excluded files", async () => {
-            mockFs([
-                "file1",
-                { subdir: ["file2", { excluded: ["so", "many", "sad", "files", "here"] }] },
-                { subdir2: ["where-am-i", { "404": ["not found"] }] },
-            ]);
-            await expectFilesWithConfig(
-                { exclusions: "excluded, subdir2" },
-                "/some/path/file1",
-                "/some/path/subdir/file2",
-            );
+            mockFs(["file1", { subdir: ["file2", { excluded: ["so", "many", "sad", "files", "here"] }] }, { subdir2: ["where-am-i", { "404": ["not found"] }] }]);
+            await expectFilesWithConfig({ exclusions: "excluded, subdir2" }, "/some/path/file1", "/some/path/subdir/file2");
         });
 
         it("should throw an error, if the sourcePath is not a file or directory", () => {
@@ -151,6 +127,7 @@ describe("Helper.ts", () => {
         });
 
         type Entry = string | { [key: string]: Entry[] };
+
         function mockFs(entries?: Entry[]): void {
             if (!entries) {
                 vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
@@ -159,9 +136,9 @@ describe("Helper.ts", () => {
                 mockOpenDir(entries);
             }
         }
+
         function mockOpenDir(entries: Entry[]): void {
-            vi.spyOn(fs, "opendir").mockResolvedValueOnce(
-                // eslint-disable-next-line @typescript-eslint/require-await
+            vi.spyOn(fs, "opendir").mockResolvedValueOnce(// eslint-disable-next-line @typescript-eslint/require-await
                 (async function* (): AsyncGenerator<Dirent> {
                     for (const entry of entries) {
                         if (typeof entry === "string") {
@@ -173,17 +150,14 @@ describe("Helper.ts", () => {
                             }
                         }
                     }
-                })() as unknown as Dir,
-            );
+                })() as unknown as Dir);
         }
 
         async function expectFiles(...files: string[]): Promise<void> {
             await expectFilesWithConfig(undefined, ...files);
         }
-        async function expectFilesWithConfig(
-            configOverrides?: Partial<ConfigurationParams>,
-            ...files: string[]
-        ): Promise<void> {
+
+        async function expectFilesWithConfig(configOverrides?: Partial<ConfigurationParams>, ...files: string[]): Promise<void> {
             const config = getTestConfiguration("/some/path", configOverrides);
 
             const result: string[] = [];
@@ -196,71 +170,40 @@ describe("Helper.ts", () => {
     });
 
     describe("Helper for node types", () => {
-        const exampleNodeTypes: NodeTypeConfig[] = [
-            {
-                type_name: "node type 0",
-                languages: ["rs"],
-                category: NodeTypeCategory.If,
-            },
-            {
-                type_name: "node type 1",
-                languages: ["cpp"],
-                category: NodeTypeCategory.Other,
-            },
-            {
-                type_name: "node type 2",
-                languages: ["cpp", "js", "ts", "tsx"],
-                deactivated_for_languages: ["cpp"],
-                category: NodeTypeCategory.Comment,
-            },
-            {
-                type_name: "node type 3",
-                languages: ["cpp"],
-                category: NodeTypeCategory.Other,
-            },
-            {
-                type_name: "node type 4",
-                languages: ["java"],
-                category: NodeTypeCategory.Comment,
-            },
-            {
-                type_name: "node type 5",
-                languages: ["go"],
-                category: NodeTypeCategory.Comment,
-            },
-            {
-                type_name: "node type 6",
-                languages: ["java"],
-                category: NodeTypeCategory.ClassDefinition,
-            },
-        ];
+        const exampleNodeTypes: NodeTypeConfig[] = [{
+            type_name: "node type 0", languages: ["rs"], category: NodeTypeCategory.If
+        }, {
+            type_name: "node type 1", languages: ["cpp"], category: NodeTypeCategory.Other
+        }, {
+            type_name: "node type 2",
+            languages: ["cpp", "js", "ts", "tsx"],
+            deactivated_for_languages: ["cpp"],
+            category: NodeTypeCategory.Comment
+        }, {
+            type_name: "node type 3", languages: ["cpp"], category: NodeTypeCategory.Other
+        }, {
+            type_name: "node type 4", languages: ["java"], category: NodeTypeCategory.Comment
+        }, {
+            type_name: "node type 5", languages: ["go"], category: NodeTypeCategory.Comment
+        }, {
+            type_name: "node type 6",
+            languages: ["java"],
+            category: NodeTypeCategory.ClassDefinition
+        }];
 
         describe("getNodeTypesByCategory(...)", () => {
             it("should return all node types of a category", () => {
                 const result = getNodeTypesByCategories(exampleNodeTypes, NodeTypeCategory.Comment);
 
-                const expectedResult = [
-                    exampleNodeTypes[2],
-                    exampleNodeTypes[4],
-                    exampleNodeTypes[5],
-                ];
+                const expectedResult = [exampleNodeTypes[2], exampleNodeTypes[4], exampleNodeTypes[5]];
 
                 expect(result).toEqual(expectedResult);
             });
 
             it("should return all node types that match one of multiple categories", () => {
-                const result = getNodeTypesByCategories(
-                    exampleNodeTypes,
-                    NodeTypeCategory.Comment,
-                    NodeTypeCategory.ClassDefinition,
-                );
+                const result = getNodeTypesByCategories(exampleNodeTypes, NodeTypeCategory.Comment, NodeTypeCategory.ClassDefinition);
 
-                const expectedResult = [
-                    exampleNodeTypes[2],
-                    exampleNodeTypes[4],
-                    exampleNodeTypes[5],
-                    exampleNodeTypes[6],
-                ];
+                const expectedResult = [exampleNodeTypes[2], exampleNodeTypes[4], exampleNodeTypes[5], exampleNodeTypes[6]];
 
                 expect(result).toEqual(expectedResult);
             });
@@ -276,10 +219,7 @@ describe("Helper.ts", () => {
 
         describe("getNodeTypeNamesByCategory(...)", () => {
             it("should return the names of all node types of a category", () => {
-                const result = getNodeTypeNamesByCategories(
-                    exampleNodeTypes,
-                    NodeTypeCategory.Comment,
-                );
+                const result = getNodeTypeNamesByCategories(exampleNodeTypes, NodeTypeCategory.Comment);
 
                 const expectedResult = ["node type 2", "node type 4", "node type 5"];
 
@@ -287,20 +227,9 @@ describe("Helper.ts", () => {
             });
 
             it("should return the names of all node types that match one of multiple categories", () => {
-                const result = getNodeTypeNamesByCategories(
-                    exampleNodeTypes,
-                    NodeTypeCategory.Comment,
-                    NodeTypeCategory.ClassDefinition,
-                    NodeTypeCategory.If,
-                );
+                const result = getNodeTypeNamesByCategories(exampleNodeTypes, NodeTypeCategory.Comment, NodeTypeCategory.ClassDefinition, NodeTypeCategory.If);
 
-                const expectedResult = [
-                    "node type 0",
-                    "node type 2",
-                    "node type 4",
-                    "node type 5",
-                    "node type 6",
-                ];
+                const expectedResult = ["node type 0", "node type 2", "node type 4", "node type 5", "node type 6"];
 
                 expect(result).toEqual(expectedResult);
             });
@@ -316,63 +245,43 @@ describe("Helper.ts", () => {
 
         describe("getQueryStatementsByCategory(...)", () => {
             it("should return query statements for all node types of a single category", () => {
-                const result = getQueryStatementsByCategories(
-                    exampleNodeTypes,
-                    NodeTypeCategory.Comment,
-                );
+                const result = getQueryStatementsByCategories(exampleNodeTypes, NodeTypeCategory.Comment);
 
-                const expectedResult = [
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 2",
-                        languages: ["cpp", "js", "ts", "tsx"],
-                        deactivated_for_languages: ["cpp"],
-                        category: NodeTypeCategory.Comment,
-                    }),
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 4",
-                        languages: ["java"],
-                        category: NodeTypeCategory.Comment,
-                    }),
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 5",
-                        languages: ["go"],
-                        category: NodeTypeCategory.Comment,
-                    }),
-                ];
+                const expectedResult = [new NodeTypeQueryStatement({
+                    type_name: "node type 2",
+                    languages: ["cpp", "js", "ts", "tsx"],
+                    deactivated_for_languages: ["cpp"],
+                    category: NodeTypeCategory.Comment
+                }), new NodeTypeQueryStatement({
+                    type_name: "node type 4",
+                    languages: ["java"],
+                    category: NodeTypeCategory.Comment
+                }), new NodeTypeQueryStatement({
+                    type_name: "node type 5", languages: ["go"], category: NodeTypeCategory.Comment
+                })];
 
                 expect(result).toEqual(expectedResult);
             });
 
             it("should return query statements for all node types that match one of multiple categories", () => {
-                const result = getQueryStatementsByCategories(
-                    exampleNodeTypes,
-                    NodeTypeCategory.Comment,
-                    NodeTypeCategory.ClassDefinition,
-                );
+                const result = getQueryStatementsByCategories(exampleNodeTypes, NodeTypeCategory.Comment, NodeTypeCategory.ClassDefinition);
 
-                const expectedResult = [
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 2",
-                        languages: ["cpp", "js", "ts", "tsx"],
-                        deactivated_for_languages: ["cpp"],
-                        category: NodeTypeCategory.Comment,
-                    }),
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 4",
-                        languages: ["java"],
-                        category: NodeTypeCategory.Comment,
-                    }),
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 5",
-                        languages: ["go"],
-                        category: NodeTypeCategory.Comment,
-                    }),
-                    new NodeTypeQueryStatement({
-                        type_name: "node type 6",
-                        languages: ["java"],
-                        category: NodeTypeCategory.ClassDefinition,
-                    }),
-                ];
+                const expectedResult = [new NodeTypeQueryStatement({
+                    type_name: "node type 2",
+                    languages: ["cpp", "js", "ts", "tsx"],
+                    deactivated_for_languages: ["cpp"],
+                    category: NodeTypeCategory.Comment
+                }), new NodeTypeQueryStatement({
+                    type_name: "node type 4",
+                    languages: ["java"],
+                    category: NodeTypeCategory.Comment
+                }), new NodeTypeQueryStatement({
+                    type_name: "node type 5", languages: ["go"], category: NodeTypeCategory.Comment
+                }), new NodeTypeQueryStatement({
+                    type_name: "node type 6",
+                    languages: ["java"],
+                    category: NodeTypeCategory.ClassDefinition
+                })];
 
                 expect(result).toEqual(expectedResult);
             });
@@ -383,6 +292,55 @@ describe("Helper.ts", () => {
                 const expectedResult: NodeTypeQueryStatement[] = [];
 
                 expect(result).toEqual(expectedResult);
+            });
+        });
+        describe("createRegexFor", () => {
+            it("should match if the text contains a given keyword", () => {
+                const keyword = "bug";
+                const input = "this is a bug";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+            });
+
+            it("should not match if the input does not contain the keyword", () => {
+                const keyword = "bug";
+                const input = "this is a game";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(0);
+            });
+
+            it("should match if the the keyword string contains multiple words", () => {
+                const keyword = "not good ";
+                const input = "I am not good at programming :(";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+            });
+
+            it("should match if the the keyword contains special character", () => {
+                const keyword = "i?+[A-Z]/*^";
+                const input = "weird i?+[A-Z]/*^ string";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+            });
+
+            it("should match case-insensitively", () => {
+                const keyword = "ToDo";
+                const input = "we have many TODO";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+            });
+
+            it("should match multiple time", () => {
+                const keyword = "ToDo";
+                const input = "we have many TODO today todo";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(2);
+            });
+            it("tesin", () => {
+                const keyword = "todo";
+                const input = "#this is a comment with bug, wtf, todo, hack, BUG, TODO, HACK";
+
+                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(2);
             });
         });
     });

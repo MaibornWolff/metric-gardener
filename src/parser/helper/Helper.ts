@@ -143,3 +143,14 @@ export function getNodeTypeNamesByCategories(
     });
     return typeNames;
 }
+
+/**
+ * create regex string for a
+ * @param keyword ,
+ * which match any input text if it contains the keyword as an independent word.
+ * The regex is case-insensitive.
+ */
+export function createRegexFor(keyword: string): RegExp {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`\\b${escapedKeyword}\\b`, "gi");
+}

@@ -144,4 +144,10 @@ describe("C# metric tests", () => {
             testFileMetric("weird-lines.cs", "real_lines_of_code", 32);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.cs", FileMetric.KeywordsInComments, 8);
+        });
+    });
 });

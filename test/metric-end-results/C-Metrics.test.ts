@@ -87,4 +87,10 @@ describe("C metrics tests", () => {
             testFileMetric("empty.c", "real_lines_of_code", 0);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.c", FileMetric.KeywordsInComments, 8);
+        });
+    });
 });

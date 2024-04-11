@@ -114,7 +114,7 @@ describe("Kotlin metric tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.kt", FileMetric.keywordsInComments, 8);
+            testFileMetric("keywords.kt", "keywords_in_comments", 8);
         });
     });
 });

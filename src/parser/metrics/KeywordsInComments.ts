@@ -1,4 +1,4 @@
-import { FileMetric, Metric, MetricResult, ParsedFile } from "./Metric.js";
+import { Metric, MetricName, MetricResult, ParsedFile } from "./Metric.js";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import { NodeTypeConfig } from "../helper/Model.js";
 import { createRegexFor } from "../helper/Helper.js";
@@ -18,7 +18,7 @@ export class KeywordsInComments implements Metric {
         this.#regexArray = this.#keywords.map((k) => createRegexFor(k));
     }
 
-    async calculate(parsedFile: ParsedFile): Promise<MetricResult> {
+    calculate(parsedFile: ParsedFile): MetricResult {
         const captures = this.#commentLinesCalculator.getQueryCapturesFrom(parsedFile);
         let metricValue = 0;
 
@@ -29,7 +29,7 @@ export class KeywordsInComments implements Metric {
             }
         }
 
-        dlog(this.getName() + " - " + metricValue);
+        dlog(this.getName() + " - " + metricValue.toString());
 
         return {
             metricName: this.getName(),
@@ -37,7 +37,7 @@ export class KeywordsInComments implements Metric {
         };
     }
 
-    getName(): string {
-        return FileMetric.keywordsInComments;
+    getName(): MetricName {
+        return "keywords_in_comments";
     }
 }

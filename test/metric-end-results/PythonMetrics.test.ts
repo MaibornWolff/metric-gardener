@@ -106,7 +106,7 @@ describe("Python metrics test", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.py", FileMetric.keywordsInComments, 16);
+            testFileMetric("keywords.py", "keywords_in_comments", 16);
         });
     });
 });

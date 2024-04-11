@@ -176,7 +176,7 @@ describe("Java metrics tests.", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.java", FileMetric.keywordsInComments, 8);
+            testFileMetric("keywords.java", "keywords_in_comments", 8);
         });
     });
 });

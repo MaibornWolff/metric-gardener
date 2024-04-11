@@ -5,7 +5,8 @@ import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
 import { QueryCapture, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
 import {
-    QueryStatementInterface, SimpleLanguageSpecificQueryStatement
+    QueryStatementInterface,
+    SimpleLanguageSpecificQueryStatement,
 } from "../queries/QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -24,12 +25,20 @@ export class CommentLines implements Metric {
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: NodeTypeConfig[]) {
-        this.#statementsSuperSet = getQueryStatementsByCategories(allNodeTypes, NodeTypeCategory.Comment);
+        this.#statementsSuperSet = getQueryStatementsByCategories(
+            allNodeTypes,
+            NodeTypeCategory.Comment,
+        );
         this.#addQueriesForPython();
     }
 
-    #addQueriesForPython() {
-        this.#statementsSuperSet.push(new SimpleLanguageSpecificQueryStatement("(expression_statement (string)) @python_multiline_comment", ["py"]));
+    #addQueriesForPython(): void {
+        this.#statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(expression_statement (string)) @python_multiline_comment",
+                ["py"],
+            ),
+        );
     }
 
     calculate(parsedFile: ParsedFile): MetricResult {
@@ -57,10 +66,10 @@ export class CommentLines implements Metric {
         dlog(this.getName() + " - " + numberOfLines.toString());
 
         return {
-            metricName: this.getName(), metricValue: numberOfLines
+            metricName: this.getName(),
+            metricValue: numberOfLines,
         };
     }
-
 
     getQueryCapturesFrom(parsedFile: ParsedFile): QueryCapture[] {
         const { language, tree } = parsedFile;
@@ -79,5 +88,4 @@ export class CommentLines implements Metric {
     getName(): MetricName {
         return "comment_lines";
     }
-
 }

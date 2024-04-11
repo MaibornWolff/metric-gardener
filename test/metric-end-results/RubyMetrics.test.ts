@@ -65,7 +65,7 @@ describe("Ruby metrics tests", () => {
     });
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.rb", FileMetric.keywordsInComments, 8);
+            testFileMetric("keywords.rb", "keywords_in_comments", 8);
         });
     });
 });

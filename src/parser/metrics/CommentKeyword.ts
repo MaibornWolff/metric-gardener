@@ -11,12 +11,26 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class CommentKeyword implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
-    private readonly keywords: string[] = ["BUG", "Bug", "bug", "TODO", "Todo", "todo", "HACK", "Hack", "hack", "WTF", "Wtf", "wtf"];
+    private readonly keywords: string[] = [
+        "BUG",
+        "Bug",
+        "bug",
+        "TODO",
+        "Todo",
+        "todo",
+        "HACK",
+        "Hack",
+        "hack",
+        "WTF",
+        "Wtf",
+        "wtf",
+    ];
 
     constructor() {
         for (const keyword of this.keywords) {
             const regularexpression = "\b" + keyword + "(?![^s.])";
-            const queryStatementsByKeywords = `((comment) @constant(#match? @constant "` + regularexpression + `"))`;
+            const queryStatementsByKeywords =
+                `((comment) @constant(#match? @constant "` + regularexpression + `"))`;
             this.statementsSuperSet.push(new SimpleQueryStatement(queryStatementsByKeywords));
         }
     }
@@ -35,10 +49,11 @@ export class CommentKeyword implements Metric {
             console.log(keyword.captures.toString());
         }
 
-        dlog(this.getName() + " - " + matches.length);
+        dlog(this.getName() + " - " + matches.length.toString());
 
         return {
-            metricName: this.getName(), metricValue: matches.length
+            metricName: this.getName(),
+            metricValue: matches.length,
         };
     }
 
@@ -46,7 +61,6 @@ export class CommentKeyword implements Metric {
         return "keywords_in_comments";
     }
 }
-
 
 // static method test if word in input
 // copie regex
@@ -63,4 +77,3 @@ export class Test {
         //new SimpleQueryStatement(queryStatementsByKeywords);
     }
 }
-

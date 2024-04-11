@@ -63,4 +63,9 @@ describe("Ruby metrics tests", () => {
             testFileMetric("ruby-example-code.rb", "real_lines_of_code", 62);
         });
     });
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.rb", FileMetric.keywordsInComments, 8);
+        });
+    });
 });

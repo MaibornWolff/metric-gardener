@@ -111,4 +111,10 @@ describe("TypeScript metrics tests", () => {
             testFileMetric("weird-lines.ts", "real_lines_of_code", 32);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.ts", FileMetric.keywordsInComments, 10);
+        });
+    });
 });

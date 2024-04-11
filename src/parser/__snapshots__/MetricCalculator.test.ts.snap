@@ -1,0 +1,106 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MetricCalculator.calculateMetrics() > should calculate all metrics of type source code for a python file 1`] = `
+{
+  "fileType": "source_code",
+  "metricErrors": [],
+  "metricResults": [
+    {
+      "metricName": "complexity",
+      "metricValue": 3,
+    },
+    {
+      "metricName": "functions",
+      "metricValue": 4,
+    },
+    {
+      "metricName": "classes",
+      "metricValue": 1,
+    },
+    {
+      "metricName": "lines_of_code",
+      "metricValue": 5,
+    },
+    {
+      "metricName": "comment_lines",
+      "metricValue": 2,
+    },
+    {
+      "metricName": "real_lines_of_code",
+      "metricValue": 7,
+    },
+    {
+      "metricName": "CommentKeywords",
+      "metricValue": 0,
+    },
+  ],
+}
+`;
+
+exports[`MetricCalculator.calculateMetrics() > should calculate lines of code and maximum nesting level for a JSON file 1`] = `
+{
+  "fileType": "structured_text",
+  "metricErrors": [],
+  "metricResults": [
+    {
+      "metricName": "lines_of_code",
+      "metricValue": 5,
+    },
+    {
+      "metricName": "max_nesting_level",
+      "metricValue": 6,
+    },
+  ],
+}
+`;
+
+exports[`MetricCalculator.calculateMetrics() > should calculate lines of code for a text file 1`] = `
+{
+  "fileType": "unsupported_file",
+  "metricErrors": [],
+  "metricResults": [
+    {
+      "metricName": "lines_of_code",
+      "metricValue": 8,
+    },
+  ],
+}
+`;
+
+exports[`MetricCalculator.calculateMetrics() > should include an error object in the result when an error is thrown while calculating any metric on a source file 1`] = `
+{
+  "fileType": "source_code",
+  "metricErrors": [
+    {
+      "error": [Error: something went wrong when calculating complexity metric],
+      "metricName": "complexity",
+    },
+    {
+      "error": [Error: something went wrong when calculating classes metric],
+      "metricName": "classes",
+    },
+    {
+      "error": [Error: something went wrong when calculating commentLines metric],
+      "metricName": "comment_lines",
+    },
+    {
+      "error": [Error: something went wrong when calculating realLinesOfCode metric],
+      "metricName": "real_lines_of_code",
+    },
+  ],
+  "metricResults": [
+    {
+      "metricName": "functions",
+      "metricValue": 1,
+    },
+    {
+      "metricName": "lines_of_code",
+      "metricValue": 2,
+    },
+    {
+      "metricName": "CommentKeywords",
+      "metricValue": 0,
+    },
+  ],
+}
+`;

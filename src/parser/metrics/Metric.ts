@@ -15,7 +15,6 @@ export type MetricName =
     | "keywords_in_comments"
     | "coupling";
 
-
 /**
  * Interface for carrying the results of the metric calculations for a file.
  */

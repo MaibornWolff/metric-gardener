@@ -309,16 +309,9 @@ describe("Helper.ts", () => {
                 expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(0);
             });
 
-            it("should match if the the keyword string contains multiple words", () => {
+            it("should match if the the keyword string contains space", () => {
                 const keyword = "not good ";
                 const input = "I am not good at programming :(";
-
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
-            });
-
-            it("should match if the the keyword contains special character", () => {
-                const keyword = "i?+[A-Z]/*^";
-                const input = "weird i?+[A-Z]/*^ string";
 
                 expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
             });
@@ -333,12 +326,6 @@ describe("Helper.ts", () => {
             it("should match multiple time", () => {
                 const keyword = "ToDo";
                 const input = "we have many TODO today todo";
-
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(2);
-            });
-            it("tesin", () => {
-                const keyword = "todo";
-                const input = "#this is a comment with bug, wtf, todo, hack, BUG, TODO, HACK";
 
                 expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(2);
             });

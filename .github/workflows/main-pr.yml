@@ -13,20 +13,11 @@ jobs:
       - uses: davelosert/vitest-coverage-report-action@v2
         if: always()
 
-  format:
+  xo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
         with:
           install-options: --ignore-scripts
-      - run: npm run format:check
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/prepare
-        with:
-          install-options: --ignore-scripts
-      - run: npm run lint
+      - run: npm run xo

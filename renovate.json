@@ -10,12 +10,7 @@
         {
             "matchFileNames": ["package.json"],
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "excludePackagePatterns": [
-                "^tree-sitter-.*",
-                "^prettier",
-                "^pretty-quick",
-                ".*eslint.*"
-            ],
+            "excludePackagePatterns": ["^tree-sitter-.*", "^xo"],
             "groupName": "npm dependencies without major updates",
             "enabled": true
         },
@@ -26,13 +21,8 @@
             "enabled": true
         },
         {
-            "matchPackagePatterns": ["^prettier", "^pretty-quick"],
-            "groupName": "prettier & pretty-quick dependency updates",
-            "enabled": true
-        },
-        {
-            "matchPackagePatterns": [".*eslint.*"],
-            "groupName": "eslint dependency updates",
+            "matchPackagePatterns": ["^xo"],
+            "groupName": "xo",
             "enabled": true
         }
     ],

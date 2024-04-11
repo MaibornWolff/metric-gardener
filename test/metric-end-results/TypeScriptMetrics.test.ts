@@ -114,7 +114,7 @@ describe("TypeScript metrics tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.ts", FileMetric.keywordsInComments, 10);
+            testFileMetric("keywords.ts", "keywords_in_comments", 10);
         });
     });
 });

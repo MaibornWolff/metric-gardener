@@ -30,7 +30,7 @@ exports[`MetricCalculator.calculateMetrics() > should calculate all metrics of t
       "metricValue": 7,
     },
     {
-      "metricName": "CommentKeywords",
+      "metricName": "keywords_in_comments",
       "metricValue": 0,
     },
   ],
@@ -98,7 +98,7 @@ exports[`MetricCalculator.calculateMetrics() > should include an error object in
       "metricValue": 2,
     },
     {
-      "metricName": "CommentKeywords",
+      "metricName": "keywords_in_comments",
       "metricValue": 0,
     },
   ],

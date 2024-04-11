@@ -158,7 +158,7 @@ describe("C++ metrics tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.cpp", FileMetric.keywordsInComments, 8);
+            testFileMetric("keywords.cpp", "keywords_in_comments", 8);
         });
     });
 });

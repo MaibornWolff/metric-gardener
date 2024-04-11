@@ -90,7 +90,7 @@ describe("C metrics tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.c", FileMetric.keywordsInComments, 8);
+            testFileMetric("keywords.c", "keywords_in_comments", 8);
         });
     });
 });

@@ -58,7 +58,7 @@ describe("Rust metrics tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.rs", FileMetric.keywordsInComments, 10);
+            testFileMetric("keywords.rs", "keywords_in_comments", 10);
         });
     });
 });

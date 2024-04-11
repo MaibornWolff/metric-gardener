@@ -135,7 +135,7 @@ describe("PHP metrics tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.php", FileMetric.keywordsInComments, 8);
+            testFileMetric("keywords.php", "keywords_in_comments", 8);
         });
     });
 });

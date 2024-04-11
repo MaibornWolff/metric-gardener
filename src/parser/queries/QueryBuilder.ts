@@ -1,7 +1,7 @@
+import { debuglog, type DebugLoggerFunction } from "node:util";
 import { Query } from "tree-sitter";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { Language, languageToGrammar } from "../helper/Language.js";
-import { QueryStatementInterface } from "./QueryStatements.js";
+import { type Language, languageToGrammar } from "../helper/Language.js";
+import { type QueryStatementInterface } from "./QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -52,13 +52,13 @@ export class QueryBuilder {
     #retrieveTreeSitterQuery(queryString: string): Query {
         const cachedQueriesForLanguage = treeSitterQueryCache.get(this.#language);
 
-        if (cachedQueriesForLanguage !== undefined) {
+        if (cachedQueriesForLanguage === undefined) {
+            treeSitterQueryCache.set(this.#language, new Map<string, Query>());
+        } else {
             const cachedQuery = cachedQueriesForLanguage.get(queryString);
             if (cachedQuery !== undefined) {
                 return cachedQuery;
             }
-        } else {
-            treeSitterQueryCache.set(this.#language, new Map<string, Query>());
         }
 
         const newQuery = new Query(languageToGrammar.get(this.#language), queryString);
@@ -82,6 +82,7 @@ export class QueryBuilder {
                 statementQueries.push(statement.toString());
             }
         }
+
         return statementQueries.join("\n");
     }
 }

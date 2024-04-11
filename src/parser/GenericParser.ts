@@ -1,16 +1,16 @@
+import pMap from "p-map";
 import { findFilesAsync, formatPrintPath } from "./helper/Helper.js";
-import { Configuration } from "./Configuration.js";
+import { type Configuration } from "./Configuration.js";
 import { calculateMetrics } from "./MetricCalculator.js";
 import { CouplingCalculator } from "./CouplingCalculator.js";
 import {
-    SourceFile,
-    FileMetricResults,
+    type SourceFile,
+    type FileMetricResults,
     ErrorFile,
     UnsupportedFile,
-    CouplingResult,
+    type CouplingResult,
 } from "./metrics/Metric.js";
 import { parse } from "./helper/TreeParser.js";
-import pMap from "p-map";
 
 /**
  * Arranges the parsing of files and calculation of metrics as specified by the stored configuration.
@@ -73,12 +73,13 @@ export class GenericParser {
                 process.stdout.write(`\rfiles: ${filePaths.length.toString()}`);
             }
         }
+
         console.log(`\rfiles: ${filePaths.length.toString()}`);
 
         return filePaths;
     }
 
-    private processResults(results: [SourceFile, FileMetricResults][]): {
+    private processResults(results: Array<[SourceFile, FileMetricResults]>): {
         fileMetrics: Map<string, FileMetricResults>;
         unsupportedFiles: string[];
         errorFiles: string[];
@@ -132,6 +133,7 @@ function showProgressBar(i: number): void {
         process.stdout.write(`\r[${dots}${empty}] ${i.toString()}%`);
     }
 }
+
 function clearProgressBar(): void {
     process.stdout.write("\r" + " ".repeat(110) + "\r");
     progress = 0;

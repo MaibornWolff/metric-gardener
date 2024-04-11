@@ -1,11 +1,11 @@
-import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector.js";
+import { type ParsedFile } from "../metrics/Metric.js";
+import { type Language } from "../helper/Language.js";
+import { type FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector.js";
 import { Factory as NamespaceCollectorFactory } from "./fullyQualifiedTypeNames/Factory.js";
-import { ParsedFile } from "../metrics/Metric.js";
-import { Language } from "../helper/Language.js";
 
 export class NamespaceCollector {
-    private namespaceCollectorFactory = new NamespaceCollectorFactory();
-    private cache = new Map<Language, Map<string, Map<string, FullyQTN>>>();
+    private readonly namespaceCollectorFactory = new NamespaceCollectorFactory();
+    private readonly cache = new Map<Language, Map<string, Map<string, FullyQTN>>>();
 
     getNamespaces(parsedFile: ParsedFile): Map<string, FullyQTN> {
         const { filePath, language } = parsedFile;
@@ -22,9 +22,9 @@ export class NamespaceCollector {
 
         const collector = this.namespaceCollectorFactory.getCollector(parsedFile);
         const packages =
-            collector !== undefined
-                ? collector.getFullyQTNs(parsedFile)
-                : new Map<string, FullyQTN>();
+            collector === undefined
+                ? new Map<string, FullyQTN>()
+                : collector.getFullyQTNs(parsedFile);
 
         this.cache.get(language)?.set(filePath, packages);
 

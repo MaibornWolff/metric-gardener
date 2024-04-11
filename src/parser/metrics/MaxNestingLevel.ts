@@ -1,7 +1,7 @@
-import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
-import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { TreeCursor } from "tree-sitter";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type TreeCursor } from "tree-sitter";
+import { type NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
+import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./Metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Calculates maximum nesting level of a json file.
  */
 export class MaxNestingLevel implements Metric {
-    private nodeTypesToCount: string[] = [];
+    private readonly nodeTypesToCount: string[] = [];
 
     /**
      * Constructs a new instance of {@link MaxNestingLevel}.
@@ -43,14 +43,15 @@ export class MaxNestingLevel implements Metric {
                     maxChildHeight = childHeight;
                 }
             } while (cursor.gotoNextSibling());
+
             cursor.gotoParent();
         }
 
         if (this.nodeTypesToCount.includes(cursor.currentNode.type)) {
             return 1 + maxChildHeight;
-        } else {
-            return maxChildHeight;
         }
+
+        return maxChildHeight;
     }
 
     calculate(parsedFile: ParsedFile): MetricResult {

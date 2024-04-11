@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { assumeLanguageFromFilePath, Language } from "./Language.js";
 import {
     getTestConfiguration,
     mockPosixPath,
     mockWin32Path,
 } from "../../../test/metric-end-results/TestHelper.js";
+import { assumeLanguageFromFilePath, Language } from "./Language.js";
 
 describe("assumeLanguageFromFilePath(...)", () => {
     it("should extract the language from a supported file extension in UNIX-Style paths", () => {

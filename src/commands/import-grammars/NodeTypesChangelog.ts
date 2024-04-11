@@ -1,6 +1,6 @@
-import { NodeTypeConfig } from "../../parser/helper/Model.js";
-import * as fs from "fs";
-import { EOL } from "os";
+import * as fs from "node:fs";
+import { EOL } from "node:os";
+import { type NodeTypeConfig } from "../../parser/helper/Model.js";
 
 /**
  * Path to which the changelog is written.
@@ -18,7 +18,7 @@ const csvSeparator = ";";
  * @returns An escaped version of the string, without CSV special characters.
  */
 function escapeForCsv(s: string): string {
-    const escaped = s.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/"/g, '""');
+    const escaped = s.replaceAll("\n", "\\n").replaceAll("\r", "\\r").replaceAll('"', '""');
     return '"' + escaped + '"';
 }
 
@@ -27,7 +27,7 @@ function escapeForCsv(s: string): string {
  * the current mappings between node type and metrics (nodeTypesConfig.json).
  */
 export class NodeTypesChangelog {
-    private changelog = new Map<string, NodeTypesChangelogEntry>();
+    private readonly changelog = new Map<string, NodeTypesChangelogEntry>();
 
     /**
      * Clear the changelog.
@@ -55,6 +55,7 @@ export class NodeTypesChangelog {
                 ),
             );
         }
+
         this.changelog.get(nodeTypeConfig.type_name)?.addedToLanguage(languageAbbr);
     }
 
@@ -87,6 +88,7 @@ export class NodeTypesChangelog {
                 ),
             );
         }
+
         this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(languageAbbr);
     }
 
@@ -99,7 +101,7 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.addedLanguages).toString() +
+                        [...entry.addedLanguages].toString() +
                         EOL,
                 );
             }
@@ -128,7 +130,7 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.removedLanguages).toString() +
+                        [...entry.removedLanguages].toString() +
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
@@ -169,11 +171,11 @@ export class NodeTypesChangelog {
                 writeStream.write(
                     escapeForCsv(entry.nodeTypeName) +
                         csvSeparator +
-                        Array.from(entry.addedLanguages).toString() +
+                        [...entry.addedLanguages].toString() +
                         csvSeparator +
-                        Array.from(entry.removedLanguages).toString() +
+                        [...entry.removedLanguages].toString() +
                         csvSeparator +
-                        Array.from(entry.remainingLanguages).toString() +
+                        [...entry.remainingLanguages].toString() +
                         csvSeparator +
                         mapping.category +
                         csvSeparator +
@@ -190,12 +192,12 @@ export class NodeTypesChangelog {
      * are currently calculated with the changed syntax node(s).
      * @return Promise that fulfills once the changelog has been written successfully.
      */
-    writeChangelog(metricMappings: Map<string, NodeTypeConfig>): Promise<void> {
+    async writeChangelog(metricMappings: Map<string, NodeTypeConfig>): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             const writeStream = fs.createWriteStream(pathToWriteChangelog);
 
-            writeStream.on("error", (err) => {
-                reject(new Error("Error while writing the changelog:\n" + err.toString()));
+            writeStream.on("error", (error) => {
+                reject(new Error("Error while writing the changelog:\n" + error.toString()));
             });
             writeStream.on("finish", () => {
                 console.log("####################################");

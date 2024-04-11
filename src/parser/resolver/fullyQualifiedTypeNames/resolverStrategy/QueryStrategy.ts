@@ -1,9 +1,9 @@
-import { FullyQTN } from "../AbstractCollector.js";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type QueryCapture } from "tree-sitter";
+import { type FullyQTN } from "../AbstractCollector.js";
 import { QueryBuilder } from "../../../queries/QueryBuilder.js";
 import { formatCaptures } from "../../../helper/Helper.js";
-import { ParsedFile } from "../../../metrics/Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { QueryCapture } from "tree-sitter";
+import { type ParsedFile } from "../../../metrics/Metric.js";
 import { SimpleQueryStatement } from "../../../queries/QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 export class QueryStrategy {
-    protected cache: Map<string, Map<string, FullyQTN>> = new Map();
+    protected cache = new Map<string, Map<string, FullyQTN>>();
 
     getFullyQTNs(
         parsedFile: ParsedFile,
@@ -25,7 +25,7 @@ export class QueryStrategy {
             return cachedItem;
         }
 
-        const namespaceDeclarations: Map<string, FullyQTN> = new Map();
+        const namespaceDeclarations = new Map<string, FullyQTN>();
 
         const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
@@ -35,6 +35,7 @@ export class QueryStrategy {
         if (query !== undefined) {
             captures = query.captures(tree.rootNode);
         }
+
         const textCaptures = formatCaptures(tree, captures);
 
         dlog("namespace definitions", filePath, textCaptures);
@@ -51,16 +52,17 @@ export class QueryStrategy {
                 // Jump to class name capture
                 index++;
             }
+
             let hasClassDeclaration = textCaptures[index]?.name === "class_name";
 
             while (hasClassDeclaration) {
                 const className = textCaptures[index].text;
                 const namespaceDeclaration: FullyQTN = {
                     namespace: namespaceName,
-                    className: className,
+                    className,
                     classType: isInterface ? "interface" : "class",
                     source: parsedFile.filePath,
-                    namespaceDelimiter: namespaceDelimiter,
+                    namespaceDelimiter,
                     implementedClasses: [],
                 };
 

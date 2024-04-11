@@ -1,13 +1,13 @@
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type QueryMatch } from "tree-sitter";
+import { NodeTypeCategory, type NodeTypeConfig } from "../helper/Model.js";
 import { QueryBuilder } from "../queries/QueryBuilder.js";
-import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
-import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { QueryMatch } from "tree-sitter";
 import {
-    QueryStatementInterface,
+    type QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/QueryStatements.js";
 import { getQueryStatementsByCategories } from "../helper/Helper.js";
+import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./Metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -16,7 +16,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class Classes implements Metric {
     private readonly statementsSuperSet: QueryStatementInterface[] = [];
 
-    private nodeTypeCategories = new Set([
+    private readonly nodeTypeCategories = new Set([
         NodeTypeCategory.ClassDefinition,
         NodeTypeCategory.EnumDefinition,
         NodeTypeCategory.StructDefinition,

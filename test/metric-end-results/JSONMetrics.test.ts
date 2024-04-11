@@ -1,6 +1,6 @@
 import { beforeAll, describe, it } from "vitest";
+import { type MetricName, type FileMetricResults } from "../../src/parser/metrics/Metric.js";
 import { expectFileMetric, mockConsole, parseAllFileMetrics } from "./TestHelper.js";
-import { MetricName, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("JSON metrics tests", () => {
     const jsonTestResourcesPath = "./resources/json/";

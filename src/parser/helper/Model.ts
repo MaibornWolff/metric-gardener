@@ -2,7 +2,7 @@
  * Configuration for a single syntax node type.
  * May maps a syntax node type to a category if it should be used to calculate a metric.
  */
-export interface NodeTypeConfig {
+export type NodeTypeConfig = {
     /**
      * Name of the node type. Usually equivalent to the name used in the tree-sitter grammar.
      */
@@ -28,7 +28,7 @@ export interface NodeTypeConfig {
      * Operator of this node type, if any.
      */
     operator?: string;
-}
+};
 
 export enum NodeTypeCategory {
     /**

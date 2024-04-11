@@ -25,6 +25,7 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
     getValueFor(key: KeyType): ValueType | undefined {
         return this.map.get(key);
     }
+
     getKeyFor(value: ValueType): KeyType | undefined {
         return this.reverseMap.get(value);
     }
@@ -42,6 +43,7 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
                 set.add(retrievedKey);
             }
         }
+
         return set;
     }
 }

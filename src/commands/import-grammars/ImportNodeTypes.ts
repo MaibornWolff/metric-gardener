@@ -1,9 +1,9 @@
-import { NodeTypeConfig, NodeTypeCategory } from "../../parser/helper/Model.js";
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type NodeTypeConfig, NodeTypeCategory } from "../../parser/helper/Model.js";
 import nodeTypesConfig from "../../parser/config/nodeTypesConfig.json" with { type: "json" };
-import { debuglog, DebugLoggerFunction } from "node:util";
 import { NodeTypesChangelog } from "./NodeTypesChangelog.js";
-import { NodeType, NodeTypes } from "./NodeTypes.js";
+import { type NodeType, type NodeTypes } from "./NodeTypes.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -61,27 +61,28 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
             if (!nodeTypesJson) {
                 throw new Error("No node-types.json found for language " + languageAbbr);
             }
+
             if (nodeTypesJson instanceof Error) {
                 throw nodeTypesJson;
             }
+
             updateLanguage(languageAbbr, presentNodeTypes, nodeTypesJson);
         }
 
         // Make sure to write the change information before deleting any metric mapping.
         await changelog.writeChangelog(nodeTypeMappings);
         removeObsolete();
-    } catch (e) {
+    } catch (error) {
         console.error("Error while updating the node mappings. Cancel update...");
-        console.error(e);
+        console.error(error);
         return;
     }
 
     try {
         await writeNewNodeTypeMappings();
-    } catch (e) {
+    } catch (error) {
         console.error("Error while writing nodeTypesConfig.json");
-        console.error(e);
-        return;
+        console.error(error);
     }
 }
 
@@ -89,9 +90,9 @@ function readNodeTypesJsons(): Map<string, Promise<string | Error>> {
     const languageAbbrToNodeTypePromises = new Map<string, Promise<string | Error>>();
 
     for (const [languageAbbr, fileLocation] of languageAbbreviationToNodeTypeFiles.entries()) {
-        const json = fs.readFile(fileLocation, "utf8").catch((reason: unknown) => {
+        const json = fs.readFile(fileLocation, "utf8").catch((error: unknown) => {
             return new Error(
-                `Error while reading a node-types.json file from ${fileLocation}:\n${String(reason)}`,
+                `Error while reading a node-types.json file from ${fileLocation}:\n${String(error)}`,
             ); // To be handled when awaiting the result.
         });
         languageAbbrToNodeTypePromises.set(languageAbbr, json);
@@ -126,7 +127,7 @@ function updateLanguage(
 ): void {
     const grammarNodeTypes = JSON.parse(nodeTypesJson) as NodeTypes;
 
-    const toRemove: Set<string> = new Set(presentNodes);
+    const toRemove = new Set<string>(presentNodes);
     for (const grammarNodeType of grammarNodeTypes) {
         // Ignore all unnamed syntax nodes that are no binary expressions (as we require them) to get a "kind of"
         // abstract syntax tree by removing syntax details.
@@ -198,22 +199,20 @@ function updateOrAddExpression(
 ): void {
     const nodeType = nodeTypeMappings.get(nodeTypeName);
 
-    if (nodeType !== undefined) {
-        if (!nodeType.languages.includes(languageAbbr)) {
-            changelog.addedNodeToLanguage(nodeType, languageAbbr);
-            nodeType.languages.push(languageAbbr);
-            dlog('Language "' + languageAbbr + '" was added to node type "' + nodeTypeName + '".');
-        }
-    } else {
+    if (nodeType === undefined) {
         nodeTypeMappings.set(nodeTypeName, {
             type_name: nodeTypeName,
-            category: category,
+            category,
             languages: [languageAbbr],
             grammar_type_name: grammarNodeTypeName,
-            operator: operator,
+            operator,
         });
         changelog.addedNewNode(nodeTypeName, languageAbbr);
         dlog('New node type "' + nodeTypeName + '" was added for language "' + languageAbbr + '".');
+    } else if (!nodeType.languages.includes(languageAbbr)) {
+        changelog.addedNodeToLanguage(nodeType, languageAbbr);
+        nodeType.languages.push(languageAbbr);
+        dlog('Language "' + languageAbbr + '" was added to node type "' + nodeTypeName + '".');
     }
 }
 
@@ -263,6 +262,7 @@ function removeObsolete(): void {
                         ". You may have to add a new node to the metric(s) in nodeTypesConfig.json. ####",
                 );
             }
+
             nodeTypeMappings.delete(nodeTypeName);
             dlog(
                 `Removed node type ${nodeTypeName} as it is no longer used in any language grammar`,
@@ -283,7 +283,7 @@ async function writeNewNodeTypeMappings(): Promise<void> {
     // Save the updated mappings:
     await fs.writeFile(
         pathToNodeTypesConfig,
-        JSON.stringify(Array.from(nodeTypeMappings.values()), null, 4),
+        JSON.stringify([...nodeTypeMappings.values()], null, 4),
     );
     console.log("####################################");
     console.log(

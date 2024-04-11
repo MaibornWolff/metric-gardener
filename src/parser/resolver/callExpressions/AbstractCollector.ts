@@ -1,21 +1,21 @@
-import { ParsedFile } from "../../metrics/Metric.js";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type QueryCapture } from "tree-sitter";
+import { type ParsedFile } from "../../metrics/Metric.js";
 import { formatCaptures } from "../../helper/Helper.js";
 import { QueryBuilder } from "../../queries/QueryBuilder.js";
-import { FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { QueryCapture } from "tree-sitter";
+import { type FullyQTN } from "../fullyQualifiedTypeNames/AbstractCollector.js";
 import { SimpleQueryStatement } from "../../queries/QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
-export interface Accessor {
+export type Accessor = {
     name: string;
     namespaces: FullyQTN[];
     filePath: string;
     returnType: string;
-}
+};
 
 export abstract class AbstractCollector {
     protected abstract getAccessorsQuery(): string;
@@ -38,22 +38,22 @@ export abstract class AbstractCollector {
                 publicAccessorsCaptures = publicAccessorsQuery.captures(tree.rootNode);
             }
 
-            const accessorsTextCaptures: {
+            const accessorsTextCaptures: Array<{
                 name: string;
                 text: string;
                 usageType?: string;
                 source?: string;
-            }[] = formatCaptures(tree, publicAccessorsCaptures);
+            }> = formatCaptures(tree, publicAccessorsCaptures);
 
             dlog("public accessors captures", accessorsTextCaptures);
 
-            // first index must be the return type
-            // second index must be the accessor name
+            // First index must be the return type
+            // Second index must be the accessor name
             for (let index = 0; index < accessorsTextCaptures.length; index += 1) {
                 const publicAccessor: Accessor = {
                     name: "",
-                    namespaces: Array.from(namespacesOfFile.values()),
-                    filePath: filePath,
+                    namespaces: [...namespacesOfFile.values()],
+                    filePath,
                     returnType: accessorsTextCaptures[index].text,
                 };
 

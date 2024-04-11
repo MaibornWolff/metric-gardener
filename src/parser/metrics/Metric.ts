@@ -1,5 +1,5 @@
-import { Tree } from "tree-sitter";
-import { FileType, Language, languageToFileType } from "../helper/Language.js";
+import { type Tree } from "tree-sitter";
+import { FileType, type Language, languageToFileType } from "../helper/Language.js";
 
 /**
  * Names of all available file metrics.
@@ -18,16 +18,16 @@ export type MetricName =
 /**
  * Interface for carrying the results of the metric calculations for a file.
  */
-export interface FileMetricResults {
+export type FileMetricResults = {
     fileType: FileType;
     metricResults: MetricResult[];
     metricErrors: MetricError[];
-}
+};
 
 /**
  * Interface for carrying the result of a metric calculation.
  */
-export interface MetricResult {
+export type MetricResult = {
     /**
      * Name of the metric.
      */
@@ -37,17 +37,17 @@ export interface MetricResult {
      * Value of the metric.
      */
     metricValue: number;
-}
+};
 
 /**
  * Represents an error that occurred during the metric calculation process.
  */
-export interface MetricError {
+export type MetricError = {
     metricName: MetricName;
     error: Error;
-}
+};
 
-export interface Relationship {
+export type Relationship = {
     fromNamespace: string;
     toNamespace: string;
     fromSource: string;
@@ -55,26 +55,26 @@ export interface Relationship {
     fromClassName: string;
     toClassName: string;
     usageType: UsageType;
-}
+};
 
 export type UsageType = "usage" | "extends" | "implements";
 
-export interface CouplingMetrics {
+export type CouplingMetrics = {
     outgoing_dependencies: number;
     incoming_dependencies: number;
     coupling_between_objects: number;
     instability: number;
-}
+};
 
-export interface CouplingResult {
+export type CouplingResult = {
     relationships: Relationship[];
     metrics: Map<string, CouplingMetrics>;
-}
+};
 
 /**
  * Interface for calculating a concrete metric.
  */
-export interface Metric {
+export type Metric = {
     /**
      * Calculates the metric value for the specified file.
      * @param parsedFile Parsed source code file for which the metric value should be calculated.
@@ -87,15 +87,15 @@ export interface Metric {
      * @return The name of this metric.
      */
     getName(): MetricName;
-}
+};
 
-export interface CouplingMetric {
+export type CouplingMetric = {
     processFile(file: ParsedFile): void;
 
     calculate(): CouplingResult;
 
     getName(): MetricName;
-}
+};
 
 export abstract class SourceFile {
     /**

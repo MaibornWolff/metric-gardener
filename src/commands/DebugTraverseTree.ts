@@ -1,7 +1,7 @@
+import * as fs from "node:fs";
 import Parser = require("tree-sitter");
-import { TreeCursor } from "tree-sitter";
+import { type TreeCursor } from "tree-sitter";
 import { Language, languageToGrammar } from "../parser/helper/Language.js";
-import * as fs from "fs";
 
 if (require.main === module) {
     traverseTree("./resources/c++/TEST.hpp", Language.CPlusPlus);
@@ -32,6 +32,7 @@ function walkTree(cursor: TreeCursor): void {
     if (cursor.gotoFirstChild()) {
         walkTree(cursor);
     }
+
     if (cursor.gotoNextSibling()) {
         walkTree(cursor);
     } else {

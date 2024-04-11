@@ -1,75 +1,66 @@
+import path from "node:path";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import Parser = require("tree-sitter");
+import { type Tree } from "tree-sitter";
+import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import { GenericParser } from "./GenericParser.js";
 import * as HelperModule from "./helper/Helper.js";
 import * as TreeParser from "./helper/TreeParser.js";
-import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import {
     assumeLanguageFromFilePath,
     FileType,
     Language,
     languageToGrammar,
 } from "./helper/Language.js";
-import Parser = require("tree-sitter");
-import { Tree } from "tree-sitter";
 import {
-    SourceFile,
+    type SourceFile,
     ParsedFile,
     UnsupportedFile,
-    FileMetricResults,
+    type FileMetricResults,
     ErrorFile,
-    MetricError,
-    MetricResult,
+    type MetricError,
+    type MetricResult,
 } from "./metrics/Metric.js";
 import * as MetricCalculator from "./MetricCalculator.js";
 import { CouplingCalculator } from "./CouplingCalculator.js";
-import { Configuration } from "./Configuration.js";
-import path from "path";
+import { type Configuration } from "./Configuration.js";
 
 /*
  * Implementation of function mocks:
  */
 
-// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path.cpp";
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindTwoFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/path2.cpp";
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindAlsoUnsupportedFilesAsync(): AsyncGenerator<string> {
     yield "clearly/invalid/path1.cc";
     yield "clearly/invalid/unsupported.unsupported";
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 async function* mockedFindFilesAsyncError(): AsyncGenerator<string> {
     yield "clearly/invalid/path.cpp";
     throw new Error("Hard drive crashed!");
 }
 
-function mockedTreeParserParse(filePath: string, config: Configuration): Promise<SourceFile> {
+async function mockedTreeParserParse(filePath: string, config: Configuration): Promise<SourceFile> {
     const language = assumeLanguageFromFilePath(filePath, config);
-    if (language !== undefined) {
-        return Promise.resolve(new ParsedFile(filePath, language, tree));
-    } else {
-        return Promise.resolve(new UnsupportedFile(filePath));
-    }
+    return language === undefined
+        ? Promise.resolve(new UnsupportedFile(filePath))
+        : Promise.resolve(new ParsedFile(filePath, language, tree));
 }
 
-function mockedMetricsCalculator(file: SourceFile): Promise<[SourceFile, FileMetricResults]> {
+async function mockedMetricsCalculator(file: SourceFile): Promise<[SourceFile, FileMetricResults]> {
     if (file instanceof ErrorFile) {
-        return Promise.resolve([
-            file,
-            { fileType: file.fileType, metricResults: [], metricErrors: [] },
-        ]);
-    } else {
-        return Promise.resolve([file, expectedFileMetricsResults]);
+        return [file, { fileType: file.fileType, metricResults: [], metricErrors: [] }];
     }
+
+    return [file, expectedFileMetricsResults];
 }
 
 /*
@@ -141,11 +132,11 @@ describe("GenericParser.calculateMetrics()", () => {
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([["clearly/invalid/path.cpp", expectedFileMetricsResults]]),
@@ -170,11 +161,11 @@ describe("GenericParser.calculateMetrics()", () => {
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([
@@ -202,11 +193,11 @@ describe("GenericParser.calculateMetrics()", () => {
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([
@@ -227,17 +218,17 @@ describe("GenericParser.calculateMetrics()", () => {
          * Given:
          */
         mockFindFilesAsync();
-        mockTreeParserParse((filePath) => {
-            return Promise.resolve(new ErrorFile(filePath, new Error("Baaaaaah")));
+        mockTreeParserParse(async (filePath) => {
+            return new ErrorFile(filePath, new Error("Baaaaaah"));
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(new Map());
         expect(actualResult.errorFiles).toEqual(["clearly/invalid/path.cpp"]);
@@ -257,18 +248,18 @@ describe("GenericParser.calculateMetrics()", () => {
             metricErrors: [{ metricName: "lines_of_code", error: new Error("Buuuh!") }],
         };
 
-        spyOnMetricCalculator().mockImplementation((file) => {
-            return Promise.resolve([file, errorMetricsResults]);
+        spyOnMetricCalculator().mockImplementation(async (file) => {
+            return [file, errorMetricsResults];
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid/path.cpp"));
 
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([["clearly/invalid/path.cpp", errorMetricsResults]]),
@@ -295,22 +286,20 @@ describe("GenericParser.calculateMetrics()", () => {
             ],
         };
 
-        spyOnMetricCalculator().mockImplementation((file) => {
-            if (path.posix.extname(file.filePath) !== ".cpp") {
-                return Promise.resolve([file, errorMetricsResults]);
-            } else {
-                return Promise.resolve([file, expectedFileMetricsResults]);
-            }
+        spyOnMetricCalculator().mockImplementation(async (file) => {
+            return path.posix.extname(file.filePath) === ".cpp"
+                ? Promise.resolve([file, expectedFileMetricsResults])
+                : Promise.resolve([file, errorMetricsResults]);
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([
@@ -353,20 +342,20 @@ describe("GenericParser.calculateMetrics()", () => {
 
         spyOnMetricCalculator().mockImplementation(async (file) => {
             if (path.posix.extname(file.filePath) === ".cpp") {
-                return Promise.resolve([file, partialErrorMetricsResults]);
-            } else {
-                return Promise.resolve([file, expectedFileMetricsResults]);
+                return [file, partialErrorMetricsResults];
             }
+
+            return [file, expectedFileMetricsResults];
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));
 
         /*
-         * when:
+         * When:
          */
         const actualResult = await parser.calculateMetrics();
         /*
-         * then:
+         * Then:
          */
         expect(actualResult.fileMetrics).toEqual(
             new Map([

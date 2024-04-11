@@ -1,8 +1,8 @@
-import { Relationship } from "../Metric.js";
-import { Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
-import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector.js";
-import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type Relationship } from "../Metric.js";
+import { type Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
+import { type UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector.js";
+import { type FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -29,6 +29,7 @@ export function getAdditionalRelationships(
             if (processedPublicAccessors.has(callExpression.name)) {
                 continue;
             }
+
             processedPublicAccessors.add(callExpression.name);
 
             const qualifiedNameParts = callExpression.name.split(callExpression.namespaceDelimiter);
@@ -37,9 +38,9 @@ export function getAdditionalRelationships(
             }
 
             for (let namePart of qualifiedNameParts) {
-                // remove save call character
+                // Remove save call character
                 if (namePart.endsWith("?")) {
-                    namePart = namePart.substring(0, namePart.length - 1);
+                    namePart = namePart.slice(0, Math.max(0, namePart.length - 1));
                 }
 
                 const publicAccessorsOfPrefix = publicAccessors.get(namePart);
@@ -127,7 +128,7 @@ export function getAdditionalRelationships(
             }
         }
 
-        additionalRelationships = additionalRelationships.concat(fileAdditionalRelationships);
+        additionalRelationships = [...additionalRelationships, ...fileAdditionalRelationships];
     }
 
     return additionalRelationships;
@@ -144,7 +145,7 @@ function resolveAccessorReturnType(
     // TODO resolve return type (generics, etc.)
     dlog(
         "Lookup Status: ",
-        !!matchingDependency,
+        Boolean(matchingDependency),
         " -> check return type add: ",
         accessor.returnType,
         matchingDependency,

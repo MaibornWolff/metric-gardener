@@ -1,8 +1,8 @@
+import { type ParsedFile } from "../../metrics/Metric.js";
 import { QueryStrategy } from "./resolverStrategy/QueryStrategy.js";
 import { FilenameStrategy } from "./resolverStrategy/FilenameResolver.js";
-import { ParsedFile } from "../../metrics/Metric.js";
 
-export interface FullyQTN {
+export type FullyQTN = {
     namespace: string;
     className: string;
     classType: "interface" | "class";
@@ -10,7 +10,7 @@ export interface FullyQTN {
     namespaceDelimiter: string;
     extendedClass?: string;
     implementedClasses: string[];
-}
+};
 
 export enum NamespaceResolvingStrategy {
     Query,
@@ -35,7 +35,7 @@ export abstract class AbstractCollector {
             return new FilenameStrategy().getFullyQTNs();
         }
 
-        throw Error(
+        throw new Error(
             "Unsupported Namespace Resolving Strategy " +
                 this.getNamespaceResolvingStrategy().toString(),
         );

@@ -1,9 +1,9 @@
-import fs from "fs/promises";
-import path from "path";
-import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
-import { Configuration } from "../Configuration.js";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { type QueryCapture, type Tree } from "tree-sitter";
+import { type Configuration } from "../Configuration.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
-import { QueryCapture, Tree } from "tree-sitter";
+import { type NodeTypeCategory, type NodeTypeConfig } from "./Model.js";
 
 /**
  * Looks up the passed string key converted to lower case in the passed map. Returns the retrieved value (if any).
@@ -50,6 +50,7 @@ export function formatPrintPath(filePath: string, config: Configuration): string
             result = path.basename(filePath);
         }
     }
+
     return result;
 }
 
@@ -67,7 +68,7 @@ export async function* findFilesAsync(config: Configuration): AsyncGenerator<str
     if ((await fs.lstat(config.sourcesPath)).isFile()) {
         yield config.sourcesPath;
     } else {
-        // sourcePath points to a directory, so use recursive function to find all files.
+        // SourcePath points to a directory, so use recursive function to find all files.
 
         // The folder at sourcePath itself cannot be excluded, so continue using delegating yield* generator call:
         yield* findFilesAsyncRecursive(config.sourcesPath, config.exclusions);
@@ -145,7 +146,7 @@ export function getNodeTypeNamesByCategories(
 }
 
 /**
- * create regex for multiple
+ * Create regex for multiple
  * @param keywords ,
  * which matches those keywords as independent words.
  * The keywords must contain only letters or spaces for this to work.

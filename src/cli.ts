@@ -1,9 +1,9 @@
+import fs from "node:fs/promises";
+import yargs from "yargs";
 import { GenericParser } from "./parser/GenericParser.js";
 import { Configuration } from "./parser/Configuration.js";
-import yargs from "yargs";
 import { updateNodeTypesMappingFile } from "./commands/import-grammars/ImportNodeTypes.js";
 import { outputAsJson } from "./commands/outputMetrics.js";
-import fs from "fs/promises";
 
 export const parser = yargs()
     .command(
@@ -71,6 +71,7 @@ export const parser = yargs()
         },
         async (argv) => {
             const configuration = new Configuration({
+                /* eslint-disable @typescript-eslint/dot-notation */
                 sourcesPath: await fs.realpath(argv["sources-path"]),
                 outputPath: argv["output-path"],
                 parseDependencies: argv["parse-dependencies"],
@@ -79,6 +80,7 @@ export const parser = yargs()
                 parseSomeHAsC: argv["parse-some-h-as-c"],
                 compress: argv["compress"],
                 relativePaths: argv["relative-paths"],
+                /* eslint-enable @typescript-eslint/dot-notation */
             });
             await parseSourceCode(configuration);
         },
@@ -106,10 +108,10 @@ async function parseSourceCode(configuration: Configuration): Promise<void> {
             configuration.outputPath,
             configuration.compress,
         );
-    } catch (e) {
+    } catch (error) {
         console.error("#####################################");
         console.error("#####################################");
         console.error("Metrics calculation failed with the following error:");
-        console.error(e);
+        console.error(error);
     }
 }

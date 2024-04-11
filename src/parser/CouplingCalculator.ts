@@ -1,13 +1,18 @@
-import { Configuration } from "./Configuration.js";
+import { type Configuration } from "./Configuration.js";
 import { Coupling } from "./metrics/coupling/Coupling.js";
 import { NamespaceCollector } from "./resolver/NamespaceCollector.js";
 import { UsagesCollector } from "./resolver/UsagesCollector.js";
-import { CouplingMetric, CouplingResult, ParsedFile, SourceFile } from "./metrics/Metric.js";
+import {
+    type CouplingMetric,
+    type CouplingResult,
+    ParsedFile,
+    type SourceFile,
+} from "./metrics/Metric.js";
 import { PublicAccessorCollector } from "./resolver/PublicAccessorCollector.js";
 
 export class CouplingCalculator {
     private readonly comprisingMetrics: CouplingMetric[] = [];
-    private config: Configuration;
+    private readonly config: Configuration;
 
     private readonly namespaceCollector: NamespaceCollector;
     private readonly publicAccessorCollector: PublicAccessorCollector;
@@ -39,8 +44,8 @@ export class CouplingCalculator {
             console.log("Calculating coupling metrics...");
             // TODO rewrite this to support multiple coupling metrics
             return this.comprisingMetrics[0].calculate();
-        } else {
-            return { relationships: [], metrics: new Map() };
         }
+
+        return { relationships: [], metrics: new Map() };
     }
 }

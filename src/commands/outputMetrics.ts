@@ -1,30 +1,32 @@
-import * as fs from "fs";
-import { Readable } from "stream";
-import zlib from "zlib";
-import { CouplingResult, FileMetricResults, MetricError } from "../parser/metrics/Metric.js";
+import * as fs from "node:fs";
+import { Readable } from "node:stream";
+import zlib from "node:zlib";
+import {
+    type CouplingResult,
+    type FileMetricResults,
+    type MetricError,
+} from "../parser/metrics/Metric.js";
 import { FileType } from "../parser/helper/Language.js";
 
-interface OutputNode {
+type OutputNode = {
     name: string;
     type: string;
-    metrics: {
-        [key: string]: number;
-    };
-}
+    metrics: Record<string, number>;
+};
 
-interface OutputInfoNode {
+type OutputInfoNode = {
     name: string;
     type: string;
     message: string;
-}
+};
 
-interface OutputRelationship {
+type OutputRelationship = {
     from: string;
     to: string;
     metrics: {
-        coupling: 100.0;
+        coupling: 100;
     };
-}
+};
 
 /**
  * Writes the passed metrics into a json file.
@@ -86,7 +88,7 @@ function buildOutputObject(
     const metricErrorsPerFile = new Map<string, Iterable<MetricError>>();
 
     for (const [filePath, fileMetricResults] of fileMetrics.entries()) {
-        const metrics: { [key: string]: number } = {};
+        const metrics: Record<string, number> = {};
         if (fileMetricResults.metricErrors.length > 0) {
             metricErrorsPerFile.set(filePath, fileMetricResults.metricErrors);
         }
@@ -98,7 +100,7 @@ function buildOutputObject(
         const outputNode: OutputNode = {
             name: filePath,
             type: fileMetricResults.fileType,
-            metrics: metrics,
+            metrics,
         };
 
         outputNodeReferenceLookUp.set(filePath, outputNode);
@@ -131,7 +133,7 @@ function buildOutputObject(
     for (const [filePath, metricErrors] of metricErrorsPerFile) {
         let message = "Error while calculating the following metric(s) for the file:";
         for (const metricError of metricErrors) {
-            message = message.concat(" ", metricError.metricName);
+            message = [...message, " "].concat(metricError.metricName);
         }
 
         const outputNode: OutputInfoNode = {
@@ -143,19 +145,19 @@ function buildOutputObject(
         output.info.push(outputNode);
     }
 
-    // merge relationship metrics with existing nodes or add new node
+    // Merge relationship metrics with existing nodes or add new node
     const couplingMetrics = relationshipMetrics.metrics.entries();
     for (const [filePath, metricsMap] of couplingMetrics) {
         const existingOutputNode = outputNodeReferenceLookUp.get(filePath);
-        if (existingOutputNode !== undefined) {
-            existingOutputNode.metrics = { ...existingOutputNode.metrics, ...metricsMap };
-        } else {
+        if (existingOutputNode === undefined) {
             const newOutputNode: OutputNode = {
                 name: filePath,
                 type: FileType.SourceCode,
                 metrics: { ...metricsMap },
             };
             output.nodes.push(newOutputNode);
+        } else {
+            existingOutputNode.metrics = { ...existingOutputNode.metrics, ...metricsMap };
         }
     }
 
@@ -165,7 +167,7 @@ function buildOutputObject(
         output.relationships.push({
             from: couplingMetricResult.fromSource,
             to: couplingMetricResult.toSource,
-            metrics: { coupling: 100.0 },
+            metrics: { coupling: 100 },
         });
     }
 
@@ -174,8 +176,7 @@ function buildOutputObject(
 
 function dumpCompressed(outputString: string, outputFilePath: string): void {
     const readableStream = new Readable();
-    readableStream.push(outputString);
-    readableStream.push(null);
+    readableStream.push(outputString, null);
 
     const gzip = zlib.createGzip();
     const writeStream = fs.createWriteStream(outputFilePath);

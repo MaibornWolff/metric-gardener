@@ -1,42 +1,42 @@
-import { FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type FullyQTN } from "../../resolver/fullyQualifiedTypeNames/AbstractCollector.js";
 import {
-    UnresolvedCallExpression,
-    TypeUsageCandidate,
+    type UnresolvedCallExpression,
+    type TypeUsageCandidate,
 } from "../../resolver/typeUsages/AbstractCollector.js";
-import { NamespaceCollector } from "../../resolver/NamespaceCollector.js";
-import { UsagesCollector } from "../../resolver/UsagesCollector.js";
+import { type NamespaceCollector } from "../../resolver/NamespaceCollector.js";
+import { type UsagesCollector } from "../../resolver/UsagesCollector.js";
 import {
-    CouplingMetric,
-    Relationship,
+    type CouplingMetric,
+    type Relationship,
     ParsedFile,
-    CouplingMetrics,
-    CouplingResult,
-    MetricName,
+    type CouplingMetrics,
+    type CouplingResult,
+    type MetricName,
 } from "../Metric.js";
 import { formatPrintPath } from "../../helper/Helper.js";
-import { PublicAccessorCollector } from "../../resolver/PublicAccessorCollector.js";
-import { Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
-import { getAdditionalRelationships } from "./CallExpressionResolver.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { Configuration } from "../../Configuration.js";
+import { type PublicAccessorCollector } from "../../resolver/PublicAccessorCollector.js";
+import { type Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
+import { type Configuration } from "../../Configuration.js";
 import { parseSync } from "../../helper/TreeParser.js";
+import { getAdditionalRelationships } from "./CallExpressionResolver.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export class Coupling implements CouplingMetric {
-    private config: Configuration;
-    private namespaceCollector: NamespaceCollector;
-    private publicAccessorCollector: PublicAccessorCollector;
-    private usageCollector: UsagesCollector;
-    private filesWithMultipleNamespaces: ParsedFile[] = [];
-    private alreadyAddedRelationships = new Set<string>();
+    private readonly config: Configuration;
+    private readonly namespaceCollector: NamespaceCollector;
+    private readonly publicAccessorCollector: PublicAccessorCollector;
+    private readonly usageCollector: UsagesCollector;
+    private readonly filesWithMultipleNamespaces: ParsedFile[] = [];
+    private readonly alreadyAddedRelationships = new Set<string>();
 
-    private namespaces: Map<string, FullyQTN> = new Map();
-    private publicAccessors = new Map<string, Accessor[]>();
+    private namespaces = new Map<string, FullyQTN>();
+    private readonly publicAccessors = new Map<string, Accessor[]>();
     private usagesCandidates: TypeUsageCandidate[] = [];
-    private unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
+    private readonly unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
 
     constructor(
         config: Configuration,
@@ -51,7 +51,7 @@ export class Coupling implements CouplingMetric {
     }
 
     processFile(parsedFile: ParsedFile): void {
-        // preprocessing
+        // Preprocessing
         const moreNamespaces = this.namespaceCollector.getNamespaces(parsedFile);
         this.namespaces = new Map([...this.namespaces, ...moreNamespaces]);
 
@@ -61,14 +61,14 @@ export class Coupling implements CouplingMetric {
         );
         for (const [accessorName, accessors] of moreAccessors) {
             const existingAccessors = this.publicAccessors.get(accessorName);
-            if (existingAccessors !== undefined) {
-                existingAccessors.push(...accessors);
-            } else {
+            if (existingAccessors === undefined) {
                 this.publicAccessors.set(accessorName, accessors);
+            } else {
+                existingAccessors.push(...accessors);
             }
         }
 
-        // processing
+        // Processing
         const { candidates, unresolvedCallExpressions: callExpressionsOfFile } =
             this.usageCollector.getUsageCandidates(parsedFile, this.namespaceCollector);
         this.usagesCandidates = this.usagesCandidates.concat(candidates);
@@ -76,7 +76,7 @@ export class Coupling implements CouplingMetric {
     }
 
     calculate(): CouplingResult {
-        // postprocessing
+        // Postprocessing
 
         dlog("\n\n");
         dlog("namespaces", this.namespaces, "\n\n");
@@ -88,7 +88,7 @@ export class Coupling implements CouplingMetric {
         dlog("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
-        const tree = this.buildDependencyTree(relationships, couplingMetrics).tree;
+        const { tree } = this.buildDependencyTree(relationships, couplingMetrics);
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
@@ -141,6 +141,7 @@ export class Coupling implements CouplingMetric {
                     },
                 ];
             }
+
             return [];
         });
     }
@@ -179,7 +180,7 @@ export class Coupling implements CouplingMetric {
         //     // scan tree for cycles and so on
         // }
 
-        //console.log(tree, rootFiles);
+        // console.log(tree, rootFiles);
     }
 
     private calculateCouplingMetrics(
@@ -259,13 +260,16 @@ export class Coupling implements CouplingMetric {
                 relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
                 relationship.toSource = formatPrintPath(relationship.toSource, this.config);
             }
+
             const relCouplingMetrics = new Map<string, CouplingMetrics>();
             for (const [absolutePath, metricValues] of couplingMetrics) {
                 relCouplingMetrics.set(formatPrintPath(absolutePath, this.config), metricValues);
             }
+
             couplingMetrics = relCouplingMetrics;
         }
-        return { relationships: relationships, metrics: couplingMetrics };
+
+        return { relationships, metrics: couplingMetrics };
     }
 
     getName(): MetricName {

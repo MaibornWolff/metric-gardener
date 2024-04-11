@@ -1,4 +1,4 @@
-import { FullyQTN } from "../AbstractCollector.js";
+import { type FullyQTN } from "../AbstractCollector.js";
 
 export class FilenameStrategy {
     getFullyQTNs(): Map<string, FullyQTN> {

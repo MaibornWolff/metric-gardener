@@ -1,11 +1,11 @@
-import fs from "fs/promises";
-import { readFileSync } from "fs";
-import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language.js";
+import fs from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import Parser = require("tree-sitter");
-import { ErrorFile, ParsedFile, SourceFile, UnsupportedFile } from "../metrics/Metric.js";
-import { Configuration } from "../Configuration.js";
+import { ErrorFile, ParsedFile, type SourceFile, UnsupportedFile } from "../metrics/Metric.js";
+import { type Configuration } from "../Configuration.js";
+import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./Language.js";
 
-const cache: Map<string, SourceFile> = new Map();
+const cache = new Map<string, SourceFile>();
 
 export function parseSync(filePath: string, config: Configuration): ParsedFile | UnsupportedFile {
     const cachedItem = cache.get(filePath);
@@ -52,14 +52,15 @@ function parseTree(
         return unsupportedFile;
     }
 
-    if (language === Language.JavaScript) {
-        // Check if this is actually flow-annotated code instead of plain JavaScript. Use the TSX-grammar then.
-        // See https://flow.org/en/docs/usage/#toc-prepare-your-code-for-flow on how to identify them.
-        // See https://github.com/tree-sitter/tree-sitter-typescript/tree/v0.20.5 on using the TSX-grammar
-        // for flow-annotated files.
-        if (sourceCode.match(/^(\/\*[\s*]*@flow)|(\/\/\s*@flow)/) !== null) {
-            language = Language.TSX;
-        }
+    // Check if this is actually flow-annotated code instead of plain JavaScript. Use the TSX-grammar then.
+    // See https://flow.org/en/docs/usage/#toc-prepare-your-code-for-flow on how to identify them.
+    // See https://github.com/tree-sitter/tree-sitter-typescript/tree/v0.20.5 on using the TSX-grammar
+    // for flow-annotated files.
+    if (
+        language === Language.JavaScript &&
+        /^(\/\*[\s*]*@flow)|(\/\/\s*@flow)/.exec(sourceCode) !== null
+    ) {
+        language = Language.TSX;
     }
 
     const parser = new Parser();

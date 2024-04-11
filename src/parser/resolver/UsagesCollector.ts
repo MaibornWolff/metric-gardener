@@ -1,10 +1,13 @@
+import { type ParsedFile } from "../metrics/Metric.js";
 import { Factory as UsageCollectorFactory } from "./typeUsages/Factory.js";
-import { NamespaceCollector } from "./NamespaceCollector.js";
-import { ParsedFile } from "../metrics/Metric.js";
-import { TypeUsageCandidate, UnresolvedCallExpression } from "./typeUsages/AbstractCollector.js";
+import { type NamespaceCollector } from "./NamespaceCollector.js";
+import {
+    type TypeUsageCandidate,
+    type UnresolvedCallExpression,
+} from "./typeUsages/AbstractCollector.js";
 
 export class UsagesCollector {
-    private usageCollectorFactory = new UsageCollectorFactory();
+    private readonly usageCollectorFactory = new UsageCollectorFactory();
 
     getUsageCandidates(
         parsedFile: ParsedFile,
@@ -14,8 +17,8 @@ export class UsagesCollector {
         unresolvedCallExpressions: UnresolvedCallExpression[];
     } {
         const collector = this.usageCollectorFactory.getCollector(parsedFile);
-        return collector !== undefined
-            ? collector.getUsageCandidates(parsedFile, namespaceCollector)
-            : { candidates: [], unresolvedCallExpressions: [] };
+        return collector === undefined
+            ? { candidates: [], unresolvedCallExpressions: [] }
+            : collector.getUsageCandidates(parsedFile, namespaceCollector);
     }
 }

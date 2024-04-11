@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { Relationship } from "../Metric.js";
+import { type Relationship } from "../Metric.js";
+import { type UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector.js";
+import { type Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
 import { getAdditionalRelationships } from "./CallExpressionResolver.js";
-import { UnresolvedCallExpression } from "../../resolver/typeUsages/AbstractCollector.js";
-import { Accessor } from "../../resolver/callExpressions/AbstractCollector.js";
 
 describe("CallExpressionResolver", () => {
     describe("resolves call expressions and retrieves additional and transitive relationships", () => {

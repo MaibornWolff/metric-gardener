@@ -2,7 +2,7 @@
  * Parameters of the constructor of {@link Configuration}.
  * Represents configuration options that can be provided by the user via command line arguments.
  */
-export interface ConfigurationParams {
+export type ConfigurationParams = {
     /**
      * Path to the source files to be parsed.
      */
@@ -35,7 +35,7 @@ export interface ConfigurationParams {
      * Whether to include the relative file paths or absolute paths of the analyzed files in the output.
      */
     relativePaths: boolean;
-}
+};
 
 /**
  * Configures the files to be parsed and the metrics to be calculated.

@@ -1,9 +1,13 @@
+import * as fs from "node:fs";
+import path, { type PlatformPath } from "node:path";
 import { expect, vi } from "vitest";
-import * as fs from "fs";
 import { GenericParser } from "../../src/parser/GenericParser.js";
-import { ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
-import { CouplingResult, MetricName, FileMetricResults } from "../../src/parser/metrics/Metric.js";
-import path, { PlatformPath } from "path";
+import { type ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
+import {
+    type CouplingResult,
+    type MetricName,
+    type FileMetricResults,
+} from "../../src/parser/metrics/Metric.js";
 
 /**
  * Gets a configuration for test cases.
@@ -16,7 +20,7 @@ export function getTestConfiguration(
     sourcesPath: string,
     customOverrides: Partial<ConfigurationParams> = {},
 ): Configuration {
-    const defaultParams: ConfigurationParams = {
+    const defaultParameters: ConfigurationParams = {
         sourcesPath,
         outputPath: "invalid/output/path",
         parseDependencies: false,
@@ -26,27 +30,33 @@ export function getTestConfiguration(
         compress: false,
         relativePaths: false,
     };
-    return new Configuration({ ...defaultParams, ...customOverrides });
+    return new Configuration({ ...defaultParameters, ...customOverrides });
 }
 
 export function mockConsole(): void {
-    for (const key of Object.keys(console) as (keyof Console)[]) {
+    for (const key of Object.keys(console) as Array<keyof Console>) {
         vi.spyOn(console, key).mockReset();
     }
+
     vi.spyOn(process.stdout, "write").mockReset();
 }
 
-export function mockPosixPath({ skip }: { skip?: (keyof PlatformPath)[] } = {}): void {
+export function mockPosixPath({ skip }: { skip?: Array<keyof PlatformPath> } = {}): void {
     mockPath(path.posix, skip);
 }
-export function mockWin32Path({ skip }: { skip?: (keyof PlatformPath)[] } = {}): void {
+
+export function mockWin32Path({ skip }: { skip?: Array<keyof PlatformPath> } = {}): void {
     mockPath(path.win32, skip);
 }
-function mockPath(platformPath: PlatformPath, skip: (keyof PlatformPath)[] = []): void {
-    for (const [key, value] of Object.entries(platformPath) as [keyof PlatformPath, unknown][]) {
+
+function mockPath(platformPath: PlatformPath, skip: Array<keyof PlatformPath> = []): void {
+    for (const [key, value] of Object.entries(platformPath) as Array<
+        [keyof PlatformPath, unknown]
+    >) {
         if (skip.includes(key)) {
             continue;
         }
+
         if (typeof value === "function") {
             // @ts-expect-error TS cannot handle the check above
             vi.spyOn(path, key).mockImplementation(value);
@@ -140,8 +150,11 @@ function sortCouplingResults(couplingResult: CouplingResult): void {
 function strcmp(a: string, b: string): 1 | 0 | -1 {
     if (a < b) {
         return -1;
-    } else if (b < a) {
+    }
+
+    if (b < a) {
         return 1;
     }
+
     return 0;
 }

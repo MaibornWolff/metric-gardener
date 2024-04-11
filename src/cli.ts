@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import yargs from "yargs";
-import { GenericParser } from "./parser/GenericParser.js";
-import { Configuration } from "./parser/Configuration.js";
-import { updateNodeTypesMappingFile } from "./commands/import-grammars/ImportNodeTypes.js";
-import { outputAsJson } from "./commands/outputMetrics.js";
+import { GenericParser } from "./parser/generic-parser.js";
+import { Configuration } from "./parser/configuration.js";
+import { updateNodeTypesMappingFile } from "./commands/import-grammars/import-node-types.js";
+import { outputAsJson } from "./commands/output-metrics.js";
 
 export const parser = yargs()
     .command(

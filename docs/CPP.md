@@ -49,6 +49,6 @@ It does **not** count:
 -   forward declarations of classes, structs and unions (with semicolon directly after the class/struct/enum name instead of a code block, like `class name;`).
 -   General type definitions via `typedef`
 
-### lines_of_code, comment_lines and real_lines_of_code
+### lines_of_code, comment_lines, real_lines_of_code and keywords_in_comments
 
 There are no language-specific details for these metrics. See [README.md](README.md) for their general definition.

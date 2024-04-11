@@ -109,7 +109,9 @@ for comments, empty lines, etc.
 The maximum nesting level of structured text files, like JSON and YAML.
 
 **keywords_in_comments**<br>
-The number of these keywords (not case-sensitive) within the comments: hack, todo, bug, wtf.
+There is the saying that wtf's per minute is the most precise code metric.
+Sometimes they can even be found in the code.
+This metric counts the occurrence of the keywords `hack`, `todo`, `bug` and `wtf` within comments.
 
 **Note:** _Please click on the languages listed in the section above to access language-specific
 details._

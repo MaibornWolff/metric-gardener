@@ -36,6 +36,6 @@ The "classes" metric counts:
 -   definitions of `class`, `abstract class`, `interface`, `trait` and `enum`
 -   anonymous classes
 
-### lines_of_code, comment_lines and real_lines_of_code
+### lines_of_code, comment_lines, real_lines_of_code and keywords_in_comments
 
 see [README.md](../README.md)

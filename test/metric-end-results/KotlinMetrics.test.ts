@@ -111,4 +111,10 @@ describe("Kotlin metric tests", () => {
             testFileMetric("weird-lines.kt", "real_lines_of_code", 30);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.kt", FileMetric.keywordsInComments, 8);
+        });
+    });
 });

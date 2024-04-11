@@ -55,4 +55,10 @@ describe("Rust metrics tests", () => {
             testFileMetric("rust-example-code.rs", "real_lines_of_code", 70);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.rs", FileMetric.keywordsInComments, 10);
+        });
+    });
 });

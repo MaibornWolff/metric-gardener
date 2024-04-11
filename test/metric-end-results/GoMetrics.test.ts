@@ -110,7 +110,7 @@ describe("Go metric tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.go", FileMetric.KeywordsInComments, 8);
+            testFileMetric("keywords.go", FileMetric.keywordsInComments, 8);
         });
     });
 });

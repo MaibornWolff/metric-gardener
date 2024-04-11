@@ -103,4 +103,10 @@ describe("Python metrics test", () => {
             testFileMetric("block-comment.py", "real_lines_of_code", 3);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.py", FileMetric.keywordsInComments, 16);
+        });
+    });
 });

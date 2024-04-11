@@ -78,4 +78,10 @@ describe("TSX metrics tests.", () => {
             testFileMetric("empty.tsx", "lines_of_code", 1);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.tsx", FileMetric.keywordsInComments, 10);
+        });
+    });
 });

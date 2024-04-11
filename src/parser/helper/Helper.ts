@@ -147,10 +147,10 @@ export function getNodeTypeNamesByCategories(
 /**
  * create regex string for a
  * @param keyword ,
- * which match any input text if it contains the keyword as an independent word.
+ * which match any input text if it contains the keyword as a stand-alone word.
+ * The keyword should contain only letters or space for this to work.
  * The regex is case-insensitive.
  */
 export function createRegexFor(keyword: string): RegExp {
-    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`\\b${escapedKeyword}\\b`, "gi");
+    return new RegExp(`\\b${keyword}\\b`, "gi");
 }

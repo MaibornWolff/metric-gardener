@@ -147,7 +147,7 @@ describe("C# metric tests", () => {
 
     describe("parses keywords in comments metric", () => {
         it("should count all predefined keywords in comments", () => {
-            testFileMetric("keywords.cs", FileMetric.KeywordsInComments, 8);
+            testFileMetric("keywords.cs", FileMetric.keywordsInComments, 8);
         });
     });
 });

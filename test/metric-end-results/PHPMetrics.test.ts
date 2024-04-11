@@ -132,4 +132,10 @@ describe("PHP metrics tests", () => {
             expect(couplingResult).toMatchSnapshot();
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.php", FileMetric.keywordsInComments, 8);
+        });
+    });
 });

@@ -114,4 +114,9 @@ describe("JavaScript metrics tests", () => {
             testFileMetric("weird-lines.js", "real_lines_of_code", 32);
         });
     });
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.js", FileMetric.keywordsInComments, 8);
+        });
+    });
 });

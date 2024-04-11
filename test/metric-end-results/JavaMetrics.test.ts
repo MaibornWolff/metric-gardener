@@ -173,4 +173,10 @@ describe("Java metrics tests.", () => {
             testFileMetric("comment_lines/DifferentKindOfComments.java", "comment_lines", 28);
         });
     });
+
+    describe("parses keywords in comments metric", () => {
+        it("should count all predefined keywords in comments", () => {
+            testFileMetric("keywords.java", FileMetric.keywordsInComments, 8);
+        });
+    });
 });

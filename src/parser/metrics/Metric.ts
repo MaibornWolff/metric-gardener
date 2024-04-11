@@ -98,17 +98,10 @@ export type CouplingMetric = {
 };
 
 export abstract class SourceFile {
-    /**
-     * Path to the file.
-     */
-    filePath: string;
-
-    fileType: FileType;
-
-    protected constructor(filePath: string, fileType: FileType) {
-        this.filePath = filePath;
-        this.fileType = fileType;
-    }
+    protected constructor(
+        public readonly filePath: string,
+        public readonly fileType: FileType,
+    ) {}
 }
 
 /**

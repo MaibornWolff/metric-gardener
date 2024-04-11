@@ -18,8 +18,6 @@ export type Accessor = {
 };
 
 export abstract class AbstractCollector {
-    protected abstract getAccessorsQuery(): string;
-
     getAccessors(
         parsedFile: ParsedFile,
         namespacesOfFile: Map<string, FullyQTN>,
@@ -73,4 +71,6 @@ export abstract class AbstractCollector {
 
         return publicAccessors;
     }
+
+    protected abstract getAccessorsQuery(): string;
 }

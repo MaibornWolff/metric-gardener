@@ -7,7 +7,7 @@ import {
     mockWin32Path,
 } from "../../../test/metric-end-results/TestHelper.js";
 import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
-import { type ConfigurationParams } from "../Configuration.js";
+import { type ConfigurationParameters } from "../Configuration.js";
 import {
     findFilesAsync,
     createRegexFor,
@@ -158,22 +158,22 @@ describe("Helper.ts", () => {
         function mockFs(entries?: Entry[]): void {
             if (entries) {
                 vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => false } as Stats);
-                mockOpenDir(entries);
+                mockOpenDirectory(entries);
             } else {
                 vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
             }
         }
 
-        function mockOpenDir(entries: Entry[]): void {
+        function mockOpenDirectory(entries: Entry[]): void {
             vi.spyOn(fs, "opendir").mockResolvedValueOnce(
-                (async function* (): AsyncGenerator<Dirent> {
+                (async function* (): AsyncGenerator<Partial<Dirent>> {
                     for (const entry of entries) {
                         if (typeof entry === "string") {
-                            yield { name: entry, isDirectory: () => false } as Dirent;
+                            yield { name: entry, isDirectory: () => false };
                         } else {
                             for (const [name, children] of Object.entries(entry)) {
-                                mockOpenDir(children);
-                                yield { name, isDirectory: () => true } as Dirent;
+                                mockOpenDirectory(children);
+                                yield { name, isDirectory: () => true };
                             }
                         }
                     }
@@ -186,7 +186,7 @@ describe("Helper.ts", () => {
         }
 
         async function expectFilesWithConfig(
-            configOverrides?: Partial<ConfigurationParams>,
+            configOverrides?: Partial<ConfigurationParameters>,
             ...files: string[]
         ): Promise<void> {
             const config = getTestConfiguration("/some/path", configOverrides);

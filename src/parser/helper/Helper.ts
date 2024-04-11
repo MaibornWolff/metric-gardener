@@ -65,7 +65,8 @@ export function formatPrintPath(filePath: string, config: Configuration): string
  */
 export async function* findFilesAsync(config: Configuration): AsyncGenerator<string> {
     // Handle special case: if the specified sourcePath is a single file, just yield the file.
-    if ((await fs.lstat(config.sourcesPath)).isFile()) {
+    const stats = await fs.lstat(config.sourcesPath);
+    if (stats.isFile()) {
         yield config.sourcesPath;
     } else {
         // SourcePath points to a directory, so use recursive function to find all files.
@@ -76,13 +77,13 @@ export async function* findFilesAsync(config: Configuration): AsyncGenerator<str
 }
 
 async function* findFilesAsyncRecursive(
-    dir: string,
+    directory: string,
     excludedFolders: Set<string>,
 ): AsyncGenerator<string> {
-    const openedDir = await fs.opendir(dir);
+    const openedDirectory = await fs.opendir(directory);
 
-    for await (const currentEntry of openedDir) {
-        const currentPath = path.join(dir, currentEntry.name);
+    for await (const currentEntry of openedDirectory) {
+        const currentPath = path.join(directory, currentEntry.name);
 
         if (currentEntry.isDirectory()) {
             const isPathExcluded = excludedFolders.has(currentEntry.name);

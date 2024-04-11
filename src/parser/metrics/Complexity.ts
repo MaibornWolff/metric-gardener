@@ -196,11 +196,10 @@ export class Complexity implements Metric {
 
         if (language === Language.Java) {
             // Add query for instance init block in Java
-            queryBuilder.setStatements(
-                this.complexityStatementsSuperSet.concat(
-                    new SimpleQueryStatement("(class_body (block)) @initBlock"),
-                ),
-            );
+            queryBuilder.setStatements([
+                ...this.complexityStatementsSuperSet,
+                new SimpleQueryStatement("(class_body (block)) @initBlock"),
+            ]);
         } else {
             queryBuilder.setStatements(this.complexityStatementsSuperSet);
         }

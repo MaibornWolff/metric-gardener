@@ -32,15 +32,6 @@ export class CommentLines implements Metric {
         this.#addQueriesForPython();
     }
 
-    #addQueriesForPython(): void {
-        this.#statementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement(
-                "(expression_statement (string)) @python_multiline_comment",
-                ["py"],
-            ),
-        );
-    }
-
     calculate(parsedFile: ParsedFile): MetricResult {
         const captures = this.getQueryCapturesFrom(parsedFile);
 
@@ -88,5 +79,14 @@ export class CommentLines implements Metric {
 
     getName(): MetricName {
         return "comment_lines";
+    }
+
+    #addQueriesForPython(): void {
+        this.#statementsSuperSet.push(
+            new SimpleLanguageSpecificQueryStatement(
+                "(expression_statement (string)) @python_multiline_comment",
+                ["py"],
+            ),
+        );
     }
 }

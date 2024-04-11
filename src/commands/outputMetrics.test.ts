@@ -1,3 +1,4 @@
+import * as fs from "node:fs";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
     type MetricResult,
@@ -8,15 +9,18 @@ import { FileType } from "../parser/helper/Language.js";
 import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
 import { outputAsJson } from "./outputMetrics.js";
 
-const writeFileSync = vi.hoisted(() => vi.fn<Parameters<typeof import("fs").writeFileSync>>());
 vi.mock("fs", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("fs")>();
-    return { ...actual, writeFileSync };
+    const actual = await importOriginal<typeof fs>();
+    return { ...actual, writeFileSync: vi.fn() };
 });
+
 describe("outputMetrics", () => {
     describe("writes json into file ", () => {
         beforeEach(mockConsole);
-        afterAll(() => void vi.resetModules());
+
+        afterAll(() => {
+            vi.resetModules();
+        });
 
         it("when metrics are present", () => {
             const file1MetricResults: MetricResult[] = [];
@@ -89,8 +93,8 @@ describe("outputMetrics", () => {
             expect(console.log).toHaveBeenCalledTimes(1);
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
-            expect(writeFileSync).toHaveBeenCalledTimes(1);
-            const [file, data, options] = writeFileSync.mock.lastCall!;
+            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+            const [file, data, options] = vi.mocked(fs.writeFileSync).mock.lastCall!;
 
             expect(file).toBe("mocked-file.json");
             expect(data).toMatchSnapshot();
@@ -108,8 +112,8 @@ describe("outputMetrics", () => {
             expect(console.log).toHaveBeenCalledTimes(1);
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
 
-            expect(writeFileSync).toHaveBeenCalledTimes(1);
-            expect(writeFileSync).toHaveBeenCalledWith(
+            expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+            expect(fs.writeFileSync).toHaveBeenCalledWith(
                 "mocked-file.json",
                 '{"nodes":[],"info":[],"relationships":[]}',
             );

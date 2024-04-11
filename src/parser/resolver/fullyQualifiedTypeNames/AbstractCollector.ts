@@ -18,10 +18,6 @@ export enum NamespaceResolvingStrategy {
 }
 
 export abstract class AbstractCollector {
-    protected abstract getNamespaceResolvingStrategy(): NamespaceResolvingStrategy;
-    protected abstract getNamespaceDelimiter(): string;
-    protected abstract getNamespacesQuery(): string;
-
     getFullyQTNs(parsedFile: ParsedFile): Map<string, FullyQTN> {
         if (this.getNamespaceResolvingStrategy() === NamespaceResolvingStrategy.Query) {
             return new QueryStrategy().getFullyQTNs(
@@ -40,4 +36,8 @@ export abstract class AbstractCollector {
                 this.getNamespaceResolvingStrategy().toString(),
         );
     }
+
+    protected abstract getNamespaceResolvingStrategy(): NamespaceResolvingStrategy;
+    protected abstract getNamespaceDelimiter(): string;
+    protected abstract getNamespacesQuery(): string;
 }

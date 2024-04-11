@@ -34,7 +34,9 @@ vi.mock("fs", () => ({
 }));
 
 describe("ImportNodeTypes", () => {
-    afterEach(() => void vi.resetModules());
+    afterEach(() => {
+        vi.resetModules();
+    });
 
     describe("updateNodeTypesMappingFile()", () => {
         it("should log success to the console", async () => {
@@ -113,7 +115,7 @@ describe("ImportNodeTypes", () => {
         it("should update node types mapping file correctly and write changelog", async () => {
             mockConsole();
             vi.spyOn(fs, "readFile").mockImplementation(async (path) => {
-                let nodeTypes: NodeTypes = [];
+                let nodeTypes: NodeTypes;
                 switch (path) {
                     case "./node_modules/tree-sitter-c-sharp/src/node-types.json": {
                         nodeTypes = [
@@ -174,6 +176,10 @@ describe("ImportNodeTypes", () => {
                             { type: "lambda_expression", named: true },
                         ];
                         break;
+                    }
+
+                    default: {
+                        nodeTypes = [];
                     }
                 }
 

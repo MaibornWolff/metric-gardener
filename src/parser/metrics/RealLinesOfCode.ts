@@ -79,6 +79,7 @@ export class RealLinesOfCode implements Metric {
             this.isComment(node);
         let countAllLinesFunction: (node: SyntaxNode) => boolean = isLeafNodeButNoLinebreak;
 
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
         switch (language) {
             case Language.Python: {
                 isCommentFunction = (node: SyntaxNode): boolean => this.isPythonComment(node);

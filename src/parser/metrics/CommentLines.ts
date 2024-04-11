@@ -2,10 +2,11 @@ import { QueryBuilder } from "../queries/QueryBuilder.js";
 import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
 import { getQueryStatementsByCategories } from "../helper/Helper.js";
 import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { QueryMatch, SyntaxNode } from "tree-sitter";
+import { QueryCapture, SyntaxNode } from "tree-sitter";
 import { debuglog, DebugLoggerFunction } from "node:util";
-import { Language } from "../helper/Language.js";
-import { QueryStatementInterface, SimpleQueryStatement } from "../queries/QueryStatements.js";
+import {
+    QueryStatementInterface, SimpleLanguageSpecificQueryStatement
+} from "../queries/QueryStatements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -16,52 +17,29 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Includes also empty comment lines, etc.
  */
 export class CommentLines implements Metric {
-    private readonly statementsSuperSet: QueryStatementInterface[] = [];
+    readonly #statementsSuperSet: QueryStatementInterface[] = [];
 
     /**
      * Constructor of the class {@link CommentLines}.
      * @param allNodeTypes List of all configured syntax node types.
      */
     constructor(allNodeTypes: NodeTypeConfig[]) {
-        this.statementsSuperSet = getQueryStatementsByCategories(
-            allNodeTypes,
-            NodeTypeCategory.Comment,
-        );
+        this.#statementsSuperSet = getQueryStatementsByCategories(allNodeTypes, NodeTypeCategory.Comment);
+        this.#addQueriesForPython();
+    }
+
+    #addQueriesForPython() {
+        this.#statementsSuperSet.push(new SimpleLanguageSpecificQueryStatement("(expression_statement (string)) @python_multiline_comment", ["py"]));
     }
 
     calculate(parsedFile: ParsedFile): MetricResult {
-        const { language, tree } = parsedFile;
-        const additionalStatements: QueryStatementInterface[] = [];
-        switch (language) {
-            case Language.Python:
-                additionalStatements.push(
-                    new SimpleQueryStatement(
-                        "(expression_statement (string)) @python_multiline_comment",
-                    ),
-                );
-                break;
-        }
-
-        const queryBuilder = new QueryBuilder(language);
-
-        if (additionalStatements.length === 0) {
-            queryBuilder.setStatements(this.statementsSuperSet);
-        } else {
-            // Important to use concat() here, because we do not want to change this.statementSuperSet:
-            queryBuilder.setStatements(this.statementsSuperSet.concat(additionalStatements));
-        }
-
-        const query = queryBuilder.build();
-        let matches: QueryMatch[] = [];
-        if (query !== undefined) {
-            matches = query.matches(tree.rootNode);
-        }
+        const captures = this.getQueryCapturesFrom(parsedFile);
 
         let numberOfLines = 0;
         let lastCommentLine = -1;
 
-        for (const match of matches) {
-            const captureNode: SyntaxNode = match.captures[0].node;
+        for (const capture of captures) {
+            const captureNode: SyntaxNode = capture.node;
             const startRow = captureNode.startPosition.row;
             const endRow = captureNode.endPosition.row;
             // If we have not already counted for a comment on the same line:
@@ -79,12 +57,27 @@ export class CommentLines implements Metric {
         dlog(this.getName() + " - " + numberOfLines.toString());
 
         return {
-            metricName: this.getName(),
-            metricValue: numberOfLines,
+            metricName: this.getName(), metricValue: numberOfLines
         };
+    }
+
+
+    getQueryCapturesFrom(parsedFile: ParsedFile): QueryCapture[] {
+        const { language, tree } = parsedFile;
+        const queryBuilder = new QueryBuilder(language);
+
+        queryBuilder.setStatements(this.#statementsSuperSet);
+
+        const query = queryBuilder.build();
+        let queryCaptures: QueryCapture[] = [];
+        if (query !== undefined) {
+            queryCaptures = query.captures(tree.rootNode);
+        }
+        return queryCaptures;
     }
 
     getName(): MetricName {
         return "comment_lines";
     }
+
 }

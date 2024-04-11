@@ -49,9 +49,15 @@
     },
     "xo": {
         "prettier": true,
-        "rules": {
-            "@typescript-eslint/explicit-function-return-type": "error"
-        }
+        "overrides": [
+            {
+                "files": "**.ts",
+                "rules": {
+                    "@typescript-eslint/explicit-function-return-type": "error"
+                }
+            }
+        ],
+        "ignores": "resources"
     },
     "prettier": {
         "bracketSpacing": true

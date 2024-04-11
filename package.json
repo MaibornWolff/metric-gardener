@@ -11,19 +11,9 @@
     "scripts": {
         "start": "tsc && node --no-warnings=ExperimentalWarning dist/src/app.js",
         "test": "vitest run",
-        "format": "prettier . --write",
-        "format:quick": "pretty-quick --staged",
-        "format:check": "prettier . --check",
-        "lint": "eslint .",
-        "lint:fix": "npm run lint -- --fix",
-        "lint:quick": "npm run precommit",
-        "check": "tsc && npm run format:check && npm run lint && npm run test",
-        "prepare": "husky",
-        "precommit": "lint-staged",
-        "commitmsg": "commitlint --edit"
-    },
-    "lint-staged": {
-        "src/**/*.ts": "eslint --max-warnings=0"
+        "xo": "xo",
+        "xo:fix": "xo --fix",
+        "prepare": "husky"
     },
     "dependencies": {
         "p-map": "^7.0.1",
@@ -47,18 +37,26 @@
     },
     "devDependencies": {
         "@commitlint/config-conventional": "19.1.0",
-        "@types/eslint__js": "8.42.3",
         "@types/node": "18.19.26",
         "@types/yargs": "17.0.32",
         "@vitest/coverage-v8": "1.4.0",
         "commitlint": "19.2.1",
-        "eslint": "8.57.0",
         "husky": "9.0.11",
         "lint-staged": "15.2.2",
-        "prettier": "3.2.5",
-        "pretty-quick": "4.0.0",
         "typescript": "5.3.3",
-        "typescript-eslint": "7.5.0",
-        "vitest": "1.4.0"
+        "vitest": "1.4.0",
+        "xo": "0.58.0"
+    },
+    "xo": {
+        "prettier": true,
+        "rules": {
+            "@typescript-eslint/explicit-function-return-type": "error"
+        }
+    },
+    "prettier": {
+        "bracketSpacing": true
+    },
+    "lint-staged": {
+        "*": "npm run xo --"
     }
 }

@@ -108,7 +108,8 @@ export abstract class AbstractCollector {
             }
 
             if (importTextCapture.name === "namespace_use_alias_suffix") {
-                const matchingUsage = importsOfFile.at(-1);
+                // Todo: rewrite using at() method
+                const matchingUsage = importsOfFile[importsOfFile.length - 1]; // eslint-disable-line unicorn/prefer-at
                 matchingUsage.alias = importTextCapture.text;
 
                 this.importsBySuffixOrAlias.get(filePath)?.delete(matchingUsage.namespaceSuffix);
@@ -168,7 +169,8 @@ export abstract class AbstractCollector {
 
         for (let index = 0; index < importTextCaptures.length; index++) {
             if (importTextCaptures[index].name === "namespace_use_alias_suffix") {
-                const matchingUsage = importsOfFile.at(-1);
+                // Todo: rewrite using at() method
+                const matchingUsage = importsOfFile[importsOfFile.length - 1]; // eslint-disable-line unicorn/prefer-at
                 // Split alias from alias keyword (if any) by space and use last element by pop()
                 // it seems to be not possible to query the alias part only
                 const alias = importTextCaptures[index].text.split(" ").pop() ?? "";

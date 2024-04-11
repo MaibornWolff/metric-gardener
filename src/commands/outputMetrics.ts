@@ -133,7 +133,7 @@ function buildOutputObject(
     for (const [filePath, metricErrors] of metricErrorsPerFile) {
         let message = "Error while calculating the following metric(s) for the file:";
         for (const metricError of metricErrors) {
-            message = [...message, " "].concat(metricError.metricName);
+            message += " " + metricError.metricName;
         }
 
         const outputNode: OutputInfoNode = {
@@ -176,7 +176,7 @@ function buildOutputObject(
 
 function dumpCompressed(outputString: string, outputFilePath: string): void {
     const readableStream = new Readable();
-    readableStream.push(outputString, null);
+    readableStream.push(outputString);
 
     const gzip = zlib.createGzip();
     const writeStream = fs.createWriteStream(outputFilePath);

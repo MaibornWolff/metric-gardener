@@ -1,9 +1,9 @@
-import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
-import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { SyntaxNode, TreeCursor } from "tree-sitter";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type SyntaxNode, type TreeCursor } from "tree-sitter";
+import { NodeTypeCategory, type NodeTypeConfig } from "../helper/Model.js";
 import { getNodeTypeNamesByCategories } from "../helper/Helper.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
 import { Language } from "../helper/Language.js";
+import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./Metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -13,7 +13,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Counts the number of lines in a file, not counting for comments and empty lines.
  */
 export class RealLinesOfCode implements Metric {
-    private commentStatementsSet: Set<string>;
+    private readonly commentStatementsSet: Set<string>;
     private lastCountedLine = -1;
 
     /**
@@ -55,11 +55,11 @@ export class RealLinesOfCode implements Metric {
                     realLinesOfCode += currentNode.endPosition.row - currentNode.startPosition.row;
                     this.lastCountedLine = currentNode.endPosition.row;
                 }
-            } else if (currentNode.endPosition.row > currentNode.startPosition.row) {
-                // Recurse, depth-first
-                if (cursor.gotoFirstChild()) {
-                    realLinesOfCode += this.walkTree(cursor, isComment, countAllLines);
-                }
+            } else if (
+                currentNode.endPosition.row > currentNode.startPosition.row &&
+                cursor.gotoFirstChild() // Recurse, depth-first
+            ) {
+                realLinesOfCode += this.walkTree(cursor, isComment, countAllLines);
             }
         }
 
@@ -69,6 +69,7 @@ export class RealLinesOfCode implements Metric {
             // Completed searching this part of the tree, so go up now.
             cursor.gotoParent();
         }
+
         return realLinesOfCode;
     }
 
@@ -79,12 +80,15 @@ export class RealLinesOfCode implements Metric {
         let countAllLinesFunction: (node: SyntaxNode) => boolean = isLeafNodeButNoLinebreak;
 
         switch (language) {
-            case Language.Python:
+            case Language.Python: {
                 isCommentFunction = (node: SyntaxNode): boolean => this.isPythonComment(node);
                 break;
-            case Language.Bash:
+            }
+
+            case Language.Bash: {
                 countAllLinesFunction = countAllLinesBash;
                 break;
+            }
         }
 
         let realLinesOfCode = 0;
@@ -132,7 +136,7 @@ function isLeafNodeButNoLinebreak(node: SyntaxNode): boolean {
     return node.childCount === 0 && !"\r\n".includes(node.type);
 }
 
-function isHereDocBody(node: SyntaxNode): boolean {
+function isHeredocBody(node: SyntaxNode): boolean {
     return node.type === "heredoc_body";
 }
 
@@ -142,5 +146,5 @@ function isHereDocBody(node: SyntaxNode): boolean {
  * This is probably a bug in the tree-sitter-bash grammar.
  */
 function countAllLinesBash(node: SyntaxNode): boolean {
-    return isLeafNodeButNoLinebreak(node) || isHereDocBody(node);
+    return isLeafNodeButNoLinebreak(node) || isHeredocBody(node);
 }

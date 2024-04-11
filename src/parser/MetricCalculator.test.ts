@@ -1,15 +1,16 @@
+import fs from "node:fs/promises";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { calculateMetrics } from "./MetricCalculator.js";
+import Parser = require("tree-sitter");
 import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
+import { calculateMetrics } from "./MetricCalculator.js";
 import {
     ErrorFile,
-    FileMetricResults,
+    type FileMetricResults,
     ParsedFile,
-    SourceFile,
+    type SourceFile,
     UnsupportedFile,
 } from "./metrics/Metric.js";
 import { FileType, Language, languageToGrammar } from "./helper/Language.js";
-import Parser = require("tree-sitter");
 import { Classes } from "./metrics/Classes.js";
 import { CommentLines } from "./metrics/CommentLines.js";
 import { Complexity } from "./metrics/Complexity.js";
@@ -18,7 +19,6 @@ import { LinesOfCode } from "./metrics/LinesOfCode.js";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel.js";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode.js";
 import * as LinesOfCodeRawText from "./metrics/LinesOfCodeRawText.js";
-import fs from "fs/promises";
 
 function initiateSpies(): void {
     vi.spyOn(Classes.prototype, "calculate").mockReturnValue({
@@ -98,7 +98,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     });
 
     it("should calculate all metrics of type source code for a python file", async () => {
-        // given
+        // Given
         parser.setLanguage(languageToGrammar.get(Language.Python));
         const tree = parser.parse("sum(range(4))");
         const parsedFile = new ParsedFile("test.py", Language.Python, tree);
@@ -106,16 +106,16 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         initiateSpies();
 
-        // when
+        // When
         const [sourceFile, fileMetricResults] = await calculateMetrics(parsedFilePromise);
 
-        // then
+        // Then
         expect(sourceFile).toEqual(parsedFile);
         expect(fileMetricResults).toMatchSnapshot();
     });
 
     it("should calculate lines of code and maximum nesting level for a JSON file", async () => {
-        // given
+        // Given
         parser.setLanguage(languageToGrammar.get(Language.JSON));
         const tree = parser.parse('{ "a": { "b": "c" } }');
         const parsedFile = new ParsedFile("test.json", Language.JSON, tree);
@@ -123,31 +123,31 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         initiateSpies();
 
-        // when
+        // When
         const [sourceFile, fileMetricResults] = await calculateMetrics(parsedFilePromise);
 
-        // then
+        // Then
         expect(sourceFile).toEqual(parsedFile);
         expect(fileMetricResults).toMatchSnapshot();
     });
 
     it("should calculate lines of code for a text file", async () => {
-        // given
+        // Given
         const unsupportedFile = new UnsupportedFile("test.txt");
         const unsupportedFilePromise = unsupportedFile;
 
         initiateSpies();
 
-        // when
+        // When
         const [sourceFile, fileMetricResults] = await calculateMetrics(unsupportedFilePromise);
 
-        // then
+        // Then
         expect(sourceFile).toEqual(unsupportedFile);
         expect(fileMetricResults).toMatchSnapshot();
     });
 
     it("should return an empty map of metrics when the source file is an error file", async () => {
-        // given
+        // Given
         const errorFile = new ErrorFile(
             "/path/to/error/causing/file.js",
             new Error(
@@ -157,10 +157,10 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         const errorFilePromise = errorFile;
 
-        // when
+        // When
         const result = await calculateMetrics(errorFilePromise);
 
-        // then
+        // Then
         const expectedResult: [SourceFile, FileMetricResults] = [
             errorFile,
             { fileType: FileType.Error, metricResults: [], metricErrors: [] },
@@ -169,7 +169,7 @@ describe("MetricCalculator.calculateMetrics()", () => {
     });
 
     it("should include an error object in the result when an error is thrown while calculating any metric on a source file", async () => {
-        // given
+        // Given
         parser.setLanguage(languageToGrammar.get(Language.Python));
         const tree = parser.parse("sum(range(4))");
         const parsedFile = new ParsedFile("test.py", Language.Python, tree);
@@ -177,10 +177,10 @@ describe("MetricCalculator.calculateMetrics()", () => {
 
         initiateErrorSpies();
 
-        // when
+        // When
         const [sourceFile, fileMetricResults] = await calculateMetrics(parsedFilePromise);
 
-        // then
+        // Then
         expect(sourceFile).toEqual(parsedFile);
         expect(fileMetricResults).toMatchSnapshot();
     });

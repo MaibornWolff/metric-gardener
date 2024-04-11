@@ -8,9 +8,7 @@ export type NodeType = {
     subtypes?: NodeType[];
 };
 
-type Fields = {
-    [key: string]: Children;
-};
+type Fields = Record<string, Children>;
 
 type Children = {
     multiple: boolean;

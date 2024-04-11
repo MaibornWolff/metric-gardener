@@ -1,3 +1,4 @@
+import path from "node:path";
 // @ts-expect-error module doesn't have types
 import CSharp from "tree-sitter-c-sharp";
 // @ts-expect-error module doesn't have types
@@ -28,10 +29,9 @@ import C from "tree-sitter-c";
 import JSON from "tree-sitter-json";
 // @ts-expect-error module doesn't have types
 import YAML from "tree-sitter-yaml";
+import { type Configuration } from "../Configuration.js";
 import { ConstantTwoWayMap } from "./ConstantTwoWayMap.js";
-import { Configuration } from "../Configuration.js";
 import { lookupLowerCase } from "./Helper.js";
-import path from "path";
 
 /**
  * Enum of all supported programming languages.
@@ -158,7 +158,7 @@ export function languageToFileType(language: Language): FileType {
 const caseSensitiveFileExtensionToLanguage = new Map([
     ["c", Language.C],
     ["C", Language.CPlusPlus],
-    ["H", Language.CPlusPlus], // lowercase .h has a special treatment
+    ["H", Language.CPlusPlus], // Lowercase .h has a special treatment
 ]);
 
 /**
@@ -176,6 +176,7 @@ export function assumeLanguageFromFilePath(
         if (shouldHBeParsedAsC(filePath, config)) {
             return Language.C;
         }
+
         return Language.CPlusPlus;
     }
 
@@ -183,6 +184,7 @@ export function assumeLanguageFromFilePath(
     if (resultCaseSensitive !== undefined) {
         return resultCaseSensitive;
     }
+
     return lookupLowerCase(fileExtensionToLanguage, fileExtension);
 }
 
@@ -193,6 +195,7 @@ function shouldHBeParsedAsC(filePath: string, config: Configuration): boolean {
     if (config.parseAllHAsC) {
         return true;
     }
+
     if (config.parseSomeHAsC.size > 0) {
         // Use the path relative to the sources path to avoid the unintuitive behavior
         // that higher-level folders are evaluated for this:
@@ -203,5 +206,6 @@ function shouldHBeParsedAsC(filePath: string, config: Configuration): boolean {
             }
         }
     }
+
     return false;
 }

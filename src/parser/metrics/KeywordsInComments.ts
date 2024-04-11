@@ -1,7 +1,7 @@
-import { Metric, MetricName, MetricResult, ParsedFile } from "./Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { NodeTypeConfig } from "../helper/Model.js";
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type NodeTypeConfig } from "../helper/Model.js";
 import { createRegexFor } from "../helper/Helper.js";
+import { type Metric, type MetricName, type MetricResult, type ParsedFile } from "./Metric.js";
 import { CommentLines } from "./CommentLines.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -23,14 +23,14 @@ export class KeywordsInComments implements Metric {
 
         for (const comment of comments) {
             const regexMatchArrays = comment.node.text.matchAll(this.#regex);
-            metricValue += Array.from(regexMatchArrays).length;
+            metricValue += [...regexMatchArrays].length;
         }
 
         dlog(this.getName() + " - " + metricValue.toString());
 
         return {
             metricName: this.getName(),
-            metricValue: metricValue,
+            metricValue,
         };
     }
 

@@ -1,10 +1,10 @@
+import { type ParsedFile } from "../metrics/Metric.js";
 import { Factory as AccessorCollectorFactory } from "./callExpressions/Factory.js";
-import { ParsedFile } from "../metrics/Metric.js";
-import { Accessor } from "./callExpressions/AbstractCollector.js";
-import { FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector.js";
+import { type Accessor } from "./callExpressions/AbstractCollector.js";
+import { type FullyQTN } from "./fullyQualifiedTypeNames/AbstractCollector.js";
 
 export class PublicAccessorCollector {
-    private accessorCollectorFactory = new AccessorCollectorFactory();
+    private readonly accessorCollectorFactory = new AccessorCollectorFactory();
 
     getPublicAccessors(
         parsedFile: ParsedFile,

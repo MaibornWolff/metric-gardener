@@ -1,25 +1,25 @@
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type QueryMatch } from "tree-sitter";
+import { type NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
 import { QueryBuilder } from "../queries/QueryBuilder.js";
-import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
-import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { QueryMatch } from "tree-sitter";
 import {
     NodeTypeQueryStatement,
     OperatorQueryStatement,
-    QueryStatementInterface,
+    type QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
     SimpleQueryStatement,
 } from "../queries/QueryStatements.js";
 import { Language } from "../helper/Language.js";
+import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./Metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export class Complexity implements Metric {
-    private complexityStatementsSuperSet: QueryStatementInterface[] = [];
+    private readonly complexityStatementsSuperSet: QueryStatementInterface[] = [];
 
-    private nodeTypeCategories = new Set([
+    private readonly nodeTypeCategories = new Set([
         NodeTypeCategory.If,
         NodeTypeCategory.Loop,
         NodeTypeCategory.ConditionalExpression,
@@ -57,6 +57,7 @@ export class Complexity implements Metric {
                 }
             }
         }
+
         this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
         this.addQueriesForCSharp();
     }
@@ -115,55 +116,70 @@ export class Complexity implements Metric {
         noDefaultLangAbbrs: string[],
         caseDefaultNodeType: NodeTypeConfig,
     ): void {
-        if (caseDefaultNodeType.type_name === "case_statement") {
-            // Special treatment for "case_statement" used by at least C++ and PHP.
-            // This syntax node can have more than one child,
-            // because it also has the content of the case block as child(s).
-            //
-            // In this case, a case label can be differentiated from a default label by
-            // checking if there is a child with the field name "value":
-            this.complexityStatementsSuperSet.push(
-                new SimpleLanguageSpecificQueryStatement(
-                    "(case_statement value: _ ) @case_statement",
-                    noDefaultLangAbbrs,
-                    caseDefaultNodeType.deactivated_for_languages,
-                ),
-            );
-        } else if (caseDefaultNodeType.type_name === "when_entry") {
-            // Special treatment for the "when_entry" used by Kotlin. Can also have more than one child.
-            //
-            // A conditional when_entry can be differentiated from an else when_entry by checking
-            // if the first child ist a "when_condition":
-            this.complexityStatementsSuperSet.push(
-                new SimpleLanguageSpecificQueryStatement(
-                    "(when_entry (when_condition)) @when_entry",
-                    noDefaultLangAbbrs,
-                    caseDefaultNodeType.deactivated_for_languages,
-                ),
-            );
-        } else if (caseDefaultNodeType.type_name === "match_arm") {
-            // Special treatment for the "match_arm" used by Rust.
-            //
-            // A conditional match_arm can be differentiated from a default label by checking
-            // if the match_pattern child node has a child
-            this.complexityStatementsSuperSet.push(
-                new SimpleLanguageSpecificQueryStatement(
-                    "(match_arm pattern: (match_pattern (_))) @match_arm",
-                    noDefaultLangAbbrs,
-                    caseDefaultNodeType.deactivated_for_languages,
-                ),
-            );
-        } else {
-            // Standard treatment: check if the case label node has a named child:
-            this.complexityStatementsSuperSet.push(
-                new SimpleLanguageSpecificQueryStatement(
-                    "(" + caseDefaultNodeType.type_name + " (_)) @" + caseDefaultNodeType.type_name,
-                    noDefaultLangAbbrs,
-                    caseDefaultNodeType.deactivated_for_languages,
-                ),
-            );
+        switch (caseDefaultNodeType.type_name) {
+            case "case_statement": {
+                // Special treatment for "case_statement" used by at least C++ and PHP.
+                // This syntax node can have more than one child,
+                // because it also has the content of the case block as child(s).
+                //
+                // In this case, a case label can be differentiated from a default label by
+                // checking if there is a child with the field name "value":
+                this.complexityStatementsSuperSet.push(
+                    new SimpleLanguageSpecificQueryStatement(
+                        "(case_statement value: _ ) @case_statement",
+                        noDefaultLangAbbrs,
+                        caseDefaultNodeType.deactivated_for_languages,
+                    ),
+                );
+                break;
+            }
+
+            case "when_entry": {
+                // Special treatment for the "when_entry" used by Kotlin. Can also have more than one child.
+                //
+                // A conditional when_entry can be differentiated from an else when_entry by checking
+                // if the first child ist a "when_condition":
+                this.complexityStatementsSuperSet.push(
+                    new SimpleLanguageSpecificQueryStatement(
+                        "(when_entry (when_condition)) @when_entry",
+                        noDefaultLangAbbrs,
+                        caseDefaultNodeType.deactivated_for_languages,
+                    ),
+                );
+                break;
+            }
+
+            case "match_arm": {
+                // Special treatment for the "match_arm" used by Rust.
+                //
+                // A conditional match_arm can be differentiated from a default label by checking
+                // if the match_pattern child node has a child
+                this.complexityStatementsSuperSet.push(
+                    new SimpleLanguageSpecificQueryStatement(
+                        "(match_arm pattern: (match_pattern (_))) @match_arm",
+                        noDefaultLangAbbrs,
+                        caseDefaultNodeType.deactivated_for_languages,
+                    ),
+                );
+                break;
+            }
+
+            default: {
+                // Standard treatment: check if the case label node has a named child:
+                this.complexityStatementsSuperSet.push(
+                    new SimpleLanguageSpecificQueryStatement(
+                        "(" +
+                            caseDefaultNodeType.type_name +
+                            " (_)) @" +
+                            caseDefaultNodeType.type_name,
+                        noDefaultLangAbbrs,
+                        caseDefaultNodeType.deactivated_for_languages,
+                    ),
+                );
+            }
         }
     }
+
     addQueriesForCSharp(): void {
         this.complexityStatementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(`(assignment_operator "??=")`, ["cs"]),
@@ -179,7 +195,7 @@ export class Complexity implements Metric {
         const queryBuilder = new QueryBuilder(language);
 
         if (language === Language.Java) {
-            //add query for instance init block in Java
+            // Add query for instance init block in Java
             queryBuilder.setStatements(
                 this.complexityStatementsSuperSet.concat(
                     new SimpleQueryStatement("(class_body (block)) @initBlock"),

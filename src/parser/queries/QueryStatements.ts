@@ -1,7 +1,7 @@
-import { Language, languageToAbbreviation } from "../helper/Language.js";
-import { NodeTypeConfig } from "../helper/Model.js";
+import { type Language, languageToAbbreviation } from "../helper/Language.js";
+import { type NodeTypeConfig } from "../helper/Model.js";
 
-export interface QueryStatementInterface {
+export type QueryStatementInterface = {
     activatedFor(language: Language): boolean;
 
     /**
@@ -12,10 +12,10 @@ export interface QueryStatementInterface {
     applicableFor(language: Language): boolean;
 
     toString(): string;
-}
+};
 
 export class SimpleQueryStatement implements QueryStatementInterface {
-    #query: string;
+    readonly #query: string;
 
     constructor(query: string) {
         this.#query = query;
@@ -45,11 +45,11 @@ export abstract class LanguageSpecificQueryStatement implements QueryStatementIn
         this.applicableForLanguages =
             languageToAbbreviation.getKeysForAllValues(applicable_for_languages);
 
-        if (deactivated_for_languages !== undefined) {
+        if (deactivated_for_languages === undefined) {
+            this.deactivatedForLanguages = new Set();
+        } else {
             this.deactivatedForLanguages =
                 languageToAbbreviation.getKeysForAllValues(deactivated_for_languages);
-        } else {
-            this.deactivatedForLanguages = new Set();
         }
     }
 
@@ -75,11 +75,7 @@ export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
         const { type_name, grammar_type_name } = nodeType;
         super(applicable_for_languages, deactivated_for_languages);
 
-        if (grammar_type_name === undefined) {
-            this.nodeTypeName = type_name;
-        } else {
-            this.nodeTypeName = grammar_type_name;
-        }
+        this.nodeTypeName = grammar_type_name === undefined ? type_name : grammar_type_name;
     }
 
     override toString(): string {

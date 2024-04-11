@@ -1,23 +1,23 @@
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import fs from "node:fs/promises";
 import { Complexity } from "./metrics/Complexity.js";
 import { Functions } from "./metrics/Functions.js";
 import { Classes } from "./metrics/Classes.js";
 import { LinesOfCode } from "./metrics/LinesOfCode.js";
 import { CommentLines } from "./metrics/CommentLines.js";
 import { RealLinesOfCode } from "./metrics/RealLinesOfCode.js";
-import { NodeTypeConfig } from "./helper/Model.js";
+import { type NodeTypeConfig } from "./helper/Model.js";
 import {
     ErrorFile,
-    FileMetricResults,
-    MetricError,
-    MetricResult,
+    type FileMetricResults,
+    type MetricError,
+    type MetricResult,
     ParsedFile,
-    SourceFile,
+    type SourceFile,
 } from "./metrics/Metric.js";
 import nodeTypesConfig from "./config/nodeTypesConfig.json" with { type: "json" };
-import { debuglog, DebugLoggerFunction } from "node:util";
 import { MaxNestingLevel } from "./metrics/MaxNestingLevel.js";
 import { calculateLinesOfCodeRawText } from "./metrics/LinesOfCodeRawText.js";
-import fs from "fs/promises";
 import { FileType } from "./helper/Language.js";
 import { KeywordsInComments } from "./metrics/KeywordsInComments.js";
 
@@ -68,8 +68,8 @@ export async function calculateMetrics(
         for (const metric of metricsToCalculate) {
             try {
                 metricResults.push(metric.calculate(sourceFile));
-            } catch (err) {
-                const error = err instanceof Error ? err : new Error(String(err));
+            } catch (error_) {
+                const error = error_ instanceof Error ? error_ : new Error(String(error_));
                 metricErrors.push({ metricName: metric.getName(), error });
             }
         }
@@ -79,8 +79,8 @@ export async function calculateMetrics(
             // Reading a file might fail, catch that
             const sourceCode = await fs.readFile(sourceFile.filePath, { encoding: "utf8" });
             metricResults.push(calculateLinesOfCodeRawText(sourceCode)); // Should never throw
-        } catch (err) {
-            const error = err instanceof Error ? err : new Error(String(err));
+        } catch (error_) {
+            const error = error_ instanceof Error ? error_ : new Error(String(error_));
             metricErrors.push({ metricName: "lines_of_code", error });
         }
     }

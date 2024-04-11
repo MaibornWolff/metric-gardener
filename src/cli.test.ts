@@ -1,10 +1,10 @@
+import fs from "node:fs/promises";
 import { afterAll, describe, expect, it, vi } from "vitest";
+import { mockConsole } from "../test/metric-end-results/TestHelper.js";
 import * as ImportNodeTypes from "./commands/import-grammars/ImportNodeTypes.js";
 import { parser } from "./cli.js";
-import { mockConsole } from "../test/metric-end-results/TestHelper.js";
 import { Configuration } from "./parser/Configuration.js";
-import { CouplingResult, FileMetricResults } from "./parser/metrics/Metric.js";
-import fs from "fs/promises";
+import { type CouplingResult, type FileMetricResults } from "./parser/metrics/Metric.js";
 import * as outputMetrics from "./commands/outputMetrics.js";
 
 const parserConstructor = vi.hoisted(() => vi.fn<[Configuration]>());
@@ -24,6 +24,7 @@ vi.mock("./parser/GenericParser.js", () => ({
         constructor(config: Configuration) {
             parserConstructor(config);
         }
+
         calculateMetrics = parserCalculateMetrics;
     },
 }));
@@ -65,7 +66,7 @@ describe("cli", () => {
 
         it("should calculate and output metrics", async () => {
             mockConsole();
-            vi.spyOn(fs, "realpath").mockImplementation((path) => Promise.resolve(path.toString()));
+            vi.spyOn(fs, "realpath").mockImplementation(async (path) => path.toString());
             parserCalculateMetrics.mockResolvedValue(expectedMetrics);
             vi.spyOn(outputMetrics, "outputAsJson").mockReset();
 
@@ -89,7 +90,7 @@ describe("cli", () => {
 
         it("should configure the parser with the correct options", async () => {
             mockConsole();
-            vi.spyOn(fs, "realpath").mockImplementation((path) => Promise.resolve(path.toString()));
+            vi.spyOn(fs, "realpath").mockImplementation(async (path) => path.toString());
             parserCalculateMetrics.mockResolvedValue(expectedMetrics);
             vi.spyOn(outputMetrics, "outputAsJson").mockReset();
 

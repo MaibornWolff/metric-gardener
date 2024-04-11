@@ -1,8 +1,12 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { outputAsJson } from "./outputMetrics.js";
-import { MetricResult, CouplingResult, MetricError } from "../parser/metrics/Metric.js";
+import {
+    type MetricResult,
+    type CouplingResult,
+    type MetricError,
+} from "../parser/metrics/Metric.js";
 import { FileType } from "../parser/helper/Language.js";
 import { mockConsole } from "../../test/metric-end-results/TestHelper.js";
+import { outputAsJson } from "./outputMetrics.js";
 
 const writeFileSync = vi.hoisted(() => vi.fn<Parameters<typeof import("fs").writeFileSync>>());
 vi.mock("fs", async (importOriginal) => {
@@ -16,8 +20,10 @@ describe("outputMetrics", () => {
 
         it("when metrics are present", () => {
             const file1MetricResults: MetricResult[] = [];
-            file1MetricResults.push({ metricName: "real_lines_of_code", metricValue: 42 });
-            file1MetricResults.push({ metricName: "lines_of_code", metricValue: 43 });
+            file1MetricResults.push(
+                { metricName: "real_lines_of_code", metricValue: 42 },
+                { metricName: "lines_of_code", metricValue: 43 },
+            );
 
             const file2MetricResults: MetricResult[] = [];
             file2MetricResults.push({ metricName: "real_lines_of_code", metricValue: 44 });

@@ -1,11 +1,11 @@
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../queries/QueryBuilder.js";
-import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
+import { NodeTypeCategory, type NodeTypeConfig } from "../helper/Model.js";
 import { getQueryStatementsByCategories } from "../helper/Helper.js";
-import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { debuglog, DebugLoggerFunction } from "node:util";
-import { QueryMatch } from "tree-sitter";
 import { Language } from "../helper/Language.js";
-import { QueryStatementInterface, SimpleQueryStatement } from "../queries/QueryStatements.js";
+import { type QueryStatementInterface, SimpleQueryStatement } from "../queries/QueryStatements.js";
+import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./Metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -25,7 +25,7 @@ export class Functions implements Metric {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
         if (language === Language.Java) {
-            //add query for instance init block in Java
+            // Add query for instance init block in Java
             queryBuilder.setStatements(
                 this.statementsSuperSet.concat(
                     new SimpleQueryStatement("(class_body (block)) @initBlock"),

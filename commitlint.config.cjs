@@ -11,11 +11,12 @@ module.exports = {
     plugins: [
         {
             rules: {
-                "issue-id-required": ({ subject }) => {
+                "issue-id-required"({ subject }) {
                     const issueIdRegex = /\s#(\d+)$/;
                     if (!issueIdRegex.test(subject)) {
                         return [false, "Issue ID is required at the end of the commit message"];
                     }
+
                     return [true];
                 },
             },

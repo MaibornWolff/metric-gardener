@@ -1,8 +1,8 @@
+import fs from "node:fs/promises";
+import { type WriteStream } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import fs from "fs/promises";
 import { mockConsole } from "../../../test/metric-end-results/TestHelper.js";
-import { WriteStream } from "fs";
-import { NodeTypes } from "./NodeTypes.js";
+import { type NodeTypes } from "./NodeTypes.js";
 
 let changelog = "";
 let failWriteStream = false;
@@ -22,10 +22,11 @@ vi.mock("fs", () => ({
             },
             end(): WriteStream {
                 if (failWriteStream) {
-                    listeners["error"](new Error("write?? not here!!"));
+                    listeners.error(new Error("write?? not here!!"));
                 } else {
-                    listeners["finish"]();
+                    listeners.finish();
                 }
+
                 return this as WriteStream;
             },
         };
@@ -111,10 +112,10 @@ describe("ImportNodeTypes", () => {
 
         it("should update node types mapping file correctly and write changelog", async () => {
             mockConsole();
-            vi.spyOn(fs, "readFile").mockImplementation((path) => {
+            vi.spyOn(fs, "readFile").mockImplementation(async (path) => {
                 let nodeTypes: NodeTypes = [];
                 switch (path) {
-                    case "./node_modules/tree-sitter-c-sharp/src/node-types.json":
+                    case "./node_modules/tree-sitter-c-sharp/src/node-types.json": {
                         nodeTypes = [
                             { type: "class_declaration", named: true },
                             {
@@ -144,7 +145,9 @@ describe("ImportNodeTypes", () => {
                             },
                         ];
                         break;
-                    case "./node_modules/tree-sitter-java/src/node-types.json":
+                    }
+
+                    case "./node_modules/tree-sitter-java/src/node-types.json": {
                         nodeTypes = [
                             { type: "class_declaration", named: true },
                             {
@@ -160,7 +163,9 @@ describe("ImportNodeTypes", () => {
                             },
                         ];
                         break;
-                    case "./node_modules/tree-sitter-javascript/src/node-types.json":
+                    }
+
+                    case "./node_modules/tree-sitter-javascript/src/node-types.json": {
                         nodeTypes = [
                             {
                                 type: "class_declaration",
@@ -169,8 +174,10 @@ describe("ImportNodeTypes", () => {
                             { type: "lambda_expression", named: true },
                         ];
                         break;
+                    }
                 }
-                return Promise.resolve(JSON.stringify(nodeTypes));
+
+                return JSON.stringify(nodeTypes);
             });
             vi.spyOn(fs, "writeFile").mockResolvedValueOnce();
             vi.doMock("../../parser/config/nodeTypesConfig.json", () => ({

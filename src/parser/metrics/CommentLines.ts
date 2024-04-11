@@ -1,13 +1,13 @@
+import { debuglog, type DebugLoggerFunction } from "node:util";
+import { type SyntaxNode, type QueryCapture } from "tree-sitter";
 import { QueryBuilder } from "../queries/QueryBuilder.js";
-import { NodeTypeCategory, NodeTypeConfig } from "../helper/Model.js";
+import { NodeTypeCategory, type NodeTypeConfig } from "../helper/Model.js";
 import { getQueryStatementsByCategories } from "../helper/Helper.js";
-import { MetricName, Metric, MetricResult, ParsedFile } from "./Metric.js";
-import { QueryCapture, SyntaxNode } from "tree-sitter";
-import { debuglog, DebugLoggerFunction } from "node:util";
 import {
-    QueryStatementInterface,
+    type QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/QueryStatements.js";
+import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./Metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -82,6 +82,7 @@ export class CommentLines implements Metric {
         if (query !== undefined) {
             queryCaptures = query.captures(tree.rootNode);
         }
+
         return queryCaptures;
     }
 

@@ -1,9 +1,13 @@
+import fs from "node:fs/promises";
+import { type Dir, type Dirent, type Stats } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     getTestConfiguration,
     mockPosixPath,
     mockWin32Path,
 } from "../../../test/metric-end-results/TestHelper.js";
+import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
+import { type ConfigurationParams } from "../Configuration.js";
 import {
     findFilesAsync,
     createRegexFor,
@@ -13,11 +17,7 @@ import {
     getQueryStatementsByCategories,
     lookupLowerCase,
 } from "./Helper.js";
-import { NodeTypeCategory, NodeTypeConfig } from "./Model.js";
-import { NodeTypeQueryStatement } from "../queries/QueryStatements.js";
-import fs from "fs/promises";
-import { ConfigurationParams } from "../Configuration.js";
-import { Dir, Dirent, Stats } from "fs";
+import { NodeTypeCategory, type NodeTypeConfig } from "./Model.js";
 
 describe("Helper.ts", () => {
     describe("lookupLowerCase<V>(...)", () => {
@@ -31,7 +31,9 @@ describe("Helper.ts", () => {
             ["KEY", "VALUE"],
             ["kEy", "VaLuE"],
         ]);
-        const noLowerCaseKey = new Map<string, object>([["KEY", { key: "value" }]]);
+        const noLowerCaseKey = new Map<string, Record<string, unknown>>([
+            ["KEY", { key: "value" }],
+        ]);
 
         it("should return the value for a key that is in the map", () => {
             expect(lookupLowerCase(numbers, "key")).toBe(1);
@@ -154,17 +156,16 @@ describe("Helper.ts", () => {
         type Entry = string | { [key: string]: Entry[] };
 
         function mockFs(entries?: Entry[]): void {
-            if (!entries) {
-                vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
-            } else {
+            if (entries) {
                 vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => false } as Stats);
                 mockOpenDir(entries);
+            } else {
+                vi.spyOn(fs, "lstat").mockResolvedValue({ isFile: () => true } as Stats);
             }
         }
 
         function mockOpenDir(entries: Entry[]): void {
             vi.spyOn(fs, "opendir").mockResolvedValueOnce(
-                // eslint-disable-next-line @typescript-eslint/require-await
                 (async function* (): AsyncGenerator<Dirent> {
                     for (const entry of entries) {
                         if (typeof entry === "string") {
@@ -395,49 +396,49 @@ describe("Helper.ts", () => {
                 const keywords = ["bug"];
                 const input = "this is a bug";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(1);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(1);
             });
 
             it("should not match if the input does not contain the keyword", () => {
                 const keywords = ["bug"];
                 const input = "this is a game";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(0);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(0);
             });
 
             it("should match if the the keyword string contains space", () => {
                 const keywords = ["not good"];
                 const input = "I am not good at programming :(";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(1);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(1);
             });
 
             it("should match case-insensitively", () => {
                 const keywords = ["ToDo"];
                 const input = "we have many TODO";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(1);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(1);
             });
 
             it("should match multiple time", () => {
                 const keywords = ["ToDo"];
                 const input = "we have many TODO today todo";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(2);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(2);
             });
 
             it("should match multiple keywords ", () => {
                 const keywords = ["ToDo", "bug", "hello"];
                 const input = "hello, we have many TODO today todo";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(3);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(3);
             });
 
             it("should NOT match if the keywords are contained in other words", () => {
                 const keywords = ["todo, bug", "a"];
                 const input = "we have many TODOs today, the music group ABBA should not be buggy";
 
-                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(0);
+                expect([...input.matchAll(createRegexFor(keywords))].length).toBe(0);
             });
         });
     });

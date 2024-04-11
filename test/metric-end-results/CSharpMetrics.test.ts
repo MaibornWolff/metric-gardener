@@ -1,4 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
+import { type MetricName, type FileMetricResults } from "../../src/parser/metrics/Metric.js";
 import {
     expectFileMetric,
     getCouplingMetrics,
@@ -6,7 +7,6 @@ import {
     mockWin32Path,
     parseAllFileMetrics,
 } from "./TestHelper.js";
-import { MetricName, FileMetricResults } from "../../src/parser/metrics/Metric.js";
 
 describe("C# metric tests", () => {
     const csharpTestResourcesPath = "./resources/c-sharp/";
@@ -30,7 +30,7 @@ describe("C# metric tests", () => {
                 csharpTestResourcesPath + "coupling-examples/",
             );
             expect(couplingResult).toMatchSnapshot();
-        }, 10000);
+        }, 10_000);
     });
 
     describe("parses C# complexity metric", () => {

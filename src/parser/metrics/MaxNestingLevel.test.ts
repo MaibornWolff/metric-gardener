@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { MaxNestingLevel } from "./MaxNestingLevel.js";
 import Parser = require("tree-sitter");
 import { Language, languageToGrammar } from "../helper/Language.js";
+import { type NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
 import { ParsedFile } from "./Metric.js";
-import { NodeTypeConfig, NodeTypeCategory } from "../helper/Model.js";
+import { MaxNestingLevel } from "./MaxNestingLevel.js";
 
 describe("MaxNestingLevel.calculate(...)", () => {
     let maxNestingLevel: MaxNestingLevel;

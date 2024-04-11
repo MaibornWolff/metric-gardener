@@ -14,7 +14,7 @@ export function getAdditionalRelationships(
     publicAccessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>,
 ): Relationship[] {
-    let additionalRelationships: Relationship[] = [];
+    const additionalRelationships: Relationship[] = [];
 
     for (const [filePath, callExpressions] of unresolvedCallExpressions) {
         const fileDependencies = tree.get(filePath) ?? [];
@@ -128,7 +128,7 @@ export function getAdditionalRelationships(
             }
         }
 
-        additionalRelationships = [...additionalRelationships, ...fileAdditionalRelationships];
+        additionalRelationships.push(...fileAdditionalRelationships);
     }
 
     return additionalRelationships;

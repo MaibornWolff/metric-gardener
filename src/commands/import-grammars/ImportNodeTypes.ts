@@ -57,7 +57,7 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
             const nodeTypesPromise = languageToNodeTypePromises.get(languageAbbr);
 
             // Await reading node-types.json for the language:
-            const nodeTypesJson = await nodeTypesPromise;
+            const nodeTypesJson = await nodeTypesPromise; // eslint-disable-line no-await-in-loop
             if (!nodeTypesJson) {
                 throw new Error("No node-types.json found for language " + languageAbbr);
             }
@@ -242,7 +242,7 @@ function removeNodeTypesForLanguage(languageAbbr: string, removedNodeTypes: Set<
             }
 
             if (nodeType.deactivated_for_languages?.includes(languageAbbr)) {
-                const obsolete = obsoleteDeactivatedLanguages.get(nodeTypeName) || [];
+                const obsolete = obsoleteDeactivatedLanguages.get(nodeTypeName) ?? [];
                 obsolete.push(languageAbbr);
                 obsoleteDeactivatedLanguages.set(nodeTypeName, obsolete);
             }

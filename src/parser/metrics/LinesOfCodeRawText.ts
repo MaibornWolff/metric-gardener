@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export function calculateLinesOfCodeRawText(sourceCode: string): MetricResult {
     const loc = sourceCode.split(/\r\n|\r|\n/g).length;
 
-    dlog("lines_of_code" + " - raw text - " + loc.toString());
+    dlog("lines_of_code - raw text - " + loc.toString());
 
     return {
         metricName: "lines_of_code",

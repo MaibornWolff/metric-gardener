@@ -75,7 +75,7 @@ export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
         const { type_name, grammar_type_name } = nodeType;
         super(applicable_for_languages, deactivated_for_languages);
 
-        this.nodeTypeName = grammar_type_name === undefined ? type_name : grammar_type_name;
+        this.nodeTypeName = grammar_type_name ?? type_name;
     }
 
     override toString(): string {

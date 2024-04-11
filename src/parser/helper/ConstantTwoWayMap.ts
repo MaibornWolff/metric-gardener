@@ -4,11 +4,8 @@
  * Read-only.
  */
 export class ConstantTwoWayMap<KeyType, ValueType> {
-    private readonly map: Map<KeyType, ValueType>;
     private readonly reverseMap: Map<ValueType, KeyType>;
-
-    constructor(map: Map<KeyType, ValueType>) {
-        this.map = map;
+    constructor(private readonly map: Map<KeyType, ValueType>) {
         this.reverseMap = new Map();
         for (const key of map.keys()) {
             const value = map.get(key);

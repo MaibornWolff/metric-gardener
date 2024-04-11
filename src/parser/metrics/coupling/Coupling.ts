@@ -26,29 +26,20 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 export class Coupling implements CouplingMetric {
-    private readonly config: Configuration;
-    private readonly namespaceCollector: NamespaceCollector;
-    private readonly publicAccessorCollector: PublicAccessorCollector;
-    private readonly usageCollector: UsagesCollector;
     private readonly filesWithMultipleNamespaces: ParsedFile[] = [];
     private readonly alreadyAddedRelationships = new Set<string>();
 
     private namespaces = new Map<string, FullyQTN>();
     private readonly publicAccessors = new Map<string, Accessor[]>();
-    private usagesCandidates: TypeUsageCandidate[] = [];
+    private readonly usagesCandidates: TypeUsageCandidate[] = [];
     private readonly unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
 
     constructor(
-        config: Configuration,
-        namespaceCollector: NamespaceCollector,
-        usageCollector: UsagesCollector,
-        publicAccessorCollector: PublicAccessorCollector,
-    ) {
-        this.config = config;
-        this.namespaceCollector = namespaceCollector;
-        this.usageCollector = usageCollector;
-        this.publicAccessorCollector = publicAccessorCollector;
-    }
+        private readonly config: Configuration,
+        private readonly namespaceCollector: NamespaceCollector,
+        private readonly usageCollector: UsagesCollector,
+        private readonly publicAccessorCollector: PublicAccessorCollector,
+    ) {}
 
     processFile(parsedFile: ParsedFile): void {
         // Preprocessing
@@ -71,7 +62,7 @@ export class Coupling implements CouplingMetric {
         // Processing
         const { candidates, unresolvedCallExpressions: callExpressionsOfFile } =
             this.usageCollector.getUsageCandidates(parsedFile, this.namespaceCollector);
-        this.usagesCandidates = this.usagesCandidates.concat(candidates);
+        this.usagesCandidates.push(...candidates);
         this.unresolvedCallExpressions.set(parsedFile.filePath, callExpressionsOfFile);
     }
 
@@ -84,7 +75,7 @@ export class Coupling implements CouplingMetric {
         dlog("\n\n", "unresolved call expressions", this.unresolvedCallExpressions, "\n\n");
         dlog("\n\n", "publicAccessors", this.publicAccessors, "\n\n");
 
-        let relationships = this.getRelationships(this.namespaces, this.usagesCandidates);
+        const relationships = this.getRelationships(this.namespaces, this.usagesCandidates);
         dlog("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
@@ -96,12 +87,16 @@ export class Coupling implements CouplingMetric {
             this.publicAccessors,
             this.alreadyAddedRelationships,
         );
-        relationships = relationships.concat(additionalRelationships);
+        relationships.push(...additionalRelationships);
         dlog("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
 
         couplingMetrics = this.calculateCouplingMetrics(relationships);
 
         return this.formatPrintedPaths(relationships, couplingMetrics);
+    }
+
+    getName(): MetricName {
+        return "coupling";
     }
 
     private getRelationships(
@@ -261,18 +256,14 @@ export class Coupling implements CouplingMetric {
                 relationship.toSource = formatPrintPath(relationship.toSource, this.config);
             }
 
-            const relCouplingMetrics = new Map<string, CouplingMetrics>();
+            const metrics = new Map<string, CouplingMetrics>();
             for (const [absolutePath, metricValues] of couplingMetrics) {
-                relCouplingMetrics.set(formatPrintPath(absolutePath, this.config), metricValues);
+                metrics.set(formatPrintPath(absolutePath, this.config), metricValues);
             }
 
-            couplingMetrics = relCouplingMetrics;
+            couplingMetrics = metrics;
         }
 
         return { relationships, metrics: couplingMetrics };
-    }
-
-    getName(): MetricName {
-        return "coupling";
     }
 }

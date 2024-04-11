@@ -43,23 +43,14 @@ export class Classes implements Metric {
                 "(struct_specifier body: (field_declaration_list)) @struct_definition",
                 ["cpp", "c"],
             ),
-        );
-
-        this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(union_specifier body: (field_declaration_list)) @union_definition",
                 ["cpp", "c"],
             ),
-        );
-
-        this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(class_specifier body: (field_declaration_list)) @class_definition",
                 ["cpp"],
             ),
-        );
-
-        this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 `(enum_specifier [
     base: (_)
@@ -77,9 +68,6 @@ export class Classes implements Metric {
 `,
                 ["cpp"],
             ),
-        );
-
-        this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(enum_specifier body: (enumerator_list)) @enum_definition",
                 ["c"],

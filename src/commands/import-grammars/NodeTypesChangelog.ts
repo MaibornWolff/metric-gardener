@@ -51,7 +51,7 @@ export class NodeTypesChangelog {
                 new NodeTypesChangelogEntry(
                     nodeTypeConfig.type_name,
                     false,
-                    nodeTypeConfig.languages,
+                    new Set(nodeTypeConfig.languages),
                 ),
             );
         }
@@ -84,12 +84,44 @@ export class NodeTypesChangelog {
                 new NodeTypesChangelogEntry(
                     nodeTypeConfig.type_name,
                     false,
-                    nodeTypeConfig.languages,
+                    new Set(nodeTypeConfig.languages),
                 ),
             );
         }
 
         this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(languageAbbr);
+    }
+
+    /**
+     * Writes the changelog.
+     * @param metricMappings The current mappings to inform the user about which metric(s)
+     * are currently calculated with the changed syntax node(s).
+     * @return Promise that fulfills once the changelog has been written successfully.
+     */
+    async writeChangelog(metricMappings: Map<string, NodeTypeConfig>): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const writeStream = fs.createWriteStream(pathToWriteChangelog);
+
+            writeStream.on("error", (error) => {
+                reject(new Error("Error while writing the changelog:\n" + error.toString()));
+            });
+            writeStream.on("finish", () => {
+                console.log("####################################");
+                console.log('Saved overview of all changes to "' + pathToWriteChangelog + '".');
+                resolve();
+            });
+
+            writeStream.write("Changelog for updating the node types configuration" + EOL + EOL);
+
+            this.writeNewNodes(writeStream);
+            writeStream.write(EOL);
+
+            this.writeRemovedNodes(writeStream, metricMappings);
+            writeStream.write(EOL);
+
+            this.writeModifiedNodes(writeStream, metricMappings);
+            writeStream.end();
+        });
     }
 
     private writeNewNodes(writeStream: fs.WriteStream): void {
@@ -185,38 +217,6 @@ export class NodeTypesChangelog {
             }
         }
     }
-
-    /**
-     * Writes the changelog.
-     * @param metricMappings The current mappings to inform the user about which metric(s)
-     * are currently calculated with the changed syntax node(s).
-     * @return Promise that fulfills once the changelog has been written successfully.
-     */
-    async writeChangelog(metricMappings: Map<string, NodeTypeConfig>): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            const writeStream = fs.createWriteStream(pathToWriteChangelog);
-
-            writeStream.on("error", (error) => {
-                reject(new Error("Error while writing the changelog:\n" + error.toString()));
-            });
-            writeStream.on("finish", () => {
-                console.log("####################################");
-                console.log('Saved overview of all changes to "' + pathToWriteChangelog + '".');
-                resolve();
-            });
-
-            writeStream.write("Changelog for updating the node types configuration" + EOL + EOL);
-
-            this.writeNewNodes(writeStream);
-            writeStream.write(EOL);
-
-            this.writeRemovedNodes(writeStream, metricMappings);
-            writeStream.write(EOL);
-
-            this.writeModifiedNodes(writeStream, metricMappings);
-            writeStream.end();
-        });
-    }
 }
 
 /**
@@ -225,52 +225,21 @@ export class NodeTypesChangelog {
  */
 class NodeTypesChangelogEntry {
     /**
-     * Name of the node type.
-     */
-    nodeTypeName: string;
-
-    /**
-     * Whether this entry is for adding a totally new node type that was not included in the mappings file before.
-     */
-    isNewNode: boolean;
-
-    /**
-     * Languages from which the node type was removed.
-     */
-    removedLanguages: Set<string>;
-
-    /**
-     * Languages to which the node type was added.
-     */
-    addedLanguages: Set<string>;
-
-    /**
-     * Languages that include this node type and had included it before.
-     */
-    remainingLanguages: Set<string>;
-
-    /**
      * Constructs a new changelog entry. Tracks the changes that were applied to one node type.
      * Expected to be created when the first change operation of one node type is to be performed.
      * @param nodeTypeName Name of the node type.
-     * @param isNew Whether this is a totally new node that was not included in the mappings file before.
-     * @param oldLanguages Languages that included this node type before.
+     * @param isNewNode Whether this is a totally new node that was not included in the mappings file before.
+     * @param remainingLanguages Languages that include this node type and had included it before.
      * @param removedLanguages Languages from which this node type was removed.
      * @param addedLanguages Languages to which this node type was added.
      */
     constructor(
-        nodeTypeName: string,
-        isNew: boolean,
-        oldLanguages: string[] = [],
-        removedLanguages: string[] = [],
-        addedLanguages: string[] = [],
-    ) {
-        this.nodeTypeName = nodeTypeName;
-        this.isNewNode = isNew;
-        this.remainingLanguages = new Set(oldLanguages);
-        this.removedLanguages = new Set(removedLanguages);
-        this.addedLanguages = new Set(addedLanguages);
-    }
+        public readonly nodeTypeName: string,
+        public readonly isNewNode: boolean,
+        public readonly remainingLanguages = new Set<string>(),
+        public readonly removedLanguages = new Set<string>(),
+        public readonly addedLanguages = new Set<string>(),
+    ) {}
 
     /**
      * Logs that this node type was added to a language.

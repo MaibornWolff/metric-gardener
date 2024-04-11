@@ -10,7 +10,7 @@ import * as outputMetrics from "./commands/outputMetrics.js";
 const parserConstructor = vi.hoisted(() => vi.fn<[Configuration]>());
 const parserCalculateMetrics = vi.hoisted(() =>
     vi.fn<
-        [],
+        [], // eslint-disable-line @typescript-eslint/ban-types
         Promise<{
             couplingMetrics: CouplingResult;
             fileMetrics: Map<string, FileMetricResults>;
@@ -21,16 +21,17 @@ const parserCalculateMetrics = vi.hoisted(() =>
 );
 vi.mock("./parser/GenericParser.js", () => ({
     GenericParser: class GenericParser {
+        calculateMetrics = parserCalculateMetrics;
         constructor(config: Configuration) {
             parserConstructor(config);
         }
-
-        calculateMetrics = parserCalculateMetrics;
     },
 }));
 
 describe("cli", () => {
-    afterAll(() => void vi.resetModules());
+    afterAll(() => {
+        vi.resetModules();
+    });
 
     itShouldOfferHelp();
 

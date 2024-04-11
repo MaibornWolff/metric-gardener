@@ -51,8 +51,8 @@ async function* mockedFindFilesAsyncError(): AsyncGenerator<string> {
 async function mockedTreeParserParse(filePath: string, config: Configuration): Promise<SourceFile> {
     const language = assumeLanguageFromFilePath(filePath, config);
     return language === undefined
-        ? Promise.resolve(new UnsupportedFile(filePath))
-        : Promise.resolve(new ParsedFile(filePath, language, tree));
+        ? new UnsupportedFile(filePath)
+        : new ParsedFile(filePath, language, tree);
 }
 
 async function mockedMetricsCalculator(file: SourceFile): Promise<[SourceFile, FileMetricResults]> {
@@ -288,8 +288,8 @@ describe("GenericParser.calculateMetrics()", () => {
 
         spyOnMetricCalculator().mockImplementation(async (file) => {
             return path.posix.extname(file.filePath) === ".cpp"
-                ? Promise.resolve([file, expectedFileMetricsResults])
-                : Promise.resolve([file, errorMetricsResults]);
+                ? [file, expectedFileMetricsResults]
+                : [file, errorMetricsResults];
         });
 
         const parser = new GenericParser(getTestConfiguration("clearly/invalid"));

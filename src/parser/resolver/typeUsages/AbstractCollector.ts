@@ -34,21 +34,6 @@ export type UnresolvedCallExpression = {
 };
 
 export abstract class AbstractCollector {
-    // In C# for example,
-    // it is not possible to know which usage belongs to which import
-    // Imagine:
-    // using System;
-    // Console.WriteLine("foo");
-    // You cannot be sure that the Console.WriteLine (partial) namespace
-    // belongs to the used namespace "System"
-    protected abstract indirectNamespaceReferencing(): boolean;
-    protected abstract noImportForClassesInSameOrParentNamespaces(): boolean;
-    protected abstract getFunctionCallDelimiter(): string;
-    protected abstract getNamespaceDelimiter(): string;
-    protected abstract getImportsQuery(): string;
-    protected abstract getGroupedImportsQuery(): string;
-    protected abstract getUsagesQuery(): string;
-
     private readonly importsBySuffixOrAlias = new Map<string, Map<string, ImportReference>>();
 
     getUsageCandidates(
@@ -61,9 +46,9 @@ export abstract class AbstractCollector {
         const { filePath } = parsedFile;
         this.importsBySuffixOrAlias.set(filePath, new Map());
 
-        let importReferences: ImportReference[] = this.getImports(parsedFile);
+        const importReferences = this.getImports(parsedFile);
         if (this.getGroupedImportsQuery().length > 0) {
-            importReferences = importReferences.concat(this.getGroupedImports(parsedFile));
+            importReferences.push(...this.getGroupedImports(parsedFile));
         }
 
         dlog("Alias Map:", filePath, this.importsBySuffixOrAlias);
@@ -81,6 +66,21 @@ export abstract class AbstractCollector {
             unresolvedCallExpressions,
         };
     }
+
+    // In C# for example,
+    // it is not possible to know which usage belongs to which import
+    // Imagine:
+    // using System;
+    // Console.WriteLine("foo");
+    // You cannot be sure that the Console.WriteLine (partial) namespace
+    // belongs to the used namespace "System"
+    protected abstract indirectNamespaceReferencing(): boolean;
+    protected abstract noImportForClassesInSameOrParentNamespaces(): boolean;
+    protected abstract getFunctionCallDelimiter(): string;
+    protected abstract getNamespaceDelimiter(): string;
+    protected abstract getImportsQuery(): string;
+    protected abstract getGroupedImportsQuery(): string;
+    protected abstract getUsagesQuery(): string;
 
     private getImports(parsedFile: ParsedFile): ImportReference[] {
         const { filePath, language, tree } = parsedFile;
@@ -436,7 +436,7 @@ export abstract class AbstractCollector {
                             fromNamespace.namespaceDelimiter +
                             fromNamespace.className,
                         sourceOfUsing: filePath,
-                        usageType: usageType === undefined ? "usage" : usageType,
+                        usageType: usageType ?? "usage",
                     };
                     // TODO prevent duplicate adds in current file
                     //  when is it a duplicate? (usedNamespace + fromNamespace + sourceOfUsing?)
@@ -475,7 +475,7 @@ export abstract class AbstractCollector {
                         fromNamespace.namespaceDelimiter +
                         fromNamespace.className,
                     sourceOfUsing: filePath,
-                    usageType: usageType === undefined ? "usage" : usageType,
+                    usageType: usageType ?? "usage",
                 };
                 usagesAndCandidates.push(usageCandidate);
 
@@ -500,7 +500,7 @@ export abstract class AbstractCollector {
                                 fromNamespace.namespaceDelimiter +
                                 fromNamespace.className,
                             sourceOfUsing: filePath,
-                            usageType: usageType === undefined ? "usage" : usageType,
+                            usageType: usageType ?? "usage",
                         };
                         usagesAndCandidates.push(usageCandidate);
                         fromNamespaceParts.pop();

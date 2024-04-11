@@ -2,7 +2,7 @@
  * Parameters of the constructor of {@link Configuration}.
  * Represents configuration options that can be provided by the user via command line arguments.
  */
-export type ConfigurationParams = {
+export type ConfigurationParameters = {
     /**
      * Path to the source files to be parsed.
      */
@@ -86,7 +86,7 @@ export class Configuration {
      * as command line arguments.
      * @param parameters {@link Parameters} object containing the configuration options.
      */
-    constructor(parameters: ConfigurationParams) {
+    constructor(parameters: ConfigurationParameters) {
         this.sourcesPath = parameters.sourcesPath;
         this.outputPath = parameters.outputPath;
         this.parseDependencies = parameters.parseDependencies;

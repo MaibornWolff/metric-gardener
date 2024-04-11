@@ -1,8 +1,9 @@
 import * as fs from "node:fs";
 import path, { type PlatformPath } from "node:path";
+import process from "node:process";
 import { expect, vi } from "vitest";
 import { GenericParser } from "../../src/parser/GenericParser.js";
-import { type ConfigurationParams, Configuration } from "../../src/parser/Configuration.js";
+import { type ConfigurationParameters, Configuration } from "../../src/parser/Configuration.js";
 import {
     type CouplingResult,
     type MetricName,
@@ -12,15 +13,15 @@ import {
 /**
  * Gets a configuration for test cases.
  * @param sourcesPath Path to the source files.
- * @param customOverrides Partial {@link ConfigurationParams} object for overriding parts of the default test configuration.
+ * @param customOverrides Partial {@link ConfigurationParameters} object for overriding parts of the default test configuration.
  *
  * @return A configuration for testing purposes.
  */
 export function getTestConfiguration(
     sourcesPath: string,
-    customOverrides: Partial<ConfigurationParams> = {},
+    customOverrides: Partial<ConfigurationParameters> = {},
 ): Configuration {
-    const defaultParameters: ConfigurationParams = {
+    const defaultParameters: ConfigurationParameters = {
         sourcesPath,
         outputPath: "invalid/output/path",
         parseDependencies: false,
@@ -81,7 +82,8 @@ export async function parseAllFileMetrics(
     const parser = new GenericParser(
         getTestConfiguration(realInputPath, { parseAllHAsC: parseHAsC }),
     );
-    return (await parser.calculateMetrics()).fileMetrics;
+    const result = await parser.calculateMetrics();
+    return result.fileMetrics;
 }
 
 /**

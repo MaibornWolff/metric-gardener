@@ -1,3 +1,4 @@
+import process from "node:process";
 import pMap from "p-map";
 import { findFilesAsync, formatPrintPath } from "./helper/Helper.js";
 import { type Configuration } from "./Configuration.js";

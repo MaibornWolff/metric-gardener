@@ -26,11 +26,10 @@ export class Functions implements Metric {
         const queryBuilder = new QueryBuilder(language);
         if (language === Language.Java) {
             // Add query for instance init block in Java
-            queryBuilder.setStatements(
-                this.statementsSuperSet.concat(
-                    new SimpleQueryStatement("(class_body (block)) @initBlock"),
-                ),
-            );
+            queryBuilder.setStatements([
+                ...this.statementsSuperSet,
+                new SimpleQueryStatement("(class_body (block)) @initBlock"),
+            ]);
         } else {
             queryBuilder.setStatements(this.statementsSuperSet);
         }

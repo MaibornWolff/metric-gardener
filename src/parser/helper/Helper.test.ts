@@ -390,39 +390,45 @@ describe("Helper.ts", () => {
             });
         });
         describe("createRegexFor", () => {
-            it("should match if the text contains a given keyword", () => {
-                const keyword = "bug";
+            it("should match if the text contains one given keyword", () => {
+                const keywords = ["bug"];
                 const input = "this is a bug";
 
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(1);
             });
 
             it("should not match if the input does not contain the keyword", () => {
-                const keyword = "bug";
+                const keywords = ["bug"];
                 const input = "this is a game";
 
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(0);
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(0);
             });
 
             it("should match if the the keyword string contains space", () => {
-                const keyword = "not good ";
+                const keywords = ["not good"];
                 const input = "I am not good at programming :(";
 
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(1);
             });
 
             it("should match case-insensitively", () => {
-                const keyword = "ToDo";
+                const keywords = ["ToDo"];
                 const input = "we have many TODO";
 
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(1);
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(1);
             });
 
             it("should match multiple time", () => {
-                const keyword = "ToDo";
+                const keywords = ["ToDo"];
                 const input = "we have many TODO today todo";
 
-                expect(Array.from(input.matchAll(createRegexFor(keyword))).length).toBe(2);
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(2);
+            });
+            it("should match multiple keywords ", () => {
+                const keywords = ["ToDo", "bug", "hello"];
+                const input = "hello, we have many TODO today todo";
+
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(3);
             });
         });
     });

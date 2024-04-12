@@ -145,12 +145,12 @@ export function getNodeTypeNamesByCategories(
 }
 
 /**
- * create regex string for a
- * @param keyword ,
- * which match any input text if it contains the keyword as a independent word.
- * The keyword should contain only letters or space for this to work.
+ * create regex for multiple
+ * @param keywords ,
+ * which matches those keywords as independent words.
+ * The keywords must contain only letters or spaces for this to work.
  * The regex is case-insensitive.
  */
 export function createRegexFor(keywords: string[]): RegExp {
-    return new RegExp(`\\b${keywords.join("|")}\\b`, "gi");
+    return new RegExp(`\\b(${keywords.join("|")})\\b`, "gi");
 }

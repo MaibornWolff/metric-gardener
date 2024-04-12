@@ -53,10 +53,10 @@ describe("outputMetrics", () => {
                 ],
             ]);
 
-            const unknownFiles = ["/file/path3.unknown", "/file/noExtension"];
+            const unsupportedFiles = ["/file/path3.unknown", "/file/noExtension"];
             const errorFiles = ["/file/path4.error"];
 
-            const relationShipMetrics: CouplingResult = {
+            const relationshipMetrics: CouplingResult = {
                 relationships: [
                     {
                         fromNamespace: "fromNamespace",
@@ -81,14 +81,14 @@ describe("outputMetrics", () => {
                 ]),
             };
 
-            outputAsJson(
+            outputAsJson({
                 fileMetrics,
-                unknownFiles,
+                unsupportedFiles,
                 errorFiles,
-                relationShipMetrics,
-                "mocked-file.json",
-                false,
-            );
+                relationshipMetrics,
+                outputFilePath: "mocked-file.json",
+                compress: false,
+            });
 
             expect(console.log).toHaveBeenCalledTimes(1);
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");
@@ -102,12 +102,19 @@ describe("outputMetrics", () => {
         });
 
         it("when no metrics are present", () => {
-            const relationShipMetrics: CouplingResult = {
+            const relationshipMetrics: CouplingResult = {
                 relationships: [],
                 metrics: new Map(),
             };
 
-            outputAsJson(new Map(), [], [], relationShipMetrics, "mocked-file.json", false);
+            outputAsJson({
+                fileMetrics: new Map(),
+                unsupportedFiles: [],
+                errorFiles: [],
+                relationshipMetrics,
+                outputFilePath: "mocked-file.json",
+                compress: false,
+            });
 
             expect(console.log).toHaveBeenCalledTimes(1);
             expect(console.log).toHaveBeenCalledWith("Results saved to mocked-file.json");

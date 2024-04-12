@@ -37,14 +37,21 @@ type OutputRelationship = {
  * @param outputFilePath Path to write the file to
  * @param compress Whether the file should be compressed
  */
-export function outputAsJson(
-    fileMetrics: Map<string, FileMetricResults>,
-    unsupportedFiles: string[],
-    errorFiles: string[],
-    relationshipMetrics: CouplingResult,
-    outputFilePath: string,
-    compress: boolean,
-): void {
+export function outputAsJson({
+    fileMetrics,
+    unsupportedFiles,
+    errorFiles,
+    relationshipMetrics,
+    outputFilePath,
+    compress,
+}: {
+    fileMetrics: Map<string, FileMetricResults>;
+    unsupportedFiles: string[];
+    errorFiles: string[];
+    relationshipMetrics: CouplingResult;
+    outputFilePath: string;
+    compress: boolean;
+}): void {
     const output = buildOutputObject(
         fileMetrics,
         unsupportedFiles,

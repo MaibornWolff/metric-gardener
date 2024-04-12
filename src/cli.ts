@@ -100,14 +100,14 @@ async function parseSourceCode(configuration: Configuration): Promise<void> {
         console.log("Metrics calculation finished.");
         console.timeEnd("Time to complete");
 
-        outputAsJson(
-            results.fileMetrics,
-            results.unsupportedFiles,
-            results.errorFiles,
-            results.couplingMetrics,
-            configuration.outputPath,
-            configuration.compress,
-        );
+        outputAsJson({
+            fileMetrics: results.fileMetrics,
+            unsupportedFiles: results.unsupportedFiles,
+            errorFiles: results.errorFiles,
+            relationshipMetrics: results.couplingMetrics,
+            outputFilePath: configuration.outputPath,
+            compress: configuration.compress,
+        });
     } catch (error) {
         console.error("#####################################");
         console.error("#####################################");

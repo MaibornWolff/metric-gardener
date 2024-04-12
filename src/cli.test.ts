@@ -79,14 +79,14 @@ describe("cli", () => {
             expect(console.log).toHaveBeenCalledWith("#####################################");
             expect(console.log).toHaveBeenCalledWith("Metrics calculation finished.");
             expect(console.timeEnd).toHaveBeenCalledWith("Time to complete");
-            expect(outputMetrics.outputAsJson).toHaveBeenCalledWith(
-                expectedMetrics.fileMetrics,
-                expectedMetrics.unsupportedFiles,
-                expectedMetrics.errorFiles,
-                expectedMetrics.couplingMetrics,
-                expectedConfig.outputPath,
-                expectedConfig.compress,
-            );
+            expect(outputMetrics.outputAsJson).toHaveBeenCalledWith({
+                fileMetrics: expectedMetrics.fileMetrics,
+                unsupportedFiles: expectedMetrics.unsupportedFiles,
+                errorFiles: expectedMetrics.errorFiles,
+                relationshipMetrics: expectedMetrics.couplingMetrics,
+                outputFilePath: expectedConfig.outputPath,
+                compress: expectedConfig.compress,
+            });
         });
 
         it("should configure the parser with the correct options", async () => {

@@ -65,6 +65,9 @@
                 }
             }
         ],
+        "rules": {
+            "@typescript-eslint/naming-convention": "off"
+        },
         "ignores": "resources"
     },
     "prettier": {

@@ -389,6 +389,7 @@ describe("Helper.ts", () => {
                 expect(result).toEqual(expectedResult);
             });
         });
+
         describe("createRegexFor", () => {
             it("should match if the text contains one given keyword", () => {
                 const keywords = ["bug"];
@@ -424,11 +425,19 @@ describe("Helper.ts", () => {
 
                 expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(2);
             });
+
             it("should match multiple keywords ", () => {
                 const keywords = ["ToDo", "bug", "hello"];
                 const input = "hello, we have many TODO today todo";
 
                 expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(3);
+            });
+
+            it("should NOT match if the keywords are contained in other words", () => {
+                const keywords = ["todo, bug", "a"];
+                const input = "we have many TODOs today, the music group ABBA should not be buggy";
+
+                expect(Array.from(input.matchAll(createRegexFor(keywords))).length).toBe(0);
             });
         });
     });

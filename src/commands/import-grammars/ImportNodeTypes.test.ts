@@ -7,7 +7,7 @@ import { NodeTypes } from "./NodeTypes.js";
 let changelog = "";
 let failWriteStream = false;
 vi.mock("fs", () => ({
-    createWriteStream: (): Partial<WriteStream> => {
+    createWriteStream(): Partial<WriteStream> {
         changelog = "";
         // eslint-disable-next-line @typescript-eslint/ban-types
         const listeners: Record<string, Function> = {};
@@ -117,7 +117,10 @@ describe("ImportNodeTypes", () => {
                     case "./node_modules/tree-sitter-c-sharp/src/node-types.json":
                         nodeTypes = [
                             { type: "class_declaration", named: true },
-                            { type: "!", named: false },
+                            {
+                                type: "!",
+                                named: false,
+                            },
                             {
                                 type: "binary_expression",
                                 named: true,
@@ -148,7 +151,10 @@ describe("ImportNodeTypes", () => {
                                 type: "comment",
                                 named: true,
                                 subtypes: [
-                                    { type: "block_comment", named: true },
+                                    {
+                                        type: "block_comment",
+                                        named: true,
+                                    },
                                     { type: "line_comment", named: true },
                                 ],
                             },
@@ -156,7 +162,10 @@ describe("ImportNodeTypes", () => {
                         break;
                     case "./node_modules/tree-sitter-javascript/src/node-types.json":
                         nodeTypes = [
-                            { type: "class_declaration", named: true },
+                            {
+                                type: "class_declaration",
+                                named: true,
+                            },
                             { type: "lambda_expression", named: true },
                         ];
                         break;

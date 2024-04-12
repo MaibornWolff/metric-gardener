@@ -14,8 +14,7 @@ export class KeywordsInComments implements Metric {
 
     constructor(allNodeTypes: NodeTypeConfig[]) {
         this.#commentLinesCalculator = new CommentLines(allNodeTypes);
-        const keywords: string[] = ["bug", "wtf", "todo", "hack"];
-        this.#regex = createRegexFor(keywords);
+        this.#regex = createRegexFor(["bug", "wtf", "todo", "hack"]);
     }
 
     calculate(parsedFile: ParsedFile): MetricResult {

@@ -1,0 +1,14 @@
+Changelog for updating the node types configuration
+
+New syntax nodes:
+
+Name:;Added to language(s):
+
+Removed syntax nodes:
+
+Name:;Was present in language(s):;Mapped to category:;Was explicitly deactivated for language(s):
+
+Already known and still used syntax nodes which were removed from or added to some language(s):
+
+Name:;Added to language(s):;Removed from language(s):;Remains in language(s):;Mapped to category:;Was explicitly deactivated for language(s):
+"alias";rb;;yaml;;

@@ -14,4 +14,14 @@ func main() {
             sum += i
         }
     }
+    var testdata *struct {
+    	a *[7]int
+    }
+    for i, _ := range testdata.a {
+    	f(i)
+    }
+    for i := range 10 {
+        f(i)
+    }
+
 }

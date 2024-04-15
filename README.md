@@ -15,63 +15,63 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 #### Install required build tools:
 
--   This project is based upon Node.js. Therefore, there has to be a recent version of Node.js
-    installed on your machine (see `engines` entry of package.json for version requirements).
--   Ensure that you have installed all build tools necessary to compile the native C/C++ parts of the
-    required tree-sitter package:
-    -   Ensure that a supported version of python is installed.
-    -   For Linux: ensure that `make` and a C/C++ compiler toolchain is installed, e.g. GCC including
-        the `g++` command.
-    -   For macOS: ensure that the "Xcode Command Line Tools" are installed. These include `make` as
-        well as the `clang` and `clang++` compiler.
-    -   For Windows: ensure that you have installed Visual Studio 2019 or later with the "Desktop
-        development with C++" workload.
-    -   Further information about the required build tools can be found
-        here: https://github.com/nodejs/node-gyp#installation
+- This project is based upon Node.js. Therefore, there has to be a recent version of Node.js
+  installed on your machine (see `engines` entry of package.json for version requirements).
+- Ensure that you have installed all build tools necessary to compile the native C/C++ parts of the
+  required tree-sitter package:
+    - Ensure that a supported version of python is installed.
+    - For Linux: ensure that `make` and a C/C++ compiler toolchain is installed, e.g. GCC including
+      the `g++` command.
+    - For macOS: ensure that the "Xcode Command Line Tools" are installed. These include `make` as
+      well as the `clang` and `clang++` compiler.
+    - For Windows: ensure that you have installed Visual Studio 2019 or later with the "Desktop
+      development with C++" workload.
+    - Further information about the required build tools can be found
+      here: https://github.com/nodejs/node-gyp#installation
 
 #### Install project and parse your sources:
 
--   `npm install`
--   `npm run start -- parse /path/to/sources -o /output/file/path.json` specify the path to a folder
-    or a file to be parsed and specify output file path.
+- `npm install`
+- `npm run start -- parse /path/to/sources -o /output/file/path.json` specify the path to a folder
+  or a file to be parsed and specify output file path.
 
 #### Global installation via npm
 
--   `npm install -g metric-gardener`
--   `metric-gardener parse /path/to/sources -o /output/file/path.json`
+- `npm install -g metric-gardener`
+- `metric-gardener parse /path/to/sources -o /output/file/path.json`
 
 #### Local as a npm dependency
 
--   `npm install metric-gardener`
--   `npm exec metric-gardener /path/to/sources -o /output/file/path.json`
+- `npm install metric-gardener`
+- `npm exec metric-gardener /path/to/sources -o /output/file/path.json`
 
 ### Supported Languages
 
--   Go
--   [PHP](docs/PHP.md)
--   [TypeScript and TSX](docs/TS_TSX.md)
--   [Java](docs/Java.md)
--   [C#](docs/C_Sharp.md)
--   [C++](docs/CPP.md)
--   [Python](docs/Python.md)
--   [JavaScript](docs/JavaScript.md)
--   Kotlin
--   JSON
--   YAML
+- [Go](docs/Go.md)
+- [PHP](docs/PHP.md)
+- [TypeScript and TSX](docs/TS_TSX.md)
+- [Java](docs/Java.md)
+- [C#](docs/C_Sharp.md)
+- [C++](docs/CPP.md)
+- [Python](docs/Python.md)
+- [JavaScript](docs/JavaScript.md)
+- Kotlin
+- JSON
+- YAML
 
 #### Basic support with missing or incomplete unit tests:
 
--   [C](docs/C.md) (take a look at the CLI
-    option [`parse-h-as-c`](#command-line-options-for-the-parse-command)
-    or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers
-    as C)
--   Ruby
--   Rust
--   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to
-    issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if
-    placed after the first heredoc delimiter. Default labels in Switch-statement are treated as
-    regular case labels.)
--   Flow-annotated JavaScript
+- [C](docs/C.md) (take a look at the CLI
+  option [`parse-h-as-c`](#command-line-options-for-the-parse-command)
+  or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers
+  as C)
+- Ruby
+- Rust
+- Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to
+  issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if
+  placed after the first heredoc delimiter. Default labels in Switch-statement are treated as
+  regular case labels.)
+- Flow-annotated JavaScript
 
 ### Supported File Metrics
 
@@ -80,8 +80,8 @@ Counts expressions that branch the control flow, like if-statements, loops, swit
 catch-blocks etc. - but no else/default/finally statements. Also counts the following other
 expressions that are considered to increase the complexity of the code inside a file:
 
--   function declarations (see functions metric below)
--   binary logical operations (like AND and OR)
+- function declarations (see functions metric below)
+- binary logical operations (like AND and OR)
 
 **functions**<br>
 The number of function declarations inside a file. Includes all kinds of functions, like
@@ -176,20 +176,20 @@ environment variable `NODE_DEBUG` to `metric-gardener`.
 **Supported for C# and PHP**<br>
 Activate dependency analysis by passing `--parseDependencies`
 
--   Coupling Between Objects (CBO)
--   Incoming Dependencies
--   Outgoing Dependencies
--   Instability: Outgoing Dependencies / (Outgoing Dependencies + Incoming Dependencies)
+- Coupling Between Objects (CBO)
+- Incoming Dependencies
+- Outgoing Dependencies
+- Instability: Outgoing Dependencies / (Outgoing Dependencies + Incoming Dependencies)
 
 **Limitations:**<br>
 
--   Multiple, nested Namespace Declarations within one .cs file are not covered so far and are ignored
-    during the calculation of coupling.
+- Multiple, nested Namespace Declarations within one .cs file are not covered so far and are ignored
+  during the calculation of coupling.
 
 ### TODOs
 
--   Rename callExpression Resolver to accessor Resolver
--   Refactor Abstract Usage Collector (small resolver classes?)
--   Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
--   Separate Infrastructure from Domain Code
--   Checkout sample project(s) per language and parse them as an automatic test
+- Rename callExpression Resolver to accessor Resolver
+- Refactor Abstract Usage Collector (small resolver classes?)
+- Add more Unit Tests (Helpers, QueryResolver, TreeParser, etc.)
+- Separate Infrastructure from Domain Code
+- Checkout sample project(s) per language and parse them as an automatic test

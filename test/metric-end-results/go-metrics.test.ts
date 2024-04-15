@@ -22,7 +22,7 @@ describe("Go metric tests", () => {
         });
 
         it("should count functions and methods correctly", () => {
-            testFileMetric("functions-and-methods.go", "complexity", 4);
+            testFileMetric("functions-and-methods.go", "complexity", 13);
         });
 
         it("should not count multiple return statements within functions and methods correctly", () => {
@@ -30,7 +30,7 @@ describe("Go metric tests", () => {
         });
 
         it("should not count any struct or interface declarations", () => {
-            testFileMetric("structs-interfaces.go", "complexity", 5);
+            testFileMetric("structs-interfaces.go", "complexity", 13);
         });
 
         it("should count case statements in switch and select statements correctly", () => {
@@ -44,18 +44,18 @@ describe("Go metric tests", () => {
 
     describe("parses Go functions metric", () => {
         it("should count functions and methods properly", () => {
-            testFileMetric("functions-and-methods.go", "functions", 4);
+            testFileMetric("functions-and-methods.go", "functions", 12);
         });
     });
 
     describe("parses Go classes metric", () => {
-        it("should count structs and interfaces for the classes metric", () => {
-            testFileMetric("structs-interfaces.go", "classes", 5);
+        it("should count all structs and interface declarations, but not type aliases", () => {
+            testFileMetric("structs-interfaces.go", "classes", 6);
         });
     });
 
     describe("parses Go commentLines metric", () => {
-        it("should count number of comment lines correctly, including line with curly brackets, inline comments" + " and lines of the block comment", () => {
+        it("should count number of comment lines correctly, including line with curly brackets, inline comments and lines of the block comment", () => {
             testFileMetric("if-statements.go", "comment_lines", 6);
         });
 

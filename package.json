@@ -72,7 +72,7 @@
     },
     "prettier": {
         "bracketSpacing": true,
-        "endOfLine": "crlf"
+        "endOfLine": "auto"
     },
     "lint-staged": {
         "*": "npm run xo --"

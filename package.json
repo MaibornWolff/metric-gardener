@@ -71,7 +71,8 @@
         "ignores": "resources"
     },
     "prettier": {
-        "bracketSpacing": true
+        "bracketSpacing": true,
+        "endOfLine": "crlf"
     },
     "lint-staged": {
         "*": "npm run xo --"

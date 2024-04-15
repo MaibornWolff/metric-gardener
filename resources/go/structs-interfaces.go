@@ -3,7 +3,19 @@ package employee
 import (
 	"fmt"
 )
+type Age int
+type (
+	T5 struct{ f *T5 }
+)
+func main() {
+    var anyType = struct{ Name string }{Name: "John Doe"}
 
+}
+interface {
+	Read([]byte) (int, error)
+	Write([]byte) (int, error)
+	Close() error
+}
 type Employee struct {
 	FirstName  string
 	LastName   string

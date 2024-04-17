@@ -66,7 +66,7 @@ function parseTree(
     const parser = new Parser();
     parser.setLanguage(languageToGrammar.get(language));
     const tree = parser.parse(sourceCode);
-    console.log(tree.rootNode.toString());
+
     const parsedFile = new ParsedFile(filePath, language, tree);
     cache.set(filePath, parsedFile);
     return parsedFile;

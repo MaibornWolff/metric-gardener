@@ -44,5 +44,22 @@ open class Test(name: String) {
         println("Doing something else")
         doSomethingElse()
     }
-
+    val x = fun(s: String): Int { return s.toIntOrNull() ?: 0 }
 }
+interface IndexedContainer {
+    operator fun get(index: Int)
+}
+class OrdersList: IndexedContainer {
+    override fun get(index: Int) { return 7 }
+}
+/*
+functional interface can not be counted
+fun interface IntPredicate {
+    fun accept(i: Int): Boolean
+}*/
+val isEven1 = object : IntPredicate {
+    override fun accept(i: Int): Boolean {
+        return i % 2 == 0
+    }
+}
+val isEven2 = IntPredicate { it % 2 == 0 }

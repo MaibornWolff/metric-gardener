@@ -4085,10 +4085,8 @@
     },
     {
         "type_name": "anonymous_function",
-        "category": "",
-        "languages": [
-            "kt"
-        ]
+        "category": "function",
+        "languages": ["kt"]
     },
     {
         "type_name": "anonymous_initializer",
@@ -4157,10 +4155,8 @@
     },
     {
         "type_name": "companion_object",
-        "category": "",
-        "languages": [
-            "kt"
-        ]
+        "category": "class_definition",
+        "languages": ["kt"]
     },
     {
         "type_name": "comparison_expression",
@@ -4241,10 +4237,8 @@
     },
     {
         "type_name": "enum_entry",
-        "category": "enum_definition",
-        "languages": [
-            "kt"
-        ]
+        "category": "",
+        "languages": ["kt"]
     },
     {
         "type_name": "equality_expression",
@@ -4421,17 +4415,13 @@
     },
     {
         "type_name": "object_declaration",
-        "category": "",
-        "languages": [
-            "kt"
-        ]
+        "category": "class_definition",
+        "languages": ["kt"]
     },
     {
         "type_name": "object_literal",
-        "category": "",
-        "languages": [
-            "kt"
-        ]
+        "category": "class_definition",
+        "languages": ["kt"]
     },
     {
         "type_name": "package_header",
@@ -4513,11 +4503,8 @@
     },
     {
         "type_name": "setter",
-        "category": "",
-        "languages": [
-            "kt",
-            "rb"
-        ]
+        "category": "function",
+        "languages": ["kt", "rb"]
     },
     {
         "type_name": "shebang_line",
@@ -7362,10 +7349,8 @@
     },
     {
         "type_name": "getter",
-        "category": "",
-        "languages": [
-            "kt"
-        ]
+        "category": "function",
+        "languages": ["kt"]
     },
     {
         "type_name": "import_list",

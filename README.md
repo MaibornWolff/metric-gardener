@@ -61,17 +61,17 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 #### Basic support with missing or incomplete unit tests:
 
-- [C](docs/C.md) (take a look at the CLI
-  option [`parse-h-as-c`](#command-line-options-for-the-parse-command)
-  or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers
-  as C)
-- Ruby
-- Rust
-- Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to
-  issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if
-  placed after the first heredoc delimiter. Default labels in Switch-statement are treated as
-  regular case labels.)
-- Flow-annotated JavaScript
+-   [C](docs/C.md) (take a look at the CLI
+    option [`parse-h-as-c`](#command-line-options-for-the-parse-command)
+    or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers
+    as C)
+-   [Ruby](docs/Ruby.md)
+-   Rust
+-   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to
+    issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if
+    placed after the first heredoc delimiter. Default labels in Switch-statement are treated as
+    regular case labels.)
+-   Flow-annotated JavaScript
 
 ### Supported File Metrics
 

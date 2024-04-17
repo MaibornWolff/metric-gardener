@@ -1,6 +1,6 @@
-# File Metrics for TypeScript (TS) and TypeScript JSX (TSX)
+# File Metrics for TypeScript (TS),TypeScript JSX (TSX) and flow-annotated JavaScript
 
-This document outlines the definition of file metrics for TypeScript (TS) and TypeScript JSX (TSX).
+This document outlines the definition of file metrics for TypeScript (TS), TypeScript JSX (TSX) and flow-annotated JavaScript.
 
 ### complexity
 

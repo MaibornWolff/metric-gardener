@@ -67,11 +67,9 @@ This is quite slow and can take up to one or two hours but can provide good resu
     as C)
 -   [Ruby](docs/Ruby.md)
 -   [Rust](docs/Rust.md)
--   Bash (the binary logical operators -o for "or" and -a for "and" are currently not evaluated due to
-    issues with tree-sitter-bash. For the same reason, the && and || operators are not evaluated if
-    placed after the first heredoc delimiter. Default labels in Switch-statement are treated as
-    regular case labels.)
--   Flow-annotated JavaScript
+-   [Bash](docs/Bash.md)
+-   [Flow-annotated JavaScript](docs/TS_TSX.md)
+>>>>>>> 8510ace (docs: update README, mention flow-annotated JS #326)
 
 ### Supported File Metrics
 

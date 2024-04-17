@@ -12,11 +12,11 @@ import JavaScript from "tree-sitter-javascript";
 // @ts-expect-error module doesn't have types
 import Kotlin from "tree-sitter-kotlin";
 // @ts-expect-error module doesn't have types
-import { php } from "tree-sitter-php";
+import PHP from "tree-sitter-php";
 // @ts-expect-error module doesn't have types
 import Python from "tree-sitter-python";
 // @ts-expect-error module doesn't have types
-import { typescript, tsx } from "tree-sitter-typescript";
+import TS from "tree-sitter-typescript";
 // @ts-expect-error module doesn't have types
 import Ruby from "tree-sitter-ruby";
 // @ts-expect-error module doesn't have types
@@ -33,6 +33,8 @@ import { type Configuration } from "../configuration.js";
 import { ConstantTwoWayMap } from "./constant-two-way-map.js";
 import { lookupLowerCase } from "./helper.js";
 
+const { php } = PHP as { php: unknown };
+const { typescript, tsx } = TS as { typescript: unknown; tsx: unknown };
 /**
  * Enum of all supported programming languages.
  */

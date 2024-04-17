@@ -26,7 +26,7 @@ describe("Kotlin metric tests", () => {
         });
 
         it("should not count any class declaration", () => {
-            testFileMetric("classes.kt", "complexity", 4);
+            testFileMetric("classes.kt", "complexity", 8);
         });
 
         it("should count when case statements correctly, but not else statements", () => {
@@ -34,7 +34,7 @@ describe("Kotlin metric tests", () => {
         });
 
         it("should count all function declarations and one init block correctly", () => {
-            testFileMetric("functions-and-methods.kt", "complexity", 11);
+            testFileMetric("functions-and-methods.kt", "complexity", 17);
         });
 
         it("should not count multiple return statements within functions and methods", () => {
@@ -48,13 +48,16 @@ describe("Kotlin metric tests", () => {
 
     describe("parses Kotlin classes metric", () => {
         it("should count class declarations", () => {
-            testFileMetric("classes.kt", "classes", 8);
+            testFileMetric("classes.kt", "classes", 16);
         });
     });
 
     describe("parses Kotlin functions metric", () => {
-        it("should count functions and methods properly", () => {
-            testFileMetric("functions-and-methods.kt", "functions", 10);
+        it("should count all functions, methods and secondary constructors", () => {
+            testFileMetric("functions-and-methods.kt", "functions", 15);
+        });
+        it("should count all getters and setters", () => {
+            testFileMetric("getter-setter.kt", "functions", 3);
         });
     });
 

@@ -56,8 +56,8 @@ This is quite slow and can take up to one or two hours but can provide good resu
 - [Python](docs/Python.md)
 - [JavaScript](docs/JavaScript.md)
 - [Kotlin](docs/Kotlin.md)
-- JSON
-- YAML
+- [JSON](docs/JSON.md)
+- [YAML](docs/YAML.md))
 
 #### Basic support with missing or incomplete unit tests:
 

@@ -7,7 +7,7 @@ This document outlines the definition of file metrics for Kotlin.
 The "complexity" metric counts:
 
 -   `if` and `else if` statements
-- elvis expression `?:`
+-   elvis expression `?:`
 -   `for`, `while` and `do...while` loops
 -   branches (not `else` branch) in the `when` statements/expressions
 -   `catch` labels in `try-catch` statements

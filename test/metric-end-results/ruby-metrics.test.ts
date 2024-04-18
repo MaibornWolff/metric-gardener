@@ -54,7 +54,7 @@ describe("Ruby metrics tests", () => {
 
     describe("parses Ruby lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file", () => {
-            testFileMetric("ruby-example-code.rb", "lines_of_code", 90);
+            testFileMetric("ruby-example-code.rb", "lines_of_code", 91);
         });
     });
 

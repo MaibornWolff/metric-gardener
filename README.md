@@ -69,7 +69,6 @@ This is quite slow and can take up to one or two hours but can provide good resu
 -   [Rust](docs/Rust.md)
 -   [Bash](docs/Bash.md)
 -   [Flow-annotated JavaScript](docs/TS_TSX.md)
->>>>>>> 8510ace (docs: update README, mention flow-annotated JS #326)
 
 ### Supported File Metrics
 

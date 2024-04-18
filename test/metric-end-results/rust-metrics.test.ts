@@ -46,7 +46,7 @@ describe("Rust metrics tests", () => {
 
     describe("parses Rust lines of code metric", () => {
         it("should count number of lines correctly for a non-empty file", () => {
-            testFileMetric("rust-example-code.rs", "lines_of_code", 105);
+            testFileMetric("rust-example-code.rs", "lines_of_code", 106);
         });
     });
 

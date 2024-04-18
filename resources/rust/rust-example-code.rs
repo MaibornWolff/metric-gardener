@@ -46,7 +46,7 @@ fn main() {
     let is_student = true;
     if is_student {
         println!("This is a student.");
-    }else {
+    } else {
         println!("This is not a student.");
     }
 

@@ -36,7 +36,7 @@ It does **not** count:
 
 The "classes" metric counts:
 
--   definitions of `class`, `abstract class`, `interface` (incl. `fun interface`) and `enum`
+-   definitions of `class`, `abstract class`, `interface` and `enum`
 -   object expressions/declarations with the keyword `object` and `companion object`
 
 It does **not** count:

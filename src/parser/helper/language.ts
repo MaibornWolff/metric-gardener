@@ -1,33 +1,18 @@
 import path from "node:path";
-// @ts-expect-error module doesn't have types
 import CSharp from "tree-sitter-c-sharp";
-// @ts-expect-error module doesn't have types
 import CPlusPlus from "tree-sitter-cpp";
-// @ts-expect-error module doesn't have types
 import GO from "tree-sitter-go";
-// @ts-expect-error module doesn't have types
 import Java from "tree-sitter-java";
-// @ts-expect-error module doesn't have types
 import JavaScript from "tree-sitter-javascript";
-// @ts-expect-error module doesn't have types
 import Kotlin from "tree-sitter-kotlin";
-// @ts-expect-error module doesn't have types
 import phpTreesitterConfig from "tree-sitter-php";
-// @ts-expect-error module doesn't have types
 import Python from "tree-sitter-python";
-// @ts-expect-error module doesn't have types
 import TSTreesitterConfig from "tree-sitter-typescript";
-// @ts-expect-error module doesn't have types
 import Ruby from "tree-sitter-ruby";
-// @ts-expect-error module doesn't have types
 import Rust from "tree-sitter-rust";
-// @ts-expect-error module doesn't have types
 import Bash from "tree-sitter-bash";
-// @ts-expect-error module doesn't have types
 import C from "tree-sitter-c";
-// @ts-expect-error module doesn't have types
 import JSON from "tree-sitter-json";
-// @ts-expect-error module doesn't have types
 import YAML from "tree-sitter-yaml";
 import { type Configuration } from "../configuration.js";
 import { ConstantTwoWayMap } from "./constant-two-way-map.js";

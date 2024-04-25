@@ -7274,7 +7274,7 @@
     },
     {
         "type_name": "class_static_block",
-        "category": "",
+        "category": "function",
         "languages": [
             "js",
             "ts",

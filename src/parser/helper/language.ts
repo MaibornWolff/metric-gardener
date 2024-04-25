@@ -1,4 +1,5 @@
 import path from "node:path";
+import { type LanguageNode, type NodeType } from "tree-sitter-type";
 import CSharp from "tree-sitter-c-sharp";
 import CPlusPlus from "tree-sitter-cpp";
 import GO from "tree-sitter-go";
@@ -18,8 +19,9 @@ import { type Configuration } from "../configuration.js";
 import { ConstantTwoWayMap } from "./constant-two-way-map.js";
 import { lookupLowerCase } from "./helper.js";
 
-const { php } = phpTreesitterConfig as { php: unknown };
-const { typescript, tsx } = TSTreesitterConfig as { typescript: unknown; tsx: unknown };
+const { php } = phpTreesitterConfig as { php: LanguageNode };
+const { typescript, tsx } = TSTreesitterConfig as { typescript: LanguageNode; tsx: LanguageNode };
+
 /**
  * Enum of all supported programming languages.
  */

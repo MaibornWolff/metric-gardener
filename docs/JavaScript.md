@@ -23,6 +23,7 @@ It does **not** count:
 
 The "functions" metric counts:
 
+-   static initialization blocks
 -   function declarations and expressions with `function`,`function*`, `async function` and `async function*`
 -   constructors, getter (`get <method_name>`), setter (`set <method_name>`), and methods of classes and objects
 -   arrow functions

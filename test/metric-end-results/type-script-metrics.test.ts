@@ -56,6 +56,9 @@ describe("TypeScript metrics tests", () => {
         it("should count functions and methods properly", () => {
             testFileMetric("functions-and-methods.ts", "functions", 9);
         });
+        it("should count static initialization block", () => {
+            testFileMetric("static_init_block.ts", "functions", 1);
+        });
     });
 
     describe("parses TypeScript comment lines metric", () => {

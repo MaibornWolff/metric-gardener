@@ -59,6 +59,9 @@ describe("JavaScript metrics tests", () => {
         it("should count all methods in object definition", () => {
             testFileMetric("object-method.js", "functions", 4);
         });
+        it("should count static initialization block", () => {
+            testFileMetric("static-initialization-block.js", "functions", 1);
+        });
     });
 
     describe("parses JavaScript comment lines metric", () => {

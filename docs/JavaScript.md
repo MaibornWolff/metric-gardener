@@ -30,7 +30,11 @@ The "functions" metric counts:
 
 It does **not** count:
 
--   functions created with the constructors: `Function()`, `GeneratorFunction()`, `AsyncFunction()`, `AsyncGeneratorFunction()`
+-   functions created from the constructors `new Function()`, `new GeneratorFunction()`, `new AsyncFunction()` and `new AsyncGeneratorFunction()`. Ex:
+    ```
+    const generator = new GeneratorFunction("a", "yield a * 2"); //we don't count this as function
+    const iterator = generator(10);
+    ```
 
 ### classes
 

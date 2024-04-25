@@ -23,6 +23,7 @@ It does **not** count:
 
 The "functions" metric counts:
 
+-   static initialization blocks
 -   method declarations in classes, abstract classes and interfaces
 -   static methods, constructors, getters and setters
 -   functions declared with the keyword `function`

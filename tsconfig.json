@@ -7,8 +7,5 @@
         "resolveJsonModule": true,
         "strict": true
     },
-    "exclude": ["resources", "node_modules"],
-    "include": [
-        "./src/parser/helper/language.d.ts"
-    ]
+    "exclude": ["resources", "node_modules"]
 }

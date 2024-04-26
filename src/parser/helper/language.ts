@@ -19,9 +19,6 @@ import { type Configuration } from "../configuration.js";
 import { ConstantTwoWayMap } from "./constant-two-way-map.js";
 import { lookupLowerCase } from "./helper.js";
 
-const { php } = phpTreesitterConfig as { php: LanguageNode };
-const { typescript, tsx } = TSTreesitterConfig as { typescript: LanguageNode; tsx: LanguageNode };
-
 /**
  * Enum of all supported programming languages.
  */
@@ -83,9 +80,9 @@ export const languageToGrammar = new Map([
     [Language.Java, Java],
     [Language.JavaScript, JavaScript],
     [Language.Kotlin, Kotlin],
-    [Language.PHP, php],
-    [Language.TypeScript, typescript],
-    [Language.TSX, tsx],
+    [Language.PHP, phpTreesitterConfig.php],
+    [Language.TypeScript, TSTreesitterConfig.typescript],
+    [Language.TSX, TSTreesitterConfig.tsx],
     [Language.Python, Python],
     [Language.Ruby, Ruby],
     [Language.Rust, Rust],

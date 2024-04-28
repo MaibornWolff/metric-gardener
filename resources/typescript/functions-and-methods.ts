@@ -27,3 +27,9 @@ const myFunction = function myFunctionDefinition() {
 };
 
 const x = (x, y) => x * y;
+
+// method_signature
+interface KeyValueProcessor{ functionName(key: number, value: string): void; }
+
+// call_signature
+interface KeyValueProcessor{ (key: number, value: string): void; };

@@ -5422,7 +5422,7 @@
     },
     {
         "type_name": "abstract_method_signature",
-        "category": "",
+        "category": "function",
         "languages": [
             "ts",
             "tsx"
@@ -5446,7 +5446,7 @@
     },
     {
         "type_name": "call_signature",
-        "category": "",
+        "category": "function",
         "languages": [
             "ts",
             "tsx"
@@ -5551,7 +5551,7 @@
     },
     {
         "type_name": "method_signature",
-        "category": "",
+        "category": "function",
         "languages": [
             "ts",
             "tsx"

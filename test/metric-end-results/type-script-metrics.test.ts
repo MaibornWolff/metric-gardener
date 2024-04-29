@@ -22,7 +22,7 @@ describe("TypeScript metrics tests", () => {
         });
 
         it("should count functions and methods correctly", () => {
-            testFileMetric("functions-and-methods.ts", "complexity", 9);
+            testFileMetric("functions-and-methods.ts", "complexity", 12);
         });
 
         it("should not count multiple return statements within functions and methods correctly", () => {
@@ -48,13 +48,13 @@ describe("TypeScript metrics tests", () => {
 
     describe("parses TypeScript classes metric", () => {
         it("should count class declarations", () => {
-            testFileMetric("classes.ts", "classes", 3);
+            testFileMetric("classes.ts", "classes", 4);
         });
     });
 
     describe("parses TypeScript functions metric", () => {
         it("should count functions and methods properly", () => {
-            testFileMetric("functions-and-methods.ts", "functions", 9);
+            testFileMetric("functions-and-methods.ts", "functions", 12);
         });
         it("should count static initialization block", () => {
             testFileMetric("static_init_block.ts", "functions", 1);

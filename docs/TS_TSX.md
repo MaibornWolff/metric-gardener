@@ -28,6 +28,7 @@ The "functions" metric counts:
 -   static methods, constructors, getters and setters
 -   functions declared with the keyword `function`
 -   arrow functions
+-   interface/abstract methods (signatures)
 
 ### classes
 

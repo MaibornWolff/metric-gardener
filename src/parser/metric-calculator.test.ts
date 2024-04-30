@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import Parser = require("tree-sitter");
 import { mockConsole } from "../../test/metric-end-results/test-helper.js";
+import { FileType, Language, languageToGrammar } from "../helper/language.js";
 import { calculateMetrics } from "./metric-calculator.js";
 import {
     ErrorFile,
@@ -10,7 +11,6 @@ import {
     type SourceFile,
     UnsupportedFile,
 } from "./metrics/metric.js";
-import { FileType, Language, languageToGrammar } from "./helper/language.js";
 import { Classes } from "./metrics/classes.js";
 import { CommentLines } from "./metrics/comment-lines.js";
 import { Complexity } from "./metrics/complexity.js";

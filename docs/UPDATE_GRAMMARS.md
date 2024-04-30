@@ -5,7 +5,7 @@
 If you update the tree-sitter grammars installed as dependency of this project, you need to update the node types config file [node-types-config.json](src%2Fparser%2Fconfig%2Fnode-types-config.json).
 For this, reimport the grammars from all supported languages by running the import script:
 
--   `npm run start -- import-grammars`
+-   `npm run import-grammars`
 
 If there are new syntax node types included in the grammars (e.g. because of a new feature of the corresponding programming language), these are still going to be ignored until you have mapped the new node types to the corresponding metric inside the `node-types-config.json`.
 
@@ -15,7 +15,7 @@ If you want to support a completely new programming language, you have to perfor
 
 -   Add the language, the file extension(s) of the source code files used by that language and an appropriate shortcut for that language to the enum and the maps inside [language.ts](src%2Fparser%2Fhelper%2Flanguage.ts).
 -   You also have to add the path to the `node-types.json` of the tree-sitter grammar for that language to [import-node-types.ts](src%2Fcommands%2Fimport-grammars%2Fimport-node-types.ts).
--   After these steps, you can run the import script via `npm run start -- import-grammars` as mentioned above.
+-   After these steps, you can run the import script via `npm run import-grammars` as mentioned above.
 -   You can now run metric-gardener on source code of that newly added language.
 
 **Note:**

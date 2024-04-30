@@ -1,12 +1,13 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import fs from "node:fs/promises";
+import { type NodeTypeConfig } from "../helper/model.js";
+import { FileType } from "../helper/language.js";
 import { Complexity } from "./metrics/complexity.js";
 import { Functions } from "./metrics/functions.js";
 import { Classes } from "./metrics/classes.js";
 import { LinesOfCode } from "./metrics/lines-of-code.js";
 import { CommentLines } from "./metrics/comment-lines.js";
 import { RealLinesOfCode } from "./metrics/real-lines-of-code.js";
-import { type NodeTypeConfig } from "./helper/model.js";
 import {
     ErrorFile,
     type FileMetricResults,
@@ -18,7 +19,6 @@ import {
 import nodeTypesConfig from "./config/node-types-config.json" with { type: "json" };
 import { MaxNestingLevel } from "./metrics/max-nesting-level.js";
 import { calculateLinesOfCodeRawText } from "./metrics/lines-of-code-raw-text.js";
-import { FileType } from "./helper/language.js";
 import { KeywordsInComments } from "./metrics/keywords-in-comments.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

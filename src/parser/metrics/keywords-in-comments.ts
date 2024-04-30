@@ -1,6 +1,6 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type NodeTypeConfig } from "../helper/model.js";
-import { createRegexFor } from "../helper/helper.js";
+import { type NodeTypeConfig } from "../../helper/model.js";
+import { createRegexFor } from "../../helper/helper.js";
 import { type Metric, type MetricName, type MetricResult, type ParsedFile } from "./metric.js";
 import { CommentLines } from "./comment-lines.js";
 

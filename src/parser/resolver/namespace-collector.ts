@@ -1,5 +1,5 @@
 import { type ParsedFile } from "../metrics/metric.js";
-import { type Language } from "../helper/language.js";
+import { type Language } from "../../helper/language.js";
 import { type FullyQTN } from "./fully-qualified-type-names/abstract-collector.js";
 import { Factory as NamespaceCollectorFactory } from "./fully-qualified-type-names/factory.js";
 

@@ -1,6 +1,7 @@
 import process from "node:process";
 import pMap from "p-map";
-import { findFilesAsync, formatPrintPath } from "./helper/helper.js";
+import { findFilesAsync, formatPrintPath } from "../helper/helper.js";
+import { parse } from "../helper/tree-parser.js";
 import { type Configuration } from "./configuration.js";
 import { calculateMetrics } from "./metric-calculator.js";
 import { CouplingCalculator } from "./coupling-calculator.js";
@@ -11,7 +12,6 @@ import {
     UnsupportedFile,
     type CouplingResult,
 } from "./metrics/metric.js";
-import { parse } from "./helper/tree-parser.js";
 
 /**
  * Arranges the parsing of files and calculation of metrics as specified by the stored configuration.

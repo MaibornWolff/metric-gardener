@@ -3,7 +3,7 @@ import {
     getTestConfiguration,
     mockPosixPath,
     mockWin32Path,
-} from "../../../test/metric-end-results/test-helper.js";
+} from "../../test/metric-end-results/test-helper.js";
 import { assumeLanguageFromFilePath, Language } from "./language.js";
 
 describe("assumeLanguageFromFilePath(...)", () => {

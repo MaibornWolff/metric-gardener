@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import { EOL } from "node:os";
-import { type NodeTypeConfig } from "../../parser/helper/model.js";
+import { type NodeTypeConfig } from "../helper/model.js";
 
 /**
  * Path to which the changelog is written.

@@ -5,9 +5,9 @@ import {
     getTestConfiguration,
     mockPosixPath,
     mockWin32Path,
-} from "../../../test/metric-end-results/test-helper.js";
-import { NodeTypeQueryStatement } from "../queries/query-statements.js";
-import { type ConfigurationParameters } from "../configuration.js";
+} from "../../test/metric-end-results/test-helper.js";
+import { NodeTypeQueryStatement } from "../parser/queries/query-statements.js";
+import { type ConfigurationParameters } from "../parser/configuration.js";
 import {
     findFilesAsync,
     createRegexFor,

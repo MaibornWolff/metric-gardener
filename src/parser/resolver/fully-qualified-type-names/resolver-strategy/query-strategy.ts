@@ -2,7 +2,7 @@ import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
 import { type FullyQTN } from "../abstract-collector.js";
 import { QueryBuilder } from "../../../queries/query-builder.js";
-import { formatCaptures } from "../../../helper/helper.js";
+import { formatCaptures } from "../../../../helper/helper.js";
 import { type ParsedFile } from "../../../metrics/metric.js";
 import { SimpleQueryStatement } from "../../../queries/query-statements.js";
 

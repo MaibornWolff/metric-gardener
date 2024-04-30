@@ -5,7 +5,7 @@ import {
     type CouplingResult,
     type MetricError,
 } from "../parser/metrics/metric.js";
-import { FileType } from "../parser/helper/language.js";
+import { FileType } from "../helper/language.js";
 import { mockConsole } from "../../test/metric-end-results/test-helper.js";
 import { outputAsJson } from "./output-metrics.js";
 

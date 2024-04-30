@@ -3,15 +3,15 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import Parser = require("tree-sitter");
 import { type Tree } from "tree-sitter";
 import { getTestConfiguration, mockConsole } from "../../test/metric-end-results/test-helper.js";
-import { GenericParser } from "./generic-parser.js";
-import * as HelperModule from "./helper/helper.js";
-import * as TreeParser from "./helper/tree-parser.js";
+import * as HelperModule from "../helper/helper.js";
+import * as TreeParser from "../helper/tree-parser.js";
 import {
     assumeLanguageFromFilePath,
     FileType,
     Language,
     languageToGrammar,
-} from "./helper/language.js";
+} from "../helper/language.js";
+import { GenericParser } from "./generic-parser.js";
 import {
     type SourceFile,
     ParsedFile,

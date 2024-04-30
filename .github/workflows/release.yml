@@ -1,0 +1,54 @@
+name: Release metric-gardener
+
+on:
+  push:
+    tags: 'mg-*.*.*'
+
+jobs:
+  build_project:
+    name: Build Project
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Build metric-gardener
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+        working-directory: ./metric-gardener
+        run: |
+          npm ci
+          npm run build
+          npm run test
+          npm pack
+      # npm pack to generate the tarball
+
+      - name: Add Changelog Entries to Release
+        uses: rasmus-saks/release-a-changelog-action@v1.2.0
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          path: 'CHANGELOG.md'
+          title-template: 'metric-gardener release {version}'
+          tag-template: '{version}'
+
+      - name: Publish npm package
+        uses: JS-DevTools/npm-publish@v2.2.2
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: ./package.json
+
+      - name: Set env
+        run: |
+          fullVersion="${GITHUB_REF#refs/*/}"
+          echo "RELEASE_VERSION=${fullVersion:4}" >> $GITHUB_ENV
+# open questions: docker image, release on github

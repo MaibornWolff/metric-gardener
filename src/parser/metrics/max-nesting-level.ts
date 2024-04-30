@@ -1,6 +1,6 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type TreeCursor } from "tree-sitter";
-import { type NodeTypeConfig, NodeTypeCategory } from "../helper/model.js";
+import { type NodeTypeConfig, NodeTypeCategory } from "../../helper/model.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

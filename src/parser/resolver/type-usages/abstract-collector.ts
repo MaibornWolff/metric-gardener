@@ -1,7 +1,7 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
-import { formatCaptures } from "../../helper/helper.js";
+import { formatCaptures } from "../../../helper/helper.js";
 import { type NamespaceCollector } from "../namespace-collector.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { SimpleQueryStatement } from "../../queries/query-statements.js";

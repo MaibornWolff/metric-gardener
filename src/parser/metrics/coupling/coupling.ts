@@ -14,11 +14,11 @@ import {
     type CouplingResult,
     type MetricName,
 } from "../metric.js";
-import { formatPrintPath } from "../../helper/helper.js";
+import { formatPrintPath } from "../../../helper/helper.js";
 import { type PublicAccessorCollector } from "../../resolver/public-accessor-collector.js";
 import { type Accessor } from "../../resolver/call-expressions/abstract-collector.js";
 import { type Configuration } from "../../configuration.js";
-import { parseSync } from "../../helper/tree-parser.js";
+import { parseSync } from "../../../helper/tree-parser.js";
 import { getAdditionalRelationships } from "./call-expression-resolver.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type NodeTypeConfig, NodeTypeCategory } from "../../parser/helper/model.js";
-import nodeTypesConfig from "../../parser/config/node-types-config.json" with { type: "json" };
+import { type NodeTypeConfig, NodeTypeCategory } from "../helper/model.js";
+import nodeTypesConfig from "../parser/config/node-types-config.json" with { type: "json" };
+import { type NodeType, type NodeTypes } from "../helper/node-types.js";
 import { NodeTypesChangelog } from "./node-types-changelog.js";
-import { type NodeType, type NodeTypes } from "./node-types.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

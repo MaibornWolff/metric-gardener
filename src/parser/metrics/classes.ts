@@ -1,12 +1,12 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryMatch } from "tree-sitter";
-import { NodeTypeCategory, type NodeTypeConfig } from "../helper/model.js";
+import { NodeTypeCategory, type NodeTypeConfig } from "../../helper/model.js";
 import { QueryBuilder } from "../queries/query-builder.js";
 import {
     type QueryStatementInterface,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/query-statements.js";
-import { getQueryStatementsByCategories } from "../helper/helper.js";
+import { getQueryStatementsByCategories } from "../../helper/helper.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

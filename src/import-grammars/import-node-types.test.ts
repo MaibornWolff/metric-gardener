@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { type WriteStream } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { mockConsole } from "../../../test/metric-end-results/test-helper.js";
-import { type NodeTypes } from "./node-types.js";
+import { mockConsole } from "../../test/metric-end-results/test-helper.js";
+import { type NodeTypes } from "../helper/node-types.js";
 
 let changelog = "";
 let failWriteStream = false;

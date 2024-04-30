@@ -1,9 +1,9 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../queries/query-builder.js";
-import { NodeTypeCategory, type NodeTypeConfig } from "../helper/model.js";
-import { getQueryStatementsByCategories } from "../helper/helper.js";
-import { Language } from "../helper/language.js";
+import { NodeTypeCategory, type NodeTypeConfig } from "../../helper/model.js";
+import { getQueryStatementsByCategories } from "../../helper/helper.js";
+import { Language } from "../../helper/language.js";
 import { type QueryStatementInterface, SimpleQueryStatement } from "../queries/query-statements.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
 

@@ -1,11 +1,11 @@
 import fs from "node:fs/promises";
 import { afterAll, describe, expect, it, vi } from "vitest";
-import { mockConsole } from "../test/metric-end-results/test-helper.js";
-import * as ImportNodeTypes from "./commands/import-grammars/import-node-types.js";
+import { mockConsole } from "../../test/metric-end-results/test-helper.js";
+import * as ImportNodeTypes from "../import-grammars/import-node-types.js";
+import { Configuration } from "../parser/configuration.js";
+import { type CouplingResult, type FileMetricResults } from "../parser/metrics/metric.js";
 import { parser } from "./cli.js";
-import { Configuration } from "./parser/configuration.js";
-import { type CouplingResult, type FileMetricResults } from "./parser/metrics/metric.js";
-import * as outputMetrics from "./commands/output-metrics.js";
+import * as outputMetrics from "./output-metrics.js";
 
 const parserConstructor = vi.hoisted(() => vi.fn<[Configuration]>());
 const parserCalculateMetrics = vi.hoisted(() =>

@@ -6,7 +6,7 @@ import {
     type FileMetricResults,
     type MetricError,
 } from "../parser/metrics/metric.js";
-import { FileType } from "../parser/helper/language.js";
+import { FileType } from "../helper/language.js";
 
 type OutputNode = {
     name: string;

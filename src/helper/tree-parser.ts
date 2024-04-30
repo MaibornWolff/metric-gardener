@@ -1,8 +1,13 @@
 import fs from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import Parser = require("tree-sitter");
-import { ErrorFile, ParsedFile, type SourceFile, UnsupportedFile } from "../metrics/metric.js";
-import { type Configuration } from "../configuration.js";
+import {
+    ErrorFile,
+    ParsedFile,
+    type SourceFile,
+    UnsupportedFile,
+} from "../parser/metrics/metric.js";
+import { type Configuration } from "../parser/configuration.js";
 import { assumeLanguageFromFilePath, Language, languageToGrammar } from "./language.js";
 
 const cache = new Map<string, SourceFile>();

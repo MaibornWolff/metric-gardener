@@ -1,5 +1,5 @@
-import { type Language, languageToAbbreviation } from "../helper/language.js";
-import { type NodeTypeConfig } from "../helper/model.js";
+import { type Language, languageToAbbreviation } from "../../helper/language.js";
+import { type NodeTypeConfig } from "../../helper/model.js";
 
 export type QueryStatementInterface = {
     activatedFor(language: Language): boolean;

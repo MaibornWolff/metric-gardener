@@ -1,5 +1,4 @@
 import path from "node:path";
-import { type LanguageNode, type NodeType } from "tree-sitter-type";
 import CSharp from "tree-sitter-c-sharp";
 import CPlusPlus from "tree-sitter-cpp";
 import GO from "tree-sitter-go";
@@ -15,7 +14,7 @@ import Bash from "tree-sitter-bash";
 import C from "tree-sitter-c";
 import JSON from "tree-sitter-json";
 import YAML from "tree-sitter-yaml";
-import { type Configuration } from "../configuration.js";
+import { type Configuration } from "../parser/configuration.js";
 import { ConstantTwoWayMap } from "./constant-two-way-map.js";
 import { lookupLowerCase } from "./helper.js";
 

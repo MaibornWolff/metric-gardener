@@ -1,19 +1,10 @@
 import fs from "node:fs/promises";
 import yargs from "yargs";
-import { GenericParser } from "./parser/generic-parser.js";
-import { Configuration } from "./parser/configuration.js";
-import { updateNodeTypesMappingFile } from "./commands/import-grammars/import-node-types.js";
-import { outputAsJson } from "./commands/output-metrics.js";
+import { GenericParser } from "../parser/generic-parser.js";
+import { Configuration } from "../parser/configuration.js";
+import { outputAsJson } from "./output-metrics.js";
 
 export const parser = yargs()
-    .command(
-        "import-grammars",
-        "(re-)import grammar expression types for supported languages",
-        {},
-        async () => {
-            await updateNodeTypesMappingFile();
-        },
-    )
     .command(
         "parse [sources-path]",
         "parse file or folders recursively by given path and calculate metrics",

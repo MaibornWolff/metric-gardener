@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import Parser = require("tree-sitter");
-import { Language, languageToGrammar } from "../helper/language.js";
-import { type NodeTypeConfig, NodeTypeCategory } from "../helper/model.js";
+import { Language, languageToGrammar } from "../../helper/language.js";
+import { type NodeTypeConfig, NodeTypeCategory } from "../../helper/model.js";
 import { ParsedFile } from "./metric.js";
 import { MaxNestingLevel } from "./max-nesting-level.js";
 

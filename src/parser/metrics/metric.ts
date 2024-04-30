@@ -1,5 +1,5 @@
 import { type Tree } from "tree-sitter";
-import { FileType, type Language, languageToFileType } from "../helper/language.js";
+import { FileType, type Language, languageToFileType } from "../../helper/language.js";
 
 /**
  * Names of all available file metrics.

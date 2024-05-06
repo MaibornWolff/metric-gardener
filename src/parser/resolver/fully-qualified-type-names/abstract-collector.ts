@@ -2,7 +2,7 @@ import { type ParsedFile } from "../../metrics/metric.js";
 import { QueryStrategy } from "./resolver-strategy/query-strategy.js";
 import { FilenameStrategy } from "./resolver-strategy/filename-resolver.js";
 
-export type FullyQTN = {
+export type FQTNInfo = {
     namespace: string;
     className: string;
     classType: "interface" | "class";
@@ -18,9 +18,9 @@ export enum NamespaceResolvingStrategy {
 }
 
 export abstract class AbstractCollector {
-    getFullyQTNs(parsedFile: ParsedFile): Map<string, FullyQTN> {
+    getFQTNsFromFile(parsedFile: ParsedFile): Map<string, FQTNInfo> {
         if (this.getNamespaceResolvingStrategy() === NamespaceResolvingStrategy.Query) {
-            return new QueryStrategy().getFullyQTNs(
+            return new QueryStrategy().getFQTNsFromFile(
                 parsedFile,
                 this.getNamespaceDelimiter(),
                 this.getNamespacesQuery(),

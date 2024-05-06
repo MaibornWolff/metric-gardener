@@ -1,6 +1,6 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
-import { type FullyQTN } from "../abstract-collector.js";
+import { type FQTNInfo } from "../abstract-collector.js";
 import { QueryBuilder } from "../../../queries/query-builder.js";
 import { formatCaptures } from "../../../../helper/helper.js";
 import { type ParsedFile } from "../../../metrics/metric.js";
@@ -11,21 +11,21 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 export class QueryStrategy {
-    protected cache = new Map<string, Map<string, FullyQTN>>();
+    protected fileToFQTNsMap = new Map<string, Map<string, FQTNInfo>>();
 
-    getFullyQTNs(
+    getFQTNsFromFile(
         parsedFile: ParsedFile,
         namespaceDelimiter: string,
         namespacesQuery: string,
-    ): Map<string, FullyQTN> {
+    ): Map<string, FQTNInfo> {
         const { filePath, language, tree } = parsedFile;
 
-        const cachedItem = this.cache.get(filePath);
-        if (cachedItem !== undefined) {
-            return cachedItem;
+        let FQTNsMap = this.fileToFQTNsMap.get(filePath);
+        if (FQTNsMap !== undefined) {
+            return FQTNsMap;
         }
 
-        const namespaceDeclarations = new Map<string, FullyQTN>();
+        FQTNsMap = new Map<string, FQTNInfo>();
 
         const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(namespacesQuery)]);
@@ -57,7 +57,7 @@ export class QueryStrategy {
 
             while (hasClassDeclaration) {
                 const className = textCaptures[index].text;
-                const namespaceDeclaration: FullyQTN = {
+                const namespaceDeclaration: FQTNInfo = {
                     namespace: namespaceName,
                     className,
                     classType: isInterface ? "interface" : "class",
@@ -66,10 +66,7 @@ export class QueryStrategy {
                     implementedClasses: [],
                 };
 
-                namespaceDeclarations.set(
-                    namespaceName + namespaceDelimiter + className,
-                    namespaceDeclaration,
-                );
+                FQTNsMap.set(namespaceName + namespaceDelimiter + className, namespaceDeclaration);
 
                 // Jump to any next capture
                 index++;
@@ -119,8 +116,8 @@ export class QueryStrategy {
             }
         }
 
-        this.cache.set(filePath, namespaceDeclarations);
+        this.fileToFQTNsMap.set(filePath, FQTNsMap);
 
-        return namespaceDeclarations;
+        return FQTNsMap;
     }
 }

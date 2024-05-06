@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import Parser = require("tree-sitter");
 import { type TreeCursor } from "tree-sitter";
-import { type Language, languageToGrammar } from "./language.js";
+import { type Language, languageToGrammar } from "../src/helper/language.js";
 
 /**
  * Traverses the syntax tree of a file depth-first and prints all encountered nodes.

@@ -3,7 +3,7 @@ import { type QueryCapture } from "tree-sitter";
 import { type ParsedFile } from "../../metrics/metric.js";
 import { formatCaptures } from "../../../helper/helper.js";
 import { QueryBuilder } from "../../queries/query-builder.js";
-import { type FullyQTN } from "../fully-qualified-type-names/abstract-collector.js";
+import { type FQTNInfo } from "../fully-qualified-type-names/abstract-collector.js";
 import { SimpleQueryStatement } from "../../queries/query-statements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -12,17 +12,17 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 
 export type Accessor = {
     name: string;
-    namespaces: FullyQTN[];
+    FQTNInfos: FQTNInfo[];
     filePath: string;
     returnType: string;
 };
 
 export abstract class AbstractCollector {
-    getAccessors(
+    getPublicAccessorsFromFile(
         parsedFile: ParsedFile,
-        namespacesOfFile: Map<string, FullyQTN>,
+        FQTNsFromFile: Map<string, FQTNInfo>,
     ): Map<string, Accessor[]> {
-        const publicAccessors = new Map<string, Accessor[]>();
+        const publicAccessorsMap = new Map<string, Accessor[]>();
 
         if (this.getAccessorsQuery()) {
             const { filePath, language, tree } = parsedFile;
@@ -50,7 +50,7 @@ export abstract class AbstractCollector {
             for (let index = 0; index < accessorsTextCaptures.length; index += 1) {
                 const publicAccessor: Accessor = {
                     name: "",
-                    namespaces: [...namespacesOfFile.values()],
+                    FQTNInfos: [...FQTNsFromFile.values()],
                     filePath,
                     returnType: accessorsTextCaptures[index].text,
                 };
@@ -58,18 +58,17 @@ export abstract class AbstractCollector {
                 index++;
                 publicAccessor.name = accessorsTextCaptures[index].text;
 
-                const accessorsByName = publicAccessors.get(publicAccessor.name);
-                if (accessorsByName === undefined) {
-                    publicAccessors.set(publicAccessor.name, []);
+                if (publicAccessorsMap.get(publicAccessor.name) === undefined) {
+                    publicAccessorsMap.set(publicAccessor.name, []);
                 }
 
                 // TODO prevent duplicate adds by checking already existing combinations
                 //  of name, returnType, and filepath
-                publicAccessors.get(publicAccessor.name)?.push(publicAccessor);
+                publicAccessorsMap.get(publicAccessor.name)?.push(publicAccessor);
             }
         }
 
-        return publicAccessors;
+        return publicAccessorsMap;
     }
 
     protected abstract getAccessorsQuery(): string;

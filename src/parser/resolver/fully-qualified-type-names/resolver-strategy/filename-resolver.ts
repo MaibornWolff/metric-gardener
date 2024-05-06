@@ -1,7 +1,7 @@
-import { type FullyQTN } from "../abstract-collector.js";
+import { type FQTNInfo } from "../abstract-collector.js";
 
 export class FilenameStrategy {
-    getFullyQTNs(): Map<string, FullyQTN> {
+    getFullyQTNs(): Map<string, FQTNInfo> {
         return new Map();
     }
 }

@@ -1,6 +1,6 @@
 import { type Configuration } from "./configuration.js";
 import { Coupling } from "./metrics/coupling/coupling.js";
-import { NamespaceCollector } from "./resolver/namespace-collector.js";
+import { FqtnCollector } from "./resolver/fqtn-collector.js";
 import { UsagesCollector } from "./resolver/usages-collector.js";
 import {
     type CouplingMetric,
@@ -14,13 +14,13 @@ export class CouplingCalculator {
     private readonly comprisingMetrics: CouplingMetric[] = [];
     private readonly config: Configuration;
 
-    private readonly namespaceCollector: NamespaceCollector;
+    private readonly namespaceCollector: FqtnCollector;
     private readonly publicAccessorCollector: PublicAccessorCollector;
     private readonly usageCollector: UsagesCollector;
 
     constructor(configuration: Configuration) {
         this.config = configuration;
-        this.namespaceCollector = new NamespaceCollector();
+        this.namespaceCollector = new FqtnCollector();
         this.publicAccessorCollector = new PublicAccessorCollector();
         this.usageCollector = new UsagesCollector();
         this.comprisingMetrics = [

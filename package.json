@@ -26,7 +26,12 @@
         "xo": "xo",
         "xo:fix": "xo --fix",
         "prepare": "husky",
+<<<<<<< HEAD
         "import-grammars": "node dist/src/import-grammars/import-grammar.js"
+=======
+        "import-grammar": "node dist/src/import-grammar.js"
+
+>>>>>>> 7d57350 (refactor: rename namespace to FQTN, rename other relevant variables #347)
     },
     "dependencies": {
         "p-map": "^7.0.1",

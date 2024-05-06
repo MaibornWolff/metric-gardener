@@ -1,6 +1,6 @@
 import { type ParsedFile } from "../metrics/metric.js";
 import { Factory as UsageCollectorFactory } from "./type-usages/factory.js";
-import { type NamespaceCollector } from "./namespace-collector.js";
+import { type FqtnCollector } from "./fqtn-collector.js";
 import {
     type TypeUsageCandidate,
     type UnresolvedCallExpression,
@@ -11,7 +11,7 @@ export class UsagesCollector {
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        namespaceCollector: NamespaceCollector,
+        FQTNCollector: FqtnCollector,
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
@@ -19,6 +19,6 @@ export class UsagesCollector {
         const collector = this.usageCollectorFactory.getCollector(parsedFile);
         return collector === undefined
             ? { candidates: [], unresolvedCallExpressions: [] }
-            : collector.getUsageCandidates(parsedFile, namespaceCollector);
+            : collector.getUsageCandidates(parsedFile, FQTNCollector);
     }
 }

@@ -2,7 +2,7 @@ import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type Relationship } from "../metric.js";
 import { type Accessor } from "../../resolver/call-expressions/abstract-collector.js";
 import { type UnresolvedCallExpression } from "../../resolver/type-usages/abstract-collector.js";
-import { type FullyQTN } from "../../resolver/fully-qualified-type-names/abstract-collector.js";
+import { type FQTNInfo } from "../../resolver/fully-qualified-type-names/abstract-collector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -61,7 +61,7 @@ export function getAdditionalRelationships(
                 let added;
 
                 for (const accessor of clonedAccessors) {
-                    if (accessor.namespaces.length === 0) {
+                    if (accessor.FQTNInfos.length === 0) {
                         continue;
                     }
 
@@ -70,7 +70,7 @@ export function getAdditionalRelationships(
                     // add both of them to not lose the correct dependency.
                     // this might lead to higher coupling values,
                     // but it is not that crucial as shown in the master thesis related to MetricGardener
-                    for (const namespace of accessor.namespaces) {
+                    for (const namespace of accessor.FQTNInfos) {
                         const fullyQualifiedNameCandidate =
                             namespace.namespace +
                             namespace.namespaceDelimiter +
@@ -137,7 +137,7 @@ export function getAdditionalRelationships(
 function resolveAccessorReturnType(
     matchingDependency: Relationship,
     accessor: Accessor,
-    namespace: FullyQTN,
+    namespace: FQTNInfo,
     tree: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>,

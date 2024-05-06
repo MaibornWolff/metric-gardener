@@ -2,18 +2,18 @@ import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { formatCaptures } from "../../../helper/helper.js";
-import { type NamespaceCollector } from "../namespace-collector.js";
+import { type FqtnCollector } from "../fqtn-collector.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { SimpleQueryStatement } from "../../queries/query-statements.js";
-import { type FullyQTN } from "../fully-qualified-type-names/abstract-collector.js";
+import { type FQTNInfo } from "../fully-qualified-type-names/abstract-collector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export type ImportReference = {
-    usedNamespace: string;
-    namespaceSuffix: string;
+    referenceName: string;
+    referenceSuffix: string;
     sourceOfUsing: string;
     alias: string;
     source: string;
@@ -34,29 +34,32 @@ export type UnresolvedCallExpression = {
 };
 
 export abstract class AbstractCollector {
-    private readonly importsBySuffixOrAlias = new Map<string, Map<string, ImportReference>>();
+    private readonly fileToImportsBySuffixOrAliasMap = new Map<
+        string,
+        Map<string, ImportReference>
+    >();
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        namespaceCollector: NamespaceCollector,
+        FQTNCollector: FqtnCollector,
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
     } {
         const { filePath } = parsedFile;
-        this.importsBySuffixOrAlias.set(filePath, new Map());
+        this.fileToImportsBySuffixOrAliasMap.set(filePath, new Map());
 
         const importReferences = this.getImports(parsedFile);
         if (this.getGroupedImportsQuery().length > 0) {
             importReferences.push(...this.getGroupedImports(parsedFile));
         }
 
-        dlog("Alias Map:", filePath, this.importsBySuffixOrAlias);
+        dlog("Alias Map:", filePath, this.fileToImportsBySuffixOrAliasMap);
         dlog("Import References", filePath, importReferences);
 
         const { candidates, unresolvedCallExpressions } = this.getUsages(
             parsedFile,
-            namespaceCollector,
+            FQTNCollector,
             importReferences,
         );
         dlog("UsagesAndCandidates", filePath, candidates);
@@ -98,7 +101,7 @@ export abstract class AbstractCollector {
 
         dlog(importsTextCaptures.toString());
 
-        const importsOfFile: ImportReference[] = [];
+        const importsInFile: ImportReference[] = [];
 
         let usageAliasPrefix = "";
         for (const importTextCapture of importsTextCaptures) {
@@ -108,36 +111,36 @@ export abstract class AbstractCollector {
             }
 
             if (importTextCapture.name === "namespace_use_alias_suffix") {
-                // Todo: rewrite using at() method
-                const matchingUsage = importsOfFile[importsOfFile.length - 1]; // eslint-disable-line unicorn/prefer-at
-                matchingUsage.alias = importTextCapture.text;
+                const matchingUsage = importsInFile.at(-1);
+                matchingUsage!.alias = importTextCapture.text;
 
-                this.importsBySuffixOrAlias.get(filePath)?.delete(matchingUsage.namespaceSuffix);
-                this.importsBySuffixOrAlias
+                this.fileToImportsBySuffixOrAliasMap
                     .get(filePath)
-                    ?.set(importTextCapture.text, matchingUsage);
+                    ?.delete(matchingUsage!.referenceSuffix);
+                this.fileToImportsBySuffixOrAliasMap
+                    .get(filePath)
+                    ?.set(importTextCapture.text, matchingUsage!);
 
                 continue;
             }
 
-            const usedNamespace = importTextCapture.text;
-
             const importReference: ImportReference = {
-                usedNamespace,
-                namespaceSuffix: usedNamespace.split(this.getNamespaceDelimiter()).pop() ?? "",
+                referenceName: importTextCapture.text,
+                referenceSuffix:
+                    importTextCapture.text.split(this.getNamespaceDelimiter()).pop() ?? "",
                 sourceOfUsing: filePath,
                 alias: usageAliasPrefix,
                 source: filePath,
                 usageType: "usage",
             };
 
-            importsOfFile.push(importReference);
-            this.importsBySuffixOrAlias
+            importsInFile.push(importReference);
+            this.fileToImportsBySuffixOrAliasMap
                 .get(filePath)
                 ?.set(
                     usageAliasPrefix.length > 0
                         ? importReference.alias
-                        : importReference.namespaceSuffix,
+                        : importReference.referenceSuffix,
                     importReference,
                 );
 
@@ -146,7 +149,7 @@ export abstract class AbstractCollector {
             }
         }
 
-        return importsOfFile;
+        return importsInFile;
     }
 
     private getGroupedImports(parsedFile: ParsedFile): ImportReference[] {
@@ -175,10 +178,12 @@ export abstract class AbstractCollector {
                 // it seems to be not possible to query the alias part only
                 const alias = importTextCaptures[index].text.split(" ").pop() ?? "";
 
-                this.importsBySuffixOrAlias.get(filePath)?.delete(matchingUsage.namespaceSuffix);
+                this.fileToImportsBySuffixOrAliasMap
+                    .get(filePath)
+                    ?.delete(matchingUsage.referenceSuffix);
                 if (alias.length > 0) {
                     matchingUsage.alias = alias;
-                    this.importsBySuffixOrAlias.get(filePath)?.set(alias, matchingUsage);
+                    this.fileToImportsBySuffixOrAliasMap.get(filePath)?.set(alias, matchingUsage);
                 }
 
                 continue;
@@ -197,8 +202,8 @@ export abstract class AbstractCollector {
 
                 const namespaceSuffix = nextUseItem.text;
                 const importReferences: ImportReference = {
-                    usedNamespace,
-                    namespaceSuffix,
+                    referenceName: usedNamespace,
+                    referenceSuffix: namespaceSuffix,
                     sourceOfUsing: filePath,
                     alias: "",
                     source: filePath,
@@ -206,9 +211,9 @@ export abstract class AbstractCollector {
                 };
 
                 importsOfFile.push(importReferences);
-                this.importsBySuffixOrAlias
+                this.fileToImportsBySuffixOrAliasMap
                     .get(filePath)
-                    ?.set(importReferences.namespaceSuffix, importReferences);
+                    ?.set(importReferences.referenceSuffix, importReferences);
 
                 hasUseGroupItem =
                     importTextCaptures[groupItemIndex + 2]?.name === "namespace_use_item_name";
@@ -222,7 +227,7 @@ export abstract class AbstractCollector {
 
     private getUsages(
         parsedFile: ParsedFile,
-        namespaceCollector: NamespaceCollector,
+        FQTNCollector: FqtnCollector,
         importReferences: ImportReference[],
     ): {
         candidates: TypeUsageCandidate[];
@@ -253,26 +258,24 @@ export abstract class AbstractCollector {
 
         // Add implemented and extended classes as usages
         // to consider the coupling of those
-        for (const [fullyQualifiedName, namespaceReference] of namespaceCollector.getNamespaces(
-            parsedFile,
-        )) {
-            if (namespaceReference.implementedClasses.length > 0) {
-                for (const implementedClass of namespaceReference.implementedClasses) {
+        for (const [FQTN, FQTNInfo] of FQTNCollector.getFQTNsFromFile(parsedFile)) {
+            if (FQTNInfo.implementedClasses.length > 0) {
+                for (const implementedClass of FQTNInfo.implementedClasses) {
                     usagesTextCaptures.push({
                         name: "qualified_name",
                         text: implementedClass,
                         usageType: "implements",
-                        source: fullyQualifiedName,
+                        source: FQTN,
                     });
                 }
             }
 
-            if (namespaceReference.extendedClass !== undefined) {
+            if (FQTNInfo.extendedClass !== undefined) {
                 usagesTextCaptures.push({
                     name: "qualified_name",
-                    text: namespaceReference.extendedClass,
+                    text: FQTNInfo.extendedClass,
                     usageType: "extends",
-                    source: fullyQualifiedName,
+                    source: FQTN,
                 });
             }
         }
@@ -295,16 +298,12 @@ export abstract class AbstractCollector {
 
             const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
             const cleanNameParts = qualifiedNameParts.map((namePart) => {
-                if (namePart.endsWith("[]")) {
+                if (namePart.endsWith("[]") || namePart.endsWith("()")) {
                     return namePart.slice(0, Math.max(0, namePart.length - 2));
                 }
 
                 if (namePart.endsWith("?")) {
                     return namePart.slice(0, Math.max(0, namePart.length - 1));
-                }
-
-                if (namePart.endsWith("()")) {
-                    return namePart.slice(0, Math.max(0, namePart.length - 2));
                 }
 
                 return namePart;
@@ -317,24 +316,24 @@ export abstract class AbstractCollector {
                 continue;
             }
 
-            const resolvedImport = this.importsBySuffixOrAlias
+            const resolvedImport = this.fileToImportsBySuffixOrAliasMap
                 .get(filePath)
                 ?.get(qualifiedNamePrefix);
 
-            const namespaces = namespaceCollector.getNamespaces(parsedFile).values();
-            let fromNamespace = namespaces.next().value as FullyQTN | undefined;
-            if (!fromNamespace) {
+            const FQTNInfos = FQTNCollector.getFQTNsFromFile(parsedFile).values();
+            let fromFQTN = FQTNInfos.next().value as FQTNInfo | undefined;
+            if (!fromFQTN) {
                 // No namespace found in current file
                 break;
             }
 
             // Resolve the right entity/class/namespace in a file with multiple ones
             if (source !== undefined) {
-                for (const [temporaryKey, temporaryValue] of namespaceCollector
-                    .getNamespaces(parsedFile)
-                    .entries()) {
+                for (const [temporaryKey, temporaryValue] of FQTNCollector.getFQTNsFromFile(
+                    parsedFile,
+                ).entries()) {
                     if (temporaryKey === source) {
-                        fromNamespace = temporaryValue;
+                        fromFQTN = temporaryValue;
                     }
                 }
             }
@@ -368,9 +367,9 @@ export abstract class AbstractCollector {
                 // For languages that allow the usage of classes in the same namespace without the need of an import:
                 // add candidate in same namespace for unresolvable usage
 
-                let usedNamespace = fromNamespace.namespace;
-                if (!cleanQualifiedName.startsWith(fromNamespace.namespaceDelimiter)) {
-                    usedNamespace += fromNamespace.namespaceDelimiter;
+                let usedNamespace = fromFQTN.namespace;
+                if (!cleanQualifiedName.startsWith(fromFQTN.namespaceDelimiter)) {
+                    usedNamespace += fromFQTN.namespaceDelimiter;
                 }
 
                 usedNamespace += cleanQualifiedName;
@@ -379,8 +378,8 @@ export abstract class AbstractCollector {
                 // Look in parent namespaces for the used class name even if no import is present
 
                 const parentNamespaceCandidates: string[] = [];
-                if (fromNamespace.namespace.includes(this.getNamespaceDelimiter())) {
-                    const sourceNamespaceParts = fromNamespace.namespace.split(
+                if (fromFQTN.namespace.includes(this.getNamespaceDelimiter())) {
+                    const sourceNamespaceParts = fromFQTN.namespace.split(
                         this.getNamespaceDelimiter(),
                     );
                     while (sourceNamespaceParts.length > 1) {
@@ -403,16 +402,16 @@ export abstract class AbstractCollector {
                             const clonedNameParts = [...originalCleanNameParts];
                             while (clonedNameParts.length > 0) {
                                 moreCandidates.push(
-                                    importReference.usedNamespace +
-                                        fromNamespace.namespaceDelimiter +
+                                    importReference.referenceName +
+                                        fromFQTN.namespaceDelimiter +
                                         clonedNameParts.join(this.getNamespaceDelimiter()),
                                 );
                                 clonedNameParts.pop();
                             }
                         } else {
                             moreCandidates.push(
-                                importReference.usedNamespace +
-                                    fromNamespace.namespaceDelimiter +
+                                importReference.referenceName +
+                                    fromFQTN.namespaceDelimiter +
                                     cleanQualifiedName,
                             );
                         }
@@ -432,9 +431,7 @@ export abstract class AbstractCollector {
                     const usageCandidate: TypeUsageCandidate = {
                         usedNamespace: candidateUsedNamespace,
                         fromNamespace:
-                            fromNamespace.namespace +
-                            fromNamespace.namespaceDelimiter +
-                            fromNamespace.className,
+                            fromFQTN.namespace + fromFQTN.namespaceDelimiter + fromFQTN.className,
                         sourceOfUsing: filePath,
                         usageType: usageType ?? "usage",
                     };
@@ -466,14 +463,12 @@ export abstract class AbstractCollector {
 
                 const usageCandidate: TypeUsageCandidate = {
                     usedNamespace:
-                        resolvedImport.usedNamespace +
+                        resolvedImport.referenceName +
                         (cleanNameParts.length > 0
                             ? this.getNamespaceDelimiter() + modifiedQualifiedName
                             : ""),
                     fromNamespace:
-                        fromNamespace.namespace +
-                        fromNamespace.namespaceDelimiter +
-                        fromNamespace.className,
+                        fromFQTN.namespace + fromFQTN.namespaceDelimiter + fromFQTN.className,
                     sourceOfUsing: filePath,
                     usageType: usageType ?? "usage",
                 };
@@ -486,19 +481,19 @@ export abstract class AbstractCollector {
                     // In This case, alias can be a Qualified Name
                     // Add Same Namespace Candidate
                     // Add Parent Namespace Candidate
-                    const fromNamespaceParts = fromNamespace.namespace.split(
+                    const fromNamespaceParts = fromFQTN.namespace.split(
                         this.getNamespaceDelimiter(),
                     );
                     while (fromNamespaceParts.length > 0) {
                         const usageCandidate: TypeUsageCandidate = {
                             usedNamespace:
                                 fromNamespaceParts.join(this.getNamespaceDelimiter()) +
-                                fromNamespace.namespaceDelimiter +
-                                resolvedImport.usedNamespace,
+                                fromFQTN.namespaceDelimiter +
+                                resolvedImport.referenceName,
                             fromNamespace:
-                                fromNamespace.namespace +
-                                fromNamespace.namespaceDelimiter +
-                                fromNamespace.className,
+                                fromFQTN.namespace +
+                                fromFQTN.namespaceDelimiter +
+                                fromFQTN.className,
                             sourceOfUsing: filePath,
                             usageType: usageType ?? "usage",
                         };

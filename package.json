@@ -1,5 +1,4 @@
-{
-    "author": "MaibornWolff GmbH",
+{   "author": "MaibornWolff GmbH",
     "bugs": {
         "url": "https://github.com/MaibornWolff/metric-gardener/issues",
         "email": ""
@@ -11,11 +10,7 @@
     "name": "metric-gardener",
     "version": "1.0.0",
     "description": "A tool to calculate metrics for imperative and object-oriented languages",
-    "files": [
-        "dist/src/commands",
-        "dist/src/helper",
-        "dist/src/parser"
-    ],
+    "files": ["dist/src/commands", "dist/src/helper", "dist/src/parser"],
     "main": "dist/src/app.js",
     "bin": {
         "metric-gardener": "dist/src/app.js"

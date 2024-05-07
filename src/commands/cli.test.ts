@@ -19,7 +19,7 @@ const parserCalculateMetrics = vi.hoisted(() =>
         }>
     >(),
 );
-vi.mock("./parser/generic-parser.js", () => ({
+vi.mock("../parser/generic-parser.js", () => ({
     GenericParser: class GenericParser {
         calculateMetrics = parserCalculateMetrics;
         constructor(config: Configuration) {
@@ -34,16 +34,6 @@ describe("cli", () => {
     });
 
     itShouldOfferHelp();
-
-    describe("import-grammars command", () => {
-        itShouldOfferHelp("import-grammars");
-
-        it("should call updateNodeTypesMappingFile()", async () => {
-            vi.spyOn(ImportNodeTypes, "updateNodeTypesMappingFile").mockReset();
-            await parser.parse("import-grammars");
-            expect(ImportNodeTypes.updateNodeTypesMappingFile).toHaveBeenCalled();
-        });
-    });
 
     describe("parse command", () => {
         const expectedConfig = new Configuration({

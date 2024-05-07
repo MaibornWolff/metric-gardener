@@ -31,7 +31,6 @@ jobs:
           npm run build
           npm run test
           npm pack
-      # npm pack to generate the tarball
 
       - name: Add Changelog Entries to Release
         uses: rasmus-saks/release-a-changelog-action@v1.2.0
@@ -39,7 +38,7 @@ jobs:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
           path: 'CHANGELOG.md'
           title-template: 'metric-gardener release {version}'
-          tag-template: '{version}'
+          tag-template: 'mg-{version}'
 
       - name: Publish npm package
         uses: JS-DevTools/npm-publish@v2.2.2
@@ -50,5 +49,12 @@ jobs:
       - name: Set env
         run: |
           fullVersion="${GITHUB_REF#refs/*/}"
-          echo "RELEASE_VERSION=${fullVersion:4}" >> $GITHUB_ENV
-# open questions: docker image, release on github
+          echo "RELEASE_VERSION=${fullVersion:3}" >> $GITHUB_ENV
+
+      - name: Upload Release Files to tagged release
+        uses: alexellis/upload-assets@0.4.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+            asset_paths: '["metric-gardener-${{ env.RELEASE_VERSION }}.tgz"]'
+

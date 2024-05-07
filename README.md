@@ -32,6 +32,7 @@ This is quite slow and can take up to one or two hours but can provide good resu
 #### Install project and parse your sources:
 
 - `npm install`
+- `npm run build`
 - `npm run start -- parse /path/to/sources -o /output/file/path.json` specify the path to a folder
   or a file to be parsed and specify output file path.
 

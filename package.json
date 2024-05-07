@@ -26,7 +26,7 @@
         "xo": "xo",
         "xo:fix": "xo --fix",
         "prepare": "husky",
-        "import-grammars": "node dist/src/import-grammar.js"
+        "import-grammars": "node dist/src/import-grammars/import-grammar.js"
 
     },
     "dependencies": {

@@ -54,7 +54,7 @@ jobs:
       - name: Upload Release Files to tagged release
         uses: alexellis/upload-assets@0.4.0
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
             asset_paths: '["metric-gardener-${{ env.RELEASE_VERSION }}.tgz"]'
 

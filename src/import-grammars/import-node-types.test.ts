@@ -188,7 +188,7 @@ describe("ImportNodeTypes", () => {
                 return JSON.stringify(nodeTypes);
             });
             vi.spyOn(fs, "writeFile").mockResolvedValueOnce();
-            vi.doMock("../../parser/config/node-types-config.json", () => ({
+            vi.doMock("../parser/config/node-types-config.json", () => ({
                 default: [
                     {
                         type_name: "class_declaration",

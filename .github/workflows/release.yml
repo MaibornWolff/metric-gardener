@@ -30,6 +30,7 @@ jobs:
           npm run build
           npm run test
           npm pack
+          echo "${{ secrets.NPM_TOKEN }}"
 
       - name: Add Changelog Entries to Release
         uses: rasmus-saks/release-a-changelog-action@v1.2.0

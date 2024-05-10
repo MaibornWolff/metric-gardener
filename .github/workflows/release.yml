@@ -25,7 +25,6 @@ jobs:
       - name: Build metric-gardener
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-        working-directory: ./metric-gardener
         run: |
           npm ci
           npm run build

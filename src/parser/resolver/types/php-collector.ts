@@ -1,15 +1,15 @@
-import { AbstractCollector, NamespaceResolvingStrategy } from "./abstract-collector.js";
+import { AbstractCollector, TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
-    protected getNamespaceResolvingStrategy(): NamespaceResolvingStrategy {
-        return NamespaceResolvingStrategy.Query;
+    protected getTypesResolvingStrategy(): TypesResolvingStrategy {
+        return TypesResolvingStrategy.Query;
     }
 
     protected getNamespaceDelimiter(): string {
         return "\\";
     }
 
-    protected getNamespacesQuery(): string {
+    protected getTypesQuery(): string {
         return `
             (
                 (namespace_definition

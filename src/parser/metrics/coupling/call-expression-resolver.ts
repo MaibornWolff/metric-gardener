@@ -1,8 +1,8 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type Relationship } from "../metric.js";
-import { type Accessor } from "../../resolver/call-expressions/abstract-collector.js";
-import { type UnresolvedCallExpression } from "../../resolver/type-usages/abstract-collector.js";
-import { type FQTNInfo } from "../../resolver/fully-qualified-type-names/abstract-collector.js";
+import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
+import { type UnresolvedCallExpression } from "../../resolver/call-expressions/abstract-collector.js";
+import { type TypeInfo } from "../../resolver/types/abstract-collector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -72,9 +72,7 @@ export function getAdditionalRelationships(
                     // but it is not that crucial as shown in the master thesis related to MetricGardener
                     for (const namespace of accessor.FQTNInfos) {
                         const fullyQualifiedNameCandidate =
-                            namespace.namespace +
-                            namespace.namespaceDelimiter +
-                            namespace.className;
+                            namespace.namespace + namespace.namespaceDelimiter + namespace.typeName;
 
                         dlog("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
 
@@ -137,7 +135,7 @@ export function getAdditionalRelationships(
 function resolveAccessorReturnType(
     matchingDependency: Relationship,
     accessor: Accessor,
-    namespace: FQTNInfo,
+    namespace: TypeInfo,
     tree: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>,
@@ -152,8 +150,8 @@ function resolveAccessorReturnType(
         "\n\n",
     );
 
-    const accessorFileDependencies = tree.get(namespace.source) ?? [];
-    dlog("namespace.source", namespace.source);
+    const accessorFileDependencies = tree.get(namespace.sourceFile) ?? [];
+    dlog("namespace.source", namespace.sourceFile);
     dlog("accessorFileDependencies", accessorFileDependencies);
     for (const accessorFileDependency of accessorFileDependencies) {
         // TODO Imagine that returnType is MyTypeNumberOne

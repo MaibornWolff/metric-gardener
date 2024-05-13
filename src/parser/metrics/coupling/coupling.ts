@@ -1,9 +1,9 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type FQTNInfo } from "../../resolver/fully-qualified-type-names/abstract-collector.js";
+import { type TypeInfo } from "../../resolver/types/abstract-collector.js";
 import {
     type UnresolvedCallExpression,
     type TypeUsageCandidate,
-} from "../../resolver/type-usages/abstract-collector.js";
+} from "../../resolver/call-expressions/abstract-collector.js";
 import { type FqtnCollector } from "../../resolver/fqtn-collector.js";
 import { type UsagesCollector } from "../../resolver/usages-collector.js";
 import {
@@ -16,7 +16,7 @@ import {
 } from "../metric.js";
 import { formatPrintPath } from "../../../helper/helper.js";
 import { type PublicAccessorCollector } from "../../resolver/public-accessor-collector.js";
-import { type Accessor } from "../../resolver/call-expressions/abstract-collector.js";
+import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
 import { type Configuration } from "../../configuration.js";
 import { parseSync } from "../../../helper/tree-parser.js";
 import { getAdditionalRelationships } from "./call-expression-resolver.js";
@@ -29,7 +29,7 @@ export class Coupling implements CouplingMetric {
     private readonly filesWithMultipleNamespaces: ParsedFile[] = [];
     private readonly alreadyAddedRelationships = new Set<string>();
 
-    private FQTNsMap = new Map<string, FQTNInfo>();
+    private FQTNsMap = new Map<string, TypeInfo>();
     private readonly publicAccessorsMap = new Map<string, Accessor[]>();
     private readonly usagesCandidates: TypeUsageCandidate[] = [];
     private readonly unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
@@ -100,7 +100,7 @@ export class Coupling implements CouplingMetric {
     }
 
     private getRelationships(
-        namespaces: Map<string, FQTNInfo>,
+        namespaces: Map<string, TypeInfo>,
         usagesCandidates: TypeUsageCandidate[],
     ): Relationship[] {
         return usagesCandidates.flatMap((usage) => {
@@ -129,9 +129,9 @@ export class Coupling implements CouplingMetric {
                         fromNamespace: usage.fromNamespace,
                         toNamespace: usage.usedNamespace,
                         fromSource: usage.sourceOfUsing,
-                        toSource: usedNamespaceSource.source,
-                        fromClassName: fromNamespaceSource.className,
-                        toClassName: usedNamespaceSource.className,
+                        toSource: usedNamespaceSource.sourceFile,
+                        fromClassName: fromNamespaceSource.typeName,
+                        toClassName: usedNamespaceSource.typeName,
                         usageType: fixedUsageType,
                     },
                 ];

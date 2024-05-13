@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { type Relationship } from "../metric.js";
-import { type UnresolvedCallExpression } from "../../resolver/type-usages/abstract-collector.js";
-import { type Accessor } from "../../resolver/call-expressions/abstract-collector.js";
+import { type UnresolvedCallExpression } from "../../resolver/call-expressions/abstract-collector.js";
+import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
 import { getAdditionalRelationships } from "./call-expression-resolver.js";
 
 describe("CallExpressionResolver", () => {
@@ -64,11 +64,11 @@ describe("CallExpressionResolver", () => {
                 FQTNInfos: [
                     {
                         namespace: "SecondItemNamespace",
-                        source: "SecondItem",
-                        className: "SecondItem",
+                        sourceFile: "SecondItem",
+                        typeName: "SecondItem",
                         classType: "class",
                         namespaceDelimiter: ".",
-                        implementedClasses: [],
+                        implementedFrom: [],
                     },
                 ],
                 returnType: "ThirdItem",
@@ -80,11 +80,11 @@ describe("CallExpressionResolver", () => {
                 FQTNInfos: [
                     {
                         namespace: "ThirdItemNamespace",
-                        source: "ThirdItem",
-                        className: "ThirdItem",
+                        sourceFile: "ThirdItem",
+                        typeName: "ThirdItem",
                         classType: "class",
                         namespaceDelimiter: ".",
-                        implementedClasses: [],
+                        implementedFrom: [],
                     },
                 ],
                 returnType: "FourthItem",

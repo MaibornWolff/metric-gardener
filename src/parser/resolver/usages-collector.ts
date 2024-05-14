@@ -1,6 +1,6 @@
 import { type ParsedFile } from "../metrics/metric.js";
 import { Factory as UsageCollectorFactory } from "./call-expressions/factory.js";
-import { type FqtnCollector } from "./fqtn-collector.js";
+import { type TypeCollector } from "./type-collector.js";
 import {
     type TypeUsageCandidate,
     type UnresolvedCallExpression,
@@ -11,7 +11,7 @@ export class UsagesCollector {
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        FQTNCollector: FqtnCollector,
+        FQTNCollector: TypeCollector,
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];

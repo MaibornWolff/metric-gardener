@@ -4,7 +4,7 @@ import {
     type UnresolvedCallExpression,
     type TypeUsageCandidate,
 } from "../../resolver/call-expressions/abstract-collector.js";
-import { type FqtnCollector } from "../../resolver/fqtn-collector.js";
+import { type TypeCollector } from "../../resolver/type-collector.js";
 import { type UsagesCollector } from "../../resolver/usages-collector.js";
 import {
     type CouplingMetric,
@@ -24,31 +24,30 @@ import { getAdditionalRelationships } from "./call-expression-resolver.js";
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
-
 export class Coupling implements CouplingMetric {
     private readonly filesWithMultipleNamespaces: ParsedFile[] = [];
     private readonly alreadyAddedRelationships = new Set<string>();
 
-    private FQTNsMap = new Map<string, TypeInfo>();
+    private typesMap = new Map<FQTN, TypeInfo>();
     private readonly publicAccessorsMap = new Map<string, Accessor[]>();
     private readonly usagesCandidates: TypeUsageCandidate[] = [];
     private readonly unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
 
     constructor(
         private readonly config: Configuration,
-        private readonly FQTNCollector: FqtnCollector,
+        private readonly typeCollector: TypeCollector,
         private readonly usageCollector: UsagesCollector,
         private readonly publicAccessorCollector: PublicAccessorCollector,
     ) {}
 
     processFile(parsedFile: ParsedFile): void {
         // Preprocessing
-        const FQTNsFromFile = this.FQTNCollector.getFQTNsFromFile(parsedFile);
-        this.FQTNsMap = new Map([...this.FQTNsMap, ...FQTNsFromFile]);
+        const typesFromFile = this.typeCollector.getTypesFromFile(parsedFile);
+        this.typesMap = new Map([...this.typesMap, ...typesFromFile]);
 
         const accessorsFromFile = this.publicAccessorCollector.getPublicAccessorsFromFile(
             parsedFile,
-            FQTNsFromFile,
+            typesFromFile,
         );
         for (const [accessorName, accessors] of accessorsFromFile) {
             const existingAccessors = this.publicAccessorsMap.get(accessorName);
@@ -61,7 +60,7 @@ export class Coupling implements CouplingMetric {
 
         // Processing
         const { candidates, unresolvedCallExpressions: callExpressionsOfFile } =
-            this.usageCollector.getUsageCandidates(parsedFile, this.FQTNCollector);
+            this.usageCollector.getUsageCandidates(parsedFile, this.typeCollector);
         this.usagesCandidates.push(...candidates);
         this.unresolvedCallExpressions.set(parsedFile.filePath, callExpressionsOfFile);
     }
@@ -70,12 +69,12 @@ export class Coupling implements CouplingMetric {
         // Postprocessing
 
         dlog("\n\n");
-        dlog("namespaces", this.FQTNsMap, "\n\n");
+        dlog("namespaces", this.typesMap, "\n\n");
         dlog("usages", this.usagesCandidates);
         dlog("\n\n", "unresolved call expressions", this.unresolvedCallExpressions, "\n\n");
         dlog("\n\n", "publicAccessors", this.publicAccessorsMap, "\n\n");
 
-        const relationships = this.getRelationships(this.FQTNsMap, this.usagesCandidates);
+        const relationships = this.getRelationships(this.typesMap, this.usagesCandidates);
         dlog("\n\n", relationships);
 
         let couplingMetrics = this.calculateCouplingMetrics(relationships);
@@ -100,12 +99,12 @@ export class Coupling implements CouplingMetric {
     }
 
     private getRelationships(
-        namespaces: Map<string, TypeInfo>,
+        types: Map<FQTN, TypeInfo>,
         usagesCandidates: TypeUsageCandidate[],
     ): Relationship[] {
         return usagesCandidates.flatMap((usage) => {
-            const usedNamespaceSource = namespaces.get(usage.usedNamespace);
-            const fromNamespaceSource = namespaces.get(usage.fromNamespace);
+            const usedNamespaceSource = types.get(usage.usedNamespace);
+            const fromNamespaceSource = types.get(usage.fromNamespace);
             const uniqueId = usage.usedNamespace + usage.fromNamespace;
 
             if (
@@ -207,8 +206,8 @@ export class Coupling implements CouplingMetric {
             return;
         }
 
-        const namespaces = this.FQTNCollector.getFQTNsFromFile(parsedFile);
-        if (namespaces.size > 1) {
+        const types = this.typeCollector.getTypesFromFile(parsedFile);
+        if (types.size > 1) {
             this.filesWithMultipleNamespaces.push(parsedFile);
         }
 

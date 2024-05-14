@@ -9,10 +9,9 @@ import { SimpleQueryStatement } from "../../queries/query-statements.js";
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
-
 export type Accessor = {
     name: string;
-    FQTNInfos: TypeInfo[];
+    fromTypes: TypeInfo[];
     filePath: string;
     returnType: string;
 };
@@ -20,7 +19,7 @@ export type Accessor = {
 export abstract class AbstractCollector {
     getPublicAccessorsFromFile(
         parsedFile: ParsedFile,
-        FQTNsFromFile: Map<string, TypeInfo>,
+        typesFromFile: Map<FQTN, TypeInfo>,
     ): Map<string, Accessor[]> {
         const publicAccessorsMap = new Map<string, Accessor[]>();
 
@@ -50,7 +49,7 @@ export abstract class AbstractCollector {
             for (let index = 0; index < accessorsTextCaptures.length; index += 1) {
                 const publicAccessor: Accessor = {
                     name: "",
-                    FQTNInfos: [...FQTNsFromFile.values()],
+                    fromTypes: [...typesFromFile.values()],
                     filePath,
                     returnType: accessorsTextCaptures[index].text,
                 };

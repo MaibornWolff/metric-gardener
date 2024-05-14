@@ -61,7 +61,7 @@ export function getAdditionalRelationships(
                 let added;
 
                 for (const accessor of clonedAccessors) {
-                    if (accessor.FQTNInfos.length === 0) {
+                    if (accessor.fromTypes.length === 0) {
                         continue;
                     }
 
@@ -70,9 +70,9 @@ export function getAdditionalRelationships(
                     // add both of them to not lose the correct dependency.
                     // this might lead to higher coupling values,
                     // but it is not that crucial as shown in the master thesis related to MetricGardener
-                    for (const namespace of accessor.FQTNInfos) {
+                    for (const type of accessor.fromTypes) {
                         const fullyQualifiedNameCandidate =
-                            namespace.namespace + namespace.namespaceDelimiter + namespace.typeName;
+                            type.namespace + type.namespaceDelimiter + type.typeName;
 
                         dlog("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
 
@@ -98,7 +98,7 @@ export function getAdditionalRelationships(
                             added = resolveAccessorReturnType(
                                 baseDependency,
                                 accessor,
-                                namespace,
+                                type,
                                 tree,
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships,
@@ -107,7 +107,7 @@ export function getAdditionalRelationships(
                             added = resolveAccessorReturnType(
                                 callExpressionDependency,
                                 accessor,
-                                namespace,
+                                type,
                                 tree,
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships,
@@ -135,7 +135,7 @@ export function getAdditionalRelationships(
 function resolveAccessorReturnType(
     matchingDependency: Relationship,
     accessor: Accessor,
-    namespace: TypeInfo,
+    fromType: TypeInfo,
     tree: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>,
@@ -150,8 +150,8 @@ function resolveAccessorReturnType(
         "\n\n",
     );
 
-    const accessorFileDependencies = tree.get(namespace.sourceFile) ?? [];
-    dlog("namespace.source", namespace.sourceFile);
+    const accessorFileDependencies = tree.get(fromType.sourceFile) ?? [];
+    dlog("namespace.source", fromType.sourceFile);
     dlog("accessorFileDependencies", accessorFileDependencies);
     for (const accessorFileDependency of accessorFileDependencies) {
         // TODO Imagine that returnType is MyTypeNumberOne

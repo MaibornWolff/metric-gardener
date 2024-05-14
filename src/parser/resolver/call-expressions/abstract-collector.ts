@@ -2,7 +2,7 @@ import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { formatCaptures } from "../../../helper/helper.js";
-import { type FqtnCollector } from "../fqtn-collector.js";
+import { type TypeCollector } from "../type-collector.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { SimpleQueryStatement } from "../../queries/query-statements.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
@@ -41,7 +41,7 @@ export abstract class AbstractCollector {
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        FQTNCollector: FqtnCollector,
+        FQTNCollector: TypeCollector,
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
@@ -227,7 +227,7 @@ export abstract class AbstractCollector {
 
     private getUsages(
         parsedFile: ParsedFile,
-        FQTNCollector: FqtnCollector,
+        FQTNCollector: TypeCollector,
         importReferences: ImportReference[],
     ): {
         candidates: TypeUsageCandidate[];
@@ -258,7 +258,7 @@ export abstract class AbstractCollector {
 
         // Add implemented and extended classes as usages
         // to consider the coupling of those
-        for (const [FQTN, FQTNInfo] of FQTNCollector.getFQTNsFromFile(parsedFile)) {
+        for (const [FQTN, FQTNInfo] of FQTNCollector.getTypesFromFile(parsedFile)) {
             if (FQTNInfo.implementedFrom.length > 0) {
                 for (const implementedClass of FQTNInfo.implementedFrom) {
                     usagesTextCaptures.push({
@@ -320,7 +320,7 @@ export abstract class AbstractCollector {
                 .get(filePath)
                 ?.get(qualifiedNamePrefix);
 
-            const FQTNInfos = FQTNCollector.getFQTNsFromFile(parsedFile).values();
+            const FQTNInfos = FQTNCollector.getTypesFromFile(parsedFile).values();
             let fromFQTN = FQTNInfos.next().value as TypeInfo | undefined;
             if (!fromFQTN) {
                 // No namespace found in current file
@@ -329,7 +329,7 @@ export abstract class AbstractCollector {
 
             // Resolve the right entity/class/namespace in a file with multiple ones
             if (source !== undefined) {
-                for (const [temporaryKey, temporaryValue] of FQTNCollector.getFQTNsFromFile(
+                for (const [temporaryKey, temporaryValue] of FQTNCollector.getTypesFromFile(
                     parsedFile,
                 ).entries()) {
                     if (temporaryKey === source) {

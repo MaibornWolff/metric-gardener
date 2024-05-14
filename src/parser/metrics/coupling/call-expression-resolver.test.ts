@@ -61,7 +61,7 @@ describe("CallExpressionResolver", () => {
             const accessor1: Accessor = {
                 filePath: "SecondItem",
                 name: "AccessorInSecondItem",
-                FQTNInfos: [
+                fromTypes: [
                     {
                         namespace: "SecondItemNamespace",
                         sourceFile: "SecondItem",
@@ -77,7 +77,7 @@ describe("CallExpressionResolver", () => {
             const accessor2: Accessor = {
                 filePath: "ThirdItem",
                 name: "AccessorInThirdItem",
-                FQTNInfos: [
+                fromTypes: [
                     {
                         namespace: "ThirdItemNamespace",
                         sourceFile: "ThirdItem",

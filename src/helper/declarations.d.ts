@@ -108,3 +108,5 @@ declare module "tree-sitter-yaml" {
     const YAML: LanguageNode;
     export default YAML;
 }
+declare type FQTN = string; // Fully qualified type name
+declare type FilePath = string;

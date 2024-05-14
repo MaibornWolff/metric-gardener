@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 export type Accessor = {
     name: string;
-    fromTypes: TypeInfo[];
+    fromTypes: TypeInfo;
     filePath: string;
     returnType: string;
 };
@@ -23,11 +23,12 @@ export abstract class AbstractCollector {
     ): Map<string, Accessor[]> {
         const publicAccessorsMap = new Map<string, Accessor[]>();
 
-        if (this.getAccessorsQuery()) {
+        const accessorsQuery = this.getAccessorsQuery();
+        if (accessorsQuery) {
             const { filePath, language, tree } = parsedFile;
 
             const queryBuilder = new QueryBuilder(language);
-            queryBuilder.setStatements([new SimpleQueryStatement(this.getAccessorsQuery())]);
+            queryBuilder.setStatements([new SimpleQueryStatement(accessorsQuery)]);
 
             const publicAccessorsQuery = queryBuilder.build();
             let publicAccessorsCaptures: QueryCapture[] = [];

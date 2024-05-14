@@ -9,10 +9,9 @@ import { SimpleQueryStatement } from "../../../queries/query-statements.js";
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
-type FileName = string;
-type TypeName = string;
+
 export class TypesQueryStrategy {
-    protected fileToTypesMap = new Map<FileName, Map<TypeName, TypeInfo>>();
+    protected fileToTypesMap = new Map<FilePath, Map<FQTN, TypeInfo>>();
 
     getTypesFromFile(
         parsedFile: ParsedFile,
@@ -26,7 +25,7 @@ export class TypesQueryStrategy {
             return typesMap;
         }
 
-        typesMap = new Map<TypeName, TypeInfo>();
+        typesMap = new Map<FQTN, TypeInfo>();
 
         const queryBuilder = new QueryBuilder(language);
         queryBuilder.setStatements([new SimpleQueryStatement(typesQuery)]);

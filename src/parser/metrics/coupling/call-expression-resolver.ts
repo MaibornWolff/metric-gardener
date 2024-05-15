@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export function getAdditionalRelationships(
     tree: Map<string, Relationship[]>,
     unresolvedCallExpressions: Map<string, UnresolvedCallExpression[]>,
-    publicAccessors: Map<string, Accessor[]>,
+    accessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>,
 ): Relationship[] {
     const additionalRelationships: Relationship[] = [];
@@ -43,7 +43,7 @@ export function getAdditionalRelationships(
                     namePart = namePart.slice(0, Math.max(0, namePart.length - 1));
                 }
 
-                const publicAccessorsOfPrefix = publicAccessors.get(namePart);
+                const publicAccessorsOfPrefix = accessors.get(namePart);
                 if (publicAccessorsOfPrefix === undefined) {
                     continue;
                 }

@@ -8,7 +8,9 @@ namespace StaticUsedNamespace
         {
             WriteLine("Hello from ClassA's MyMethod!");
         }
+
     }
+
     public class ClassB
     {
         public static void MyMethod()
@@ -17,6 +19,23 @@ namespace StaticUsedNamespace
         }
     }
 }
+
+namespace StaticUsedNamespace2
+{
+
+    public class ClassA
+    {
+        public static void MyMethod2()
+        {
+            test();
+        }
+
+        void test()
+        {
+        }
+    }
+}
+
 namespace NormalUsedNamespace
 {
     public class ClassB

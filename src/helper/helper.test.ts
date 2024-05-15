@@ -169,11 +169,11 @@ describe("Helper.ts", () => {
                 (async function* (): AsyncGenerator<Partial<Dirent>> {
                     for (const entry of entries) {
                         if (typeof entry === "string") {
-                            yield { name: entry, isDirectory: () => false };
+                            yield { name: entry, isDirectory: (): boolean => false };
                         } else {
                             for (const [name, children] of Object.entries(entry)) {
                                 mockOpenDirectory(children);
-                                yield { name, isDirectory: () => true };
+                                yield { name, isDirectory: (): boolean => true };
                             }
                         }
                     }

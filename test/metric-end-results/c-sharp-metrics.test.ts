@@ -24,13 +24,26 @@ describe("C# metric tests", () => {
 
     describe("parsing C# dependencies", () => {
         it("should calculate the right dependencies and coupling metrics", async () => {
-            mockConsole();
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "coupling-examples/",
             );
             expect(couplingResult).toMatchSnapshot();
-        }, 10_000);
+        }, 1000);
+
+        it("should calculate the right dependencies and coupling metrics for static using", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "static-using/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+
+        it("should calculate the right dependencies and coupling metrics for extended class", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "extends/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
     });
 
     describe("parses C# complexity metric", () => {

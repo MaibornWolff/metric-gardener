@@ -1,9 +1,6 @@
 using static System.Console;
-void PrintText()
-{
-    WriteLine("Hello");
-}
-namespace TestNamespace1
+
+namespace StaticUsedNamespace
 {
     public class ClassA
     {
@@ -20,9 +17,17 @@ namespace TestNamespace1
         }
     }
 }
-namespace FalsyNamespace
+namespace NormalUsedNamespace
 {
     public class ClassB
+    {
+        public static void MyMethod()
+        {
+            WriteLine("Hello from ClassA's MyMethod!");
+        }
+    }
+
+    public class ClassC
     {
         public static void MyMethod()
         {

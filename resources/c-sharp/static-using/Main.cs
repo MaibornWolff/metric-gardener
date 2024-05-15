@@ -1,5 +1,5 @@
-using static TestNamespace1.ClassA;
-using FalsyNamespace;
+using static StaticUsedNamespace.ClassA;
+using NormalUsedNamespace;
 
 namespace Programm
 {
@@ -9,6 +9,7 @@ namespace Programm
         {
             MyMethod();
             ClassB.MyMethod();
+            ClassC.MyMethod();
         }
     }
 }

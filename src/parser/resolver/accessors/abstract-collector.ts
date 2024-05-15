@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 export type Accessor = {
     name: string;
-    fromTypes: TypeInfo;
+    fromTypes: TypeInfo[];
     filePath: string;
     returnType: string;
 };

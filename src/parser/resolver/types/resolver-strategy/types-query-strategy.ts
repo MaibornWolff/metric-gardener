@@ -11,7 +11,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 export class TypesQueryStrategy {
-    protected fileToTypesMap = new Map<FilePath, Map<FQTN, TypeInfo>>();
+    protected fileToTypesMapCache = new Map<FilePath, Map<FQTN, TypeInfo>>();
 
     getTypesFromFile(
         parsedFile: ParsedFile,
@@ -20,7 +20,7 @@ export class TypesQueryStrategy {
     ): Map<string, TypeInfo> {
         const { filePath, language, tree } = parsedFile;
 
-        let typesMap = this.fileToTypesMap.get(filePath);
+        let typesMap = this.fileToTypesMapCache.get(filePath);
         if (typesMap !== undefined) {
             return typesMap;
         }
@@ -116,7 +116,7 @@ export class TypesQueryStrategy {
             }
         }
 
-        this.fileToTypesMap.set(filePath, typesMap);
+        this.fileToTypesMapCache.set(filePath, typesMap);
 
         return typesMap;
     }

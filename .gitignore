@@ -3,5 +3,3 @@ node_modules
 dist
 coverage
 node-types-changes.csv
-*.js
-!resources/javascript/*

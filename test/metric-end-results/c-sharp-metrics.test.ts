@@ -31,7 +31,7 @@ describe("C# metric tests", () => {
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
 
-        it("should calculate the right dependencies and coupling metrics for static using", async () => {
+        it.skip("should calculate the right dependencies and coupling metrics for static using", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "static-using/",

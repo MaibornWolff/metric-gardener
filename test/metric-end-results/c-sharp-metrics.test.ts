@@ -22,8 +22,8 @@ describe("C# metric tests", () => {
         results = await parseAllFileMetrics(csharpTestResourcesPath);
     });
 
-    describe("parsing C# dependencies", () => {
-        it("should calculate the right dependencies and coupling metrics", async () => {
+    describe("parsing C# dependencies should calculate the right dependencies and coupling metrics", () => {
+        it("for nested folder structure", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "coupling-examples/",
@@ -31,17 +31,37 @@ describe("C# metric tests", () => {
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
 
-        it.skip("should calculate the right dependencies and coupling metrics for static using", async () => {
+        it.skip("for static using", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "static-using/",
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-
-        it("should calculate the right dependencies and coupling metrics for extended class", async () => {
+        it("when the code contains type conversion", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "type-conversion/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it.skip("when the code contains chaining method calls", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "chaining-method/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for extended class", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "extends/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it.skip("when the code contains extension method", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "extension-method/",
+            );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
     });

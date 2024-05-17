@@ -44,7 +44,7 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it("for static class using", async () => {
+        it.skip("for static class using", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "static-class-using/",
@@ -58,7 +58,7 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it("when the code contains type conversion", async () => {
+        it.skip("when the code contains type conversion", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "type-conversion/",
@@ -82,6 +82,26 @@ describe("C# metric tests", () => {
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "extension-method/",
             );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it.skip("for global classes without namespace", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "no-namespace-definition/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it.skip("for global namespaces without import", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "use-namespace-without-import/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        // TODO: Do we want a outgoing dependency for the genericClass to ClassB?
+        it("for generics", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "generics/");
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
     });

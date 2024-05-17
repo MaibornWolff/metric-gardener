@@ -1,12 +1,12 @@
-using static StaticUsedNamespace.ClassA;
+using static StaticUsedNamespace.ClassB;
 
 namespace Programm
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            MyMethod();
+            ClassB.MyMethodB();
         }
     }
 }

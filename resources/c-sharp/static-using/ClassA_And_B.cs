@@ -1,21 +1,20 @@
 using static System.Console;
 
-namespace StaticUsedNamespace
+namespace StaticUsedNamespace1
 {
     public class ClassA
     {
         public static void MyMethod()
         {
-            WriteLine("Hello from ClassA's MyMethod!");
+            WriteLine("Hello from StaticUsedNamespace1.ClassA's MyMethod!");
         }
-
     }
 
     public class ClassB
     {
         public static void MyMethod()
         {
-            WriteLine("Hello from ClassA's MyMethod!");
+            WriteLine("Hello from StaticUsedNamespace1.ClassB's MyMethod!");
         }
     }
 }
@@ -30,8 +29,9 @@ namespace StaticUsedNamespace2
             test();
         }
 
-        void test()
+        static void test()
         {
+            WriteLine("Hello from test-Method!");
         }
     }
 }
@@ -42,7 +42,7 @@ namespace NormalUsedNamespace
     {
         public static void MyMethod()
         {
-            WriteLine("Hello from ClassA's MyMethod!");
+            WriteLine("Hello from NormalUsedNamespace.ClassB's MyMethod!");
         }
     }
 
@@ -50,7 +50,7 @@ namespace NormalUsedNamespace
     {
         public static void MyMethod()
         {
-            WriteLine("Hello from ClassA's MyMethod!");
+            WriteLine("Hello from NormalUsedNamespace.ClassC's MyMethod!");
         }
     }
 }

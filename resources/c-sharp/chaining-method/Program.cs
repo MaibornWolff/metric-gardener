@@ -7,7 +7,7 @@ namespace ChainingNamespace{
 
         static void Main()
         {
-            var classC = new ClassA().returnClassB().returnClassC();
+            ClassC classC = new ClassA().returnClassB().returnClassC();
         }
     }
 }

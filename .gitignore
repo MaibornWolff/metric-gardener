@@ -3,3 +3,7 @@ node_modules
 dist
 coverage
 node-types-changes.csv
+
+# Ignore all files in the resources/c-sharp directory except for the .cs files, for local testing
+resources/c-sharp/**/*.*
+!resources/c-sharp/**/*.cs

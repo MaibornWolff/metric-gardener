@@ -195,6 +195,141 @@ exports[`C# metric tests > parsing C# dependencies > should calculate the right 
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for extended class 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+    "ClassB.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Main.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "Programm.Program",
+      "fromSource": "Main.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "NamespaceA.ClassA",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "ClassA",
+      "fromNamespace": "NamespaceA.ClassA",
+      "fromSource": "ClassA.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "NamespaceB.ClassB",
+      "toSource": "ClassB.cs",
+      "usageType": "extends",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for global classes without namespace 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "NoNamespaceDefinition",
+      "fromNamespace": "NoNamespaceDefinition",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "ClassA",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for global namespaces without import 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "NoImport",
+      "fromNamespace": "NoImport",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "NamespaceA.ClassA",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for multiple method calls 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "MultipleMethodCalls",
+      "fromNamespace": "mainNamespace.MultipleMethodCalls",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "NamespaceA.ClassA",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for nested folder structure 1`] = `
 {
   "metrics": Map {
@@ -405,6 +540,13 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for static class using 1`] = `
+{
+  "metrics": Map {},
+  "relationships": [],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > when the code contains extension method 1`] = `
 {
   "metrics": Map {
@@ -446,6 +588,60 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
           "toSource": "Enum.cs",
           "usageType": "usage",
         },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > when the code contains type conversion 1`] = `
+{
+  "metrics": Map {
+    "ClassAFile.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+    "ClassBFile.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 2,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 2,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "ProgramNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "classANamespace.ClassA",
+      "toSource": "ClassAFile.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "ProgramNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "classBNamespace.ClassB",
+      "toSource": "ClassBFile.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "ClassA",
+      "fromNamespace": "classANamespace.ClassA",
+      "fromSource": "ClassAFile.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "classBNamespace.ClassB",
+      "toSource": "ClassBFile.cs",
+      "usageType": "extends",
+    },
   ],
 }
 `;

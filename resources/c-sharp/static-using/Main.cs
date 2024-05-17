@@ -1,5 +1,5 @@
-using static StaticUsedNamespace.ClassA;
 using static StaticUsedNamespace1.ClassA;
+using static StaticUsedNamespace2.ClassA;
 using NormalUsedNamespace;
 
 namespace Programm

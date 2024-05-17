@@ -240,6 +240,96 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for generics 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "ClassB.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "ClassC.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "ClassD.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+    "GenericClass.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 4,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 4,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "ClassANamespace.ClassA",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "ClassD",
+      "fromNamespace": "ClassDNamespace.ClassD",
+      "fromSource": "ClassD.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "ClassBNamespace.ClassB",
+      "toSource": "ClassB.cs",
+      "usageType": "extends",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassC",
+      "toNamespace": "ClassCNamespace.ClassC",
+      "toSource": "ClassC.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassD",
+      "toNamespace": "ClassDNamespace.ClassD",
+      "toSource": "ClassD.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "GenericClass",
+      "toNamespace": "GenericClassNamespace.GenericClass",
+      "toSource": "GenericClass.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for global classes without namespace 1`] = `
 {
   "metrics": Map {

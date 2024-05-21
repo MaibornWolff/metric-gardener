@@ -195,6 +195,90 @@ exports[`C# metric tests > parsing C# dependencies > should calculate the right 
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for delegate 1`] = `
+{
+  "metrics": Map {
+    "DelegateFile.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "ProgramNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "MyDelegate",
+      "toNamespace": "DelegateNamespace.MyDelegate",
+      "toSource": "DelegateFile.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for enums 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 2,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "ClassB.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Main.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 2,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "Programm.Program",
+      "fromSource": "Main.cs",
+      "toClassName": "EnumClass",
+      "toNamespace": "NamespaceEnumA.EnumClass",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "Programm.Program",
+      "fromSource": "Main.cs",
+      "toClassName": "DaysOfWeekB",
+      "toNamespace": "NamespaceEnumB.DaysOfWeekB",
+      "toSource": "ClassB.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "Programm.Program",
+      "fromSource": "Main.cs",
+      "toClassName": "DaysOfWeek",
+      "toNamespace": "NamespaceEnumA.EnumClass.DaysOfWeek",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for extended class 1`] = `
 {
   "metrics": Map {
@@ -250,8 +334,8 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "outgoing_dependencies": 0,
     },
     "ClassB.cs" => {
-      "coupling_between_objects": 1,
-      "incoming_dependencies": 1,
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 2,
       "instability": 0,
       "outgoing_dependencies": 0,
     },
@@ -268,10 +352,10 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "outgoing_dependencies": 1,
     },
     "GenericClass.cs" => {
-      "coupling_between_objects": 1,
+      "coupling_between_objects": 2,
       "incoming_dependencies": 1,
-      "instability": 0,
-      "outgoing_dependencies": 0,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
     },
     "Program.cs" => {
       "coupling_between_objects": 4,
@@ -324,6 +408,15 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "toClassName": "GenericClass",
       "toNamespace": "GenericClassNamespace.GenericClass",
       "toSource": "GenericClass.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "GenericClass",
+      "fromNamespace": "GenericClassNamespace.GenericClass",
+      "fromSource": "GenericClass.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "ClassBNamespace.ClassB",
+      "toSource": "ClassB.cs",
       "usageType": "usage",
     },
   ],
@@ -390,6 +483,36 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for interface 1`] = `
+{
+  "metrics": Map {
+    "Programm.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+    "TheInterfaceFile.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Programm.cs",
+      "toClassName": "TheInterface",
+      "toNamespace": "theInterfaceNamespace.TheInterface",
+      "toSource": "TheInterfaceFile.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for multiple method calls 1`] = `
 {
   "metrics": Map {
@@ -414,6 +537,54 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "toClassName": "ClassA",
       "toNamespace": "NamespaceA.ClassA",
       "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for multiple types in a file 1`] = `
+{
+  "metrics": Map {
+    "ImplementedClassFile.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Programm.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Programm.cs",
+      "toClassName": "ImplementClass",
+      "toNamespace": "implementClassNamespace.ImplementClass",
+      "toSource": "ImplementedClassFile.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "DoThing",
+      "fromNamespace": "mainNamespace.DoThing",
+      "fromSource": "Programm.cs",
+      "toClassName": "ImplementClass",
+      "toNamespace": "implementClassNamespace.ImplementClass",
+      "toSource": "ImplementedClassFile.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "ClassAsReturnType",
+      "fromNamespace": "mainNamespace.ClassAsReturnType",
+      "fromSource": "Programm.cs",
+      "toClassName": "ImplementClass",
+      "toNamespace": "implementClassNamespace.ImplementClass",
+      "toSource": "ImplementedClassFile.cs",
       "usageType": "usage",
     },
   ],
@@ -684,6 +855,123 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "toClassName": "Console",
       "toNamespace": "System.Console",
       "toSource": "System.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for struct 1`] = `
+{
+  "metrics": Map {
+    "Program.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+    "StructFile.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "CsharpStruct.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "Employee",
+      "toNamespace": "StructNamespace.Employee",
+      "toSource": "StructFile.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for usage of class in the same file 1`] = `
+{
+  "metrics": Map {
+    "Program.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "DoThing",
+      "toNamespace": "mainNamespace.DoThing",
+      "toSource": "Program.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for usage of delegates in class in the same file 1`] = `
+{
+  "metrics": Map {
+    "Program.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Mainy",
+      "fromNamespace": "DelegateNamespace.Mainy",
+      "fromSource": "Program.cs",
+      "toClassName": "MyDelegate",
+      "toNamespace": "DelegateNamespace.MyDelegate",
+      "toSource": "Program.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for usage of interface in class method in the same file 1`] = `
+{
+  "metrics": Map {
+    "ClassToInterface.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "OtherProgram",
+      "fromNamespace": "ClassToInterfaceNamespace.OtherProgram",
+      "fromSource": "ClassToInterface.cs",
+      "toClassName": "MyInterface",
+      "toNamespace": "ClassToInterfaceNamespace.MyInterface",
+      "toSource": "ClassToInterface.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "FirstInterface",
+      "fromNamespace": "mainNamespace.FirstInterface",
+      "fromSource": "Program.cs",
+      "toClassName": "SecondInterface",
+      "toNamespace": "mainNamespace.SecondInterface",
+      "toSource": "Program.cs",
       "usageType": "usage",
     },
   ],

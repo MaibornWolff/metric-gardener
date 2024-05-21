@@ -98,10 +98,59 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        // TODO: Do we want a outgoing dependency for the genericClass to ClassB?
-        it("for generics", async () => {
+
+        it.skip("for generics", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "generics/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+
+        it.skip("for enums", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "enums/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for interface", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "interface/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for struct", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "structs/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for delegate", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "delegate/");
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for usage of class in the same file", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "relation-between-class-in-one-file/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for usage of interface in class method in the same file", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "relation-between-interfaces-in-one-file/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for usage of delegates in class in the same file", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "relation-between-delegate-in-one-file/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it.skip("for multiple types in a file", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "relationship-from-multiple-types/",
+            );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
     });

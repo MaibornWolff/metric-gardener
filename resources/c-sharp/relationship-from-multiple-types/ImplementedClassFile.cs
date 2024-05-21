@@ -1,0 +1,6 @@
+namespace implementClassNamespace
+{
+    class ImplementClass
+    {
+    }
+}

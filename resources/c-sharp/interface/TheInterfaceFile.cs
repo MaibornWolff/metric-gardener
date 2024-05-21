@@ -1,0 +1,6 @@
+namespace theInterfaceNamespace
+{
+    interface TheInterface
+    {
+    }
+}

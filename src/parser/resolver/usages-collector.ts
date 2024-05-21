@@ -5,13 +5,14 @@ import {
     type TypeUsageCandidate,
     type UnresolvedCallExpression,
 } from "./call-expressions/abstract-collector.js";
+import type { TypeInfo } from "./types/abstract-collector.js";
 
 export class UsagesCollector {
     private readonly usageCollectorFactory = new UsageCollectorFactory();
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        FQTNCollector: TypeCollector,
+        typesFromFile: Map<FQTN, TypeInfo>,
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
@@ -19,6 +20,6 @@ export class UsagesCollector {
         const collector = this.usageCollectorFactory.getCollector(parsedFile);
         return collector === undefined
             ? { candidates: [], unresolvedCallExpressions: [] }
-            : collector.getUsageCandidates(parsedFile, FQTNCollector);
+            : collector.getUsageCandidates(parsedFile, typesFromFile);
     }
 }

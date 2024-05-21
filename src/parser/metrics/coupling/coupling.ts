@@ -59,10 +59,12 @@ export class Coupling implements CouplingMetric {
         }
 
         // Processing
-        const { candidates, unresolvedCallExpressions: callExpressionsOfFile } =
-            this.usageCollector.getUsageCandidates(parsedFile, this.typeCollector);
+        const { candidates, unresolvedCallExpressions } = this.usageCollector.getUsageCandidates(
+            parsedFile,
+            this.typeCollector.getTypesFromFile(parsedFile),
+        );
         this.usagesCandidates.push(...candidates);
-        this.unresolvedCallExpressions.set(parsedFile.filePath, callExpressionsOfFile);
+        this.unresolvedCallExpressions.set(parsedFile.filePath, unresolvedCallExpressions);
     }
 
     calculate(): CouplingResult {

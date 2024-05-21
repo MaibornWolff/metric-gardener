@@ -81,7 +81,7 @@ export abstract class AbstractCollector {
     protected abstract noImportForClassesInSameOrParentNamespaces(): boolean;
     protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
-    protected abstract getImportsQuery(): string;
+    protected abstract getImportsQuery(): QueryStatement;
     protected abstract getGroupedImportsQuery(): string;
     protected abstract getUsagesQuery(): string;
 
@@ -89,7 +89,7 @@ export abstract class AbstractCollector {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([new SimpleQueryStatement(this.getImportsQuery())]);
+        queryBuilder.setStatements([this.getImportsQuery()]);
 
         const importsQuery = queryBuilder.build();
         let importsCaptures: QueryCapture[] = [];

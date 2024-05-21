@@ -12,9 +12,13 @@ module.exports = {
         {
             rules: {
                 "issue-id-required"({ subject }) {
-                    const issueIdRegex = /\s#(\d+)$/;
+                    const issueIdRegex = /\s#(\d+)(\n\n.*)?$/;
                     if (!issueIdRegex.test(subject)) {
-                        return [false, "Issue ID is required at the end of the commit message"];
+                        return [
+                            false,
+                            "Issue ID is required at the end of the first line. " +
+                                "If you want to add a footer, separate it with a blank line.",
+                        ];
                     }
 
                     return [true];

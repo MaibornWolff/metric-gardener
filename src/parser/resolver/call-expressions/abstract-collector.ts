@@ -41,7 +41,7 @@ export abstract class AbstractCollector {
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        FQTNCollector: TypeCollector,
+        typesFromFile: Map<string, TypeInfo>,
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
@@ -59,7 +59,7 @@ export abstract class AbstractCollector {
 
         const { candidates, unresolvedCallExpressions } = this.getUsages(
             parsedFile,
-            FQTNCollector,
+            typesFromFile,
             importReferences,
         );
         dlog("UsagesAndCandidates", filePath, candidates);
@@ -227,7 +227,7 @@ export abstract class AbstractCollector {
 
     private getUsages(
         parsedFile: ParsedFile,
-        FQTNCollector: TypeCollector,
+        typesFromFile: Map<string, TypeInfo>,
         importReferences: ImportReference[],
     ): {
         candidates: TypeUsageCandidate[];
@@ -258,7 +258,7 @@ export abstract class AbstractCollector {
 
         // Add implemented and extended classes as usages
         // to consider the coupling of those
-        for (const [FQTN, FQTNInfo] of FQTNCollector.getTypesFromFile(parsedFile)) {
+        for (const [FQTN, FQTNInfo] of typesFromFile) {
             if (FQTNInfo.implementedFrom.length > 0) {
                 for (const implementedClass of FQTNInfo.implementedFrom) {
                     usagesTextCaptures.push({
@@ -320,7 +320,7 @@ export abstract class AbstractCollector {
                 .get(filePath)
                 ?.get(qualifiedNamePrefix);
 
-            const FQTNInfos = FQTNCollector.getTypesFromFile(parsedFile).values();
+            const FQTNInfos = typesFromFile.values();
             let fromFQTN = FQTNInfos.next().value as TypeInfo | undefined;
             if (!fromFQTN) {
                 // No namespace found in current file
@@ -329,9 +329,7 @@ export abstract class AbstractCollector {
 
             // Resolve the right entity/class/namespace in a file with multiple ones
             if (source !== undefined) {
-                for (const [temporaryKey, temporaryValue] of FQTNCollector.getTypesFromFile(
-                    parsedFile,
-                ).entries()) {
+                for (const [temporaryKey, temporaryValue] of typesFromFile.entries()) {
                     if (temporaryKey === source) {
                         fromFQTN = temporaryValue;
                     }

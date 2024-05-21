@@ -1,7 +1,7 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { Query } from "tree-sitter";
 import { type Language, languageToGrammar } from "../../helper/language.js";
-import { type QueryStatementInterface } from "./query-statements.js";
+import { type QueryStatement } from "./query-statements.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -11,13 +11,13 @@ const treeSitterQueryCache = new Map<Language, Map<string, Query>>();
 
 export class QueryBuilder {
     readonly #language: Language;
-    #statements: QueryStatementInterface[] = [];
+    #statements: QueryStatement[] = [];
 
     constructor(language: Language) {
         this.#language = language;
     }
 
-    setStatements(statements: QueryStatementInterface[]): void {
+    setStatements(statements: QueryStatement[]): void {
         this.#statements = statements;
     }
 

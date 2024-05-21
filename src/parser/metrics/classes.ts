@@ -3,18 +3,19 @@ import { type QueryMatch } from "tree-sitter";
 import { NodeTypeCategory, type NodeTypeConfig } from "../../helper/model.js";
 import { QueryBuilder } from "../queries/query-builder.js";
 import {
-    type QueryStatementInterface,
+    type QueryStatement,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/query-statements.js";
 import { getQueryStatementsByCategories } from "../../helper/helper.js";
-import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
+import { type Metric, type MetricName, type MetricResult, type ParsedFile } from "./metric.js";
+import { Language } from "../../helper/language.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
 export class Classes implements Metric {
-    private readonly statementsSuperSet: QueryStatementInterface[] = [];
+    private readonly statementsSuperSet: QueryStatement[] = [];
 
     private readonly nodeTypeCategories = new Set([
         NodeTypeCategory.ClassDefinition,
@@ -41,15 +42,15 @@ export class Classes implements Metric {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(struct_specifier body: (field_declaration_list)) @struct_definition",
-                ["cpp", "c"],
+                new Set([Language.CPlusPlus, Language.C]),
             ),
             new SimpleLanguageSpecificQueryStatement(
                 "(union_specifier body: (field_declaration_list)) @union_definition",
-                ["cpp", "c"],
+                new Set([Language.CPlusPlus, Language.C]),
             ),
             new SimpleLanguageSpecificQueryStatement(
                 "(class_specifier body: (field_declaration_list)) @class_definition",
-                ["cpp"],
+                new Set([Language.CPlusPlus]),
             ),
             new SimpleLanguageSpecificQueryStatement(
                 `(enum_specifier [
@@ -66,11 +67,11 @@ export class Classes implements Metric {
     !body
 ) @scoped_enum_without_body_or_type
 `,
-                ["cpp"],
+                new Set([Language.CPlusPlus]),
             ),
             new SimpleLanguageSpecificQueryStatement(
                 "(enum_specifier body: (enumerator_list)) @enum_definition",
-                ["c"],
+                new Set([Language.C]),
             ),
         );
     }
@@ -79,24 +80,20 @@ export class Classes implements Metric {
         this.statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(type_alias_declaration value: (object_type))",
-                ["ts", "tsx"],
+                new Set([Language.TypeScript, Language.TSX]),
             ),
         );
     }
 
     addQueriesForJava(): void {
         this.statementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", [
-                "java",
-            ]),
+            new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", new Set([Language.Java])),
         );
     }
 
     addQueriesForPHP(): void {
         this.statementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement(`(object_creation_expression "new" "class")`, [
-                "php",
-            ]),
+            new SimpleLanguageSpecificQueryStatement(`(object_creation_expression "new" "class")`, new Set([Language.PHP])),
         );
     }
 

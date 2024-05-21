@@ -4,7 +4,7 @@ import { QueryBuilder } from "../queries/query-builder.js";
 import { NodeTypeCategory, type NodeTypeConfig } from "../../helper/model.js";
 import { getQueryStatementsByCategories } from "../../helper/helper.js";
 import { Language } from "../../helper/language.js";
-import { type QueryStatementInterface, SimpleQueryStatement } from "../queries/query-statements.js";
+import { type QueryStatement, SimpleQueryStatement } from "../queries/query-statements.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -12,7 +12,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 export class Functions implements Metric {
-    private readonly statementsSuperSet: QueryStatementInterface[] = [];
+    private readonly statementsSuperSet: QueryStatement[] = [];
 
     constructor(allNodeTypes: NodeTypeConfig[]) {
         this.statementsSuperSet = getQueryStatementsByCategories(

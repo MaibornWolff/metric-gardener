@@ -1,7 +1,7 @@
 import { type Language, languageToAbbreviation } from "../../helper/language.js";
 import { type NodeTypeConfig } from "../../helper/model.js";
 
-export type QueryStatementInterface = {
+export type QueryStatement = {
     activatedFor(language: Language): boolean;
 
     /**
@@ -14,7 +14,7 @@ export type QueryStatementInterface = {
     toString(): string;
 };
 
-export class SimpleQueryStatement implements QueryStatementInterface {
+export class SimpleQueryStatement implements QueryStatement {
     readonly #query: string;
 
     constructor(query: string) {
@@ -34,22 +34,20 @@ export class SimpleQueryStatement implements QueryStatementInterface {
     }
 }
 
-export abstract class LanguageSpecificQueryStatement implements QueryStatementInterface {
+export abstract class LanguageSpecificQueryStatement implements QueryStatement {
     protected readonly deactivatedForLanguages: Set<Language>;
     protected readonly applicableForLanguages: Set<Language>;
 
-    protected constructor(
-        applicable_for_languages: string[],
-        deactivated_for_languages?: string[],
+    constructor(
+        applicable_for_languages: Set<Language>,
+        deactivated_for_languages?: Set<Language>,
     ) {
-        this.applicableForLanguages =
-            languageToAbbreviation.getKeysForAllValues(applicable_for_languages);
+        this.applicableForLanguages = new Set(applicable_for_languages);
 
         if (deactivated_for_languages === undefined) {
             this.deactivatedForLanguages = new Set();
         } else {
-            this.deactivatedForLanguages =
-                languageToAbbreviation.getKeysForAllValues(deactivated_for_languages);
+            this.deactivatedForLanguages = new Set(deactivated_for_languages);
         }
     }
 
@@ -69,8 +67,10 @@ export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
 
     constructor(
         nodeType: NodeTypeConfig,
-        applicable_for_languages: string[] = nodeType.languages,
-        deactivated_for_languages: string[] | undefined = nodeType.deactivated_for_languages,
+        applicable_for_languages: Set<Language> = languageToAbbreviation.getKeysForAllValues(
+            nodeType.languages,
+        ),
+        deactivated_for_languages: Set<Language> | undefined = languageToAbbreviation.getKeysForAllValues(nodeType.deactivated_for_languages),
     ) {
         const { type_name, grammar_type_name } = nodeType;
         super(applicable_for_languages, deactivated_for_languages);
@@ -88,8 +88,10 @@ export class OperatorQueryStatement extends NodeTypeQueryStatement {
 
     constructor(
         nodeType: NodeTypeConfig,
-        applicable_for_languages: string[] = nodeType.languages,
-        deactivated_for_languages: string[] | undefined = nodeType.deactivated_for_languages,
+        applicable_for_languages: Set<Language> = languageToAbbreviation.getKeysForAllValues(
+            nodeType.languages),
+        deactivated_for_languages: Set<Language> | undefined = languageToAbbreviation.getKeysForAllValues(
+            nodeType.deactivated_for_languages),
     ) {
         if (nodeType.operator === undefined) {
             throw new Error(
@@ -115,8 +117,8 @@ export class SimpleLanguageSpecificQueryStatement extends LanguageSpecificQueryS
 
     constructor(
         query: string,
-        applicable_for_languages: string[],
-        deactivated_for_languages?: string[],
+        applicable_for_languages: Set<Language>,
+        deactivated_for_languages?: Set<Language>,
     ) {
         super(applicable_for_languages, deactivated_for_languages);
         this.#query = query;

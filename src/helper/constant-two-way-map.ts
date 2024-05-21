@@ -32,7 +32,11 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
      * Returns a set of all found keys.
      * @param iterable Iterable of values to reverse-map.
      */
-    getKeysForAllValues(iterable: Iterable<ValueType>): Set<KeyType> {
+    getKeysForAllValues(iterable: Iterable<ValueType> | undefined): Set<KeyType> {
+        if(iterable === undefined) {
+            return new Set();
+        }
+
         const set = new Set<KeyType>();
         for (const value of iterable) {
             const retrievedKey = this.getKeyFor(value);

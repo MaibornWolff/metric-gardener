@@ -4,10 +4,11 @@ import { QueryBuilder } from "../queries/query-builder.js";
 import { NodeTypeCategory, type NodeTypeConfig } from "../../helper/model.js";
 import { getQueryStatementsByCategories } from "../../helper/helper.js";
 import {
-    type QueryStatementInterface,
+    type QueryStatement,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/query-statements.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
+import {Language} from "../../helper/language.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -18,7 +19,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
  * Includes also empty comment lines, etc.
  */
 export class CommentLines implements Metric {
-    readonly #statementsSuperSet: QueryStatementInterface[] = [];
+    readonly #statementsSuperSet: QueryStatement[] = [];
 
     /**
      * Constructor of the class {@link CommentLines}.
@@ -85,7 +86,7 @@ export class CommentLines implements Metric {
         this.#statementsSuperSet.push(
             new SimpleLanguageSpecificQueryStatement(
                 "(expression_statement (string)) @python_multiline_comment",
-                ["py"],
+                new Set([Language.Python]),
             ),
         );
     }

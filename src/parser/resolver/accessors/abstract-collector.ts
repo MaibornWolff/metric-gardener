@@ -1,7 +1,7 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
 import { type ParsedFile } from "../../metrics/metric.js";
-import { formatCaptures } from "../../../helper/helper.js";
+import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
 import { SimpleQueryStatement } from "../../queries/query-statements.js";
@@ -36,12 +36,7 @@ export abstract class AbstractCollector {
                 publicAccessorsCaptures = publicAccessorsQuery.captures(tree.rootNode);
             }
 
-            const accessorsTextCaptures: Array<{
-                name: string;
-                text: string;
-                usageType?: string;
-                source?: string;
-            }> = formatCaptures(tree, publicAccessorsCaptures);
+            const accessorsTextCaptures = getNameAndTextFromCaptures(publicAccessorsCaptures);
 
             dlog("public accessors captures", accessorsTextCaptures);
 

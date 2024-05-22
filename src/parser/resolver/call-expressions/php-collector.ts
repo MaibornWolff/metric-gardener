@@ -36,8 +36,8 @@ export class PHPCollector extends AbstractCollector {
         );
     }
 
-    protected getGroupedImportsQuery(): string {
-        return `
+    protected getGroupedImportsQuery(): QueryStatement {
+        const queryString = `
             (namespace_use_declaration
                 (namespace_name) @namespace_name
                 (namespace_use_group
@@ -48,6 +48,11 @@ export class PHPCollector extends AbstractCollector {
                 )
             )
         `;
+
+        return new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.PHP]),
+        );
     }
 
     /**

@@ -7,8 +7,8 @@ import {
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/query-statements.js";
 import { getQueryStatementsByCategories } from "../../helper/helper.js";
-import { type Metric, type MetricName, type MetricResult, type ParsedFile } from "./metric.js";
 import { Language } from "../../helper/language.js";
+import { type Metric, type MetricName, type MetricResult, type ParsedFile } from "./metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -87,13 +87,19 @@ export class Classes implements Metric {
 
     addQueriesForJava(): void {
         this.statementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement("(object_creation_expression (class_body))", new Set([Language.Java])),
+            new SimpleLanguageSpecificQueryStatement(
+                "(object_creation_expression (class_body))",
+                new Set([Language.Java]),
+            ),
         );
     }
 
     addQueriesForPHP(): void {
         this.statementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement(`(object_creation_expression "new" "class")`, new Set([Language.PHP])),
+            new SimpleLanguageSpecificQueryStatement(
+                `(object_creation_expression "new" "class")`,
+                new Set([Language.PHP]),
+            ),
         );
     }
 

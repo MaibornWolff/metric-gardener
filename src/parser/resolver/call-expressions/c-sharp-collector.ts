@@ -1,9 +1,9 @@
-import { AbstractCollector } from "./abstract-collector.js";
 import {
-    LanguageSpecificQueryStatement,
-    SimpleLanguageSpecificQueryStatement
+    type LanguageSpecificQueryStatement,
+    SimpleLanguageSpecificQueryStatement,
 } from "../../queries/query-statements.js";
-import {Language} from "../../../helper/language.js";
+import { Language } from "../../../helper/language.js";
+import { AbstractCollector } from "./abstract-collector.js";
 
 export class CSharpCollector extends AbstractCollector {
     protected noImportForClassesInSameOrParentNamespaces(): boolean {
@@ -31,8 +31,11 @@ export class CSharpCollector extends AbstractCollector {
                     (identifier) @namespace_use
                 ]
             )
-        `
-        return new SimpleLanguageSpecificQueryStatement(queryString, new Set<Language>([Language.CSharp]));
+        `;
+        return new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.CSharp]),
+        );
     }
 
     protected getGroupedImportsQuery(): string {

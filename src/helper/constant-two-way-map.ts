@@ -33,7 +33,7 @@ export class ConstantTwoWayMap<KeyType, ValueType> {
      * @param iterable Iterable of values to reverse-map.
      */
     getKeysForAllValues(iterable: Iterable<ValueType> | undefined): Set<KeyType> {
-        if(iterable === undefined) {
+        if (iterable === undefined) {
             return new Set();
         }
 

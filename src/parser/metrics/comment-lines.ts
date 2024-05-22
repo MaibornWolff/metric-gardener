@@ -7,8 +7,8 @@ import {
     type QueryStatement,
     SimpleLanguageSpecificQueryStatement,
 } from "../queries/query-statements.js";
+import { Language } from "../../helper/language.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
-import {Language} from "../../helper/language.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;

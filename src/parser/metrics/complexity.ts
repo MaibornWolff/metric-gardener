@@ -9,7 +9,7 @@ import {
     SimpleLanguageSpecificQueryStatement,
     SimpleQueryStatement,
 } from "../queries/query-statements.js";
-import {Language, languageToAbbreviation} from "../../helper/language.js";
+import { Language, languageToAbbreviation } from "../../helper/language.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -41,9 +41,14 @@ export class Complexity implements Metric {
             if (nodeType.category === NodeTypeCategory.DefaultLabel) {
                 for (const languageAbbr of nodeType.languages) {
                     const language = languageToAbbreviation.getKeyFor(languageAbbr);
-                    if(language === undefined) {
-                        throw new Error("Could not find language for language abbreviation" + languageAbbr + ".");
+                    if (language === undefined) {
+                        throw new Error(
+                            "Could not find language for language abbreviation" +
+                                languageAbbr +
+                                ".",
+                        );
                     }
+
                     languagesWithDefaultLabelAbbr.add(language);
                 }
             }
@@ -84,8 +89,8 @@ export class Complexity implements Metric {
         languagesWithDefaultLabelAbbr: Set<Language>,
     ): void {
         for (const caseNodeType of caseNodeTypes) {
-            const haveDefaultNodeType: Set<Language> = new Set();
-            const haveNoDefaultNodeType: Set<Language> = new Set();
+            const haveDefaultNodeType = new Set<Language>();
+            const haveNoDefaultNodeType = new Set<Language>();
 
             for (const languageAbbr of caseNodeType.languages) {
                 const language = languageToAbbreviation.getKeyFor(languageAbbr);
@@ -94,6 +99,7 @@ export class Complexity implements Metric {
                         "Could not find language for language abbreviation" + languageAbbr + ".",
                     );
                 }
+
                 if (languagesWithDefaultLabelAbbr.has(language)) {
                     haveDefaultNodeType.add(language);
                 } else {
@@ -138,7 +144,9 @@ export class Complexity implements Metric {
                     new SimpleLanguageSpecificQueryStatement(
                         "(case_statement value: _ ) @case_statement",
                         noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(caseDefaultNodeType.deactivated_for_languages),
+                        languageToAbbreviation.getKeysForAllValues(
+                            caseDefaultNodeType.deactivated_for_languages,
+                        ),
                     ),
                 );
                 break;
@@ -153,7 +161,9 @@ export class Complexity implements Metric {
                     new SimpleLanguageSpecificQueryStatement(
                         "(when_entry (when_condition)) @when_entry",
                         noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(caseDefaultNodeType.deactivated_for_languages),
+                        languageToAbbreviation.getKeysForAllValues(
+                            caseDefaultNodeType.deactivated_for_languages,
+                        ),
                     ),
                 );
                 break;
@@ -168,7 +178,9 @@ export class Complexity implements Metric {
                     new SimpleLanguageSpecificQueryStatement(
                         "(match_arm pattern: (match_pattern (_))) @match_arm",
                         noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(caseDefaultNodeType.deactivated_for_languages),
+                        languageToAbbreviation.getKeysForAllValues(
+                            caseDefaultNodeType.deactivated_for_languages,
+                        ),
                     ),
                 );
                 break;
@@ -183,7 +195,9 @@ export class Complexity implements Metric {
                             " (_)) @" +
                             caseDefaultNodeType.type_name,
                         noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(caseDefaultNodeType.deactivated_for_languages),
+                        languageToAbbreviation.getKeysForAllValues(
+                            caseDefaultNodeType.deactivated_for_languages,
+                        ),
                     ),
                 );
             }
@@ -192,7 +206,10 @@ export class Complexity implements Metric {
 
     addQueriesForCSharp(): void {
         this.complexityStatementsSuperSet.push(
-            new SimpleLanguageSpecificQueryStatement(`(assignment_operator "??=")`, new Set([Language.CSharp])),
+            new SimpleLanguageSpecificQueryStatement(
+                `(assignment_operator "??=")`,
+                new Set([Language.CSharp]),
+            ),
             new SimpleLanguageSpecificQueryStatement(
                 `(switch_expression_arm . (_) @default (#not-eq? @default "_"))`,
                 new Set([Language.CSharp]),

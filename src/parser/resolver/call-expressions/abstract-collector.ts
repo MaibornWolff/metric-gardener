@@ -4,7 +4,7 @@ import { QueryBuilder } from "../../queries/query-builder.js";
 import { formatCaptures } from "../../../helper/helper.js";
 import { type TypeCollector } from "../type-collector.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
-import {QueryStatement, SimpleQueryStatement} from "../../queries/query-statements.js";
+import { type QueryStatement, SimpleQueryStatement } from "../../queries/query-statements.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {

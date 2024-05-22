@@ -2,7 +2,6 @@ import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture, type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
-import { type TypeCollector } from "../type-collector.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { type QueryStatement, SimpleQueryStatement } from "../../queries/query-statements.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
@@ -136,11 +135,9 @@ export abstract class AbstractCollector {
         importMatch: ImportMatch,
         filePath: string,
     ): ImportReference {
-        const { importCaptures } = importMatch;
-
         let importSpecifierCapture;
         let alias = "";
-        for (const capture of importCaptures) {
+        for (const capture of importMatch.importCaptures) {
             if (capture.name === "alias") {
                 alias = capture.text;
             } else if (capture.name === "import_specifier") {
@@ -180,76 +177,89 @@ export abstract class AbstractCollector {
             queryMatches = groupedImportsQuery.matches(tree.rootNode);
         }
 
-        const importMatches = queryMatches.map((queryMatch): ImportMatch => {
+        const groupedImportMatches = queryMatches.map((queryMatch): ImportMatch => {
             return {
                 importCaptures: getNameAndTextFromCaptures(queryMatch.captures),
             };
         });
 
-        dlog(importMatches.toString());
+        dlog(groupedImportMatches.toString());
+        return this.buildGroupedImportReferences(groupedImportMatches, filePath);
+    }
 
-        const importsOfFile: ImportReference[] = [];
+    private buildGroupedImportReferences(
+        groupedImportMatches: ImportMatch[],
+        filePath: string,
+    ): ImportReference[] {
+        return groupedImportMatches.map((groupedImportMatch) => {
+            const groupedImportReference = this.groupedImportMatchToImportReference(
+                groupedImportMatch,
+                filePath,
+            );
+            this.fileToImportsBySuffixOrAliasMap
+                .get(filePath)
+                ?.set(
+                    groupedImportReference.alias.length > 0
+                        ? groupedImportReference.alias
+                        : groupedImportReference.referenceSuffix,
+                    groupedImportReference,
+                );
+            return groupedImportReference;
+        });
+    }
 
-        for (const importMatch of importMatches) {
-            const importTextCaptures = importMatch.importCaptures;
+    private groupedImportMatchToImportReference(
+        groupedImportMatch: ImportMatch,
+        filePath: string,
+    ): ImportReference {
+        let groupedImportSpecifierCapture;
+        let groupedImportNameCapture;
+        let alias = "";
+        for (const groupedImportCapture of groupedImportMatch.importCaptures) {
+            switch (groupedImportCapture.name) {
+                case "namespace": {
+                    groupedImportSpecifierCapture = groupedImportCapture;
 
-            for (let index = 0; index < importTextCaptures.length; index++) {
-                if (importTextCaptures[index].name === "namespace_use_alias_suffix") {
-                    // Todo: rewrite using at() method
-                    const matchingUsage = importsOfFile[importsOfFile.length - 1]; // eslint-disable-line unicorn/prefer-at
-                    // Split alias from alias keyword (if any) by space and use last element by pop()
-                    // it seems to be not possible to query the alias part only
-                    const alias = importTextCaptures[index].text.split(" ").pop() ?? "";
-
-                    this.fileToImportsBySuffixOrAliasMap
-                        .get(filePath)
-                        ?.delete(matchingUsage.referenceSuffix);
-                    if (alias.length > 0) {
-                        matchingUsage.alias = alias;
-                        this.fileToImportsBySuffixOrAliasMap
-                            .get(filePath)
-                            ?.set(alias, matchingUsage);
-                    }
-
-                    continue;
+                    break;
                 }
 
-                const namespaceName = importTextCaptures[index].text;
+                case "name": {
+                    groupedImportNameCapture = groupedImportCapture;
 
-                let hasUseGroupItem =
-                    importTextCaptures[index + 1]?.name === "namespace_use_item_name";
-                let groupItemIndex = index;
+                    break;
+                }
 
-                while (hasUseGroupItem) {
-                    const nextUseItem = importTextCaptures[groupItemIndex + 1];
+                case "alias": {
+                    // Split alias from alias keyword (if any) by space and use last element by pop()
+                    // it seems to be not possible to query the alias part only
+                    alias = groupedImportCapture.text.split(" ").pop() ?? "";
 
-                    const usedNamespace =
-                        namespaceName + this.getNamespaceDelimiter() + nextUseItem.text;
+                    break;
+                }
 
-                    const namespaceSuffix = nextUseItem.text;
-                    const importReferences: ImportReference = {
-                        referenceName: usedNamespace,
-                        referenceSuffix: namespaceSuffix,
-                        sourceOfUsing: filePath,
-                        alias: "",
-                        source: filePath,
-                        usageType: "usage",
-                    };
-
-                    importsOfFile.push(importReferences);
-                    this.fileToImportsBySuffixOrAliasMap
-                        .get(filePath)
-                        ?.set(importReferences.referenceSuffix, importReferences);
-
-                    hasUseGroupItem =
-                        importTextCaptures[groupItemIndex + 2]?.name === "namespace_use_item_name";
-                    groupItemIndex++;
-                    index++;
+                default: {
+                    throw new Error(`Unknown capture name ${groupedImportCapture.name}`);
                 }
             }
         }
 
-        return importsOfFile;
+        if (!groupedImportSpecifierCapture) {
+            throw new Error('No capture with the name "namespace_name" found');
+        } else if (!groupedImportNameCapture) {
+            throw new Error('No capture with the name "namespace_use_item_name" found');
+        }
+
+        return {
+            referenceName:
+                groupedImportSpecifierCapture.text +
+                this.getNamespaceDelimiter() +
+                groupedImportNameCapture.text,
+            referenceSuffix: groupedImportNameCapture.text,
+            sourceOfUsing: filePath,
+            alias,
+            source: filePath,
+            usageType: "usage",
+        };
     }
 
     private getUsages(

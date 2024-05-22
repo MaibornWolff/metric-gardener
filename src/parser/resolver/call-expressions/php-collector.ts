@@ -39,11 +39,11 @@ export class PHPCollector extends AbstractCollector {
     protected getGroupedImportsQuery(): QueryStatement {
         const queryString = `
             (namespace_use_declaration
-                (namespace_name) @namespace_name
+                (namespace_name) @namespace
                 (namespace_use_group
                     (namespace_use_group_clause
-                        (namespace_name) @namespace_use_item_name
-                        (_)? @namespace_use_alias
+                        (namespace_name) @name
+                        (_)? @alias
                     )
                 )
             )

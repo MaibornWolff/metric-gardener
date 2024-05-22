@@ -38,8 +38,8 @@ export class CSharpCollector extends AbstractCollector {
         );
     }
 
-    protected getGroupedImportsQuery(): string {
-        return "";
+    protected getGroupedImportsQuery(): undefined {
+        return undefined;
     }
 
     /**

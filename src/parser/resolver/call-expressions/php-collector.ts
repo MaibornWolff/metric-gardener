@@ -25,8 +25,8 @@ export class PHPCollector extends AbstractCollector {
     protected getImportsQuery(): QueryStatement {
         const queryString = `
             (namespace_use_clause
-                (qualified_name) @namespace_use
-                (namespace_aliasing_clause (name) @namespace_use_alias_suffix)?
+                (qualified_name) @import_specifier
+                (namespace_aliasing_clause (name) @alias)?
             )+
         `;
 

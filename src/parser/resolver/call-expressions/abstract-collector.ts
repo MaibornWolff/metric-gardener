@@ -120,9 +120,7 @@ export abstract class AbstractCollector {
         importMatches: ImportMatch[],
         filePath: string,
     ): ImportReference[] {
-        const importsInFile: ImportReference[] = [];
-
-        for (const importMatch of importMatches) {
+        return importMatches.map((importMatch) => {
             const importReference = this.importMatchToImportReference(importMatch, filePath);
             this.fileToImportsBySuffixOrAliasMap
                 .get(filePath)
@@ -132,10 +130,8 @@ export abstract class AbstractCollector {
                         : importReference.referenceSuffix,
                     importReference,
                 );
-            importsInFile.push(importReference);
-        }
-
-        return importsInFile;
+            return importReference;
+        });
     }
 
     private importMatchToImportReference(
@@ -152,6 +148,10 @@ export abstract class AbstractCollector {
             } else if (capture.name === "import_specifier") {
                 importSpecifierCapture = capture;
             }
+        }
+
+        if (!importSpecifierCapture) {
+            throw new Error('No capture with the name "import_specifier" found');
         }
 
         return {

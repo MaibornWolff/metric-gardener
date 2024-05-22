@@ -57,7 +57,6 @@ export abstract class AbstractCollector {
         this.fileToImportsBySuffixOrAliasMap.set(filePath, new Map());
 
         const importReferences = this.getImports(parsedFile);
-        importReferences.push(...this.getGroupedImports(parsedFile));
 
         dlog("Alias Map:", filePath, this.fileToImportsBySuffixOrAliasMap);
         dlog("Import References", filePath, importReferences);
@@ -87,7 +86,6 @@ export abstract class AbstractCollector {
     protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
     protected abstract getImportsQuery(): QueryStatement;
-    protected abstract getGroupedImportsQuery(): QueryStatement | undefined;
     protected abstract getUsagesQuery(): string;
 
     private getImports(parsedFile: ParsedFile): ImportReference[] {
@@ -135,126 +133,55 @@ export abstract class AbstractCollector {
         importMatch: ImportMatch,
         filePath: string,
     ): ImportReference {
-        let importSpecifierCapture;
+        let referenceName = "";
+        let referenceSuffix = "";
         let alias = "";
         for (const capture of importMatch.importCaptures) {
-            if (capture.name === "alias") {
-                alias = capture.text;
-            } else if (capture.name === "import_specifier") {
-                importSpecifierCapture = capture;
-            }
-        }
-
-        if (!importSpecifierCapture) {
-            throw new Error('No capture with the name "import_specifier" found');
-        }
-
-        return {
-            referenceName: importSpecifierCapture.text,
-            referenceSuffix:
-                importSpecifierCapture.text.split(this.getNamespaceDelimiter()).pop() ?? "",
-            sourceOfUsing: filePath,
-            alias,
-            source: filePath,
-            usageType: "usage",
-        };
-    }
-
-    private getGroupedImports(parsedFile: ParsedFile): ImportReference[] {
-        const groupedImportsQueryStatement = this.getGroupedImportsQuery();
-        if (!groupedImportsQueryStatement) {
-            return [];
-        }
-
-        const { filePath, language, tree } = parsedFile;
-
-        const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([groupedImportsQueryStatement]);
-
-        const groupedImportsQuery = queryBuilder.build();
-        let queryMatches: QueryMatch[] = [];
-        if (groupedImportsQuery !== undefined) {
-            queryMatches = groupedImportsQuery.matches(tree.rootNode);
-        }
-
-        const groupedImportMatches = queryMatches.map((queryMatch): ImportMatch => {
-            return {
-                importCaptures: getNameAndTextFromCaptures(queryMatch.captures),
-            };
-        });
-
-        dlog(groupedImportMatches.toString());
-        return this.buildGroupedImportReferences(groupedImportMatches, filePath);
-    }
-
-    private buildGroupedImportReferences(
-        groupedImportMatches: ImportMatch[],
-        filePath: string,
-    ): ImportReference[] {
-        return groupedImportMatches.map((groupedImportMatch) => {
-            const groupedImportReference = this.groupedImportMatchToImportReference(
-                groupedImportMatch,
-                filePath,
-            );
-            this.fileToImportsBySuffixOrAliasMap
-                .get(filePath)
-                ?.set(
-                    groupedImportReference.alias.length > 0
-                        ? groupedImportReference.alias
-                        : groupedImportReference.referenceSuffix,
-                    groupedImportReference,
-                );
-            return groupedImportReference;
-        });
-    }
-
-    private groupedImportMatchToImportReference(
-        groupedImportMatch: ImportMatch,
-        filePath: string,
-    ): ImportReference {
-        let groupedImportSpecifierCapture;
-        let groupedImportNameCapture;
-        let alias = "";
-        for (const groupedImportCapture of groupedImportMatch.importCaptures) {
-            switch (groupedImportCapture.name) {
-                case "namespace": {
-                    groupedImportSpecifierCapture = groupedImportCapture;
-
-                    break;
-                }
-
-                case "name": {
-                    groupedImportNameCapture = groupedImportCapture;
-
-                    break;
-                }
-
+            switch (capture.name) {
                 case "alias": {
+                    alias = capture.text;
+
+                    break;
+                }
+
+                case "import_specifier": {
+                    referenceName = capture.text;
+                    referenceSuffix = capture.text.split(this.getNamespaceDelimiter()).pop() ?? "";
+
+                    break;
+                }
+
+                case "grouped_import_alias": {
                     // Split alias from alias keyword (if any) by space and use last element by pop()
+                    // capture.text result in e.g. "as Bubbler"
                     // it seems to be not possible to query the alias part only
-                    alias = groupedImportCapture.text.split(" ").pop() ?? "";
+                    alias = capture.text.split(" ").pop() ?? "";
+
+                    break;
+                }
+
+                case "grouped_import_namespace": {
+                    referenceName = capture.text + referenceName;
+
+                    break;
+                }
+
+                case "grouped_import_name": {
+                    referenceName = referenceName + this.getNamespaceDelimiter() + capture.text;
+                    referenceSuffix = capture.text;
 
                     break;
                 }
 
                 default: {
-                    throw new Error(`Unknown capture name ${groupedImportCapture.name}`);
+                    throw new Error(`Unknown capture name ${capture.name}`);
                 }
             }
         }
 
-        if (!groupedImportSpecifierCapture) {
-            throw new Error('No capture with the name "namespace_name" found');
-        } else if (!groupedImportNameCapture) {
-            throw new Error('No capture with the name "namespace_use_item_name" found');
-        }
-
         return {
-            referenceName:
-                groupedImportSpecifierCapture.text +
-                this.getNamespaceDelimiter() +
-                groupedImportNameCapture.text,
-            referenceSuffix: groupedImportNameCapture.text,
+            referenceName,
+            referenceSuffix,
             sourceOfUsing: filePath,
             alias,
             source: filePath,

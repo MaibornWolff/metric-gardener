@@ -38,10 +38,6 @@ export class CSharpCollector extends AbstractCollector {
         );
     }
 
-    protected getGroupedImportsQuery(): undefined {
-        return undefined;
-    }
-
     /**
      * TODO Support Constant Access, Further Types like records (see declaration_list in grammar).
      * TODO Check if we can just query all types at once!

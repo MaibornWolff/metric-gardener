@@ -27,23 +27,13 @@ export class PHPCollector extends AbstractCollector {
             (namespace_use_clause
                 (qualified_name) @import_specifier
                 (namespace_aliasing_clause (name) @alias)?
-            )+
-        `;
-
-        return new SimpleLanguageSpecificQueryStatement(
-            queryString,
-            new Set<Language>([Language.PHP]),
-        );
-    }
-
-    protected getGroupedImportsQuery(): QueryStatement {
-        const queryString = `
+            )
             (namespace_use_declaration
-                (namespace_name) @namespace
+                (namespace_name) @grouped_import_namespace
                 (namespace_use_group
                     (namespace_use_group_clause
-                        (namespace_name) @name
-                        (_)? @alias
+                        (namespace_name) @grouped_import_name
+                        (_)? @grouped_import_alias
                     )
                 )
             )

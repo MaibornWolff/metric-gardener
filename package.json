@@ -88,6 +88,6 @@
         "endOfLine": "auto"
     },
     "lint-staged": {
-        "*": ["xo --fix", "git add"]
+        "*": "xo --fix"
     }
 }

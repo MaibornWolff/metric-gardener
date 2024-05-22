@@ -8,6 +8,7 @@ namespace mainNamespace
         {
             NumberOne.SameClass first = new NumberOne.SameClass();
             NumberTwo.SameClass sec = new NumberTwo.SameClass();
+
         }
     }
 }

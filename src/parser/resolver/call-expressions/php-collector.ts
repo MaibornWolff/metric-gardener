@@ -1,9 +1,9 @@
-import { AbstractCollector } from "./abstract-collector.js";
 import {
-    QueryStatement,
-    SimpleLanguageSpecificQueryStatement
+    type QueryStatement,
+    SimpleLanguageSpecificQueryStatement,
 } from "../../queries/query-statements.js";
-import {Language} from "../../../helper/language.js";
+import { Language } from "../../../helper/language.js";
+import { AbstractCollector } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
     protected noImportForClassesInSameOrParentNamespaces(): boolean {
@@ -30,7 +30,10 @@ export class PHPCollector extends AbstractCollector {
             )+
         `;
 
-        return new SimpleLanguageSpecificQueryStatement(queryString, new Set<Language>([Language.PHP]));
+        return new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.PHP]),
+        );
     }
 
     protected getGroupedImportsQuery(): string {

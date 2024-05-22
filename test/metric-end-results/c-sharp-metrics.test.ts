@@ -153,6 +153,13 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
+        it("for two namespace containing the same class name", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "two-namespace-same-class-name/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
     });
 
     describe("parses C# complexity metric", () => {

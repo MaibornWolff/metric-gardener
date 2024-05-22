@@ -44,11 +44,10 @@ export abstract class LanguageSpecificQueryStatement implements QueryStatement {
     ) {
         this.applicableForLanguages = new Set(applicable_for_languages);
 
-        if (deactivated_for_languages === undefined) {
-            this.deactivatedForLanguages = new Set();
-        } else {
-            this.deactivatedForLanguages = new Set(deactivated_for_languages);
-        }
+        this.deactivatedForLanguages =
+            deactivated_for_languages === undefined
+                ? new Set()
+                : new Set(deactivated_for_languages);
     }
 
     activatedFor(language: Language): boolean {
@@ -70,7 +69,11 @@ export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
         applicable_for_languages: Set<Language> = languageToAbbreviation.getKeysForAllValues(
             nodeType.languages,
         ),
-        deactivated_for_languages: Set<Language> | undefined = languageToAbbreviation.getKeysForAllValues(nodeType.deactivated_for_languages),
+        deactivated_for_languages:
+            | Set<Language>
+            | undefined = languageToAbbreviation.getKeysForAllValues(
+            nodeType.deactivated_for_languages,
+        ),
     ) {
         const { type_name, grammar_type_name } = nodeType;
         super(applicable_for_languages, deactivated_for_languages);
@@ -89,9 +92,13 @@ export class OperatorQueryStatement extends NodeTypeQueryStatement {
     constructor(
         nodeType: NodeTypeConfig,
         applicable_for_languages: Set<Language> = languageToAbbreviation.getKeysForAllValues(
-            nodeType.languages),
-        deactivated_for_languages: Set<Language> | undefined = languageToAbbreviation.getKeysForAllValues(
-            nodeType.deactivated_for_languages),
+            nodeType.languages,
+        ),
+        deactivated_for_languages:
+            | Set<Language>
+            | undefined = languageToAbbreviation.getKeysForAllValues(
+            nodeType.deactivated_for_languages,
+        ),
     ) {
         if (nodeType.operator === undefined) {
             throw new Error(

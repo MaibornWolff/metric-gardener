@@ -25,10 +25,10 @@ export class CSharpCollector extends AbstractCollector {
     protected getImportsQuery(): LanguageSpecificQueryStatement {
         const queryString = `
             (using_directive
-                (name_equals (identifier) @namespace_use_alias_prefix)?
+                (name_equals (identifier) @alias)?
                 [
-                    (qualified_name) @namespace_use
-                    (identifier) @namespace_use
+                    (qualified_name) @import_specifier
+                    (identifier) @import_specifier
                 ]
             )
         `;

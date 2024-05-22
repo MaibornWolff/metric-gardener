@@ -144,25 +144,20 @@ export abstract class AbstractCollector {
     ): ImportReference {
         const { importCaptures } = importMatch;
 
-        let importCapture;
-        let alias;
-        if (importCaptures.length === 1) {
-            // Just a normal import
-            importCapture = importCaptures[0];
-            alias = "";
-        } else if (importCaptures[0].name === "namespace_use_alias_prefix") {
-            // An import with prefix alias
-            alias = importCaptures[0].text;
-            importCapture = importCaptures[1];
-        } else {
-            // An import with suffix alias
-            importCapture = importCaptures[0];
-            alias = importCaptures[1].text;
+        let importSpecifierCapture;
+        let alias = "";
+        for (const capture of importCaptures) {
+            if (capture.name === "alias") {
+                alias = capture.text;
+            } else if (capture.name === "import_specifier") {
+                importSpecifierCapture = capture;
+            }
         }
 
         return {
-            referenceName: importCapture.text,
-            referenceSuffix: importCapture.text.split(this.getNamespaceDelimiter()).pop() ?? "",
+            referenceName: importSpecifierCapture.text,
+            referenceSuffix:
+                importSpecifierCapture.text.split(this.getNamespaceDelimiter()).pop() ?? "",
             sourceOfUsing: filePath,
             alias,
             source: filePath,

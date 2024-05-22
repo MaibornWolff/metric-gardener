@@ -22,7 +22,7 @@ export class PHPCollector extends AbstractCollector {
         return "\\";
     }
 
-    protected getImportsQuery(): QueryStatement {
+    protected getImportsQueryStatement(): QueryStatement {
         const queryString = `
             (namespace_use_clause
                 (qualified_name) @import_specifier
@@ -49,8 +49,8 @@ export class PHPCollector extends AbstractCollector {
      * We cannot query constructors and its parameters due to grammar structure
      * TODO Support more expressions
      */
-    protected getUsagesQuery(): string {
-        return `
+    protected getUsagesQueryStatement(): QueryStatement {
+        const queryString = `
             (method_declaration
                 (formal_parameters
                     (_ type: (_) @qualified_name)
@@ -74,5 +74,10 @@ export class PHPCollector extends AbstractCollector {
                 (qualified_name) @call_expression
             )
         `;
+
+        return new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.PHP]),
+        );
     }
 }

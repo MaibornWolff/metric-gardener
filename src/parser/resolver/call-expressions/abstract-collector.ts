@@ -3,7 +3,7 @@ import { type QueryCapture, type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
-import { type QueryStatement, SimpleQueryStatement } from "../../queries/query-statements.js";
+import { type QueryStatement } from "../../queries/query-statements.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -85,14 +85,14 @@ export abstract class AbstractCollector {
     protected abstract noImportForClassesInSameOrParentNamespaces(): boolean;
     protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
-    protected abstract getImportsQuery(): QueryStatement;
-    protected abstract getUsagesQuery(): string;
+    protected abstract getImportsQueryStatement(): QueryStatement;
+    protected abstract getUsagesQueryStatement(): QueryStatement;
 
     private getImports(parsedFile: ParsedFile): ImportReference[] {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([this.getImportsQuery()]);
+        queryBuilder.setStatements([this.getImportsQueryStatement()]);
 
         const importsQuery = queryBuilder.build();
         let queryMatches: QueryMatch[] = [];
@@ -200,7 +200,7 @@ export abstract class AbstractCollector {
         const { filePath, language, tree } = parsedFile;
 
         const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([new SimpleQueryStatement(this.getUsagesQuery())]);
+        queryBuilder.setStatements([this.getUsagesQueryStatement()]);
 
         const usagesQuery = queryBuilder.build();
         let usagesCaptures: QueryCapture[] = [];

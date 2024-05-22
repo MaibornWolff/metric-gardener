@@ -1,5 +1,6 @@
 import {
     type LanguageSpecificQueryStatement,
+    type QueryStatement,
     SimpleLanguageSpecificQueryStatement,
 } from "../../queries/query-statements.js";
 import { Language } from "../../../helper/language.js";
@@ -22,7 +23,7 @@ export class CSharpCollector extends AbstractCollector {
         return ".";
     }
 
-    protected getImportsQuery(): LanguageSpecificQueryStatement {
+    protected getImportsQueryStatement(): LanguageSpecificQueryStatement {
         const queryString = `
             (using_directive
                 (name_equals (identifier) @alias)?
@@ -44,8 +45,8 @@ export class CSharpCollector extends AbstractCollector {
      *
      * @protected
      */
-    protected getUsagesQuery(): string {
-        return `
+    protected getUsagesQueryStatement(): QueryStatement {
+        const queryString = `
             (generic_name
                 (identifier) @qualified_name
                 (type_argument_list (_) @qualified_name)
@@ -97,5 +98,10 @@ export class CSharpCollector extends AbstractCollector {
                 name: (_) @qualified_name
             )
         `;
+
+        return new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.CSharp]),
+        );
     }
 }

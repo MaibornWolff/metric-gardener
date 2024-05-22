@@ -20,16 +20,15 @@ export function lookupLowerCase<V>(map: Map<string, V>, key: string): V | undefi
  * This was once used for debugging,
  * so that one can see which program code tree-sitter has found via the query
  * or which program code is behind a nodeType.
- * @deprecated TODO: rewrite and fix this function or remove it
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function formatCaptures(tree: Tree, captures: QueryCapture[]) {
-    return captures.map((c) => {
-        const { node, ...capture } = c;
-        // @ts-expect-error TODO fix this
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        const text = tree.getText(node) as string;
-        return { ...capture, text };
+export function getNameAndTextFromCaptures(
+    captures: QueryCapture[],
+): Array<{ name: string; text: string }> {
+    return captures.map((capture) => {
+        return {
+            name: capture.name,
+            text: capture.node.text,
+        };
     });
 }
 

@@ -1,7 +1,7 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
-import { formatCaptures } from "../../../helper/helper.js";
+import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { type TypeCollector } from "../type-collector.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { type QueryStatement, SimpleQueryStatement } from "../../queries/query-statements.js";
@@ -97,37 +97,37 @@ export abstract class AbstractCollector {
             importsCaptures = importsQuery.captures(tree.rootNode);
         }
 
-        const importsTextCaptures = formatCaptures(tree, importsCaptures);
+        const nameAndTextFromCaptures = getNameAndTextFromCaptures(importsCaptures);
 
-        dlog(importsTextCaptures.toString());
+        dlog(nameAndTextFromCaptures.toString());
 
         const importsInFile: ImportReference[] = [];
 
         let usageAliasPrefix = "";
-        for (const importTextCapture of importsTextCaptures) {
-            if (importTextCapture.name === "namespace_use_alias_prefix") {
-                usageAliasPrefix = importTextCapture.text;
+        for (const nameAndTextFromCapture of nameAndTextFromCaptures) {
+            if (nameAndTextFromCapture.name === "namespace_use_alias_prefix") {
+                usageAliasPrefix = nameAndTextFromCapture.text;
                 continue;
             }
 
-            if (importTextCapture.name === "namespace_use_alias_suffix") {
+            if (nameAndTextFromCapture.name === "namespace_use_alias_suffix") {
                 const matchingUsage = importsInFile.at(-1);
-                matchingUsage!.alias = importTextCapture.text;
+                matchingUsage!.alias = nameAndTextFromCapture.text;
 
                 this.fileToImportsBySuffixOrAliasMap
                     .get(filePath)
                     ?.delete(matchingUsage!.referenceSuffix);
                 this.fileToImportsBySuffixOrAliasMap
                     .get(filePath)
-                    ?.set(importTextCapture.text, matchingUsage!);
+                    ?.set(nameAndTextFromCapture.text, matchingUsage!);
 
                 continue;
             }
 
             const importReference: ImportReference = {
-                referenceName: importTextCapture.text,
+                referenceName: nameAndTextFromCapture.text,
                 referenceSuffix:
-                    importTextCapture.text.split(this.getNamespaceDelimiter()).pop() ?? "",
+                    nameAndTextFromCapture.text.split(this.getNamespaceDelimiter()).pop() ?? "",
                 sourceOfUsing: filePath,
                 alias: usageAliasPrefix,
                 source: filePath,
@@ -164,7 +164,7 @@ export abstract class AbstractCollector {
             importCaptures = groupedImportsQuery.captures(tree.rootNode);
         }
 
-        const importTextCaptures = formatCaptures(tree, importCaptures);
+        const importTextCaptures = getNameAndTextFromCaptures(importCaptures);
 
         dlog(importTextCaptures.toString());
 
@@ -247,9 +247,16 @@ export abstract class AbstractCollector {
         const usagesTextCaptures: Array<{
             name: string;
             text: string;
-            usageType?: UsageType;
-            source?: string;
-        }> = formatCaptures(tree, usagesCaptures);
+            source: undefined | string;
+            usageType: undefined | UsageType;
+        }> = usagesCaptures.map((capture) => {
+            return {
+                name: capture.name,
+                text: capture.node.text,
+                usageType: undefined,
+                source: undefined,
+            };
+        });
 
         dlog("class/object usages", usagesTextCaptures);
 

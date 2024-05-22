@@ -3,6 +3,7 @@ import path from "node:path";
 import { type QueryCapture, type Tree } from "tree-sitter";
 import { type Configuration } from "../parser/configuration.js";
 import { NodeTypeQueryStatement } from "../parser/queries/query-statements.js";
+import { type ImportCapture } from "../parser/resolver/call-expressions/abstract-collector.js";
 import { type NodeTypeCategory, type NodeTypeConfig } from "./model.js";
 
 /**
@@ -21,9 +22,7 @@ export function lookupLowerCase<V>(map: Map<string, V>, key: string): V | undefi
  * so that one can see which program code tree-sitter has found via the query
  * or which program code is behind a nodeType.
  */
-export function getNameAndTextFromCaptures(
-    captures: QueryCapture[],
-): Array<{ name: string; text: string }> {
+export function getNameAndTextFromCaptures(captures: QueryCapture[]): ImportCapture[] {
     return captures.map((capture) => {
         return {
             name: capture.name,

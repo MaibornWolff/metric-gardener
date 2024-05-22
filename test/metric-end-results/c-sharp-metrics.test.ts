@@ -158,6 +158,7 @@ describe("C# metric tests", () => {
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "two-namespace-same-class-name/",
             );
+            const x = 1;
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
     });

@@ -1,5 +1,5 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type QueryCapture, type QueryCapture as X, type QueryMatch } from "tree-sitter";
+import { type QueryCapture, type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
@@ -11,8 +11,8 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 export type ImportReference = {
-    referenceName: string;
-    referenceSuffix: string;
+    FQTN: string;
+    typeName: string;
     alias: string;
     source: string;
     usageType: UsageType;
@@ -121,7 +121,7 @@ export abstract class AbstractCollector {
                 ?.set(
                     importReference.alias.length > 0
                         ? importReference.alias
-                        : importReference.referenceSuffix,
+                        : importReference.typeName,
                     importReference,
                 );
             return importReference;
@@ -132,9 +132,10 @@ export abstract class AbstractCollector {
         importMatch: ImportMatch,
         filePath: string,
     ): ImportReference {
-        let referenceName = "";
-        let referenceSuffix = "";
+        let FQTN = "";
+        let typeName = "";
         let alias = "";
+        let namespaceName = "";
         for (const capture of importMatch.importCaptures) {
             switch (capture.name) {
                 case "alias": {
@@ -144,8 +145,8 @@ export abstract class AbstractCollector {
                 }
 
                 case "import_specifier": {
-                    referenceName = capture.text;
-                    referenceSuffix = capture.text.split(this.getNamespaceDelimiter()).pop() ?? "";
+                    FQTN = capture.text;
+                    typeName = capture.text.split(this.getNamespaceDelimiter()).pop() ?? "";
 
                     break;
                 }
@@ -160,14 +161,13 @@ export abstract class AbstractCollector {
                 }
 
                 case "grouped_import_namespace": {
-                    referenceName = capture.text + referenceName;
+                    namespaceName = capture.text;
 
                     break;
                 }
 
                 case "grouped_import_name": {
-                    referenceName = referenceName + this.getNamespaceDelimiter() + capture.text;
-                    referenceSuffix = capture.text;
+                    typeName = capture.text;
 
                     break;
                 }
@@ -178,19 +178,13 @@ export abstract class AbstractCollector {
             }
         }
 
-        if (referenceName === "" || referenceSuffix === "") {
-            throw new Error(
-                "Reference name: " +
-                    referenceName +
-                    " or suffix: " +
-                    referenceSuffix +
-                    " is empty!",
-            );
+        if (FQTN === "" || typeName === "") {
+            throw new Error("Reference name: " + FQTN + " or suffix: " + typeName + " is empty!");
         }
 
         return {
-            referenceName,
-            referenceSuffix,
+            FQTN,
+            typeName,
             alias,
             source: filePath,
             usageType: "usage",
@@ -379,7 +373,7 @@ export abstract class AbstractCollector {
                             const clonedNameParts = [...originalCleanNameParts];
                             while (clonedNameParts.length > 0) {
                                 moreCandidates.push(
-                                    importReference.referenceName +
+                                    importReference.FQTN +
                                         fromFQTN.namespaceDelimiter +
                                         clonedNameParts.join(this.getNamespaceDelimiter()),
                                 );
@@ -387,7 +381,7 @@ export abstract class AbstractCollector {
                             }
                         } else {
                             moreCandidates.push(
-                                importReference.referenceName +
+                                importReference.FQTN +
                                     fromFQTN.namespaceDelimiter +
                                     cleanQualifiedName,
                             );
@@ -440,7 +434,7 @@ export abstract class AbstractCollector {
 
                 const usageCandidate: TypeUsageCandidate = {
                     usedNamespace:
-                        resolvedImport.referenceName +
+                        resolvedImport.FQTN +
                         (cleanNameParts.length > 0
                             ? this.getNamespaceDelimiter() + modifiedQualifiedName
                             : ""),
@@ -466,7 +460,7 @@ export abstract class AbstractCollector {
                             usedNamespace:
                                 fromNamespaceParts.join(this.getNamespaceDelimiter()) +
                                 fromFQTN.namespaceDelimiter +
-                                resolvedImport.referenceName,
+                                resolvedImport.FQTN,
                             fromNamespace:
                                 fromFQTN.namespace +
                                 fromFQTN.namespaceDelimiter +

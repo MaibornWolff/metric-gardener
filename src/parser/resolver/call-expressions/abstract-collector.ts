@@ -1,7 +1,6 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type QueryCapture, type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
-import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { type QueryStatement } from "../../queries/query-statements.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
@@ -94,10 +93,10 @@ export abstract class AbstractCollector {
 
         const importMatches = queryMatches.map((queryMatch): ImportMatch => {
             if (this.isGroupedImportMatch(queryMatch)) {
-                return new GroupedImportMatch(getNameAndTextFromCaptures(queryMatch.captures));
+                return new GroupedImportMatch(queryMatch.captures);
             }
 
-            return new SimpleImportMatch(getNameAndTextFromCaptures(queryMatch.captures));
+            return new SimpleImportMatch(queryMatch.captures);
         });
 
         dlog(importMatches.toString());

@@ -1,12 +1,8 @@
+import { type QueryCapture } from "tree-sitter";
 import { type ImportReference } from "./abstract-collector.js";
 
-export type ImportCapture = {
-    name: string;
-    text: string;
-};
-
 export abstract class ImportMatch {
-    constructor(public importCaptures: ImportCapture[]) {}
+    constructor(public queryCaptures: QueryCapture[]) {}
 
     abstract toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference;
 }
@@ -16,25 +12,25 @@ export class GroupedImportMatch extends ImportMatch {
         let typeName = "";
         let alias = "";
         let namespaceName = "";
-        for (const capture of this.importCaptures) {
+        for (const capture of this.queryCaptures) {
             switch (capture.name) {
                 case "grouped_import_alias": {
                     // Split alias from alias keyword (if any) by space and use last element by pop()
                     // capture.text result in e.g. "as Bubbler"
                     // it seems to be not possible to query the alias part only
-                    alias = capture.text.split(" ").pop() ?? "";
+                    alias = capture.node.text.split(" ").pop() ?? "";
 
                     break;
                 }
 
                 case "grouped_import_namespace": {
-                    namespaceName = capture.text;
+                    namespaceName = capture.node.text;
 
                     break;
                 }
 
                 case "grouped_import_name": {
-                    typeName = capture.text;
+                    typeName = capture.node.text;
 
                     break;
                 }
@@ -60,16 +56,16 @@ export class SimpleImportMatch extends ImportMatch {
         let typeName = "";
         let alias = "";
         let FQTN = "";
-        for (const capture of this.importCaptures) {
+        for (const capture of this.queryCaptures) {
             switch (capture.name) {
                 case "alias": {
-                    alias = capture.text;
+                    alias = capture.node.text;
 
                     break;
                 }
 
                 case "import_specifier": {
-                    FQTN = capture.text;
+                    FQTN = capture.node.text;
                     typeName = FQTN.split(namespaceDelimiter).pop() ?? "";
 
                     break;

@@ -1,9 +1,7 @@
-import {
-    type LanguageSpecificQueryStatement,
-    type QueryStatement,
-    SimpleLanguageSpecificQueryStatement,
-} from "../../queries/query-statements.js";
+import { type Query } from "tree-sitter";
+import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
 import { Language } from "../../../helper/language.js";
+import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector } from "./abstract-collector.js";
 
 export class CSharpCollector extends AbstractCollector {
@@ -23,7 +21,7 @@ export class CSharpCollector extends AbstractCollector {
         return ".";
     }
 
-    protected getImportsQueryStatement(): LanguageSpecificQueryStatement {
+    protected getImportsQuery(): Query {
         const queryString = `
             (using_directive
                 (name_equals (identifier) @alias)?
@@ -33,10 +31,14 @@ export class CSharpCollector extends AbstractCollector {
                 ]
             )
         `;
-        return new SimpleLanguageSpecificQueryStatement(
+        const queryStatement = new SimpleLanguageSpecificQueryStatement(
             queryString,
             new Set<Language>([Language.CSharp]),
         );
+
+        const queryBuilder = new QueryBuilder(Language.CSharp);
+        queryBuilder.setStatement(queryStatement);
+        return queryBuilder.build();
     }
 
     /**
@@ -45,7 +47,7 @@ export class CSharpCollector extends AbstractCollector {
      *
      * @protected
      */
-    protected getUsagesQueryStatement(): QueryStatement {
+    protected getUsagesQuery(): Query {
         const queryString = `
             (generic_name
                 (identifier) @qualified_name
@@ -99,9 +101,13 @@ export class CSharpCollector extends AbstractCollector {
             )
         `;
 
-        return new SimpleLanguageSpecificQueryStatement(
+        const queryStatement = new SimpleLanguageSpecificQueryStatement(
             queryString,
             new Set<Language>([Language.CSharp]),
         );
+
+        const queryBuilder = new QueryBuilder(Language.CSharp);
+        queryBuilder.setStatement(queryStatement);
+        return queryBuilder.build();
     }
 }

@@ -35,12 +35,97 @@ export type ImportCapture = {
     name: string;
     text: string;
 };
-type ImportMatch = {
-    importCaptures: ImportCapture[];
-};
+abstract class ImportMatch {
+    constructor(public importCaptures: ImportCapture[]) {}
+    abstract toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference;
+}
+class GroupedImportMatch extends ImportMatch {
+    toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference {
+        let typeName = "";
+        let alias = "";
+        let namespaceName = "";
+        for (const capture of this.importCaptures) {
+            switch (capture.name) {
+                case "grouped_import_alias": {
+                    // Split alias from alias keyword (if any) by space and use last element by pop()
+                    // capture.text result in e.g. "as Bubbler"
+                    // it seems to be not possible to query the alias part only
+                    alias = capture.text.split(" ").pop() ?? "";
+
+                    break;
+                }
+
+                case "grouped_import_namespace": {
+                    namespaceName = capture.text;
+
+                    break;
+                }
+
+                case "grouped_import_name": {
+                    typeName = capture.text;
+
+                    break;
+                }
+
+                default: {
+                    throw new Error(`Unknown capture name ${capture.name}`);
+                }
+            }
+        }
+
+        return {
+            FQTN: namespaceName + namespaceDelimiter + typeName,
+            typeName,
+            alias,
+            source: filePath,
+            usageType: "usage",
+        };
+    }
+}
+class SimpleImportMatch extends ImportMatch {
+    toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference {
+        let typeName = "";
+        let alias = "";
+        let FQTN = "";
+        for (const capture of this.importCaptures) {
+            switch (capture.name) {
+                case "alias": {
+                    alias = capture.text;
+
+                    break;
+                }
+
+                case "import_specifier": {
+                    FQTN = capture.text;
+                    typeName = FQTN.split(namespaceDelimiter).pop() ?? "";
+
+                    break;
+                }
+
+                default: {
+                    throw new Error(`Unknown capture name ${capture.name}`);
+                }
+            }
+        }
+
+        if (FQTN === "" || typeName === "") {
+            throw new Error(
+                "Fully Qualified Type Name: " + FQTN + " or type name: " + typeName + " is empty!",
+            );
+        }
+
+        return {
+            FQTN,
+            typeName,
+            alias,
+            source: filePath,
+            usageType: "usage",
+        };
+    }
+}
 
 export abstract class AbstractCollector {
-    private readonly fileToImportsBySuffixOrAliasMap = new Map<
+    private readonly fileToTypeNameToImportReference = new Map<
         string,
         Map<string, ImportReference>
     >();
@@ -53,11 +138,11 @@ export abstract class AbstractCollector {
         unresolvedCallExpressions: UnresolvedCallExpression[];
     } {
         const { filePath } = parsedFile;
-        this.fileToImportsBySuffixOrAliasMap.set(filePath, new Map());
+        this.fileToTypeNameToImportReference.set(filePath, new Map());
 
         const importReferences = this.getImports(parsedFile);
 
-        dlog("Alias Map:", filePath, this.fileToImportsBySuffixOrAliasMap);
+        dlog("Alias Map:", filePath, this.fileToTypeNameToImportReference);
         dlog("Import References", filePath, importReferences);
 
         const { candidates, unresolvedCallExpressions } = this.getUsages(
@@ -100,9 +185,11 @@ export abstract class AbstractCollector {
         }
 
         const importMatches = queryMatches.map((queryMatch): ImportMatch => {
-            return {
-                importCaptures: getNameAndTextFromCaptures(queryMatch.captures),
-            };
+            if (this.isGroupedImportMatch(queryMatch)) {
+                return new GroupedImportMatch(getNameAndTextFromCaptures(queryMatch.captures));
+            }
+
+            return new SimpleImportMatch(getNameAndTextFromCaptures(queryMatch.captures));
         });
 
         dlog(importMatches.toString());
@@ -110,13 +197,21 @@ export abstract class AbstractCollector {
         return this.buildImportReferences(importMatches, filePath);
     }
 
+    private isGroupedImportMatch(queryMatch: QueryMatch): boolean {
+        return queryMatch.captures[0].name.startsWith("grouped");
+    }
+
     private buildImportReferences(
         importMatches: ImportMatch[],
         filePath: string,
     ): ImportReference[] {
         return importMatches.map((importMatch) => {
-            const importReference = this.importMatchToImportReference(importMatch, filePath);
-            this.fileToImportsBySuffixOrAliasMap
+            const importReference = importMatch.toImportReference(
+                this.getNamespaceDelimiter(),
+                filePath,
+            );
+
+            this.fileToTypeNameToImportReference
                 .get(filePath)
                 ?.set(
                     importReference.alias.length > 0
@@ -126,73 +221,6 @@ export abstract class AbstractCollector {
                 );
             return importReference;
         });
-    }
-
-    private importMatchToImportReference(
-        importMatch: ImportMatch,
-        filePath: string,
-    ): ImportReference {
-        let FQTN = "";
-        let typeName = "";
-        let alias = "";
-        let namespaceName = "";
-        for (const capture of importMatch.importCaptures) {
-            switch (capture.name) {
-                case "alias": {
-                    alias = capture.text;
-
-                    break;
-                }
-
-                case "import_specifier": {
-                    FQTN = capture.text;
-                    typeName = capture.text.split(this.getNamespaceDelimiter()).pop() ?? "";
-
-                    break;
-                }
-
-                case "grouped_import_alias": {
-                    // Split alias from alias keyword (if any) by space and use last element by pop()
-                    // capture.text result in e.g. "as Bubbler"
-                    // it seems to be not possible to query the alias part only
-                    alias = capture.text.split(" ").pop() ?? "";
-
-                    break;
-                }
-
-                case "grouped_import_namespace": {
-                    namespaceName = capture.text;
-
-                    break;
-                }
-
-                case "grouped_import_name": {
-                    typeName = capture.text;
-
-                    break;
-                }
-
-                default: {
-                    throw new Error(`Unknown capture name ${capture.name}`);
-                }
-            }
-        }
-
-        if (FQTN === "") {
-            FQTN = namespaceName + this.getNamespaceDelimiter() + typeName;
-        }
-
-        if (FQTN === "" || typeName === "") {
-            throw new Error("Reference name: " + FQTN + " or suffix: " + typeName + " is empty!");
-        }
-
-        return {
-            FQTN,
-            typeName,
-            alias,
-            source: filePath,
-            usageType: "usage",
-        };
     }
 
     private getUsages(
@@ -293,7 +321,7 @@ export abstract class AbstractCollector {
                 continue;
             }
 
-            const resolvedImport = this.fileToImportsBySuffixOrAliasMap
+            const resolvedImport = this.fileToTypeNameToImportReference
                 .get(filePath)
                 ?.get(qualifiedNamePrefix);
 

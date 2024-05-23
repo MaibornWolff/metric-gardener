@@ -1,5 +1,5 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type Query, type QueryCapture, type QueryMatch } from "tree-sitter";
+import { type Query, type QueryCapture, type QueryMatch, type Tree } from "tree-sitter";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
 import { GroupedImportMatch, type ImportMatch, SimpleImportMatch } from "./import-match.js";
@@ -80,11 +80,7 @@ export abstract class AbstractCollector {
     private getImports(parsedFile: ParsedFile): ImportReference[] {
         const { filePath, tree } = parsedFile;
 
-        const importsQuery = this.getImportsQuery();
-        let queryMatches: QueryMatch[] = [];
-        if (importsQuery !== undefined) {
-            queryMatches = importsQuery.matches(tree.rootNode);
-        }
+        const queryMatches = this.getQueryMatchesFromTree(tree, this.getImportsQuery());
 
         const importMatches = queryMatches.map((queryMatch): ImportMatch => {
             if (this.isGroupedImportMatch(queryMatch)) {
@@ -97,6 +93,15 @@ export abstract class AbstractCollector {
         dlog(importMatches.toString());
 
         return this.buildImportReferences(importMatches, filePath);
+    }
+
+    private getQueryMatchesFromTree(tree: Tree, importsQuery: Query): QueryMatch[] {
+        let queryMatches: QueryMatch[] = [];
+        if (importsQuery !== undefined) {
+            queryMatches = importsQuery.matches(tree.rootNode);
+        }
+
+        return queryMatches;
     }
 
     private isGroupedImportMatch(queryMatch: QueryMatch): boolean {

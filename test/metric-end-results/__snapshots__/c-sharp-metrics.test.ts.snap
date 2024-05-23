@@ -831,6 +831,84 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for static method call in for loop 1`] = `
+{
+  "metrics": Map {
+    "ClassA.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+    "ClassB.cs" => {
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 2,
+      "instability": 0.3333333333333333,
+      "outgoing_dependencies": 1,
+    },
+    "ClassC.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 2,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 3,
+    },
+  },
+  "relationships": [
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "ProgramNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassA",
+      "toNamespace": "ClassANamespace.ClassA",
+      "toSource": "ClassA.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "ClassA",
+      "fromNamespace": "ClassANamespace.ClassA",
+      "fromSource": "ClassA.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "ClassBNamespace.ClassB",
+      "toSource": "ClassB.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "ProgramNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "ClassBNamespace.ClassB",
+      "toSource": "ClassB.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "ClassB",
+      "fromNamespace": "ClassBNamespace.ClassB",
+      "fromSource": "ClassB.cs",
+      "toClassName": "ClassC",
+      "toNamespace": "ClassCNamespace.ClassC",
+      "toSource": "ClassC.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "Program",
+      "fromNamespace": "ProgramNamespace.Program",
+      "fromSource": "Program.cs",
+      "toClassName": "ClassC",
+      "toNamespace": "ClassCNamespace.ClassC",
+      "toSource": "ClassC.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for static system.console.writeline using 1`] = `
 {
   "metrics": Map {

@@ -1,5 +1,5 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type QueryCapture, type QueryMatch } from "tree-sitter";
+import { type QueryCapture, type QueryCapture as X, type QueryMatch } from "tree-sitter";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
@@ -13,7 +13,6 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export type ImportReference = {
     referenceName: string;
     referenceSuffix: string;
-    sourceOfUsing: string;
     alias: string;
     source: string;
     usageType: UsageType;
@@ -192,7 +191,6 @@ export abstract class AbstractCollector {
         return {
             referenceName,
             referenceSuffix,
-            sourceOfUsing: filePath,
             alias,
             source: filePath,
             usageType: "usage",

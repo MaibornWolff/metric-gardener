@@ -9,7 +9,7 @@ import {
     SimpleLanguageSpecificQueryStatement,
     SimpleQueryStatement,
 } from "../queries/query-statements.js";
-import { Language, languageToAbbreviation } from "../../helper/language.js";
+import { Language } from "../../helper/language.js";
 import { type MetricName, type Metric, type MetricResult, type ParsedFile } from "./metric.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -39,12 +39,12 @@ export class Complexity implements Metric {
              * Handle case label node types differently based upon this.
              */
             if (nodeType.category === NodeTypeCategory.DefaultLabel) {
-                for (const languageAbbr of nodeType.languages) {
-                    const language = languageToAbbreviation.getKeyFor(languageAbbr);
+                for (const language of nodeType.languages) {
                     if (language === undefined) {
+                        const languageString: string = language;
                         throw new Error(
                             "Could not find language for language abbreviation" +
-                                languageAbbr +
+                                languageString +
                                 ".",
                         );
                     }
@@ -92,11 +92,11 @@ export class Complexity implements Metric {
             const haveDefaultNodeType = new Set<Language>();
             const haveNoDefaultNodeType = new Set<Language>();
 
-            for (const languageAbbr of caseNodeType.languages) {
-                const language = languageToAbbreviation.getKeyFor(languageAbbr);
+            for (const language of caseNodeType.languages) {
                 if (language === undefined) {
+                    const languageString: string = language;
                     throw new Error(
-                        "Could not find language for language abbreviation" + languageAbbr + ".",
+                        "Could not find language for language abbreviation" + languageString + ".",
                     );
                 }
 
@@ -124,12 +124,12 @@ export class Complexity implements Metric {
     /**
      * Adds a query statement that differentiates if the syntax node type is used as case or default label.
      * For node types which are used for both case labels and default labels.
-     * @param noDefaultLangAbbrs Abbreviations of the languages which use the node type as case label and
+     * @param noDefaultLanguage Abbreviations of the languages which use the node type as case label and
      * have no explicit default label.
      * @param caseDefaultNodeType The syntax node type.
      */
     addCaseDefaultDifferentiatingQuery(
-        noDefaultLangAbbrs: Set<Language>,
+        noDefaultLanguage: Set<Language>,
         caseDefaultNodeType: NodeTypeConfig,
     ): void {
         switch (caseDefaultNodeType.type_name) {
@@ -143,10 +143,8 @@ export class Complexity implements Metric {
                 this.complexityStatementsSuperSet.push(
                     new SimpleLanguageSpecificQueryStatement(
                         "(case_statement value: _ ) @case_statement",
-                        noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(
-                            caseDefaultNodeType.deactivated_for_languages,
-                        ),
+                        noDefaultLanguage,
+                        new Set(caseDefaultNodeType.deactivated_for_languages),
                     ),
                 );
                 break;
@@ -160,10 +158,8 @@ export class Complexity implements Metric {
                 this.complexityStatementsSuperSet.push(
                     new SimpleLanguageSpecificQueryStatement(
                         "(when_entry (when_condition)) @when_entry",
-                        noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(
-                            caseDefaultNodeType.deactivated_for_languages,
-                        ),
+                        noDefaultLanguage,
+                        new Set(caseDefaultNodeType.deactivated_for_languages),
                     ),
                 );
                 break;
@@ -177,10 +173,8 @@ export class Complexity implements Metric {
                 this.complexityStatementsSuperSet.push(
                     new SimpleLanguageSpecificQueryStatement(
                         "(match_arm pattern: (match_pattern (_))) @match_arm",
-                        noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(
-                            caseDefaultNodeType.deactivated_for_languages,
-                        ),
+                        noDefaultLanguage,
+                        new Set(caseDefaultNodeType.deactivated_for_languages),
                     ),
                 );
                 break;
@@ -194,10 +188,8 @@ export class Complexity implements Metric {
                             caseDefaultNodeType.type_name +
                             " (_)) @" +
                             caseDefaultNodeType.type_name,
-                        noDefaultLangAbbrs,
-                        languageToAbbreviation.getKeysForAllValues(
-                            caseDefaultNodeType.deactivated_for_languages,
-                        ),
+                        noDefaultLanguage,
+                        new Set(caseDefaultNodeType.deactivated_for_languages),
                     ),
                 );
             }

@@ -15,59 +15,33 @@ import C from "tree-sitter-c";
 import JSON from "tree-sitter-json";
 import YAML from "tree-sitter-yaml";
 import { type Configuration } from "../parser/configuration.js";
-import { ConstantTwoWayMap } from "./constant-two-way-map.js";
 import { lookupLowerCase } from "./helper.js";
 
 /**
- * Enum of all supported programming languages.
- */
-export const enum Language {
-    CSharp,
-    CPlusPlus,
-    Go,
-    Java,
-    JavaScript,
-    Kotlin,
-    PHP,
-    TypeScript,
-    TSX,
-    Python,
-    Ruby,
-    Rust,
-    Bash,
-    C,
-    JSON,
-    YAML,
-}
-
-/**
- * Maps back and forth between language and an abbreviation as string value.
- * The string value corresponding to the language is equivalent to the abbreviation used in the node mappings file.
- *
  * Note that this is not necessarily identical to the file extension of a file of the corresponding language,
  * as there can be multiple file extensions for one language.
  * Use {@link fileExtensionToLanguage} for mapping file extensions.
  */
-export const languageToAbbreviation = new ConstantTwoWayMap<Language, string>(
-    new Map([
-        [Language.CSharp, "cs"],
-        [Language.CPlusPlus, "cpp"],
-        [Language.Go, "go"],
-        [Language.Java, "java"],
-        [Language.JavaScript, "js"],
-        [Language.Kotlin, "kt"],
-        [Language.PHP, "php"],
-        [Language.TypeScript, "ts"],
-        [Language.TSX, "tsx"],
-        [Language.Python, "py"],
-        [Language.Ruby, "rb"],
-        [Language.Rust, "rs"],
-        [Language.Bash, "sh"],
-        [Language.C, "c"],
-        [Language.JSON, "json"],
-        [Language.YAML, "yaml"],
-    ]),
-);
+export const Language = {
+    CSharp: "cs",
+    CPlusPlus: "cpp",
+    Go: "go",
+    Java: "java",
+    JavaScript: "js",
+    Kotlin: "kt",
+    PHP: "php",
+    TypeScript: "ts",
+    TSX: "tsx",
+    Python: "py",
+    Ruby: "rb",
+    Rust: "rs",
+    Bash: "sh",
+    C: "c",
+    JSON: "json",
+    YAML: "yaml",
+} as const;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type Language = (typeof Language)[keyof typeof Language];
 
 /**
  * Maps from a language to the corresponding tree-sitter grammar.
@@ -130,7 +104,7 @@ export const enum FileType {
 /**
  * Set of structured text languages.
  */
-export const structuredTextLanguages = new Set([Language.JSON, Language.YAML]);
+export const structuredTextLanguages = new Set<Language>([Language.JSON, Language.YAML]);
 
 export function languageToFileType(language: Language): FileType {
     return structuredTextLanguages.has(language) ? FileType.StructuredText : FileType.SourceCode;

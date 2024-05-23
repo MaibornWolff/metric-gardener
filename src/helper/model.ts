@@ -1,3 +1,5 @@
+import { type Language } from "./language.js";
+
 /**
  * Configuration for a single syntax node type.
  * May maps a syntax node type to a category if it should be used to calculate a metric.
@@ -10,11 +12,11 @@ export type NodeTypeConfig = {
     /**
      * Can be used to omit the node type from a certain subset of the languages that have the node type.
      */
-    deactivated_for_languages?: string[];
+    deactivated_for_languages?: Language[];
     /**
      * Languages that have the node type.
      */
-    languages: string[];
+    languages: Language[];
     /**
      * Category of the node type.
      * This is used to put node types of different languages in a unified semantic category.

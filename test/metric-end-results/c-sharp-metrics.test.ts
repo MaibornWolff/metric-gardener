@@ -158,7 +158,13 @@ describe("C# metric tests", () => {
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "two-namespace-same-class-name/",
             );
-            const x = 1;
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
+        it("for static method call in for loop", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "relation-in-loop/",
+            );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
     });

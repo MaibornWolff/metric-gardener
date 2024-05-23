@@ -32,32 +32,32 @@ export type NodeTypeConfig = {
     operator?: string;
 };
 
-export enum NodeTypeCategory {
+export const NodeTypeCategory = {
     /**
      * Node types with no explicit category.
      */
-    Other = "",
+    Other: "",
     /**
      * Node types that represent a logical binary expression, like "and" and "or".
      */
-    LogicalBinaryExpression = "logical_binary_expression",
+    LogicalBinaryExpression: "logical_binary_expression",
     /**
      * Node types that represent a binary expression that is no logical binary expression,
      * like addition or subtraction.
      */
-    OtherBinaryExpression = "binary_expression",
+    OtherBinaryExpression: "binary_expression",
     /**
      * Node type that represents a comment.
      */
-    Comment = "comment",
+    Comment: "comment",
     /**
      * Represents a function definition.
      */
-    Function = "function",
+    Function: "function",
     /**
      * Node types that define the nesting level in structured text.
      */
-    Nesting = "nesting",
+    Nesting: "nesting",
 
     // Language constructs that affect the control flow:
 
@@ -65,56 +65,58 @@ export enum NodeTypeCategory {
      * Node types that are used for case labels in a switch-case-block.
      * May also be used for default labels by some language grammar(s).
      */
-    CaseLabel = "case_label",
+    CaseLabel: "case_label",
     /**
      * Node types that are exclusively used for default labels in a switch-case-block.
      */
-    DefaultLabel = "default_label",
+    DefaultLabel: "default_label",
     /**
      * Represents if-statements, also including dedicated else-if-statements.
      */
-    If = "if",
+    If: "if",
     /**
      * Represents loops.
      */
-    Loop = "loop",
+    Loop: "loop",
     /**
      * Represents catch blocks.
      */
-    CatchBlock = "catch_block",
+    CatchBlock: "catch_block",
     /**
      * Represents other conditional expressions, like ternary operators.
      */
-    ConditionalExpression = "conditional_expression",
+    ConditionalExpression: "conditional_expression",
 
     // Classes, structs and similar constructs:
 
     /**
      * Represents a class definition.
      */
-    ClassDefinition = "class_definition",
+    ClassDefinition: "class_definition",
     /**
      * Represents an enum definition.
      */
-    EnumDefinition = "enum_definition",
+    EnumDefinition: "enum_definition",
     /**
      * Represents a struct definition.
      */
-    StructDefinition = "struct_definition",
+    StructDefinition: "struct_definition",
     /**
      * Represents a record definition.
      */
-    RecordDefinition = "record_definition",
+    RecordDefinition: "record_definition",
     /**
      * Represents a union definition. For unions like in C and C++.
      */
-    UnionDefinition = "c_union_definition",
+    UnionDefinition: "c_union_definition",
     /**
      * Represents a trait definition.
      */
-    TraitDefinition = "trait_definition",
+    TraitDefinition: "trait_definition",
     /**
      * Represents a interface definition.
      */
-    InterfaceDefinition = "interface_definition",
-}
+    InterfaceDefinition: "interface_definition",
+};
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type NodeTypeCategory = (typeof NodeTypeCategory)[keyof typeof NodeTypeCategory];

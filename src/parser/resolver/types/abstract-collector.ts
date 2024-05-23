@@ -13,14 +13,11 @@ export type TypeInfo = {
     implementedFrom: string[];
 };
 
-export enum TypesResolvingStrategy {
-    Query,
-    Filename,
-}
+export type TypesResolvingStrategy = "Query" | "Filename";
 
 export abstract class AbstractCollector {
     getTypesFromFile(parsedFile: ParsedFile): Map<TypeName, TypeInfo> {
-        if (this.getTypesResolvingStrategy() === TypesResolvingStrategy.Query) {
+        if (this.getTypesResolvingStrategy() === "Query") {
             return new TypesQueryStrategy().getTypesFromFile(
                 parsedFile,
                 this.getNamespaceDelimiter(),
@@ -28,13 +25,11 @@ export abstract class AbstractCollector {
             );
         }
 
-        if (this.getTypesResolvingStrategy() === TypesResolvingStrategy.Filename) {
+        if (this.getTypesResolvingStrategy() === "Filename") {
             return new FileNameStrategy().getTypes();
         }
 
-        throw new Error(
-            "Unsupported Types Resolving Strategy " + this.getTypesResolvingStrategy().toString(),
-        );
+        throw new Error("Unsupported Types Resolving Strategy " + this.getTypesResolvingStrategy());
     }
 
     protected abstract getTypesResolvingStrategy(): TypesResolvingStrategy;

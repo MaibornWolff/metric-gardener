@@ -94,12 +94,14 @@ const fileExtensionToLanguage = new Map([
     ["yml", Language.YAML],
 ]);
 
-export const enum FileType {
-    SourceCode = "source_code",
-    StructuredText = "structured_text",
-    Unsupported = "unsupported_file",
-    Error = "error_file",
-}
+export const FileType = {
+    SourceCode: "source_code",
+    StructuredText: "structured_text",
+    Unsupported: "unsupported_file",
+    Error: "error_file",
+} as const;
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export type FileType = (typeof FileType)[keyof typeof FileType];
 
 /**
  * Set of structured text languages.

@@ -1,8 +1,8 @@
-import { AbstractCollector, TypesResolvingStrategy } from "./abstract-collector.js";
+import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class CSharpCollector extends AbstractCollector {
     protected getTypesResolvingStrategy(): TypesResolvingStrategy {
-        return TypesResolvingStrategy.Query;
+        return "Query";
     }
 
     protected getNamespaceDelimiter(): string {

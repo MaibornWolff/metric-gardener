@@ -1,4 +1,4 @@
-import { type Language, languageToAbbreviation } from "../../helper/language.js";
+import { type Language } from "../../helper/language.js";
 import { type NodeTypeConfig } from "../../helper/model.js";
 
 export type QueryStatement = {
@@ -66,12 +66,8 @@ export class NodeTypeQueryStatement extends LanguageSpecificQueryStatement {
 
     constructor(
         nodeType: NodeTypeConfig,
-        applicable_for_languages: Set<Language> = languageToAbbreviation.getKeysForAllValues(
-            nodeType.languages,
-        ),
-        deactivated_for_languages:
-            | Set<Language>
-            | undefined = languageToAbbreviation.getKeysForAllValues(
+        applicable_for_languages = new Set<Language>(nodeType.languages),
+        deactivated_for_languages: Set<Language> | undefined = new Set(
             nodeType.deactivated_for_languages,
         ),
     ) {
@@ -91,12 +87,8 @@ export class OperatorQueryStatement extends NodeTypeQueryStatement {
 
     constructor(
         nodeType: NodeTypeConfig,
-        applicable_for_languages: Set<Language> = languageToAbbreviation.getKeysForAllValues(
-            nodeType.languages,
-        ),
-        deactivated_for_languages:
-            | Set<Language>
-            | undefined = languageToAbbreviation.getKeysForAllValues(
+        applicable_for_languages = new Set<Language>(nodeType.languages),
+        deactivated_for_languages: Set<Language> | undefined = new Set(
             nodeType.deactivated_for_languages,
         ),
     ) {

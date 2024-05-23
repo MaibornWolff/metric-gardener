@@ -179,6 +179,16 @@ export abstract class AbstractCollector {
             }
         }
 
+        if (referenceName === "" || referenceSuffix === "") {
+            throw new Error(
+                "Reference name: " +
+                    referenceName +
+                    " or suffix: " +
+                    referenceSuffix +
+                    " is empty!",
+            );
+        }
+
         return {
             referenceName,
             referenceSuffix,

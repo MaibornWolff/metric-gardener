@@ -17,6 +17,10 @@ export class QueryBuilder {
         this.#language = language;
     }
 
+    setStatement(statements: QueryStatement): void {
+        this.#statements = [statements];
+    }
+
     setStatements(statements: QueryStatement[]): void {
         this.#statements = statements;
     }
@@ -31,7 +35,7 @@ export class QueryBuilder {
      * Includes only query statements that are both applicable and activated for the language.
      * @return The query, or undefined if the language is set to unknown.
      */
-    build(): Query | undefined {
+    build(): Query {
         let queryString = "";
 
         if (this.#statements.length > 0) {

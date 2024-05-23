@@ -1,8 +1,7 @@
-import {
-    type QueryStatement,
-    SimpleLanguageSpecificQueryStatement,
-} from "../../queries/query-statements.js";
+import { type Query } from "tree-sitter";
+import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
 import { Language } from "../../../helper/language.js";
+import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
@@ -22,12 +21,14 @@ export class PHPCollector extends AbstractCollector {
         return "\\";
     }
 
-    protected getImportsQueryStatement(): QueryStatement {
-        const queryString = `
+    protected getImportsQuery(): Query {
+        const singleImportQueryString = `
             (namespace_use_clause
                 (qualified_name) @import_specifier
                 (namespace_aliasing_clause (name) @alias)?
             )
+        `;
+        const groupImportQueryString = `
             (namespace_use_declaration
                 (namespace_name) @grouped_import_namespace
                 (namespace_use_group
@@ -39,17 +40,25 @@ export class PHPCollector extends AbstractCollector {
             )
         `;
 
-        return new SimpleLanguageSpecificQueryStatement(
-            queryString,
+        const singleImportQueryStatement = new SimpleLanguageSpecificQueryStatement(
+            singleImportQueryString,
             new Set<Language>([Language.PHP]),
         );
+        const groupImportQueryStatement = new SimpleLanguageSpecificQueryStatement(
+            groupImportQueryString,
+            new Set<Language>([Language.PHP]),
+        );
+
+        const queryBuilder = new QueryBuilder(Language.PHP);
+        queryBuilder.setStatements([singleImportQueryStatement, groupImportQueryStatement]);
+        return queryBuilder.build();
     }
 
     /**
      * We cannot query constructors and its parameters due to grammar structure
      * TODO Support more expressions
      */
-    protected getUsagesQueryStatement(): QueryStatement {
+    protected getUsagesQuery(): Query {
         const queryString = `
             (method_declaration
                 (formal_parameters
@@ -75,9 +84,13 @@ export class PHPCollector extends AbstractCollector {
             )
         `;
 
-        return new SimpleLanguageSpecificQueryStatement(
+        const queryStatement = new SimpleLanguageSpecificQueryStatement(
             queryString,
             new Set<Language>([Language.PHP]),
         );
+
+        const queryBuilder = new QueryBuilder(Language.PHP);
+        queryBuilder.setStatement(queryStatement);
+        return queryBuilder.build();
     }
 }

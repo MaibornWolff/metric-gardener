@@ -1,8 +1,6 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type QueryCapture, type QueryMatch } from "tree-sitter";
-import { QueryBuilder } from "../../queries/query-builder.js";
+import { type Query, type QueryCapture, type QueryMatch } from "tree-sitter";
 import { type ParsedFile, type UsageType } from "../../metrics/metric.js";
-import { type QueryStatement } from "../../queries/query-statements.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
 import { GroupedImportMatch, type ImportMatch, SimpleImportMatch } from "./import-match.js";
 
@@ -76,16 +74,13 @@ export abstract class AbstractCollector {
     protected abstract noImportForClassesInSameOrParentNamespaces(): boolean;
     protected abstract getFunctionCallDelimiter(): string;
     protected abstract getNamespaceDelimiter(): string;
-    protected abstract getImportsQueryStatement(): QueryStatement;
-    protected abstract getUsagesQueryStatement(): QueryStatement;
+    protected abstract getImportsQuery(): Query;
+    protected abstract getUsagesQuery(): Query;
 
     private getImports(parsedFile: ParsedFile): ImportReference[] {
-        const { filePath, language, tree } = parsedFile;
+        const { filePath, tree } = parsedFile;
 
-        const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([this.getImportsQueryStatement()]);
-
-        const importsQuery = queryBuilder.build();
+        const importsQuery = this.getImportsQuery();
         let queryMatches: QueryMatch[] = [];
         if (importsQuery !== undefined) {
             queryMatches = importsQuery.matches(tree.rootNode);
@@ -138,12 +133,9 @@ export abstract class AbstractCollector {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
     } {
-        const { filePath, language, tree } = parsedFile;
+        const { filePath, tree } = parsedFile;
 
-        const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([this.getUsagesQueryStatement()]);
-
-        const usagesQuery = queryBuilder.build();
+        const usagesQuery = this.getUsagesQuery();
         let usagesCaptures: QueryCapture[] = [];
         if (usagesQuery !== undefined) {
             usagesCaptures = usagesQuery.captures(tree.rootNode);

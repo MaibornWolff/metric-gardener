@@ -178,6 +178,10 @@ export abstract class AbstractCollector {
             }
         }
 
+        if (FQTN === "") {
+            FQTN = namespaceName + this.getNamespaceDelimiter() + typeName;
+        }
+
         if (FQTN === "" || typeName === "") {
             throw new Error("Reference name: " + FQTN + " or suffix: " + typeName + " is empty!");
         }

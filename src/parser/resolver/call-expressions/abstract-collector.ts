@@ -82,17 +82,32 @@ export abstract class AbstractCollector {
 
         const queryMatches = this.getQueryMatchesFromTree(tree, this.getImportsQuery());
 
-        const importMatches = queryMatches.map((queryMatch): ImportMatch => {
-            if (this.isGroupedImportMatch(queryMatch)) {
-                return new GroupedImportMatch(queryMatch.captures);
-            }
-
-            return new SimpleImportMatch(queryMatch.captures);
+        const importReferences = queryMatches.map((queryMatch): ImportReference => {
+            return this.buildImportReference(queryMatch, filePath);
         });
 
-        dlog(importMatches.toString());
+        dlog(importReferences.toString());
 
-        return this.buildImportReferences(importMatches, filePath);
+        return importReferences;
+    }
+
+    private buildImportReference(queryMatch: QueryMatch, filePath: string): ImportReference {
+        const importMatch: ImportMatch = this.isGroupedImportMatch(queryMatch)
+            ? new GroupedImportMatch(queryMatch.captures)
+            : new SimpleImportMatch(queryMatch.captures);
+
+        const importReference = importMatch.toImportReference(
+            this.getNamespaceDelimiter(),
+            filePath,
+        );
+
+        this.fileToTypeNameToImportReference
+            .get(filePath)
+            ?.set(
+                importReference.alias.length > 0 ? importReference.alias : importReference.typeName,
+                importReference,
+            );
+        return importReference;
     }
 
     private getQueryMatchesFromTree(tree: Tree, importsQuery: Query): QueryMatch[] {
@@ -106,28 +121,6 @@ export abstract class AbstractCollector {
 
     private isGroupedImportMatch(queryMatch: QueryMatch): boolean {
         return queryMatch.captures[0].name.startsWith("grouped");
-    }
-
-    private buildImportReferences(
-        importMatches: ImportMatch[],
-        filePath: string,
-    ): ImportReference[] {
-        return importMatches.map((importMatch) => {
-            const importReference = importMatch.toImportReference(
-                this.getNamespaceDelimiter(),
-                filePath,
-            );
-
-            this.fileToTypeNameToImportReference
-                .get(filePath)
-                ?.set(
-                    importReference.alias.length > 0
-                        ? importReference.alias
-                        : importReference.typeName,
-                    importReference,
-                );
-            return importReference;
-        });
     }
 
     private getUsages(

@@ -11,10 +11,10 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 
 /**
- * Maps the abbreviations of all available languages (as they are used inside the node-types-config.json) to
+ * Maps all available languages (as they are used inside the node-types-config.json) to
  * the location of the node-types.json of the corresponding grammar.
  */
-const languageAbbreviationToNodeTypeFiles = new Map<Language, string>([
+const languageToNodeTypeFiles = new Map<Language, string>([
     [Language.CSharp, "./node_modules/tree-sitter-c-sharp/src/node-types.json"],
     [Language.Go, "./node_modules/tree-sitter-go/src/node-types.json"],
     [Language.Java, "./node_modules/tree-sitter-java/src/node-types.json"],
@@ -53,7 +53,7 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
         const languageToNodeTypePromises = readNodeTypesJsons();
         const languageToPresentNodeTypes = importPresentNodeTypeMappings();
 
-        for (const language of languageAbbreviationToNodeTypeFiles.keys()) {
+        for (const language of languageToNodeTypeFiles.keys()) {
             const presentNodeTypes = languageToPresentNodeTypes.get(language);
             const nodeTypesPromise = languageToNodeTypePromises.get(language);
 
@@ -88,24 +88,24 @@ export async function updateNodeTypesMappingFile(): Promise<void> {
 }
 
 function readNodeTypesJsons(): Map<string, Promise<string | Error>> {
-    const languageAbbrToNodeTypePromises = new Map<string, Promise<string | Error>>();
+    const languageToNodeTypePromises = new Map<string, Promise<string | Error>>();
 
-    for (const [languageAbbr, fileLocation] of languageAbbreviationToNodeTypeFiles.entries()) {
+    for (const [language, fileLocation] of languageToNodeTypeFiles.entries()) {
         const json = fs.readFile(fileLocation, "utf8").catch((error: unknown) => {
             return new Error(
                 `Error while reading a node-types.json file from ${fileLocation}:\n${String(error)}`,
             ); // To be handled when awaiting the result.
         });
-        languageAbbrToNodeTypePromises.set(languageAbbr, json);
+        languageToNodeTypePromises.set(language, json);
     }
 
-    return languageAbbrToNodeTypePromises;
+    return languageToNodeTypePromises;
 }
 
 function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     const presentNodeTypesForLanguage = new Map<string, Set<string>>();
-    for (const langAbbr of languageAbbreviationToNodeTypeFiles.keys()) {
-        presentNodeTypesForLanguage.set(langAbbr, new Set());
+    for (const language of languageToNodeTypeFiles.keys()) {
+        presentNodeTypesForLanguage.set(language, new Set());
     }
 
     const allNodeTypes = nodeTypesConfig as NodeTypeConfig[];
@@ -113,8 +113,8 @@ function importPresentNodeTypeMappings(): Map<string, Set<string>> {
     for (const nodeType of allNodeTypes) {
         nodeTypeMappings.set(nodeType.type_name, nodeType);
 
-        for (const presentLangAbbr of nodeType.languages) {
-            presentNodeTypesForLanguage.get(presentLangAbbr)?.add(nodeType.type_name);
+        for (const language of nodeType.languages) {
+            presentNodeTypesForLanguage.get(language)?.add(nodeType.type_name);
         }
     }
 
@@ -185,7 +185,7 @@ function updateBinaryExpressions(
 /**
  * Adds the node type to the specified language.
  * Either updates an existing mapping for that node type or adds a new node type to the mappings.
- * @param language Abbreviation of the language to add this node type to.
+ * @param language Language to add this node type to.
  * @param nodeTypeName Name of the node type.
  * @param category Category of the node type to use if a new node type mapping is created.
  * @param grammarNodeTypeName Name of the node type in the grammar, if different to the nodeTypeName.

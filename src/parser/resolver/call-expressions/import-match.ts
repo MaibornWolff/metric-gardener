@@ -4,11 +4,11 @@ import { type Import } from "./abstract-collector.js";
 export abstract class ImportMatch {
     constructor(public queryCaptures: QueryCapture[]) {}
 
-    abstract toImport(namespaceDelimiter: string, filePath: FilePath): Import;
+    abstract toImport(namespaceDelimiter: string): Import;
 }
 
 export class GroupedImportMatch extends ImportMatch {
-    toImport(namespaceDelimiter: string, filePath: FilePath): Import {
+    toImport(namespaceDelimiter: string): Import {
         let importReference = "";
         let alias = "";
         let namespace = "";
@@ -45,13 +45,12 @@ export class GroupedImportMatch extends ImportMatch {
             importReferenceFullName: namespace + namespaceDelimiter + importReference,
             importReference,
             alias,
-            source: filePath,
         };
     }
 }
 
 export class SimpleImportMatch extends ImportMatch {
-    toImport(namespaceDelimiter: string, filePath: FilePath): Import {
+    toImport(namespaceDelimiter: string): Import {
         let importReference = "";
         let alias = "";
         let importReferenceFullName = "";
@@ -90,7 +89,6 @@ export class SimpleImportMatch extends ImportMatch {
             importReferenceFullName,
             importReference,
             alias,
-            source: filePath,
         };
     }
 }

@@ -12,7 +12,6 @@ export type Import = {
     importReferenceFullName: string;
     importReference: string;
     alias: string;
-    source: string;
 };
 
 export type TypeUsageCandidate = {
@@ -92,7 +91,7 @@ export abstract class AbstractCollector {
             ? new GroupedImportMatch(queryMatch.captures)
             : new SimpleImportMatch(queryMatch.captures);
 
-        const importReference = importMatch.toImport(this.getNamespaceDelimiter(), filePath);
+        const importReference = importMatch.toImport(this.getNamespaceDelimiter());
 
         this.fileToTypeNameToImportReference
             .get(filePath)

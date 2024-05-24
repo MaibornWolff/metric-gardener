@@ -8,12 +8,11 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
-export type ImportReference = {
-    FQTN: string;
-    typeName: string;
+export type Import = {
+    importReferenceFullName: string;
+    importReference: string;
     alias: string;
     source: string;
-    usageType: UsageType;
 };
 
 export type TypeUsageCandidate = {
@@ -30,10 +29,7 @@ export type UnresolvedCallExpression = {
 };
 
 export abstract class AbstractCollector {
-    private readonly fileToTypeNameToImportReference = new Map<
-        string,
-        Map<string, ImportReference>
-    >();
+    private readonly fileToTypeNameToImportReference = new Map<string, Map<string, Import>>();
 
     getUsageCandidates(
         parsedFile: ParsedFile,
@@ -77,12 +73,12 @@ export abstract class AbstractCollector {
     protected abstract getImportsQuery(): Query;
     protected abstract getUsagesQuery(): Query;
 
-    private getImports(parsedFile: ParsedFile): ImportReference[] {
+    private getImports(parsedFile: ParsedFile): Import[] {
         const { filePath, tree } = parsedFile;
 
         const queryMatches = this.getQueryMatchesFromTree(tree, this.getImportsQuery());
 
-        const importReferences = queryMatches.map((queryMatch): ImportReference => {
+        const importReferences = queryMatches.map((queryMatch): Import => {
             return this.buildImportReference(queryMatch, filePath);
         });
 
@@ -91,20 +87,19 @@ export abstract class AbstractCollector {
         return importReferences;
     }
 
-    private buildImportReference(queryMatch: QueryMatch, filePath: string): ImportReference {
+    private buildImportReference(queryMatch: QueryMatch, filePath: string): Import {
         const importMatch: ImportMatch = this.isGroupedImportMatch(queryMatch)
             ? new GroupedImportMatch(queryMatch.captures)
             : new SimpleImportMatch(queryMatch.captures);
 
-        const importReference = importMatch.toImportReference(
-            this.getNamespaceDelimiter(),
-            filePath,
-        );
+        const importReference = importMatch.toImport(this.getNamespaceDelimiter(), filePath);
 
         this.fileToTypeNameToImportReference
             .get(filePath)
             ?.set(
-                importReference.alias.length > 0 ? importReference.alias : importReference.typeName,
+                importReference.alias.length > 0
+                    ? importReference.alias
+                    : importReference.importReference,
                 importReference,
             );
         return importReference;
@@ -126,7 +121,7 @@ export abstract class AbstractCollector {
     private getUsages(
         parsedFile: ParsedFile,
         typesFromFile: Map<string, TypeInfo>,
-        importReferences: ImportReference[],
+        importReferences: Import[],
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
@@ -302,7 +297,7 @@ export abstract class AbstractCollector {
                             const clonedNameParts = [...originalCleanNameParts];
                             while (clonedNameParts.length > 0) {
                                 moreCandidates.push(
-                                    importReference.FQTN +
+                                    importReference.importReferenceFullName +
                                         fromFQTN.namespaceDelimiter +
                                         clonedNameParts.join(this.getNamespaceDelimiter()),
                                 );
@@ -310,7 +305,7 @@ export abstract class AbstractCollector {
                             }
                         } else {
                             moreCandidates.push(
-                                importReference.FQTN +
+                                importReference.importReferenceFullName +
                                     fromFQTN.namespaceDelimiter +
                                     cleanQualifiedName,
                             );
@@ -363,7 +358,7 @@ export abstract class AbstractCollector {
 
                 const usageCandidate: TypeUsageCandidate = {
                     usedNamespace:
-                        resolvedImport.FQTN +
+                        resolvedImport.importReferenceFullName +
                         (cleanNameParts.length > 0
                             ? this.getNamespaceDelimiter() + modifiedQualifiedName
                             : ""),
@@ -389,7 +384,7 @@ export abstract class AbstractCollector {
                             usedNamespace:
                                 fromNamespaceParts.join(this.getNamespaceDelimiter()) +
                                 fromFQTN.namespaceDelimiter +
-                                resolvedImport.FQTN,
+                                resolvedImport.importReferenceFullName,
                             fromNamespace:
                                 fromFQTN.namespace +
                                 fromFQTN.namespaceDelimiter +

@@ -1,17 +1,17 @@
 import { type QueryCapture } from "tree-sitter";
-import { type ImportReference } from "./abstract-collector.js";
+import { type Import } from "./abstract-collector.js";
 
 export abstract class ImportMatch {
     constructor(public queryCaptures: QueryCapture[]) {}
 
-    abstract toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference;
+    abstract toImport(namespaceDelimiter: string, filePath: FilePath): Import;
 }
 
 export class GroupedImportMatch extends ImportMatch {
-    toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference {
-        let typeName = "";
+    toImport(namespaceDelimiter: string, filePath: FilePath): Import {
+        let importReference = "";
         let alias = "";
-        let namespaceName = "";
+        let namespace = "";
         for (const capture of this.queryCaptures) {
             switch (capture.name) {
                 case "grouped_import_alias": {
@@ -24,13 +24,13 @@ export class GroupedImportMatch extends ImportMatch {
                 }
 
                 case "grouped_import_namespace": {
-                    namespaceName = capture.node.text;
+                    namespace = capture.node.text;
 
                     break;
                 }
 
                 case "grouped_import_name": {
-                    typeName = capture.node.text;
+                    importReference = capture.node.text;
 
                     break;
                 }
@@ -42,20 +42,19 @@ export class GroupedImportMatch extends ImportMatch {
         }
 
         return {
-            FQTN: namespaceName + namespaceDelimiter + typeName,
-            typeName,
+            importReferenceFullName: namespace + namespaceDelimiter + importReference,
+            importReference,
             alias,
             source: filePath,
-            usageType: "usage",
         };
     }
 }
 
 export class SimpleImportMatch extends ImportMatch {
-    toImportReference(namespaceDelimiter: string, filePath: FilePath): ImportReference {
-        let typeName = "";
+    toImport(namespaceDelimiter: string, filePath: FilePath): Import {
+        let importReference = "";
         let alias = "";
-        let FQTN = "";
+        let importReferenceFullName = "";
         for (const capture of this.queryCaptures) {
             switch (capture.name) {
                 case "alias": {
@@ -65,8 +64,8 @@ export class SimpleImportMatch extends ImportMatch {
                 }
 
                 case "import_specifier": {
-                    FQTN = capture.node.text;
-                    typeName = FQTN.split(namespaceDelimiter).pop() ?? "";
+                    importReferenceFullName = capture.node.text;
+                    importReference = importReferenceFullName.split(namespaceDelimiter).pop() ?? "";
 
                     break;
                 }
@@ -77,18 +76,21 @@ export class SimpleImportMatch extends ImportMatch {
             }
         }
 
-        if (FQTN === "" || typeName === "") {
+        if (importReferenceFullName === "" || importReference === "") {
             throw new Error(
-                "Fully Qualified Type Name: " + FQTN + " or type name: " + typeName + " is empty!",
+                "Fully Qualified Type Name: " +
+                    importReferenceFullName +
+                    " or type name: " +
+                    importReference +
+                    " is empty!",
             );
         }
 
         return {
-            FQTN,
-            typeName,
+            importReferenceFullName,
+            importReference,
             alias,
             source: filePath,
-            usageType: "usage",
         };
     }
 }

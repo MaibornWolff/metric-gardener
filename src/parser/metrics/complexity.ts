@@ -30,7 +30,7 @@ export class Complexity implements Metric {
     ]);
 
     constructor(allNodeTypes: NodeTypeConfig[]) {
-        const languagesWithDefaultLabelAbbr = new Set<Language>();
+        const languagesWithDefaultLabel = new Set<Language>();
         const caseNodeTypes: NodeTypeConfig[] = [];
 
         for (const nodeType of allNodeTypes) {
@@ -40,16 +40,7 @@ export class Complexity implements Metric {
              */
             if (nodeType.category === NodeTypeCategory.DefaultLabel) {
                 for (const language of nodeType.languages) {
-                    if (language === undefined) {
-                        const languageString: string = language;
-                        throw new Error(
-                            "Could not find language for language abbreviation" +
-                                languageString +
-                                ".",
-                        );
-                    }
-
-                    languagesWithDefaultLabelAbbr.add(language);
+                    languagesWithDefaultLabel.add(language);
                 }
             }
 
@@ -67,7 +58,7 @@ export class Complexity implements Metric {
             }
         }
 
-        this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabelAbbr);
+        this.addCaseLabelQueryStatements(caseNodeTypes, languagesWithDefaultLabel);
         this.addQueriesForCSharp();
     }
 
@@ -86,21 +77,14 @@ export class Complexity implements Metric {
      */
     addCaseLabelQueryStatements(
         caseNodeTypes: NodeTypeConfig[],
-        languagesWithDefaultLabelAbbr: Set<Language>,
+        languagesWithDefaultLabel: Set<Language>,
     ): void {
         for (const caseNodeType of caseNodeTypes) {
             const haveDefaultNodeType = new Set<Language>();
             const haveNoDefaultNodeType = new Set<Language>();
 
             for (const language of caseNodeType.languages) {
-                if (language === undefined) {
-                    const languageString: string = language;
-                    throw new Error(
-                        "Could not find language for language abbreviation" + languageString + ".",
-                    );
-                }
-
-                if (languagesWithDefaultLabelAbbr.has(language)) {
+                if (languagesWithDefaultLabel.has(language)) {
                     haveDefaultNodeType.add(language);
                 } else {
                     haveNoDefaultNodeType.add(language);
@@ -124,7 +108,7 @@ export class Complexity implements Metric {
     /**
      * Adds a query statement that differentiates if the syntax node type is used as case or default label.
      * For node types which are used for both case labels and default labels.
-     * @param noDefaultLanguage Abbreviations of the languages which use the node type as case label and
+     * @param noDefaultLanguage Languages which use the node type as case label and
      * have no explicit default label.
      * @param caseDefaultNodeType The syntax node type.
      */

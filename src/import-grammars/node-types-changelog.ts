@@ -1,6 +1,7 @@
 import * as fs from "node:fs";
 import { EOL } from "node:os";
 import { type NodeTypeConfig } from "../helper/model.js";
+import { type Language } from "../helper/language.js";
 
 /**
  * Path to which the changelog is written.
@@ -41,9 +42,9 @@ export class NodeTypesChangelog {
      * Expected to be called directly before the change is applied to the node type config in order
      * to correctly track the difference to the old status of the mapping.
      * @param nodeTypeConfig The node type configuration, in the state before the change is applied.
-     * @param languageAbbr Abbreviation of the language.
+     * @param language The language
      */
-    addedNodeToLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string): void {
+    addedNodeToLanguage(nodeTypeConfig: NodeTypeConfig, language: Language): void {
         // There is no changelog entry for this node type yet, so create it.
         if (!this.changelog.has(nodeTypeConfig.type_name)) {
             this.changelog.set(
@@ -56,17 +57,17 @@ export class NodeTypesChangelog {
             );
         }
 
-        this.changelog.get(nodeTypeConfig.type_name)?.addedToLanguage(languageAbbr);
+        this.changelog.get(nodeTypeConfig.type_name)?.addedToLanguage(language);
     }
 
     /**
      * Logs that a totally new node type was added to a language.
      * @param nodeTypeName Name of the node type.
-     * @param languageAbbr Abbreviation of the language to which this node was added.
+     * @param language The language to which this node was added.
      */
-    addedNewNode(nodeTypeName: string, languageAbbr: string): void {
+    addedNewNode(nodeTypeName: string, language: Language): void {
         const entry = new NodeTypesChangelogEntry(nodeTypeName, true);
-        entry.addedToLanguage(languageAbbr);
+        entry.addedToLanguage(language);
         this.changelog.set(nodeTypeName, entry);
     }
 
@@ -75,9 +76,9 @@ export class NodeTypesChangelog {
      * Expected to be called directly before the change is applied to the node type config in order
      * to correctly track the difference to the old status of the mapping.
      * @param nodeTypeConfig The node type configuration, in the state before the change is applied.
-     * @param languageAbbr Abbreviation of the language.
+     * @param language The language
      */
-    removedNodeFromLanguage(nodeTypeConfig: NodeTypeConfig, languageAbbr: string): void {
+    removedNodeFromLanguage(nodeTypeConfig: NodeTypeConfig, language: Language): void {
         if (!this.changelog.has(nodeTypeConfig.type_name)) {
             this.changelog.set(
                 nodeTypeConfig.type_name,
@@ -89,7 +90,7 @@ export class NodeTypesChangelog {
             );
         }
 
-        this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(languageAbbr);
+        this.changelog.get(nodeTypeConfig.type_name)?.removedFromLanguage(language);
     }
 
     /**
@@ -243,19 +244,19 @@ class NodeTypesChangelogEntry {
 
     /**
      * Logs that this node type was added to a language.
-     * @param languageAbbr Abbreviation of the language to which this node was added.
+     * @param language The language to which this node was added.
      */
-    addedToLanguage(languageAbbr: string): void {
-        this.addedLanguages.add(languageAbbr);
+    addedToLanguage(language: Language): void {
+        this.addedLanguages.add(language);
     }
 
     /**
      * Logs that this node type was removed from a language.
-     * @param languageAbbr Abbreviation of the language from which this node was removed.
+     * @param language The language from which this node was removed.
      */
-    removedFromLanguage(languageAbbr: string): void {
-        this.removedLanguages.add(languageAbbr);
-        this.remainingLanguages.delete(languageAbbr);
+    removedFromLanguage(language: Language): void {
+        this.removedLanguages.add(language);
+        this.remainingLanguages.delete(language);
     }
 
     /**

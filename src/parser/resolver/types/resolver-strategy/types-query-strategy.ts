@@ -1,4 +1,4 @@
-import { type Query, type QueryMatch } from "tree-sitter";
+import { type Query, type QueryMatch, SyntaxNode } from "tree-sitter";
 import { type ClassType, type TypeInfo } from "../abstract-collector.js";
 import { type ParsedFile } from "../../../metrics/metric.js";
 
@@ -45,6 +45,7 @@ export class TypesQueryStrategy {
         let extendedFrom: string | undefined;
         const implementedFrom: string[] = [];
         let typeName = "";
+        let node;
         for (const capture of match.captures) {
             let namespaceNotFoundYet = true;
             switch (capture.name) {
@@ -77,6 +78,11 @@ export class TypesQueryStrategy {
                     break;
                 }
 
+                case "type_node": {
+                    node = capture.node;
+                    break;
+                }
+
                 default: {
                     break;
                 }
@@ -84,6 +90,7 @@ export class TypesQueryStrategy {
         }
 
         return {
+            node,
             namespace,
             typeName,
             classType,

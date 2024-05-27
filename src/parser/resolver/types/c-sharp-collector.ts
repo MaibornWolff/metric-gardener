@@ -19,7 +19,7 @@ export class CSharpCollector extends AbstractCollector {
                                 body: (declaration_list
                                     (class_declaration name: (identifier) @class_name)
                                 )*
-                            )
+                            ) @type_node
                         )
                         (declaration_list
                             (interface_declaration
@@ -28,7 +28,7 @@ export class CSharpCollector extends AbstractCollector {
                                 bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
-                            )
+                            ) @type_node
                         )
                         (declaration_list
                             (enum_declaration
@@ -36,7 +36,7 @@ export class CSharpCollector extends AbstractCollector {
                                 bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
-                            )
+                            ) @type_node
                         )
                         (declaration_list
                             (struct_declaration
@@ -44,12 +44,12 @@ export class CSharpCollector extends AbstractCollector {
                                 bases: (base_list
                                     (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
                                 )?
-                            )
+                            ) @type_node
                         )
                         (declaration_list
                             (delegate_declaration
                                 name: (identifier) @class_name
-                            )
+                            ) @type_node
                         )
                 ]+
             )

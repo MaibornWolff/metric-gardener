@@ -23,7 +23,7 @@ describe("C# metric tests", () => {
     });
 
     describe("parsing C# dependencies should calculate the right dependencies and coupling metrics", () => {
-        it.skip("for nested folder structure", async () => {
+        it("for nested folder structure", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "coupling-examples/",
@@ -132,7 +132,7 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it.skip("for usage of interface in class method in the same file", async () => {
+        it("for usage of interface in class method in the same file", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "relation-between-interfaces-in-one-file/",

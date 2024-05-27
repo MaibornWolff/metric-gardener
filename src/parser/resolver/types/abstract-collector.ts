@@ -1,10 +1,11 @@
-import { type Query } from "tree-sitter";
+import { type Query, type SyntaxNode } from "tree-sitter";
 import { type ParsedFile } from "../../metrics/metric.js";
 import { TypesQueryStrategy } from "./resolver-strategy/types-query-strategy.js";
 import { FileNameStrategy } from "./resolver-strategy/filename-resolver.js";
 
 type TypeName = string;
 export type TypeInfo = {
+    node: SyntaxNode;
     namespace: string;
     typeName: string;
     classType: ClassType;

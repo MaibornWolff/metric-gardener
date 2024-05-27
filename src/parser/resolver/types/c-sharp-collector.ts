@@ -1,8 +1,12 @@
+import { type Query } from "tree-sitter";
+import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
+import { Language } from "../../../helper/language.js";
+import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class CSharpCollector extends AbstractCollector {
-    public getTypesQuery(): string {
-        return `
+    public getTypesQuery(): Query {
+        const queryString = `
             (namespace_declaration
                 name: (_) @namespace_definition_name
                 body: [
@@ -50,6 +54,15 @@ export class CSharpCollector extends AbstractCollector {
                 ]+
             )
         `;
+
+        const queryStatement = new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.CSharp]),
+        );
+
+        const queryBuilder = new QueryBuilder(Language.CSharp);
+        queryBuilder.setStatement(queryStatement);
+        return queryBuilder.build();
     }
 
     protected getTypesResolvingStrategy(): TypesResolvingStrategy {

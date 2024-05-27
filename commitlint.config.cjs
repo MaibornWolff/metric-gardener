@@ -4,7 +4,7 @@ module.exports = {
         "body-case": [2, "always", "sentence-case"],
         "body-max-line-length": [2, "always", 200],
         "header-max-length": [2, "always", 72],
-        "footer-max-length": [2, "always", 52],
+        "footer-max-length": [2, "always", 200],
         "type-enum": [2, "always", getTypes()],
         "issue-id-required": [2, "always"],
     },

@@ -1,6 +1,6 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type QueryCapture } from "tree-sitter";
-import { type TypeInfo } from "../abstract-collector.js";
+import { type QueryCapture, type QueryMatch } from "tree-sitter";
+import { type ClassType, type TypeInfo } from "../abstract-collector.js";
 import { QueryBuilder } from "../../../queries/query-builder.js";
 import { getNameAndTextFromCaptures } from "../../../../helper/helper.js";
 import { type ParsedFile } from "../../../metrics/metric.js";
@@ -17,7 +17,7 @@ export class TypesQueryStrategy {
         parsedFile: ParsedFile,
         namespaceDelimiter: string,
         typesQuery: string,
-    ): Map<string, TypeInfo> {
+    ): Map<FQTN, TypeInfo> {
         const { filePath, language, tree } = parsedFile;
 
         let typesMap = this.fileToTypesMapCache.get(filePath);
@@ -28,92 +28,74 @@ export class TypesQueryStrategy {
         typesMap = new Map<FQTN, TypeInfo>();
 
         const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements([new SimpleQueryStatement(typesQuery)]);
+        queryBuilder.setStatement(new SimpleQueryStatement(typesQuery));
 
         const query = queryBuilder.build();
         let captures: QueryCapture[] = [];
+        let matches: QueryMatch[] = [];
         if (query !== undefined) {
             captures = query.captures(tree.rootNode);
+            matches = query.matches(tree.rootNode);
         }
 
         const textCaptures = getNameAndTextFromCaptures(captures);
 
         dlog("types definitions", filePath, textCaptures);
+        for (const match of matches) {
+            let namespace = "";
+            let classType: ClassType = "class";
+            let extendedClass: string | undefined;
+            const implementedInterfaces: string[] = [];
+            let className = "";
+            for (const capture of match.captures) {
+                let namespaceNotFoundYet = true;
+                switch (capture.name) {
+                    case "namespace_definition_name": {
+                        if (namespaceNotFoundYet) {
+                            namespace = capture.node.text;
+                            namespaceNotFoundYet = false;
+                        }
 
-        for (let index = 0; index < textCaptures.length; index += 1) {
-            const namespaceName = textCaptures[index].text;
-
-            // Jump to first class name or class type capture
-            index++;
-            let isInterface =
-                textCaptures[index]?.name === "class_type" &&
-                textCaptures[index]?.text === "interface";
-            if (isInterface) {
-                // Jump to class name capture
-                index++;
-            }
-
-            let hasClassDeclaration = textCaptures[index]?.name === "class_name";
-
-            while (hasClassDeclaration) {
-                const className = textCaptures[index].text;
-                const typeDeclaration: TypeInfo = {
-                    namespace: namespaceName,
-                    typeName: className,
-                    classType: isInterface ? "interface" : "class",
-                    sourceFile: parsedFile.filePath,
-                    namespaceDelimiter,
-                    implementedFrom: [],
-                };
-
-                typesMap.set(namespaceName + namespaceDelimiter + className, typeDeclaration);
-
-                // Jump to any next capture
-                index++;
-                if (textCaptures[index]?.name === "namespace_definition_name") {
-                    break;
-                }
-
-                if (textCaptures[index]?.name === "extended_class") {
-                    typeDeclaration.extendedFrom = textCaptures[index].text;
-                    index++;
-                }
-
-                if (textCaptures[index]?.name === "namespace_definition_name") {
-                    break;
-                }
-
-                let hasImplements = textCaptures[index]?.name === "implemented_class";
-
-                while (hasImplements) {
-                    const implementedClassName = textCaptures[index].text;
-                    if (!typeDeclaration.implementedFrom.includes(implementedClassName)) {
-                        typeDeclaration.implementedFrom.push(implementedClassName);
+                        break;
                     }
 
-                    // Jump to next capture, no matter if implements class or any other
-                    index++;
-                    hasImplements = textCaptures[index]?.name === "implemented_class";
-                }
+                    case "class_type": {
+                        classType = capture.node.text as ClassType;
+                        break;
+                    }
 
-                if (textCaptures[index]?.name === "namespace_definition_name") {
-                    break;
-                }
+                    case "extended_class": {
+                        extendedClass = capture.node.text;
+                        break;
+                    }
 
-                isInterface =
-                    textCaptures[index]?.name === "class_type" &&
-                    textCaptures[index]?.text === "interface";
-                if (isInterface) {
-                    // Jump to class name capture
-                    index++;
-                }
+                    case "implemented_class": {
+                        implementedInterfaces.push(capture.node.text);
+                        break;
+                    }
 
-                hasClassDeclaration = textCaptures[index]?.name === "class_name";
+                    case "class_name": {
+                        className = capture.node.text;
+                        break;
+                    }
+
+                    default: {
+                        break;
+                    }
+                }
             }
 
-            if (textCaptures[index]?.name === "namespace_definition_name") {
-                index--;
-            }
+            const typeDeclaration: TypeInfo = {
+                namespace,
+                typeName: className,
+                classType,
+                sourceFile: parsedFile.filePath,
+                namespaceDelimiter,
+                implementedFrom: implementedInterfaces,
+                extendedFrom: extendedClass,
+            };
+
+            typesMap.set(namespace + namespaceDelimiter + className, typeDeclaration);
         }
 
         this.fileToTypesMapCache.set(filePath, typesMap);

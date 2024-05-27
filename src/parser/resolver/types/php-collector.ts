@@ -1,15 +1,7 @@
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
-    protected getTypesResolvingStrategy(): TypesResolvingStrategy {
-        return "Query";
-    }
-
-    protected getNamespaceDelimiter(): string {
-        return "\\";
-    }
-
-    protected getTypesQuery(): string {
+    public getTypesQuery(): string {
         return `
             (
                 (namespace_definition
@@ -33,5 +25,13 @@ export class PHPCollector extends AbstractCollector {
                 ]+
             )
         `;
+    }
+
+    protected getTypesResolvingStrategy(): TypesResolvingStrategy {
+        return "Query";
+    }
+
+    protected getNamespaceDelimiter(): string {
+        return "\\";
     }
 }

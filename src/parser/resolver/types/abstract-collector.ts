@@ -6,13 +6,13 @@ type TypeName = string;
 export type TypeInfo = {
     namespace: string;
     typeName: string;
-    classType: "interface" | "class";
+    classType: ClassType;
     sourceFile: string;
     namespaceDelimiter: string;
     extendedFrom?: string;
     implementedFrom: string[];
 };
-
+export type ClassType = "interface" | "class";
 export type TypesResolvingStrategy = "Query" | "Filename";
 
 export abstract class AbstractCollector {

@@ -1,3 +1,4 @@
+import { type Query } from "tree-sitter";
 import { type ParsedFile } from "../../metrics/metric.js";
 import { TypesQueryStrategy } from "./resolver-strategy/types-query-strategy.js";
 import { FileNameStrategy } from "./resolver-strategy/filename-resolver.js";
@@ -31,7 +32,7 @@ export abstract class AbstractCollector {
 
         throw new Error("Unsupported Types Resolving Strategy " + this.getTypesResolvingStrategy());
     }
-    public abstract getTypesQuery(): string;
+    public abstract getTypesQuery(): Query;
     protected abstract getTypesResolvingStrategy(): TypesResolvingStrategy;
     protected abstract getNamespaceDelimiter(): string;
 }

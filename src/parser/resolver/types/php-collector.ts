@@ -1,8 +1,12 @@
+import { type Query } from "tree-sitter";
+import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
+import { Language } from "../../../helper/language.js";
+import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
-    public getTypesQuery(): string {
-        return `
+    public getTypesQuery(): Query {
+        const queryString = `
             (
                 (namespace_definition
                     name: (namespace_name) @namespace_definition_name
@@ -25,6 +29,15 @@ export class PHPCollector extends AbstractCollector {
                 ]+
             )
         `;
+
+        const queryStatement = new SimpleLanguageSpecificQueryStatement(
+            queryString,
+            new Set<Language>([Language.PHP]),
+        );
+
+        const queryBuilder = new QueryBuilder(Language.PHP);
+        queryBuilder.setStatement(queryStatement);
+        return queryBuilder.build();
     }
 
     protected getTypesResolvingStrategy(): TypesResolvingStrategy {

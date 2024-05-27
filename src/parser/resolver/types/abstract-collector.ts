@@ -31,8 +31,7 @@ export abstract class AbstractCollector {
 
         throw new Error("Unsupported Types Resolving Strategy " + this.getTypesResolvingStrategy());
     }
-
+    public abstract getTypesQuery(): string;
     protected abstract getTypesResolvingStrategy(): TypesResolvingStrategy;
     protected abstract getNamespaceDelimiter(): string;
-    protected abstract getTypesQuery(): string;
 }

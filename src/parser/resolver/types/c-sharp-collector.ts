@@ -1,18 +1,7 @@
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class CSharpCollector extends AbstractCollector {
-    protected getTypesResolvingStrategy(): TypesResolvingStrategy {
-        return "Query";
-    }
-
-    protected getNamespaceDelimiter(): string {
-        return ".";
-    }
-
-    // TODO: @implemented_class must be named @extended_class for base classes
-    //  currently this is not possible.
-    //  We cannot differentiate extended and implemented classes from source code notation.
-    protected getTypesQuery(): string {
+    public getTypesQuery(): string {
         return `
             (namespace_declaration
                 name: (_) @namespace_definition_name
@@ -62,4 +51,16 @@ export class CSharpCollector extends AbstractCollector {
             )
         `;
     }
+
+    protected getTypesResolvingStrategy(): TypesResolvingStrategy {
+        return "Query";
+    }
+
+    protected getNamespaceDelimiter(): string {
+        return ".";
+    }
+
+    // TODO: @implemented_class must be named @extended_class for base classes
+    //  currently this is not possible.
+    //  We cannot differentiate extended and implemented classes from source code notation.
 }

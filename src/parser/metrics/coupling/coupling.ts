@@ -1,8 +1,8 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type TypeInfo } from "../../resolver/types/abstract-collector.js";
 import {
-    type UnresolvedCallExpression,
-    type TypeUsageCandidate,
+    type CallExpression,
+    type UsageCandidate,
 } from "../../resolver/call-expressions/abstract-collector.js";
 import { type TypeCollector } from "../../resolver/type-collector.js";
 import { type UsagesCollector } from "../../resolver/usages-collector.js";
@@ -30,8 +30,8 @@ export class Coupling implements CouplingMetric {
 
     private typesMap = new Map<FQTN, TypeInfo>();
     private readonly publicAccessorsMap = new Map<string, Accessor[]>();
-    private readonly usagesCandidates: TypeUsageCandidate[] = [];
-    private readonly unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
+    private readonly usagesCandidates: UsageCandidate[] = [];
+    private readonly callExpressions = new Map<string, CallExpression[]>();
     private readonly outgoingDependencyByFile = new Map<FilePath, Set<FQTN>>();
 
     constructor(
@@ -42,7 +42,6 @@ export class Coupling implements CouplingMetric {
     ) {}
 
     processFile(parsedFile: ParsedFile): void {
-        // Preprocessing
         const typesFromFile = this.typeCollector.getTypesFromFile(parsedFile);
         this.typesMap = new Map([...this.typesMap, ...typesFromFile]);
 
@@ -59,13 +58,12 @@ export class Coupling implements CouplingMetric {
             }
         }
 
-        // Processing
-        const { candidates, unresolvedCallExpressions } = this.usageCollector.getUsageCandidates(
+        const { usageCandidates, callExpressions } = this.usageCollector.getUsageCandidates(
             parsedFile,
             this.typeCollector.getTypesFromFile(parsedFile),
         );
-        this.usagesCandidates.push(...candidates);
-        this.unresolvedCallExpressions.set(parsedFile.filePath, unresolvedCallExpressions);
+        this.usagesCandidates.push(...usageCandidates);
+        this.callExpressions.set(parsedFile.filePath, callExpressions);
     }
 
     calculate(): CouplingResult {
@@ -74,7 +72,7 @@ export class Coupling implements CouplingMetric {
         dlog("\n\n");
         dlog("namespaces", this.typesMap, "\n\n");
         dlog("usages", this.usagesCandidates);
-        dlog("\n\n", "unresolved call expressions", this.unresolvedCallExpressions, "\n\n");
+        dlog("\n\n", "unresolved call expressions", this.callExpressions, "\n\n");
         dlog("\n\n", "publicAccessors", this.publicAccessorsMap, "\n\n");
 
         const relationships = this.getRelationships(this.typesMap, this.usagesCandidates);
@@ -85,7 +83,7 @@ export class Coupling implements CouplingMetric {
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
-            this.unresolvedCallExpressions,
+            this.callExpressions,
             this.publicAccessorsMap,
             this.alreadyAddedRelationships,
         );
@@ -103,7 +101,7 @@ export class Coupling implements CouplingMetric {
 
     private getRelationships(
         types: Map<FQTN, TypeInfo>,
-        usagesCandidates: TypeUsageCandidate[],
+        usagesCandidates: UsageCandidate[],
     ): Relationship[] {
         return usagesCandidates.flatMap((usage) => {
             const usedNamespaceSource = types.get(usage.usedNamespace);

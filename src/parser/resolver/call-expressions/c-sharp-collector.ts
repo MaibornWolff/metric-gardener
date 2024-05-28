@@ -5,8 +5,8 @@ import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector } from "./abstract-collector.js";
 
 export class CSharpCollector extends AbstractCollector {
-    protected noImportForClassesInSameOrParentNamespaces(): boolean {
-        return true;
+    protected importForClassesInSameOrParentNamespaces(): boolean {
+        return false;
     }
 
     protected indirectNamespaceReferencing(): boolean {

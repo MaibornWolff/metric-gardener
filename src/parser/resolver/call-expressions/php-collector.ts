@@ -5,8 +5,8 @@ import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
-    protected noImportForClassesInSameOrParentNamespaces(): boolean {
-        return false;
+    protected importForClassesInSameOrParentNamespaces(): boolean {
+        return true;
     }
 
     protected indirectNamespaceReferencing(): boolean {

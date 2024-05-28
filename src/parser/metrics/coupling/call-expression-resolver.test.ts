@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { type Relationship } from "../metric.js";
-import { type UnresolvedCallExpression } from "../../resolver/call-expressions/abstract-collector.js";
+import { type CallExpression } from "../../resolver/call-expressions/abstract-collector.js";
 import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
 import { getAdditionalRelationships } from "./call-expression-resolver.js";
 
@@ -43,19 +43,19 @@ describe("CallExpressionResolver", () => {
             dependencyTree.set(thirdItem.fromSource, [thirdItem]);
             dependencyTree.set(thirdItem.toSource, []);
 
-            const callExpression1: UnresolvedCallExpression = {
+            const callExpression1: CallExpression = {
                 name: "myVariable?.UnknownAccessor?.AccessorInSecondItem?.AccessorInThirdItem?",
                 namespaceDelimiter: ".",
                 variableNameIncluded: true,
             };
 
-            const callExpression2: UnresolvedCallExpression = {
+            const callExpression2: CallExpression = {
                 name: "myVariable.AccessorInSecondItem",
                 namespaceDelimiter: ".",
                 variableNameIncluded: true,
             };
 
-            const unresolvedCallExpressions = new Map<string, UnresolvedCallExpression[]>();
+            const unresolvedCallExpressions = new Map<string, CallExpression[]>();
             unresolvedCallExpressions.set(firstItem.fromSource, [callExpression1, callExpression2]);
 
             const accessor1: Accessor = {

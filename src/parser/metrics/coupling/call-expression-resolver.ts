@@ -1,7 +1,7 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
 import { type Relationship } from "../metric.js";
 import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
-import { type UnresolvedCallExpression } from "../../resolver/call-expressions/abstract-collector.js";
+import { type CallExpression } from "../../resolver/call-expressions/abstract-collector.js";
 import { type TypeInfo } from "../../resolver/types/abstract-collector.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -10,7 +10,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 
 export function getAdditionalRelationships(
     tree: Map<string, Relationship[]>,
-    unresolvedCallExpressions: Map<string, UnresolvedCallExpression[]>,
+    unresolvedCallExpressions: Map<string, CallExpression[]>,
     accessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>,
 ): Relationship[] {

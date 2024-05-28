@@ -5,7 +5,7 @@ import { FileNameStrategy } from "./resolver-strategy/filename-resolver.js";
 
 type TypeName = string;
 export type TypeInfo = {
-    node: SyntaxNode;
+    node?: SyntaxNode;
     namespace: string;
     typeName: string;
     classType: ClassType;

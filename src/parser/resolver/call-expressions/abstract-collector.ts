@@ -14,6 +14,13 @@ export type Import = {
     alias: string;
 };
 
+type UsageCapture = {
+    name: string;
+    text: string;
+    source: undefined | string;
+    usageType: undefined | UsageType;
+};
+
 export type TypeUsageCandidate = {
     usedNamespace: string;
     fromNamespace: string;
@@ -46,7 +53,7 @@ export abstract class AbstractCollector {
         dlog("Import References", filePath, importReferences);
 
         const { candidates, unresolvedCallExpressions } = this.getUsages(
-            parsedFile,
+            filePath,
             typesFromFile,
             importReferences,
         );
@@ -118,62 +125,34 @@ export abstract class AbstractCollector {
     }
 
     private getUsages(
-        parsedFile: ParsedFile,
+        filePath: FilePath,
         typesFromFile: Map<string, TypeInfo>,
         importReferences: Import[],
     ): {
         candidates: TypeUsageCandidate[];
         unresolvedCallExpressions: UnresolvedCallExpression[];
     } {
-        const { filePath, tree } = parsedFile;
         const usagesAndCandidates: TypeUsageCandidate[] = [];
         const unresolvedCallExpressions: UnresolvedCallExpression[] = [];
-        const usagesTextCaptures: Array<{
-            name: string;
-            text: string;
-            source: undefined | string;
-            usageType: undefined | UsageType;
-        }> = [];
 
-        this.addBaseClassAndInterfaceAsUsage(typesFromFile, usagesTextCaptures);
-
-        for (const typeDeclaration of typesFromFile.values()) {
+        for (const [FQTN, typeDeclaration] of typesFromFile.entries()) {
+            const usageCaptures: UsageCapture[] = this.getUsageCaptures(FQTN, typeDeclaration);
             let fromFQTN = typeDeclaration;
-
-            const usagesQuery = this.getUsagesQuery();
-            let usagesCaptures: QueryCapture[] = [];
-            if (usagesQuery !== undefined) {
-                usagesCaptures = usagesQuery.captures(typeDeclaration.node);
-            }
-
-            for (const capture of usagesCaptures) {
-                usagesTextCaptures.push({
-                    name: capture.name,
-                    text: capture.node.text,
-                    usageType: undefined,
-                    source: undefined,
-                });
-            }
-
-            dlog("class/object usages", usagesTextCaptures);
 
             // Resolve usages against import statements and build concrete usages or usage candidates
 
-            const processedQualifiedNames = new Set<string>();
-            for (const usagesTextCapture of usagesTextCaptures) {
-                const { name, usageType, source } = usagesTextCapture;
-                let qualifiedName = usagesTextCapture.text;
+            const processedUsageText = new Set<string>();
+            for (const usageCapture of usageCaptures) {
+                const { name, usageType, source } = usageCapture;
+                let { text } = usageCapture;
 
-                if (
-                    processedQualifiedNames.has(qualifiedName) ||
-                    (name !== "qualified_name" && name !== "call_expression")
-                ) {
+                if (processedUsageText.has(text)) {
                     continue;
                 }
 
-                processedQualifiedNames.add(qualifiedName);
+                processedUsageText.add(text);
 
-                const qualifiedNameParts = qualifiedName.split(this.getNamespaceDelimiter());
+                const qualifiedNameParts = text.split(this.getNamespaceDelimiter());
                 const cleanNameParts = qualifiedNameParts.map((namePart) => {
                     if (namePart.endsWith("[]") || namePart.endsWith("()")) {
                         return namePart.slice(0, Math.max(0, namePart.length - 2));
@@ -186,7 +165,7 @@ export abstract class AbstractCollector {
                     return namePart;
                 });
 
-                qualifiedName = cleanNameParts.join(this.getNamespaceDelimiter());
+                text = cleanNameParts.join(this.getNamespaceDelimiter());
 
                 const qualifiedNamePrefix = cleanNameParts.shift();
                 if (qualifiedNamePrefix === undefined) {
@@ -206,7 +185,7 @@ export abstract class AbstractCollector {
                     }
                 }
 
-                const originalCleanNameParts = qualifiedName.split(this.getNamespaceDelimiter());
+                const originalCleanNameParts = text.split(this.getNamespaceDelimiter());
 
                 if (resolvedImport === undefined) {
                     if (
@@ -221,7 +200,7 @@ export abstract class AbstractCollector {
                     const cleanQualifiedName = originalCleanNameParts.join(
                         this.getNamespaceDelimiter(),
                     );
-                    processedQualifiedNames.add(cleanQualifiedName);
+                    processedUsageText.add(cleanQualifiedName);
 
                     // Skip current one if invalid space is included in potential class or namespace name
                     if (cleanQualifiedName.includes(" ") || cleanQualifiedName.includes("<")) {
@@ -229,7 +208,7 @@ export abstract class AbstractCollector {
                     }
 
                     if (name === "call_expression") {
-                        unresolvedCallExpressions.push(this.buildCallExpression(qualifiedName));
+                        unresolvedCallExpressions.push(this.buildCallExpression(text));
                     }
 
                     // For languages that allow the usage of classes in the same namespace without the need of an import:
@@ -320,11 +299,11 @@ export abstract class AbstractCollector {
                         }
 
                         // In case it cannot be resolved by resolvedImport name, try it later again
-                        unresolvedCallExpressions.push(this.buildCallExpression(qualifiedName));
+                        unresolvedCallExpressions.push(this.buildCallExpression(text));
                     }
 
                     const modifiedQualifiedName = cleanNameParts.join(this.getNamespaceDelimiter());
-                    processedQualifiedNames.add(modifiedQualifiedName);
+                    processedUsageText.add(modifiedQualifiedName);
 
                     // Skip current one if invalid space is included in potential class or namespace name
                     if (
@@ -384,38 +363,57 @@ export abstract class AbstractCollector {
         };
     }
 
-    private addBaseClassAndInterfaceAsUsage(
-        typesFromFile: Map<string, TypeInfo>,
-        usagesTextCaptures: Array<{
-            name: string;
-            text: string;
-            source: string | undefined;
-            usageType: UsageType | undefined;
-        }>,
-    ): void {
+    private getUsageCaptures(FQTN: FQTN, typeDeclaration: TypeInfo): UsageCapture[] {
+        const usageCaptures: UsageCapture[] = this.getBaseClassAndInterfaceUsageCaptures(
+            FQTN,
+            typeDeclaration,
+        );
+
+        const usagesQuery = this.getUsagesQuery();
+        let captures: QueryCapture[] = [];
+        if (usagesQuery !== undefined) {
+            captures = usagesQuery.captures(typeDeclaration.node!);
+        }
+
+        for (const capture of captures) {
+            usageCaptures.push({
+                name: capture.name,
+                text: capture.node.text,
+                usageType: undefined,
+                source: undefined,
+            });
+        }
+
+        dlog("class/object usages", usageCaptures);
+        return usageCaptures;
+    }
+
+    private getBaseClassAndInterfaceUsageCaptures(FQTN: FQTN, typeInfo: TypeInfo): UsageCapture[] {
+        const usagesTextCaptures: UsageCapture[] = [];
+
         // Add implemented and extended classes as usages
         // to consider the coupling of those
-        for (const [FQTN, FQTNInfo] of typesFromFile) {
-            if (FQTNInfo.implementedFrom.length > 0) {
-                for (const implementedClass of FQTNInfo.implementedFrom) {
-                    usagesTextCaptures.push({
-                        name: "qualified_name",
-                        text: implementedClass,
-                        usageType: "implements",
-                        source: FQTN,
-                    });
-                }
-            }
-
-            if (FQTNInfo.extendedFrom !== undefined) {
+        if (typeInfo.implementedFrom.length > 0) {
+            for (const implementedClass of typeInfo.implementedFrom) {
                 usagesTextCaptures.push({
                     name: "qualified_name",
-                    text: FQTNInfo.extendedFrom,
-                    usageType: "extends",
+                    text: implementedClass,
+                    usageType: "implements",
                     source: FQTN,
                 });
             }
         }
+
+        if (typeInfo.extendedFrom !== undefined) {
+            usagesTextCaptures.push({
+                name: "qualified_name",
+                text: typeInfo.extendedFrom,
+                usageType: "extends",
+                source: FQTN,
+            });
+        }
+
+        return usagesTextCaptures;
     }
 
     private buildCallExpression(qualifiedName: string): {

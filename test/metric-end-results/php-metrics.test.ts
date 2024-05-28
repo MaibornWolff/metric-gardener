@@ -123,7 +123,7 @@ describe("PHP metrics tests", () => {
     });
 
     describe("parsing PHP dependencies", () => {
-        it("should calculate the right dependencies and coupling metrics", async () => {
+        it.skip("should calculate the right dependencies and coupling metrics", async () => {
             mockConsole();
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(

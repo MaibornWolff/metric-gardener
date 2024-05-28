@@ -74,7 +74,7 @@ export class PHPCollector extends AbstractCollector {
                 type: (_) @qualified_name
             )
             (object_creation_expression
-                (qualified_name) @qualified_name
+                (name) @qualified_name
             )
             (class_constant_access_expression
                 (qualified_name) @call_expression

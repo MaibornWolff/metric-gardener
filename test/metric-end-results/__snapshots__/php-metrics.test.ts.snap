@@ -102,6 +102,15 @@ exports[`PHP metrics tests > parsing PHP dependencies > should calculate the rig
       "usageType": "extends",
     },
     {
+      "fromClassName": "BlubControllerTwo1",
+      "fromNamespace": "App\\CouplingExamplesTwo\\BlubControllerTwo1",
+      "fromSource": "BlubController.php",
+      "toClassName": "Helper",
+      "toNamespace": "App\\CouplingExamples\\Library\\Helper",
+      "toSource": "Library\\Helper.php",
+      "usageType": "usage",
+    },
+    {
       "fromClassName": "AnotherControllerOne",
       "fromNamespace": "App\\CouplingExamplesOne\\AnotherControllerOne",
       "fromSource": "AnotherController.php",
@@ -119,6 +128,15 @@ exports[`PHP metrics tests > parsing PHP dependencies > should calculate the rig
       "toSource": "Library\\Helper.php",
       "usageType": "usage",
     },
+    {
+          "fromClassName": "BlubControllerOne2",
+          "fromNamespace": "App\\CouplingExamplesOne\\BlubControllerOne2",
+          "fromSource": "BlubController.php",
+          "toClassName": "Helper",
+          "toNamespace": "App\\CouplingExamples\\Library\\Helper",
+          "toSource": "Library\\Helper.php",
+          "usageType": "usage",
+     },
     {
       "fromClassName": "HelperOutput",
       "fromNamespace": "App\\CouplingExamples\\Library\\HelperOutput",

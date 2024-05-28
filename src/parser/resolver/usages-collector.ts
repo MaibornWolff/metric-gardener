@@ -1,6 +1,5 @@
 import { type ParsedFile } from "../metrics/metric.js";
 import { Factory as UsageCollectorFactory } from "./call-expressions/factory.js";
-import { type TypeCollector } from "./type-collector.js";
 import { type UsageCandidate, type CallExpression } from "./call-expressions/abstract-collector.js";
 import type { TypeInfo } from "./types/abstract-collector.js";
 

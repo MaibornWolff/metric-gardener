@@ -25,7 +25,6 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 export class Coupling implements CouplingMetric {
-    private readonly filesWithMultipleTypeDeclarations: ParsedFile[] = [];
     private readonly alreadyAddedRelationships = new Set<string>();
 
     private typesMap = new Map<FQTN, TypeInfo>();
@@ -42,7 +41,7 @@ export class Coupling implements CouplingMetric {
     ) {}
 
     processFile(parsedFile: ParsedFile): void {
-        const typesFromFile = this.typeCollector.getTypesFromFile(parsedFile);
+        const typesFromFile: Map<FQTN, TypeInfo> = this.typeCollector.getTypesFromFile(parsedFile);
         this.typesMap = new Map([...this.typesMap, ...typesFromFile]);
 
         const accessorsFromFile = this.publicAccessorCollector.getPublicAccessorsFromFile(
@@ -50,11 +49,10 @@ export class Coupling implements CouplingMetric {
             typesFromFile,
         );
         for (const [accessorName, accessors] of accessorsFromFile) {
-            const existingAccessors = this.publicAccessorsMap.get(accessorName);
-            if (existingAccessors === undefined) {
+            if (this.publicAccessorsMap.get(accessorName) === undefined) {
                 this.publicAccessorsMap.set(accessorName, accessors);
             } else {
-                existingAccessors.push(...accessors);
+                this.publicAccessorsMap.get(accessorName)!.push(...accessors);
             }
         }
 
@@ -67,8 +65,6 @@ export class Coupling implements CouplingMetric {
     }
 
     calculate(): CouplingResult {
-        // Postprocessing
-
         dlog("\n\n");
         dlog("namespaces", this.typesMap, "\n\n");
         dlog("usages", this.usagesCandidates);
@@ -190,7 +186,7 @@ export class Coupling implements CouplingMetric {
             this.addFilePathIfNotExists(couplingValues, toFile);
 
             // Add only +1 outgoing dependency per "toClassName" for every file
-            this.updateOutgoingDependency(fromFile, couplingValues, couplingItem);
+            this.updateOutgoingDependency(fromFile, couplingItem);
             this.updateMetricsForFile(couplingItem.toSource, "incoming", couplingValues);
         }
 
@@ -222,11 +218,7 @@ export class Coupling implements CouplingMetric {
         }
     }
 
-    private updateOutgoingDependency(
-        fromFile: string,
-        couplingValues: Map<string, CouplingMetrics>,
-        couplingItem: Relationship,
-    ): void {
+    private updateOutgoingDependency(fromFile: string, couplingItem: Relationship): void {
         if (!this.outgoingDependencyByFile.has(fromFile)) {
             this.outgoingDependencyByFile.set(fromFile, new Set());
         }
@@ -248,11 +240,6 @@ export class Coupling implements CouplingMetric {
         const parsedFile = parseSync(filePath, this.config);
         if (!(parsedFile instanceof ParsedFile)) {
             return;
-        }
-
-        const types = this.typeCollector.getTypesFromFile(parsedFile);
-        if (types.size > 1) {
-            this.filesWithMultipleTypeDeclarations.push(parsedFile);
         }
 
         couplingMetrics[

@@ -1,4 +1,4 @@
-import { type Query, type QueryMatch, SyntaxNode } from "tree-sitter";
+import { type Query, type QueryMatch } from "tree-sitter";
 import { type ClassType, type TypeInfo } from "../abstract-collector.js";
 import { type ParsedFile } from "../../../metrics/metric.js";
 
@@ -24,26 +24,25 @@ export class TypesQueryStrategy {
             matches = typesQuery.matches(tree.rootNode);
         }
 
-        matches.map((match) => {
-            const typeInfo = this.buildTypeInfo(match, filePath, namespaceDelimiter);
-            typesMap!.set(typeInfo.namespace + namespaceDelimiter + typeInfo.typeName, typeInfo);
-            return typeInfo;
-        });
+        for (const match of matches) {
+            this.buildTypeInfos(match, filePath, namespaceDelimiter, typesMap);
+        }
 
         this.fileToTypesMapCache.set(filePath, typesMap);
 
         return typesMap;
     }
 
-    private buildTypeInfo(
+    private buildTypeInfos(
         match: QueryMatch,
         filePath: string,
         namespaceDelimiter: string,
-    ): TypeInfo {
+        typesMap: Map<FQTN, TypeInfo>,
+    ): void {
         let namespace = "";
         let classType: ClassType = "class";
         let extendedFrom: string | undefined;
-        const implementedFrom: string[] = [];
+        let implementedFrom: string[] = [];
         let typeName = "";
         let node;
 
@@ -55,6 +54,7 @@ export class TypesQueryStrategy {
                         namespace = capture.node.text;
                         namespaceNotFoundYet = false;
                     }
+
                     break;
                 }
 
@@ -79,6 +79,28 @@ export class TypesQueryStrategy {
                 }
 
                 case "type_node": {
+                    if (node !== undefined) {
+                        const typeInfo: TypeInfo = {
+                            node,
+                            namespace,
+                            typeName,
+                            classType,
+                            sourceFile: filePath,
+                            namespaceDelimiter,
+                            implementedFrom,
+                            extendedFrom,
+                        };
+                        typesMap.set(
+                            typeInfo.namespace + namespaceDelimiter + typeInfo.typeName,
+                            typeInfo,
+                        );
+
+                        classType = "class";
+                        extendedFrom = undefined;
+                        implementedFrom = [];
+                        typeName = "";
+                    }
+
                     node = capture.node;
                     break;
                 }
@@ -89,8 +111,8 @@ export class TypesQueryStrategy {
             }
         }
 
-        return {
-            node: node!,
+        const typeInfo: TypeInfo = {
+            node,
             namespace,
             typeName,
             classType,
@@ -99,5 +121,6 @@ export class TypesQueryStrategy {
             implementedFrom,
             extendedFrom,
         };
+        typesMap.set(typeInfo.namespace + namespaceDelimiter + typeInfo.typeName, typeInfo);
     }
 }

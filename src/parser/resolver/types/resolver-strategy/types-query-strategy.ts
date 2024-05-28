@@ -47,14 +47,9 @@ export class TypesQueryStrategy {
         let node;
 
         for (const capture of match.captures) {
-            let namespaceNotFoundYet = true;
             switch (capture.name) {
                 case "namespace_definition_name": {
-                    if (namespaceNotFoundYet) {
-                        namespace = capture.node.text;
-                        namespaceNotFoundYet = false;
-                    }
-
+                    namespace = capture.node.text;
                     break;
                 }
 

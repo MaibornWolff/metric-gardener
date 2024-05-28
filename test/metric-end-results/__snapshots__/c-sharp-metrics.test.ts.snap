@@ -1,200 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`C# metric tests > parsing C# dependencies > should calculate the right dependencies and coupling metrics for extended class 1`] = `
-{
-  "metrics": Map {
-    "ClassA.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
-      "outgoing_dependencies": 1,
-    },
-    "ClassB.cs" => {
-      "coupling_between_objects": 1,
-      "incoming_dependencies": 1,
-      "instability": 0,
-      "outgoing_dependencies": 0,
-    },
-    "Main.cs" => {
-      "coupling_between_objects": 1,
-      "incoming_dependencies": 0,
-      "instability": 1,
-      "outgoing_dependencies": 1,
-    },
-  },
-  "relationships": [
-    {
-      "fromClassName": "Program",
-      "fromNamespace": "Programm.Program",
-      "fromSource": "Main.cs",
-      "toClassName": "ClassA",
-      "toNamespace": "NamespaceA.ClassA",
-      "toSource": "ClassA.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "ClassA",
-      "fromNamespace": "NamespaceA.ClassA",
-      "fromSource": "ClassA.cs",
-      "toClassName": "ClassB",
-      "toNamespace": "NamespaceB.ClassB",
-      "toSource": "ClassB.cs",
-      "usageType": "extends",
-    },
-  ],
-}
-`;
-
-exports[`C# metric tests > parsing C# dependencies > should calculate the right dependencies and coupling metrics for static using 1`] = `
-{
-  "metrics": Map {
-    "ClassA_And_B.cs" => {
-      "coupling_between_objects": 4,
-      "incoming_dependencies": 4,
-      "instability": 0,
-      "outgoing_dependencies": 0,
-    },
-    "Main.cs" => {
-      "coupling_between_objects": 4,
-      "incoming_dependencies": 0,
-      "instability": 1,
-      "outgoing_dependencies": 4,
-    },
-  },
-  "relationships": [
-    {
-      "fromClassName": "Program",
-      "fromNamespace": "Programm.Program",
-      "fromSource": "Main.cs",
-      "toClassName": "ClassB",
-      "toNamespace": "NormalUsedNamespace.ClassB",
-      "toSource": "ClassA_And_B.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "Program",
-      "fromNamespace": "Programm.Program",
-      "fromSource": "Main.cs",
-      "toClassName": "ClassC",
-      "toNamespace": "NormalUsedNamespace.ClassC",
-      "toSource": "ClassA_And_B.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "Program",
-      "fromNamespace": "Programm.Program",
-      "fromSource": "Main.cs",
-      "toClassName": "ClassA",
-      "toNamespace": "StaticUsedNamespace.ClassA",
-      "toSource": "ClassA_And_B.cs",
-      "usageType": "usage",
-    }
-  ],
-}
-`;
-
-exports[`C# metric tests > parsing C# dependencies > should calculate the right dependencies and coupling metrics when the code contains chaining method calls 1`] = `
-{
-  "metrics": Map {
-    "ChainingMethod.cs" => {
-      "coupling_between_objects": 5,
-      "incoming_dependencies": 3,
-      "instability": 0.4,
-      "outgoing_dependencies": 2,
-    },
-    "Program.cs" => {
-      "coupling_between_objects": 1,
-      "incoming_dependencies": 0,
-      "instability": 1,
-      "outgoing_dependencies": 1,
-    },
-  },
-  "relationships": [
-    {
-      "fromClassName": "Chaining",
-      "fromNamespace": "ChainingNamespace.Chaining",
-      "fromSource": "Program.cs",
-      "toClassName": "ClassA",
-      "toNamespace": "ChainingMethodNamespace.ClassA",
-      "toSource": "ChainingMethod.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "ClassA",
-      "fromNamespace": "ChainingMethodNamespace.ClassA",
-      "fromSource": "ChainingMethod.cs",
-      "toClassName": "ClassB",
-      "toNamespace": "ChainingMethodNamespace.ClassB",
-      "toSource": "ChainingMethod.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "ClassB",
-      "fromNamespace": "ChainingMethodNamespace.ClassB",
-      "fromSource": "ChainingMethod.cs",
-      "toClassName": "ClassC",
-      "toNamespace": "ChainingMethodNamespace.ClassC",
-      "toSource": "ChainingMethod.cs",
-      "usageType": "usage",
-    },
-  ],
-}
-`;
-
-exports[`C# metric tests > parsing C# dependencies > should calculate the right dependencies and coupling metrics when the code contains type conversion 1`] = `
-{
-  "metrics": Map {
-    "ClassAFile.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
-      "outgoing_dependencies": 1,
-    },
-    "ClassBFile.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 2,
-      "instability": 0,
-      "outgoing_dependencies": 0,
-    },
-    "Program.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 0,
-      "instability": 1,
-      "outgoing_dependencies": 2,
-    },
-  },
-  "relationships": [
-    {
-      "fromClassName": "Program",
-      "fromNamespace": "ProgramNamespace.Program",
-      "fromSource": "Program.cs",
-      "toClassName": "ClassA",
-      "toNamespace": "classANamespace.ClassA",
-      "toSource": "ClassAFile.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "Program",
-      "fromNamespace": "ProgramNamespace.Program",
-      "fromSource": "Program.cs",
-      "toClassName": "ClassB",
-      "toNamespace": "classBNamespace.ClassB",
-      "toSource": "ClassBFile.cs",
-      "usageType": "usage",
-    },
-    {
-      "fromClassName": "ClassA",
-      "fromNamespace": "classANamespace.ClassA",
-      "fromSource": "ClassAFile.cs",
-      "toClassName": "ClassB",
-      "toNamespace": "classBNamespace.ClassB",
-      "toSource": "ClassBFile.cs",
-      "usageType": "extends",
-    },
-  ],
-}
-`;
-
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for delegate 1`] = `
 {
   "metrics": Map {
@@ -601,9 +406,9 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "outgoing_dependencies": 1,
     },
     "Library\\FunctionCalls.cs" => {
-      "coupling_between_objects": 6,
-      "incoming_dependencies": 2,
-      "instability": 0.6666666666666666,
+      "coupling_between_objects": 9,
+      "incoming_dependencies": 5,
+      "instability": 0.4444444444444444,
       "outgoing_dependencies": 4,
     },
     "Library\\IAnotherParameterTypes.cs" => {
@@ -656,6 +461,33 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
     {
       "fromClassName": "BlubControllerOne1",
       "fromNamespace": "App.CouplingExamplesOne.BlubControllerOne1",
+      "fromSource": "BlubController.cs",
+      "toClassName": "FunctionCalls",
+      "toNamespace": "App.CouplingExamples.Library.FunctionCalls",
+      "toSource": "Library\\FunctionCalls.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "BlubControllerOne2",
+      "fromNamespace": "App.CouplingExamplesOne.BlubControllerOne2",
+      "fromSource": "BlubController.cs",
+      "toClassName": "FunctionCalls",
+      "toNamespace": "App.CouplingExamples.Library.FunctionCalls",
+      "toSource": "Library\\FunctionCalls.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "BlubControllerTwo1",
+      "fromNamespace": "App.CouplingExamplesTwo.BlubControllerTwo1",
+      "fromSource": "BlubController.cs",
+      "toClassName": "FunctionCalls",
+      "toNamespace": "App.CouplingExamples.Library.FunctionCalls",
+      "toSource": "Library\\FunctionCalls.cs",
+      "usageType": "usage",
+    },
+    {
+      "fromClassName": "BlubControllerTwo2",
+      "fromNamespace": "App.CouplingExamplesTwo.BlubControllerTwo2",
       "fromSource": "BlubController.cs",
       "toClassName": "FunctionCalls",
       "toNamespace": "App.CouplingExamples.Library.FunctionCalls",

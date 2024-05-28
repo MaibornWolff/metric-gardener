@@ -46,6 +46,7 @@ export class TypesQueryStrategy {
         const implementedFrom: string[] = [];
         let typeName = "";
         let node;
+
         for (const capture of match.captures) {
             let namespaceNotFoundYet = true;
             switch (capture.name) {
@@ -54,7 +55,6 @@ export class TypesQueryStrategy {
                         namespace = capture.node.text;
                         namespaceNotFoundYet = false;
                     }
-
                     break;
                 }
 
@@ -90,7 +90,7 @@ export class TypesQueryStrategy {
         }
 
         return {
-            node,
+            node: node!,
             namespace,
             typeName,
             classType,

@@ -126,7 +126,7 @@ export abstract class AbstractCollector {
 
     private getUsages(
         filePath: FilePath,
-        typesFromFile: Map<string, TypeInfo>,
+        typesFromFile: Map<FQTN, TypeInfo>,
         importReferences: Import[],
     ): {
         candidates: TypeUsageCandidate[];
@@ -137,37 +137,21 @@ export abstract class AbstractCollector {
 
         for (const [FQTN, typeDeclaration] of typesFromFile.entries()) {
             const usageCaptures: UsageCapture[] = this.getUsageCaptures(FQTN, typeDeclaration);
-            let fromFQTN = typeDeclaration;
 
             // Resolve usages against import statements and build concrete usages or usage candidates
 
             const processedUsageText = new Set<string>();
             for (const usageCapture of usageCaptures) {
-                const { name, usageType, source } = usageCapture;
-                let { text } = usageCapture;
+                const qualifiedNameParts = this.getCleanAndSplitName(usageCapture.text);
+                const qualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
 
-                if (processedUsageText.has(text)) {
+                if (processedUsageText.has(qualifiedName)) {
                     continue;
                 }
 
-                processedUsageText.add(text);
+                processedUsageText.add(qualifiedName);
 
-                const qualifiedNameParts = text.split(this.getNamespaceDelimiter());
-                const cleanNameParts = qualifiedNameParts.map((namePart) => {
-                    if (namePart.endsWith("[]") || namePart.endsWith("()")) {
-                        return namePart.slice(0, Math.max(0, namePart.length - 2));
-                    }
-
-                    if (namePart.endsWith("?")) {
-                        return namePart.slice(0, Math.max(0, namePart.length - 1));
-                    }
-
-                    return namePart;
-                });
-
-                text = cleanNameParts.join(this.getNamespaceDelimiter());
-
-                const qualifiedNamePrefix = cleanNameParts.shift();
+                const qualifiedNamePrefix = qualifiedNameParts.shift();
                 if (qualifiedNamePrefix === undefined) {
                     continue;
                 }
@@ -176,16 +160,9 @@ export abstract class AbstractCollector {
                     .get(filePath)
                     ?.get(qualifiedNamePrefix);
 
-                // Resolve the right entity/class/namespace in a file with multiple ones
-                if (source !== undefined) {
-                    for (const [temporaryKey, temporaryValue] of typesFromFile.entries()) {
-                        if (temporaryKey === source) {
-                            fromFQTN = temporaryValue;
-                        }
-                    }
-                }
+                const originalCleanNameParts = qualifiedName.split(this.getNamespaceDelimiter());
 
-                const originalCleanNameParts = text.split(this.getNamespaceDelimiter());
+                const { name, usageType, source } = usageCapture;
 
                 if (resolvedImport === undefined) {
                     if (
@@ -208,15 +185,15 @@ export abstract class AbstractCollector {
                     }
 
                     if (name === "call_expression") {
-                        unresolvedCallExpressions.push(this.buildCallExpression(text));
+                        unresolvedCallExpressions.push(this.buildCallExpression(qualifiedName));
                     }
 
                     // For languages that allow the usage of classes in the same namespace without the need of an import:
                     // add candidate in same namespace for unresolvable usage
 
-                    let usedNamespace = fromFQTN.namespace;
-                    if (!cleanQualifiedName.startsWith(fromFQTN.namespaceDelimiter)) {
-                        usedNamespace += fromFQTN.namespaceDelimiter;
+                    let usedNamespace = typeDeclaration.namespace;
+                    if (!cleanQualifiedName.startsWith(typeDeclaration.namespaceDelimiter)) {
+                        usedNamespace += typeDeclaration.namespaceDelimiter;
                     }
 
                     usedNamespace += cleanQualifiedName;
@@ -225,8 +202,8 @@ export abstract class AbstractCollector {
                     // Look in parent namespaces for the used class name even if no import is present
 
                     const parentNamespaceCandidates: string[] = [];
-                    if (fromFQTN.namespace.includes(this.getNamespaceDelimiter())) {
-                        const sourceNamespaceParts = fromFQTN.namespace.split(
+                    if (typeDeclaration.namespace.includes(this.getNamespaceDelimiter())) {
+                        const sourceNamespaceParts = typeDeclaration.namespace.split(
                             this.getNamespaceDelimiter(),
                         );
                         while (sourceNamespaceParts.length > 1) {
@@ -250,7 +227,7 @@ export abstract class AbstractCollector {
                                 while (clonedNameParts.length > 0) {
                                     moreCandidates.push(
                                         importReference.importReferenceFullName +
-                                            fromFQTN.namespaceDelimiter +
+                                            typeDeclaration.namespaceDelimiter +
                                             clonedNameParts.join(this.getNamespaceDelimiter()),
                                     );
                                     clonedNameParts.pop();
@@ -258,7 +235,7 @@ export abstract class AbstractCollector {
                             } else {
                                 moreCandidates.push(
                                     importReference.importReferenceFullName +
-                                        fromFQTN.namespaceDelimiter +
+                                        typeDeclaration.namespaceDelimiter +
                                         cleanQualifiedName,
                                 );
                             }
@@ -278,9 +255,9 @@ export abstract class AbstractCollector {
                         const usageCandidate: TypeUsageCandidate = {
                             usedNamespace: candidateUsedNamespace,
                             fromNamespace:
-                                fromFQTN.namespace +
-                                fromFQTN.namespaceDelimiter +
-                                fromFQTN.typeName,
+                                typeDeclaration.namespace +
+                                typeDeclaration.namespaceDelimiter +
+                                typeDeclaration.typeName,
                             sourceOfUsing: filePath,
                             usageType: usageType ?? "usage",
                         };
@@ -295,14 +272,16 @@ export abstract class AbstractCollector {
                     ) {
                         // Pop name of called function or similar callables
                         if (originalCleanNameParts.length > 1) {
-                            cleanNameParts.pop();
+                            qualifiedNameParts.pop();
                         }
 
                         // In case it cannot be resolved by resolvedImport name, try it later again
-                        unresolvedCallExpressions.push(this.buildCallExpression(text));
+                        unresolvedCallExpressions.push(this.buildCallExpression(qualifiedName));
                     }
 
-                    const modifiedQualifiedName = cleanNameParts.join(this.getNamespaceDelimiter());
+                    const modifiedQualifiedName = qualifiedNameParts.join(
+                        this.getNamespaceDelimiter(),
+                    );
                     processedUsageText.add(modifiedQualifiedName);
 
                     // Skip current one if invalid space is included in potential class or namespace name
@@ -316,11 +295,13 @@ export abstract class AbstractCollector {
                     const usageCandidate: TypeUsageCandidate = {
                         usedNamespace:
                             resolvedImport.importReferenceFullName +
-                            (cleanNameParts.length > 0
+                            (qualifiedNameParts.length > 0
                                 ? this.getNamespaceDelimiter() + modifiedQualifiedName
                                 : ""),
                         fromNamespace:
-                            fromFQTN.namespace + fromFQTN.namespaceDelimiter + fromFQTN.typeName,
+                            typeDeclaration.namespace +
+                            typeDeclaration.namespaceDelimiter +
+                            typeDeclaration.typeName,
                         sourceOfUsing: filePath,
                         usageType: usageType ?? "usage",
                     };
@@ -333,19 +314,19 @@ export abstract class AbstractCollector {
                         // In This case, alias can be a Qualified Name
                         // Add Same Namespace Candidate
                         // Add Parent Namespace Candidate
-                        const fromNamespaceParts = fromFQTN.namespace.split(
+                        const fromNamespaceParts = typeDeclaration.namespace.split(
                             this.getNamespaceDelimiter(),
                         );
                         while (fromNamespaceParts.length > 0) {
                             const usageCandidate: TypeUsageCandidate = {
                                 usedNamespace:
                                     fromNamespaceParts.join(this.getNamespaceDelimiter()) +
-                                    fromFQTN.namespaceDelimiter +
+                                    typeDeclaration.namespaceDelimiter +
                                     resolvedImport.importReferenceFullName,
                                 fromNamespace:
-                                    fromFQTN.namespace +
-                                    fromFQTN.namespaceDelimiter +
-                                    fromFQTN.typeName,
+                                    typeDeclaration.namespace +
+                                    typeDeclaration.namespaceDelimiter +
+                                    typeDeclaration.typeName,
                                 sourceOfUsing: filePath,
                                 usageType: usageType ?? "usage",
                             };
@@ -379,8 +360,8 @@ export abstract class AbstractCollector {
             usageCaptures.push({
                 name: capture.name,
                 text: capture.node.text,
-                usageType: undefined,
-                source: undefined,
+                usageType: "usage",
+                source: FQTN,
             });
         }
 
@@ -428,5 +409,21 @@ export abstract class AbstractCollector {
                 qualifiedName.includes(this.getNamespaceDelimiter()),
             namespaceDelimiter: this.getNamespaceDelimiter(),
         };
+    }
+
+    private getCleanAndSplitName(text: string): string[] {
+        const qualifiedNameParts = text.split(this.getNamespaceDelimiter());
+        const cleanNameParts = qualifiedNameParts.map((namePart) => {
+            if (namePart.endsWith("[]") || namePart.endsWith("()")) {
+                return namePart.slice(0, Math.max(0, namePart.length - 2));
+            }
+
+            if (namePart.endsWith("?")) {
+                return namePart.slice(0, Math.max(0, namePart.length - 1));
+            }
+
+            return namePart;
+        });
+        return cleanNameParts;
     }
 }

@@ -191,16 +191,19 @@ export class Coupling implements CouplingMetric {
             this.addFilePathIfNotExists(couplingValues, fromFile);
             this.addFilePathIfNotExists(couplingValues, toFile);
 
-            //add only +1 outgoing dependency per "toClassName" for every file
+            // Add only +1 outgoing dependency per "toClassName" for every file
             this.updateOutgoingDependency(fromFile, couplingValues, couplingItem);
             this.updateMetricsForFile(couplingItem.toSource, "incoming", couplingValues);
         }
+
         for (const [file, outgoingDependencies] of this.outgoingDependencyByFile) {
             couplingValues.get(file)!.outgoing_dependencies = outgoingDependencies.size;
         }
-        for(let file of couplingValues.keys()){
+
+        for (const file of couplingValues.keys()) {
             const couplingValue = couplingValues.get(file)!;
-            couplingValue.coupling_between_objects = couplingValue.incoming_dependencies + couplingValue.outgoing_dependencies;
+            couplingValue.coupling_between_objects =
+                couplingValue.incoming_dependencies + couplingValue.outgoing_dependencies;
             this.calculateInstability(couplingValue);
         }
 
@@ -208,11 +211,15 @@ export class Coupling implements CouplingMetric {
         return couplingValues;
     }
 
-    private addFilePathIfNotExists(couplingValues: Map<string, CouplingMetrics>, filePath: FilePath) {
+    private addFilePathIfNotExists(
+        couplingValues: Map<string, CouplingMetrics>,
+        filePath: FilePath,
+    ): void {
         if (!couplingValues.has(filePath)) {
             couplingValues.set(filePath, this.getNewCouplingMetrics());
         }
-        if(!this.outgoingDependencyByFile.has(filePath)){
+
+        if (!this.outgoingDependencyByFile.has(filePath)) {
             this.outgoingDependencyByFile.set(filePath, new Set());
         }
     }
@@ -221,10 +228,11 @@ export class Coupling implements CouplingMetric {
         fromFile: string,
         couplingValues: Map<string, CouplingMetrics>,
         couplingItem: Relationship,
-    ) {
+    ): void {
         if (!this.outgoingDependencyByFile.has(fromFile)) {
             this.outgoingDependencyByFile.set(fromFile, new Set());
         }
+
         this.outgoingDependencyByFile.get(fromFile)!.add(couplingItem.toNamespace);
     }
 
@@ -236,7 +244,8 @@ export class Coupling implements CouplingMetric {
         if (!this.outgoingDependencyByFile.has(filePath)) {
             this.outgoingDependencyByFile.set(filePath, new Set());
         }
-        let couplingMetrics = this.getCouplingMetricForFile(filePath, couplingValues);
+
+        const couplingMetrics = this.getCouplingMetricForFile(filePath, couplingValues);
 
         const parsedFile = parseSync(filePath, this.config);
         if (!(parsedFile instanceof ParsedFile)) {
@@ -253,7 +262,7 @@ export class Coupling implements CouplingMetric {
         ] += 1;
     }
 
-    private calculateInstability(couplingMetrics: CouplingMetrics) {
+    private calculateInstability(couplingMetrics: CouplingMetrics): void {
         if (
             couplingMetrics.outgoing_dependencies === 0 &&
             couplingMetrics.incoming_dependencies === 0
@@ -269,12 +278,13 @@ export class Coupling implements CouplingMetric {
     private getCouplingMetricForFile(
         filePath: string,
         couplingValues: Map<FilePath, CouplingMetrics>,
-    ) {
+    ): CouplingMetrics {
         let couplingMetrics = couplingValues.get(filePath);
         if (couplingMetrics === undefined) {
             couplingMetrics = this.getNewCouplingMetrics();
             couplingValues.set(filePath, couplingMetrics);
         }
+
         return couplingMetrics;
     }
 

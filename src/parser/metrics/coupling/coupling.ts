@@ -60,7 +60,7 @@ export class Coupling implements CouplingMetric {
 
         const { usageCandidates, callExpressions } = this.usageCollector.getUsageCandidates(
             parsedFile,
-            this.typeCollector.getTypesFromFile(parsedFile),
+            typesFromFile,
         );
         this.usagesCandidates.push(...usageCandidates);
         this.callExpressions.set(parsedFile.filePath, callExpressions);

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { type Relationship } from "../metric.js";
 import { type CallExpression } from "../../resolver/call-expressions/abstract-collector.js";
 import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
-import { getAdditionalRelationships } from "./call-expression-resolver.js";
+import { getRelationshipsFromCallExpressions } from "./call-expression-resolver.js";
 
 describe("CallExpressionResolver", () => {
     describe("resolves call expressions and retrieves additional and transitive relationships", () => {
@@ -59,9 +59,10 @@ describe("CallExpressionResolver", () => {
             unresolvedCallExpressions.set(firstItem.fromFile, [callExpression1, callExpression2]);
 
             const accessor1: Accessor = {
+                FQTN: "SecondItemNamespace.SecondItem",
                 filePath: "SecondItem",
                 name: "AccessorInSecondItem",
-                fromTypes: [
+                fromType:
                     {
                         namespace: "SecondItemNamespace",
                         sourceFile: "SecondItem",
@@ -70,14 +71,14 @@ describe("CallExpressionResolver", () => {
                         namespaceDelimiter: ".",
                         implementedFrom: [],
                     },
-                ],
                 returnType: "ThirdItem",
             };
 
             const accessor2: Accessor = {
+                FQTN: "ThirdItemNamespace.ThirdItem",
                 filePath: "ThirdItem",
                 name: "AccessorInThirdItem",
-                fromTypes: [
+                fromType:
                     {
                         namespace: "ThirdItemNamespace",
                         sourceFile: "ThirdItem",
@@ -86,15 +87,14 @@ describe("CallExpressionResolver", () => {
                         namespaceDelimiter: ".",
                         implementedFrom: [],
                     },
-                ],
                 returnType: "FourthItem",
             };
 
-            const publicAccessors = new Map<string, Accessor[]>();
+            const publicAccessors  = new Map<string, Accessor[]>();
             publicAccessors.set(accessor1.name, [accessor1]);
             publicAccessors.set(accessor2.name, [accessor2]);
 
-            const additionalRelationships = getAdditionalRelationships(
+            const additionalRelationships = getRelationshipsFromCallExpressions(
                 dependencyTree,
                 unresolvedCallExpressions,
                 publicAccessors,

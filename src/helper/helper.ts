@@ -17,22 +17,6 @@ export function lookupLowerCase<V>(map: Map<string, V>, key: string): V | undefi
 }
 
 /**
- * This was once used for debugging,
- * so that one can see which program code tree-sitter has found via the query
- * or which program code is behind a nodeType.
- */
-export function getNameAndTextFromCaptures(
-    captures: QueryCapture[],
-): Array<{ name: string; text: string }> {
-    return captures.map((capture) => {
-        return {
-            name: capture.name,
-            text: capture.node.text,
-        };
-    });
-}
-
-/**
  * Formats the specified file path for being output in the way it is configured for this parser run.
  * @param filePath The file path.
  * @param config The configuration for this parser run.

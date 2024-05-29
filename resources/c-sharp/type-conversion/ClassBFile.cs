@@ -7,4 +7,12 @@ namespace classBNamespace
             Console.WriteLine("its classB");
         }
     }
+
+    public class ClassAFactory
+    {
+        public ClassB CreateClassA()
+        {
+            return new ClassA();
+        }
+    }
 }

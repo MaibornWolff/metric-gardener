@@ -64,8 +64,8 @@ describe("outputMetrics", () => {
                         usageType: "usage",
                         fromFile: "/file/path2.test",
                         toFile: "/file/path1.test",
-                        fromClassName: "ClassA",
-                        toClassName: "ClassB",
+                        fromTypeName: "ClassA",
+                        toTypeName: "ClassB",
                     },
                 ],
                 metrics: new Map([

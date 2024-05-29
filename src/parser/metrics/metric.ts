@@ -52,8 +52,8 @@ export type Relationship = {
     toFQTN: FQTN;
     fromFile: string;
     toFile: string;
-    fromClassName: string;
-    toClassName: string;
+    fromTypeName: string;
+    toTypeName: string;
     usageType: UsageType;
 };
 

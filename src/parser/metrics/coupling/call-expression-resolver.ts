@@ -155,13 +155,13 @@ function resolveAccessorReturnType(
     dlog("accessorFileDependencies", accessorFileDependencies);
     for (const accessorFileDependency of accessorFileDependencies) {
         // TODO Imagine that returnType is MyTypeNumberOne
-        //  and toClassName MyType
+        //  and toTypeName MyType
         //  This would lead to a wrong dependency
         // Substring search using includes() is used because Return Types can look very differently:
         // Collection<MyTypeNumberOne>
         // Map<string, MyTypeNumberOne>
         // etc.
-        if (accessor.returnType.includes(accessorFileDependency.toClassName)) {
+        if (accessor.returnType.includes(accessorFileDependency.toTypeName)) {
             const uniqueId = accessorFileDependency.toFQTN + matchingDependency.fromFQTN;
 
             if (alreadyAddedRelationships.has(uniqueId)) {
@@ -182,8 +182,8 @@ function resolveAccessorReturnType(
                 const dependencyClone: Relationship = {
                     fromFQTN: matchingDependency.fromFQTN,
                     fromFile: matchingDependency.fromFile,
-                    toClassName: accessorFileDependency.toClassName,
-                    fromClassName: accessorFileDependency.toClassName,
+                    toTypeName: accessorFileDependency.toTypeName,
+                    fromTypeName: accessorFileDependency.toTypeName,
                     toFQTN: accessorFileDependency.toFQTN,
                     toFile: accessorFileDependency.toFile,
                     usageType: "usage",

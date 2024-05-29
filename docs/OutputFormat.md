@@ -16,8 +16,8 @@ The output format of the program is a JSON file. The JSON file contains the foll
 - `relationalMetrics`: A dictionary containing information about the relational metrics in the graph. Each relational metric has the following fields:
     - `directional`: A boolean value indicating whether the metric is directional.
     - `relations`: A list of dictionaries containing information about the relations in the graph. Each relation has the following fields:
-        - `fromSource`: The source of the relation.
-        - `toSource`: The destination of the relation.
+        - `fromFile`: The source file of the relation.
+        - `toFile`: The destination file of the relation.
 
 
 An example file is shown below:
@@ -81,16 +81,16 @@ An example file is shown below:
             "directional": true,
             "relations": [
                 {
-                    "fromSource": "FastControllerInterface.php",
-                    "toSource": "AnotherControllerInterface.php"
+                    "fromFile": "FastControllerInterface.php",
+                    "toFile": "AnotherControllerInterface.php"
                 },
                 {
-                    "fromSource": "FastControllerInterface.php",
-                    "toSource": "AnotherControllerInterface.php"
+                    "fromFile": "FastControllerInterface.php",
+                    "toFile": "AnotherControllerInterface.php"
                 },
                 {
-                    "fromSource": "FastControllerInterface.php",
-                    "toSource": "AnotherControllerInterface.php"
+                    "fromFile": "FastControllerInterface.php",
+                    "toFile": "AnotherControllerInterface.php"
                 }
             ]
         },
@@ -98,16 +98,16 @@ An example file is shown below:
             "directional": false,
             "relations": [
                 {
-                    "fromSource": "FastControllerInterface.php",
-                    "toSource": "AnotherControllerInterface.php"
+                    "fromFile": "FastControllerInterface.php",
+                    "toFile": "AnotherControllerInterface.php"
                 },
                 {
-                    "fromSource": "FastControllerInterface.php",
-                    "toSource": "AnotherControllerInterface.php"
+                    "fromFile": "FastControllerInterface.php",
+                    "toFile": "AnotherControllerInterface.php"
                 },
                 {
-                    "fromSource": "FastControllerInterface.php",
-                    "toSource": "AnotherControllerInterface.php"
+                    "fromFile": "FastControllerInterface.php",
+                    "toFile": "AnotherControllerInterface.php"
                 }
             ]
         }

@@ -3,21 +3,21 @@
 exports[`CallExpressionResolver > resolves call expressions and retrieves additional and transitive relationships > when call expressions with save calls, public accessors and the right dependencies are given 1`] = `
 [
   {
-    "fromClassName": "ThirdItem",
     "fromFQTN": "FirstItemNamespace.FirstItem",
     "fromFile": "FirstItem",
-    "toClassName": "ThirdItem",
+    "fromTypeName": "ThirdItem",
     "toFQTN": "ThirdItemNamespace.ThirdItem",
     "toFile": "ThirdItem",
+    "toTypeName": "ThirdItem",
     "usageType": "usage",
   },
   {
-    "fromClassName": "FourthItem",
     "fromFQTN": "FirstItemNamespace.FirstItem",
     "fromFile": "FirstItem",
-    "toClassName": "FourthItem",
+    "fromTypeName": "FourthItem",
     "toFQTN": "FourthItemNamespace.FourthItem",
     "toFile": "FourthItem",
+    "toTypeName": "FourthItem",
     "usageType": "usage",
   },
 ]

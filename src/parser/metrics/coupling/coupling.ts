@@ -123,8 +123,8 @@ export class Coupling implements CouplingMetric {
                         toFQTN: usage.usedNamespace,
                         fromFile: usage.sourceOfUsing,
                         toFile: usedNamespaceSource.sourceFile,
-                        fromClassName: fromNamespaceSource.typeName,
-                        toClassName: usedNamespaceSource.typeName,
+                        fromTypeName: fromNamespaceSource.typeName,
+                        toTypeName: usedNamespaceSource.typeName,
                         usageType: fixedUsageType,
                     },
                 ];

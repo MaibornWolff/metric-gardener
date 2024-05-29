@@ -12,8 +12,8 @@ describe("CallExpressionResolver", () => {
                 fromFile: "FirstItem",
                 toFile: "SecondItem",
                 toFQTN: "SecondItemNamespace.SecondItem",
-                fromClassName: "FirstItem",
-                toClassName: "SecondItem",
+                fromTypeName: "FirstItem",
+                toTypeName: "SecondItem",
                 usageType: "usage",
             };
 
@@ -22,8 +22,8 @@ describe("CallExpressionResolver", () => {
                 fromFile: "SecondItem",
                 toFile: "ThirdItem",
                 toFQTN: "ThirdItemNamespace.ThirdItem",
-                fromClassName: "FirstItem",
-                toClassName: "ThirdItem",
+                fromTypeName: "FirstItem",
+                toTypeName: "ThirdItem",
                 usageType: "usage",
             };
 
@@ -32,8 +32,8 @@ describe("CallExpressionResolver", () => {
                 fromFile: "ThirdItem",
                 toFile: "FourthItem",
                 toFQTN: "FourthItemNamespace.FourthItem",
-                fromClassName: "FirstItem",
-                toClassName: "FourthItem",
+                fromTypeName: "FirstItem",
+                toTypeName: "FourthItem",
                 usageType: "usage",
             };
 

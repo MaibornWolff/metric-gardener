@@ -51,13 +51,6 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it.skip("for static system.console.writeline using", async () => {
-            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
-            const couplingResult = await getCouplingMetrics(
-                csharpTestResourcesPath + "static-system-using/",
-            );
-            expect(couplingResult).toMatchSnapshot();
-        }, 1000);
         it("when the code contains type conversion", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(

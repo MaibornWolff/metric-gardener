@@ -74,8 +74,7 @@ export class Coupling implements CouplingMetric {
         const relationships = this.getRelationships(this.typesMap, this.usagesCandidates);
         dlog("\n\n", relationships);
 
-        let couplingMetrics = this.calculateCouplingMetrics(relationships);
-        const { tree } = this.buildDependencyTree(relationships, couplingMetrics);
+        const { tree } = this.buildDependencyTree(relationships);
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
@@ -86,7 +85,7 @@ export class Coupling implements CouplingMetric {
         relationships.push(...additionalRelationships);
         dlog("\n\n", "additionalRelationships", additionalRelationships, "\n\n");
 
-        couplingMetrics = this.calculateCouplingMetrics(relationships);
+        const couplingMetrics = this.calculateCouplingMetrics(relationships);
 
         return this.formatPrintedPaths(relationships, couplingMetrics);
     }
@@ -137,15 +136,12 @@ export class Coupling implements CouplingMetric {
         });
     }
 
-    private buildDependencyTree(
-        couplingResults: Relationship[],
-        allCouplingMetrics: Map<string, CouplingMetrics>,
-    ): {
+    private buildDependencyTree(relationships: Relationship[]): {
         tree: Map<string, Relationship[]>;
-        rootFiles: string[];
+        rootFiles: Set<string>;
     } {
         const tree = new Map<string, Relationship[]>();
-        for (const couplingItem of couplingResults) {
+        for (const couplingItem of relationships) {
             const treeItem = tree.get(couplingItem.fromSource);
             if (treeItem === undefined) {
                 tree.set(couplingItem.fromSource, [couplingItem]);
@@ -154,12 +150,7 @@ export class Coupling implements CouplingMetric {
             }
         }
 
-        const rootFiles: string[] = [];
-        for (const [sourceFile, couplingMetrics] of allCouplingMetrics) {
-            if (couplingMetrics.incoming_dependencies === 0) {
-                rootFiles.push(sourceFile);
-            }
-        }
+        const rootFiles = this.getRootFiles(relationships);
 
         return {
             tree,
@@ -172,6 +163,30 @@ export class Coupling implements CouplingMetric {
         // }
 
         // console.log(tree, rootFiles);
+    }
+
+    private getRootFiles(relationships: Relationship[]): Set<string> {
+        const allFiles = new Map<string, boolean>();
+        for (const relationship of relationships) {
+            if (!allFiles.has(relationship.fromSource)) {
+                allFiles.set(relationship.fromSource, true);
+            }
+
+            if (!allFiles.has(relationship.toSource)) {
+                allFiles.set(relationship.toSource, false);
+            }
+
+            allFiles.set(relationship.toSource, false);
+        }
+
+        const rootFiles = new Set<string>();
+        for (const [file, isRoot] of allFiles) {
+            if (isRoot) {
+                rootFiles.add(file);
+            }
+        }
+
+        return rootFiles;
     }
 
     private calculateCouplingMetrics(

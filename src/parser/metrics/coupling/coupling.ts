@@ -18,7 +18,7 @@ import { formatPrintPath } from "../../../helper/helper.js";
 import { type PublicAccessorCollector } from "../../resolver/public-accessor-collector.js";
 import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
 import { type Configuration } from "../../configuration.js";
-import { getAdditionalRelationships } from "./call-expression-resolver.js";
+import { getRelationshipsFromCallExpressions } from "./call-expression-resolver.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
@@ -74,7 +74,7 @@ export class Coupling implements CouplingMetric {
 
         const tree = this.buildDependencyTree(relationships);
 
-        const additionalRelationships = getAdditionalRelationships(
+        const additionalRelationships = getRelationshipsFromCallExpressions(
             tree,
             this.callExpressions,
             this.publicAccessorsMap,

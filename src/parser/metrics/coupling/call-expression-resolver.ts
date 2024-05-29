@@ -8,8 +8,8 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
     dlog = logger;
 });
 
-export function getAdditionalRelationships(
-    tree: Map<string, Relationship[]>,
+export function getRelationshipsFromCallExpressions(
+    fileToRelations: Map<string, Relationship[]>,
     unresolvedCallExpressions: Map<string, CallExpression[]>,
     accessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>,
@@ -17,7 +17,7 @@ export function getAdditionalRelationships(
     const additionalRelationships: Relationship[] = [];
 
     for (const [filePath, callExpressions] of unresolvedCallExpressions) {
-        const fileDependencies = tree.get(filePath) ?? [];
+        const fileDependencies = fileToRelations.get(filePath) ?? [];
 
         dlog("RESOLVING:", fileDependencies);
 
@@ -70,59 +70,59 @@ export function getAdditionalRelationships(
                     // add both of them to not lose the correct dependency.
                     // this might lead to higher coupling values,
                     // but it is not that crucial as shown in the master thesis related to MetricGardener
-                    //for (const type of accessor.fromTypes) {
+                    // for (const type of accessor.fromTypes) {
                     const type = accessor.fromType;
-                        const fullyQualifiedNameCandidate =
-                            type.namespace + type.namespaceDelimiter + type.typeName;
+                    const fullyQualifiedNameCandidate =
+                        type.namespace + type.namespaceDelimiter + type.typeName;
 
-                        dlog("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
+                    dlog("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
 
-                        // FirstAccessor is a property or method
-                        // The type of myVariable must be an already added dependency of the current base type/class (filePath),
-                        // so that subsequent method calls or attribute accesses can be resolved.
-                        // Example:
-                        // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
-                        const baseDependency = fileDependencies.find((dependency) => {
+                    // FirstAccessor is a property or method
+                    // The type of myVariable must be an already added dependency of the current base type/class (filePath),
+                    // so that subsequent method calls or attribute accesses can be resolved.
+                    // Example:
+                    // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
+                    const baseDependency = fileDependencies.find((dependency) => {
+                        return dependency.toFQTN === fullyQualifiedNameCandidate;
+                    });
+
+                    // In case of chained accesses, look in dependencies added for previous chain elements:
+                    // e.g. look up already added dependency of return type of FirstAccessor to resolve SecondAccessor
+                    // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
+                    const callExpressionDependency = fileAdditionalRelationships.find(
+                        (dependency) => {
                             return dependency.toFQTN === fullyQualifiedNameCandidate;
-                        });
+                        },
+                    );
 
-                        // In case of chained accesses, look in dependencies added for previous chain elements:
-                        // e.g. look up already added dependency of return type of FirstAccessor to resolve SecondAccessor
-                        // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
-                        const callExpressionDependency = fileAdditionalRelationships.find(
-                            (dependency) => {
-                                return dependency.toFQTN === fullyQualifiedNameCandidate;
-                            },
+                    if (baseDependency !== undefined) {
+                        added = resolveAccessorReturnType(
+                            baseDependency,
+                            accessor,
+                            type,
+                            fileToRelations,
+                            fileAdditionalRelationships,
+                            alreadyAddedRelationships,
                         );
+                    } else if (callExpressionDependency !== undefined) {
+                        added = resolveAccessorReturnType(
+                            callExpressionDependency,
+                            accessor,
+                            type,
+                            fileToRelations,
+                            fileAdditionalRelationships,
+                            alreadyAddedRelationships,
+                        );
+                    }
 
-                        if (baseDependency !== undefined) {
-                            added = resolveAccessorReturnType(
-                                baseDependency,
-                                accessor,
-                                type,
-                                fileToRelations,
-                                fileAdditionalRelationships,
-                                alreadyAddedRelationships,
-                            );
-                        } else if (callExpressionDependency !== undefined) {
-                            added = resolveAccessorReturnType(
-                                callExpressionDependency,
-                                accessor,
-                                type,
-                                fileToRelations,
-                                fileAdditionalRelationships,
-                                alreadyAddedRelationships,
-                            );
-                        }
-
-                        if (added) {
-                            // Iterate only for the first namespace of an added accessor:
-                            // One namespace of the accessor is fitting and
-                            // the corresponding accessor was added as a dependency
-                            // It seems not necessary to check the other namespaces of the accessor
-                            break;
-                        }
-                    //}
+                    if (added) {
+                        // Iterate only for the first namespace of an added accessor:
+                        // One namespace of the accessor is fitting and
+                        // the corresponding accessor was added as a dependency
+                        // It seems not necessary to check the other namespaces of the accessor
+                        break;
+                    }
+                    // }
                 }
             }
         }

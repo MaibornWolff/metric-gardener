@@ -400,16 +400,16 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "BlubController.cs" => {
-      "coupling_between_objects": 8,
-      "incoming_dependencies": 7,
-      "instability": 0.125,
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 2,
+      "instability": 0.3333333333333333,
       "outgoing_dependencies": 1,
     },
     "Library\\FunctionCalls.cs" => {
-      "coupling_between_objects": 9,
-      "incoming_dependencies": 5,
-      "instability": 0.4444444444444444,
-      "outgoing_dependencies": 4,
+      "coupling_between_objects": 4,
+      "incoming_dependencies": 2,
+      "instability": 0.5,
+      "outgoing_dependencies": 2,
     },
     "Library\\IAnotherParameterTypes.cs" => {
       "coupling_between_objects": 1,
@@ -430,10 +430,10 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "outgoing_dependencies": 0,
     },
     "Library\\ObjectCreations.cs" => {
-      "coupling_between_objects": 8,
+      "coupling_between_objects": 5,
       "incoming_dependencies": 1,
-      "instability": 0.875,
-      "outgoing_dependencies": 7,
+      "instability": 0.8,
+      "outgoing_dependencies": 4,
     },
     "Library\\ParameterTypes.cs" => {
       "coupling_between_objects": 5,
@@ -805,14 +805,14 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "Programm.cs" => {
-      "coupling_between_objects": 2,
+      "coupling_between_objects": 1,
       "incoming_dependencies": 0,
       "instability": 1,
-      "outgoing_dependencies": 2,
+      "outgoing_dependencies": 1,
     },
     "TwoNamespaceWithSameClassName.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 2,
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
       "instability": 0,
       "outgoing_dependencies": 0,
     },

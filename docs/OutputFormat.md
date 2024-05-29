@@ -1,3 +1,5 @@
+# THIS IS NOT YET IMPLEMENTED, but coming soon!
+
 # Output Format
 
 The output format of the program is a JSON file. The JSON file contains the following fields:

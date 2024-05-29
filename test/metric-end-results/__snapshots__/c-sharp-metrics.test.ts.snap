@@ -34,8 +34,8 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "ClassA.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 2,
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
       "instability": 0,
       "outgoing_dependencies": 0,
     },

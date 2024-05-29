@@ -72,7 +72,7 @@ export class Coupling implements CouplingMetric {
         const relationships = this.getRelationships(this.typesMap, this.usagesCandidates);
         dlog("\n\n", relationships);
 
-        const { tree } = this.buildDependencyTree(relationships);
+        const tree = this.buildDependencyTree(relationships);
 
         const additionalRelationships = getAdditionalRelationships(
             tree,
@@ -134,10 +134,7 @@ export class Coupling implements CouplingMetric {
         });
     }
 
-    private buildDependencyTree(relationships: Relationship[]): {
-        tree: Map<string, Relationship[]>;
-        rootFiles: Set<string>;
-    } {
+    private buildDependencyTree(relationships: Relationship[]): Map<string, Relationship[]> {
         const tree = new Map<string, Relationship[]>();
         for (const couplingItem of relationships) {
             const treeItem = tree.get(couplingItem.fromSource);
@@ -148,41 +145,7 @@ export class Coupling implements CouplingMetric {
             }
         }
 
-        const rootFiles = this.getRootFiles(relationships);
-
-        return {
-            tree,
-            rootFiles,
-        };
-
-        // TODO cyclic dependency detection
-        // for (const rootFile of rootFiles) {
-        //     // scan tree for cycles and so on
-        // }
-    }
-
-    private getRootFiles(relationships: Relationship[]): Set<string> {
-        const allFiles = new Map<string, boolean>();
-        for (const relationship of relationships) {
-            if (!allFiles.has(relationship.fromSource)) {
-                allFiles.set(relationship.fromSource, true);
-            }
-
-            if (!allFiles.has(relationship.toSource)) {
-                allFiles.set(relationship.toSource, false);
-            }
-
-            allFiles.set(relationship.toSource, false);
-        }
-
-        const rootFiles = new Set<string>();
-        for (const [file, isRoot] of allFiles) {
-            if (isRoot) {
-                rootFiles.add(file);
-            }
-        }
-
-        return rootFiles;
+        return tree;
     }
 
     private calculateCouplingMetrics(

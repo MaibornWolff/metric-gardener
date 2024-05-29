@@ -172,8 +172,8 @@ function buildOutputObject(
 
     for (const couplingMetricResult of couplingMetricResults) {
         output.relationships.push({
-            from: couplingMetricResult.fromSource,
-            to: couplingMetricResult.toSource,
+            from: couplingMetricResult.fromFile,
+            to: couplingMetricResult.toFile,
             metrics: { coupling: 100 },
         });
     }

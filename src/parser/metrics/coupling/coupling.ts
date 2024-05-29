@@ -121,8 +121,8 @@ export class Coupling implements CouplingMetric {
                     {
                         fromNamespace: usage.fromNamespace,
                         toNamespace: usage.usedNamespace,
-                        fromSource: usage.sourceOfUsing,
-                        toSource: usedNamespaceSource.sourceFile,
+                        fromFile: usage.sourceOfUsing,
+                        toFile: usedNamespaceSource.sourceFile,
                         fromClassName: fromNamespaceSource.typeName,
                         toClassName: usedNamespaceSource.typeName,
                         usageType: fixedUsageType,
@@ -136,12 +136,12 @@ export class Coupling implements CouplingMetric {
 
     private buildDependencyTree(relationships: Relationship[]): Map<string, Relationship[]> {
         const tree = new Map<string, Relationship[]>();
-        for (const couplingItem of relationships) {
-            const treeItem = tree.get(couplingItem.fromSource);
+        for (const relation of relationships) {
+            const treeItem = tree.get(relation.fromFile);
             if (treeItem === undefined) {
-                tree.set(couplingItem.fromSource, [couplingItem]);
+                tree.set(relation.fromFile, [relation]);
             } else {
-                treeItem.push(couplingItem);
+                treeItem.push(relation);
             }
         }
 
@@ -156,14 +156,14 @@ export class Coupling implements CouplingMetric {
         const incomingDependenciesByFile = new Map<FilePath, Set<FQTN>>();
 
         for (const relationship of relationships) {
-            const { fromSource } = relationship;
-            const { toSource } = relationship;
+            const { fromFile } = relationship;
+            const { toFile } = relationship;
 
-            this.addNewCouplingMetricIfNotExists(couplingValues, fromSource);
-            this.addNewCouplingMetricIfNotExists(couplingValues, toSource);
+            this.addNewCouplingMetricIfNotExists(couplingValues, fromFile);
+            this.addNewCouplingMetricIfNotExists(couplingValues, toFile);
 
-            this.updateDependency(outgoingDependenciesByFile, fromSource, toSource);
-            this.updateDependency(incomingDependenciesByFile, toSource, fromSource);
+            this.updateDependency(outgoingDependenciesByFile, fromFile, toFile);
+            this.updateDependency(incomingDependenciesByFile, toFile, fromFile);
         }
 
         for (const [file, dependencies] of outgoingDependenciesByFile) {
@@ -237,8 +237,8 @@ export class Coupling implements CouplingMetric {
     ): CouplingResult {
         if (this.config.relativePaths) {
             for (const relationship of relationships) {
-                relationship.fromSource = formatPrintPath(relationship.fromSource, this.config);
-                relationship.toSource = formatPrintPath(relationship.toSource, this.config);
+                relationship.fromFile = formatPrintPath(relationship.fromFile, this.config);
+                relationship.toFile = formatPrintPath(relationship.toFile, this.config);
             }
 
             const metrics = new Map<string, CouplingMetrics>();

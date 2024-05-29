@@ -9,8 +9,8 @@ describe("CallExpressionResolver", () => {
         it("when call expressions with save calls, public accessors and the right dependencies are given", () => {
             const firstItem: Relationship = {
                 fromNamespace: "FirstItemNamespace.FirstItem",
-                fromSource: "FirstItem",
-                toSource: "SecondItem",
+                fromFile: "FirstItem",
+                toFile: "SecondItem",
                 toNamespace: "SecondItemNamespace.SecondItem",
                 fromClassName: "FirstItem",
                 toClassName: "SecondItem",
@@ -19,8 +19,8 @@ describe("CallExpressionResolver", () => {
 
             const secondItem: Relationship = {
                 fromNamespace: "SecondItemNamespace.SecondItem",
-                fromSource: "SecondItem",
-                toSource: "ThirdItem",
+                fromFile: "SecondItem",
+                toFile: "ThirdItem",
                 toNamespace: "ThirdItemNamespace.ThirdItem",
                 fromClassName: "FirstItem",
                 toClassName: "ThirdItem",
@@ -29,8 +29,8 @@ describe("CallExpressionResolver", () => {
 
             const thirdItem: Relationship = {
                 fromNamespace: "ThirdItemNamespace.ThirdItem",
-                fromSource: "ThirdItem",
-                toSource: "FourthItem",
+                fromFile: "ThirdItem",
+                toFile: "FourthItem",
                 toNamespace: "FourthItemNamespace.FourthItem",
                 fromClassName: "FirstItem",
                 toClassName: "FourthItem",
@@ -38,10 +38,10 @@ describe("CallExpressionResolver", () => {
             };
 
             const dependencyTree = new Map<string, Relationship[]>();
-            dependencyTree.set(firstItem.fromSource, [firstItem]);
-            dependencyTree.set(secondItem.fromSource, [secondItem]);
-            dependencyTree.set(thirdItem.fromSource, [thirdItem]);
-            dependencyTree.set(thirdItem.toSource, []);
+            dependencyTree.set(firstItem.fromFile, [firstItem]);
+            dependencyTree.set(secondItem.fromFile, [secondItem]);
+            dependencyTree.set(thirdItem.fromFile, [thirdItem]);
+            dependencyTree.set(thirdItem.toFile, []);
 
             const callExpression1: CallExpression = {
                 name: "myVariable?.UnknownAccessor?.AccessorInSecondItem?.AccessorInThirdItem?",
@@ -56,7 +56,7 @@ describe("CallExpressionResolver", () => {
             };
 
             const unresolvedCallExpressions = new Map<string, CallExpression[]>();
-            unresolvedCallExpressions.set(firstItem.fromSource, [callExpression1, callExpression2]);
+            unresolvedCallExpressions.set(firstItem.fromFile, [callExpression1, callExpression2]);
 
             const accessor1: Accessor = {
                 filePath: "SecondItem",

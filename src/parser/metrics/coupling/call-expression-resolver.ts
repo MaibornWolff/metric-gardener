@@ -61,7 +61,7 @@ export function getAdditionalRelationships(
                 let added;
 
                 for (const accessor of clonedAccessors) {
-                    if (accessor.fromTypes.length === 0) {
+                    if (!accessor.fromType) {
                         continue;
                     }
 
@@ -70,7 +70,8 @@ export function getAdditionalRelationships(
                     // add both of them to not lose the correct dependency.
                     // this might lead to higher coupling values,
                     // but it is not that crucial as shown in the master thesis related to MetricGardener
-                    for (const type of accessor.fromTypes) {
+                    //for (const type of accessor.fromTypes) {
+                    const type = accessor.fromType;
                         const fullyQualifiedNameCandidate =
                             type.namespace + type.namespaceDelimiter + type.typeName;
 
@@ -99,7 +100,7 @@ export function getAdditionalRelationships(
                                 baseDependency,
                                 accessor,
                                 type,
-                                tree,
+                                fileToRelations,
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships,
                             );
@@ -108,7 +109,7 @@ export function getAdditionalRelationships(
                                 callExpressionDependency,
                                 accessor,
                                 type,
-                                tree,
+                                fileToRelations,
                                 fileAdditionalRelationships,
                                 alreadyAddedRelationships,
                             );
@@ -121,7 +122,7 @@ export function getAdditionalRelationships(
                             // It seems not necessary to check the other namespaces of the accessor
                             break;
                         }
-                    }
+                    //}
                 }
             }
         }

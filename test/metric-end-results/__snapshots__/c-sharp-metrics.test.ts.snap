@@ -771,6 +771,45 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for static using 1`] = `
+{
+  "metrics": Map {
+    "Classes.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "ProgramFile.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+        "fromClassName": "ProgramClass",
+        "fromNamespace": "ProgramNamespace.ProgramClass",
+        "fromSource": "ProgramFile.cs",
+        "toClassName": "ClassA",
+        "toNamespace": "StaticUsedNamespace.ClassA",
+        "toSource": "Classes.cs",
+        "usageType": "usage",
+    },
+    {
+      "fromClassName": "ProgramClass",
+      "fromNamespace": "ProgramNamespace.ProgramClass",
+      "fromSource": "ProgramFile.cs",
+      "toClassName": "ClassB",
+      "toNamespace": "NormalUsedNamespace.ClassB",
+      "toSource": "Classes.cs",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for struct 1`] = `
 {
   "metrics": Map {

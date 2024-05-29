@@ -366,8 +366,8 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
   },
   "relationships": [
     {
-      "fromClassName": "Program",
-      "fromNamespace": "mainNamespace.Program",
+      "fromClassName": "ClassAsReturnType",
+      "fromNamespace": "mainNamespace.ClassAsReturnType",
       "fromSource": "Programm.cs",
       "toClassName": "ImplementClass",
       "toNamespace": "implementClassNamespace.ImplementClass",
@@ -384,8 +384,8 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "usageType": "usage",
     },
     {
-      "fromClassName": "ClassAsReturnType",
-      "fromNamespace": "mainNamespace.ClassAsReturnType",
+      "fromClassName": "Program",
+      "fromNamespace": "mainNamespace.Program",
       "fromSource": "Programm.cs",
       "toClassName": "ImplementClass",
       "toNamespace": "implementClassNamespace.ImplementClass",

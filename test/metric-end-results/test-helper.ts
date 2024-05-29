@@ -136,8 +136,8 @@ function sortCouplingResults(couplingResult: CouplingResult): void {
     );
     couplingResult.relationships.sort((a, b) => {
         // Unique ID for relationships adapted from metrics/coupling/Coupling.ts getRelationships(...)
-        const uniqueIdA = a.toNamespace + a.fromNamespace;
-        const uniqueIdB = b.toNamespace + b.fromNamespace;
+        const uniqueIdA = (a.toFQTN as string) + (a.fromFQTN as string);
+        const uniqueIdB = (b.toFQTN as string) + (b.fromFQTN as string);
         return strcmp(uniqueIdA, uniqueIdB);
     });
 }

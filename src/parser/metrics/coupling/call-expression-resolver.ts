@@ -181,11 +181,11 @@ function resolveAccessorReturnType(
 
                 const dependencyClone: Relationship = {
                     fromNamespace: matchingDependency.fromNamespace,
-                    fromSource: matchingDependency.fromSource,
+                    fromFile: matchingDependency.fromFile,
                     toClassName: accessorFileDependency.toClassName,
                     fromClassName: accessorFileDependency.toClassName,
                     toNamespace: accessorFileDependency.toNamespace,
-                    toSource: accessorFileDependency.toSource,
+                    toFile: accessorFileDependency.toFile,
                     usageType: "usage",
                 };
 

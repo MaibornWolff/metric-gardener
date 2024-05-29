@@ -48,10 +48,10 @@ export type MetricError = {
 };
 
 export type Relationship = {
-    fromNamespace: string;
-    toNamespace: string;
-    fromSource: string;
-    toSource: string;
+    fromNamespace: FQTN;
+    toNamespace: FQTN;
+    fromFile: string;
+    toFile: string;
     fromClassName: string;
     toClassName: string;
     usageType: UsageType;

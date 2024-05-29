@@ -4,20 +4,20 @@ exports[`CallExpressionResolver > resolves call expressions and retrieves additi
 [
   {
     "fromClassName": "ThirdItem",
+    "fromFile": "FirstItem",
     "fromNamespace": "FirstItemNamespace.FirstItem",
-    "fromSource": "FirstItem",
     "toClassName": "ThirdItem",
+    "toFile": "ThirdItem",
     "toNamespace": "ThirdItemNamespace.ThirdItem",
-    "toSource": "ThirdItem",
     "usageType": "usage",
   },
   {
     "fromClassName": "FourthItem",
+    "fromFile": "FirstItem",
     "fromNamespace": "FirstItemNamespace.FirstItem",
-    "fromSource": "FirstItem",
     "toClassName": "FourthItem",
+    "toFile": "FourthItem",
     "toNamespace": "FourthItemNamespace.FourthItem",
-    "toSource": "FourthItem",
     "usageType": "usage",
   },
 ]

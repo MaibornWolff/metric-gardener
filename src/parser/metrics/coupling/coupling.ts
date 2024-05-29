@@ -9,7 +9,7 @@ import { type UsagesCollector } from "../../resolver/usages-collector.js";
 import {
     type CouplingMetric,
     type Relationship,
-    ParsedFile,
+    type ParsedFile,
     type CouplingMetrics,
     type CouplingResult,
     type MetricName,
@@ -18,7 +18,6 @@ import { formatPrintPath } from "../../../helper/helper.js";
 import { type PublicAccessorCollector } from "../../resolver/public-accessor-collector.js";
 import { type Accessor } from "../../resolver/accessors/abstract-collector.js";
 import { type Configuration } from "../../configuration.js";
-import { parseSync } from "../../../helper/tree-parser.js";
 import { getAdditionalRelationships } from "./call-expression-resolver.js";
 
 let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
@@ -31,7 +30,6 @@ export class Coupling implements CouplingMetric {
     private readonly publicAccessorsMap = new Map<string, Accessor[]>();
     private readonly usagesCandidates: UsageCandidate[] = [];
     private readonly callExpressions = new Map<string, CallExpression[]>();
-    private readonly outgoingDependencyByFile = new Map<FilePath, Set<FQTN>>();
 
     constructor(
         private readonly config: Configuration,
@@ -161,8 +159,6 @@ export class Coupling implements CouplingMetric {
         // for (const rootFile of rootFiles) {
         //     // scan tree for cycles and so on
         // }
-
-        // console.log(tree, rootFiles);
     }
 
     private getRootFiles(relationships: Relationship[]): Set<string> {
@@ -193,24 +189,29 @@ export class Coupling implements CouplingMetric {
         relationships: Relationship[],
     ): Map<FilePath, CouplingMetrics> {
         const couplingValues = new Map<string, CouplingMetrics>();
-        for (const couplingItem of relationships) {
-            const fromFile = couplingItem.fromSource;
-            const toFile = couplingItem.toSource;
+        const outgoingDependenciesByFile = new Map<FilePath, Set<FQTN>>();
+        const incomingDependenciesByFile = new Map<FilePath, Set<FQTN>>();
 
-            this.addFilePathIfNotExists(couplingValues, fromFile);
-            this.addFilePathIfNotExists(couplingValues, toFile);
+        for (const relationship of relationships) {
+            const { fromSource } = relationship;
+            const { toSource } = relationship;
 
-            // Add only +1 outgoing dependency per "toClassName" for every file
-            this.updateOutgoingDependency(fromFile, couplingItem);
-            this.updateMetricsForFile(couplingItem.toSource, "incoming", couplingValues);
+            this.addNewCouplingMetricIfNotExists(couplingValues, fromSource);
+            this.addNewCouplingMetricIfNotExists(couplingValues, toSource);
+
+            this.updateDependency(outgoingDependenciesByFile, fromSource, toSource);
+            this.updateDependency(incomingDependenciesByFile, toSource, fromSource);
         }
 
-        for (const [file, outgoingDependencies] of this.outgoingDependencyByFile) {
-            couplingValues.get(file)!.outgoing_dependencies = outgoingDependencies.size;
+        for (const [file, dependencies] of outgoingDependenciesByFile) {
+            couplingValues.get(file)!.outgoing_dependencies = dependencies.size;
         }
 
-        for (const file of couplingValues.keys()) {
-            const couplingValue = couplingValues.get(file)!;
+        for (const [file, dependencies] of incomingDependenciesByFile) {
+            couplingValues.get(file)!.incoming_dependencies = dependencies.size;
+        }
+
+        for (const couplingValue of couplingValues.values()) {
             couplingValue.coupling_between_objects =
                 couplingValue.incoming_dependencies + couplingValue.outgoing_dependencies;
             this.calculateInstability(couplingValue);
@@ -220,46 +221,30 @@ export class Coupling implements CouplingMetric {
         return couplingValues;
     }
 
-    private addFilePathIfNotExists(
+    private addNewCouplingMetricIfNotExists(
         couplingValues: Map<string, CouplingMetrics>,
         filePath: FilePath,
     ): void {
         if (!couplingValues.has(filePath)) {
-            couplingValues.set(filePath, this.getNewCouplingMetrics());
-        }
-
-        if (!this.outgoingDependencyByFile.has(filePath)) {
-            this.outgoingDependencyByFile.set(filePath, new Set());
+            couplingValues.set(filePath, {
+                outgoing_dependencies: 0,
+                incoming_dependencies: 0,
+                coupling_between_objects: 0,
+                instability: 0,
+            });
         }
     }
 
-    private updateOutgoingDependency(fromFile: string, couplingItem: Relationship): void {
-        if (!this.outgoingDependencyByFile.has(fromFile)) {
-            this.outgoingDependencyByFile.set(fromFile, new Set());
-        }
-
-        this.outgoingDependencyByFile.get(fromFile)!.add(couplingItem.toNamespace);
-    }
-
-    private updateMetricsForFile(
-        filePath: string,
-        direction: string,
-        couplingValues: Map<FilePath, CouplingMetrics>,
+    private updateDependency(
+        dependencyByFile: Map<FilePath, Set<FQTN>>,
+        thisFile: string,
+        relationFile: string,
     ): void {
-        if (!this.outgoingDependencyByFile.has(filePath)) {
-            this.outgoingDependencyByFile.set(filePath, new Set());
+        if (!dependencyByFile.has(thisFile)) {
+            dependencyByFile.set(thisFile, new Set());
         }
 
-        const couplingMetrics = this.getCouplingMetricForFile(filePath, couplingValues);
-
-        const parsedFile = parseSync(filePath, this.config);
-        if (!(parsedFile instanceof ParsedFile)) {
-            return;
-        }
-
-        couplingMetrics[
-            direction === "outgoing" ? "outgoing_dependencies" : "incoming_dependencies"
-        ] += 1;
+        dependencyByFile.get(thisFile)!.add(relationFile);
     }
 
     private calculateInstability(couplingMetrics: CouplingMetrics): void {
@@ -273,28 +258,6 @@ export class Coupling implements CouplingMetric {
                 couplingMetrics.outgoing_dependencies /
                 (couplingMetrics.outgoing_dependencies + couplingMetrics.incoming_dependencies);
         }
-    }
-
-    private getCouplingMetricForFile(
-        filePath: string,
-        couplingValues: Map<FilePath, CouplingMetrics>,
-    ): CouplingMetrics {
-        let couplingMetrics = couplingValues.get(filePath);
-        if (couplingMetrics === undefined) {
-            couplingMetrics = this.getNewCouplingMetrics();
-            couplingValues.set(filePath, couplingMetrics);
-        }
-
-        return couplingMetrics;
-    }
-
-    private getNewCouplingMetrics(): CouplingMetrics {
-        return {
-            outgoing_dependencies: 0,
-            incoming_dependencies: 0,
-            coupling_between_objects: 0,
-            instability: 0,
-        };
     }
 
     /**

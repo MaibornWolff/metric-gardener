@@ -313,7 +313,7 @@ export abstract class AbstractCollector {
                 usageType: usageCapture.usageType,
             };
             // TODO prevent duplicate adds in current file
-            //  when is it a duplicate? (usedNamespace + fromNamespace + sourceOfUsing?)
+            //  when is it a duplicate? (usedNamespace + fromFQTN + sourceOfUsing?)
             usagesAndCandidates.push(usageCandidate);
         }
 

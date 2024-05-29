@@ -59,8 +59,8 @@ describe("outputMetrics", () => {
             const relationshipMetrics: CouplingResult = {
                 relationships: [
                     {
-                        fromNamespace: "fromNamespace",
-                        toNamespace: "toNamespace",
+                        fromFQTN: "fromNamespace",
+                        toFQTN: "toNamespace",
                         usageType: "usage",
                         fromFile: "/file/path2.test",
                         toFile: "/file/path1.test",

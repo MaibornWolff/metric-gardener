@@ -82,7 +82,7 @@ export function getAdditionalRelationships(
                         // Example:
                         // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
                         const baseDependency = fileDependencies.find((dependency) => {
-                            return dependency.toNamespace === fullyQualifiedNameCandidate;
+                            return dependency.toFQTN === fullyQualifiedNameCandidate;
                         });
 
                         // In case of chained accesses, look in dependencies added for previous chain elements:
@@ -90,7 +90,7 @@ export function getAdditionalRelationships(
                         // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
                         const callExpressionDependency = fileAdditionalRelationships.find(
                             (dependency) => {
-                                return dependency.toNamespace === fullyQualifiedNameCandidate;
+                                return dependency.toFQTN === fullyQualifiedNameCandidate;
                             },
                         );
 
@@ -162,7 +162,7 @@ function resolveAccessorReturnType(
         // Map<string, MyTypeNumberOne>
         // etc.
         if (accessor.returnType.includes(accessorFileDependency.toClassName)) {
-            const uniqueId = accessorFileDependency.toNamespace + matchingDependency.fromNamespace;
+            const uniqueId = accessorFileDependency.toFQTN + matchingDependency.fromFQTN;
 
             if (alreadyAddedRelationships.has(uniqueId)) {
                 dlog(
@@ -176,15 +176,15 @@ function resolveAccessorReturnType(
                 continue;
             }
 
-            if (matchingDependency.fromNamespace !== accessorFileDependency.toNamespace) {
+            if (matchingDependency.fromFQTN !== accessorFileDependency.toFQTN) {
                 alreadyAddedRelationships.add(uniqueId);
 
                 const dependencyClone: Relationship = {
-                    fromNamespace: matchingDependency.fromNamespace,
+                    fromFQTN: matchingDependency.fromFQTN,
                     fromFile: matchingDependency.fromFile,
                     toClassName: accessorFileDependency.toClassName,
                     fromClassName: accessorFileDependency.toClassName,
-                    toNamespace: accessorFileDependency.toNamespace,
+                    toFQTN: accessorFileDependency.toFQTN,
                     toFile: accessorFileDependency.toFile,
                     usageType: "usage",
                 };

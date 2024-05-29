@@ -119,8 +119,8 @@ export class Coupling implements CouplingMetric {
 
                 return [
                     {
-                        fromNamespace: usage.fromNamespace,
-                        toNamespace: usage.usedNamespace,
+                        fromFQTN: usage.fromNamespace,
+                        toFQTN: usage.usedNamespace,
                         fromFile: usage.sourceOfUsing,
                         toFile: usedNamespaceSource.sourceFile,
                         fromClassName: fromNamespaceSource.typeName,

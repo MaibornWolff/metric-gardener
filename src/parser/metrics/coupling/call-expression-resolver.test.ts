@@ -8,30 +8,30 @@ describe("CallExpressionResolver", () => {
     describe("resolves call expressions and retrieves additional and transitive relationships", () => {
         it("when call expressions with save calls, public accessors and the right dependencies are given", () => {
             const firstItem: Relationship = {
-                fromNamespace: "FirstItemNamespace.FirstItem",
+                fromFQTN: "FirstItemNamespace.FirstItem",
                 fromFile: "FirstItem",
                 toFile: "SecondItem",
-                toNamespace: "SecondItemNamespace.SecondItem",
+                toFQTN: "SecondItemNamespace.SecondItem",
                 fromClassName: "FirstItem",
                 toClassName: "SecondItem",
                 usageType: "usage",
             };
 
             const secondItem: Relationship = {
-                fromNamespace: "SecondItemNamespace.SecondItem",
+                fromFQTN: "SecondItemNamespace.SecondItem",
                 fromFile: "SecondItem",
                 toFile: "ThirdItem",
-                toNamespace: "ThirdItemNamespace.ThirdItem",
+                toFQTN: "ThirdItemNamespace.ThirdItem",
                 fromClassName: "FirstItem",
                 toClassName: "ThirdItem",
                 usageType: "usage",
             };
 
             const thirdItem: Relationship = {
-                fromNamespace: "ThirdItemNamespace.ThirdItem",
+                fromFQTN: "ThirdItemNamespace.ThirdItem",
                 fromFile: "ThirdItem",
                 toFile: "FourthItem",
-                toNamespace: "FourthItemNamespace.FourthItem",
+                toFQTN: "FourthItemNamespace.FourthItem",
                 fromClassName: "FirstItem",
                 toClassName: "FourthItem",
                 usageType: "usage",

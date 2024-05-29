@@ -27,7 +27,7 @@ export class Coupling implements CouplingMetric {
     private readonly alreadyAddedRelationships = new Set<string>();
 
     private typesMap = new Map<FQTN, TypeInfo>();
-    private readonly publicAccessorsMap = new Map<string, Accessor[]>();
+    private readonly accessorsMap = new Map<string, Accessor[]>();
     private readonly usageCandidates: UsageCandidate[] = [];
     private readonly callExpressions = new Map<string, CallExpression[]>();
 
@@ -35,22 +35,22 @@ export class Coupling implements CouplingMetric {
         private readonly config: Configuration,
         private readonly typeCollector: TypeCollector,
         private readonly usageCollector: UsagesCollector,
-        private readonly publicAccessorCollector: PublicAccessorCollector,
+        private readonly accessorCollector: PublicAccessorCollector,
     ) {}
 
     processFile(parsedFile: ParsedFile): void {
         const typesFromFile: Map<FQTN, TypeInfo> = this.typeCollector.getTypesFromFile(parsedFile);
         this.typesMap = new Map([...this.typesMap, ...typesFromFile]);
 
-        const accessorsFromFile = this.publicAccessorCollector.getPublicAccessorsFromFile(
+        const accessorsFromFile = this.accessorCollector.getAccessorsFromFile(
             parsedFile,
             typesFromFile,
         );
         for (const [accessorName, accessors] of accessorsFromFile) {
-            if (this.publicAccessorsMap.get(accessorName) === undefined) {
-                this.publicAccessorsMap.set(accessorName, accessors);
+            if (this.accessorsMap.get(accessorName) === undefined) {
+                this.accessorsMap.set(accessorName, accessors);
             } else {
-                this.publicAccessorsMap.get(accessorName)!.push(...accessors);
+                this.accessorsMap.get(accessorName)!.push(...accessors);
             }
         }
 
@@ -67,12 +67,12 @@ export class Coupling implements CouplingMetric {
         dlog("namespaces", this.typesMap, "\n\n");
         dlog("usages", this.usageCandidates);
         dlog("\n\n", "unresolved call expressions", this.callExpressions, "\n\n");
-        dlog("\n\n", "publicAccessors", this.publicAccessorsMap, "\n\n");
+        dlog("\n\n", "publicAccessors", this.accessorsMap, "\n\n");
 
         const relationships = this.getRelationships(
             this.typesMap,
             this.usageCandidates,
-            this.publicAccessorsMap,
+            this.accessorsMap,
         );
         dlog("\n\n", relationships);
 
@@ -81,7 +81,7 @@ export class Coupling implements CouplingMetric {
         const additionalRelationships = getRelationshipsFromCallExpressions(
             tree,
             this.callExpressions,
-            this.publicAccessorsMap,
+            this.accessorsMap,
             this.alreadyAddedRelationships,
         );
         relationships.push(...additionalRelationships);

@@ -6,12 +6,12 @@ import { type TypeInfo } from "./types/abstract-collector.js";
 export class PublicAccessorCollector {
     private readonly accessorCollectorFactory = new AccessorCollectorFactory();
 
-    getPublicAccessorsFromFile(
+    getAccessorsFromFile(
         parsedFile: ParsedFile,
         typesFromFile: Map<FQTN, TypeInfo>,
     ): Map<string, Accessor[]> {
         const collector = this.accessorCollectorFactory.getCollector(parsedFile);
-        const accessors = collector?.getPublicAccessorsFromFile(parsedFile.filePath, typesFromFile);
+        const accessors = collector?.getAccessorsFromFile(parsedFile.filePath, typesFromFile);
         return accessors ?? new Map<string, Accessor[]>();
     }
 }

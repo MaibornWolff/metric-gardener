@@ -636,13 +636,13 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > for static class using 1`] = `
 {
   "metrics": Map {
-    "ClassA_And_B.cs" => {
+    "ClassA.cs" => {
       "coupling_between_objects": 1,
       "incoming_dependencies": 1,
       "instability": 0,
       "outgoing_dependencies": 0,
     },
-    "Main.cs" => {
+    "Program.cs" => {
       "coupling_between_objects": 1,
       "incoming_dependencies": 0,
       "instability": 1,
@@ -651,12 +651,12 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
   },
   "relationships": [
     {
+      "fromFQTN": "Program.Program",
+      "fromFile": "Program.cs",
       "fromTypeName": "Program",
-      "fromFQTN": "Programm.Program",
-      "fromFile": "Main.cs",
-      "toTypeName": "ClassB",
-      "toFQTN": "StaticUsedNamespace.ClassB",
-      "toFile": "ClassA_And_B.cs",
+      "toFQTN": "StaticUsedNamespace.ClassA",
+      "toFile": "ClassA.cs",
+      "toTypeName": "ClassA",
       "usageType": "usage",
     },
   ],

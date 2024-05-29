@@ -11,7 +11,7 @@ export class PublicAccessorCollector {
         typesFromFile: Map<FQTN, TypeInfo>,
     ): Map<string, Accessor[]> {
         const collector = this.accessorCollectorFactory.getCollector(parsedFile);
-        const accessors = collector?.getPublicAccessorsFromFile(parsedFile, typesFromFile);
+        const accessors = collector?.getPublicAccessorsFromFile(parsedFile.filePath, typesFromFile);
         return accessors ?? new Map<string, Accessor[]>();
     }
 }

@@ -21,16 +21,16 @@ export function getRelationshipsFromCallExpressions(
 
         dlog("RESOLVING:", fileDependencies);
 
-        const processedPublicAccessors = new Set<string>();
+        const processedCallExpressions = new Set<string>();
 
         const fileAdditionalRelationships: Relationship[] = [];
 
         for (const callExpression of callExpressions) {
-            if (processedPublicAccessors.has(callExpression.name)) {
+            if (processedCallExpressions.has(callExpression.name)) {
                 continue;
             }
 
-            processedPublicAccessors.add(callExpression.name);
+            processedCallExpressions.add(callExpression.name);
 
             const qualifiedNameParts = callExpression.name.split(callExpression.namespaceDelimiter);
             if (callExpression.variableNameIncluded) {

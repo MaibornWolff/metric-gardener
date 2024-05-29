@@ -28,7 +28,7 @@ export class Coupling implements CouplingMetric {
 
     private typesMap = new Map<FQTN, TypeInfo>();
     private readonly publicAccessorsMap = new Map<string, Accessor[]>();
-    private readonly usagesCandidates: UsageCandidate[] = [];
+    private readonly usageCandidates: UsageCandidate[] = [];
     private readonly callExpressions = new Map<string, CallExpression[]>();
 
     constructor(
@@ -58,18 +58,22 @@ export class Coupling implements CouplingMetric {
             parsedFile,
             typesFromFile,
         );
-        this.usagesCandidates.push(...usageCandidates);
+        this.usageCandidates.push(...usageCandidates);
         this.callExpressions.set(parsedFile.filePath, callExpressions);
     }
 
     calculate(): CouplingResult {
         dlog("\n\n");
         dlog("namespaces", this.typesMap, "\n\n");
-        dlog("usages", this.usagesCandidates);
+        dlog("usages", this.usageCandidates);
         dlog("\n\n", "unresolved call expressions", this.callExpressions, "\n\n");
         dlog("\n\n", "publicAccessors", this.publicAccessorsMap, "\n\n");
 
-        const relationships = this.getRelationships(this.typesMap, this.usagesCandidates);
+        const relationships = this.getRelationships(
+            this.typesMap,
+            this.usageCandidates,
+            this.publicAccessorsMap,
+        );
         dlog("\n\n", relationships);
 
         const tree = this.buildDependencyTree(relationships);
@@ -94,12 +98,15 @@ export class Coupling implements CouplingMetric {
 
     private getRelationships(
         types: Map<FQTN, TypeInfo>,
-        usagesCandidates: UsageCandidate[],
+        usageCandidates: UsageCandidate[],
+        accessorNameToAccessor: Map<string, Accessor[]>,
     ): Relationship[] {
-        return usagesCandidates.flatMap((usage) => {
+        return usageCandidates.flatMap((usage) => {
             const usedNamespaceSource = types.get(usage.usedNamespace);
             const fromNamespaceSource = types.get(usage.fromNamespace);
             const uniqueId = usage.usedNamespace + usage.fromNamespace;
+
+            const matchingPublicAccessors = accessorNameToAccessor.get(usage.usedName);
 
             if (
                 usedNamespaceSource !== undefined &&
@@ -128,6 +135,32 @@ export class Coupling implements CouplingMetric {
                         usageType: fixedUsageType,
                     },
                 ];
+            }
+
+            if (
+                matchingPublicAccessors !== undefined &&
+                fromNamespaceSource !== undefined &&
+                !this.alreadyAddedRelationships.has(uniqueId)
+            ) {
+                for (const accessor of matchingPublicAccessors) {
+                    if (usage.usedNamespace === accessor.FQTN) {
+                        this.alreadyAddedRelationships.add(uniqueId);
+                        return [
+                            {
+                                fromFQTN: usage.fromNamespace,
+                                toFQTN:
+                                    accessor.fromType.namespace +
+                                    accessor.fromType.namespaceDelimiter +
+                                    accessor.fromType.typeName,
+                                fromFile: usage.sourceOfUsing,
+                                toFile: accessor.filePath,
+                                fromTypeName: fromNamespaceSource.typeName,
+                                toTypeName: accessor.name,
+                                usageType: "usage",
+                            },
+                        ];
+                    }
+                }
             }
 
             return [];

@@ -1,5 +1,5 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import {Query, type QueryCapture} from "tree-sitter";
+import { type Query, type QueryCapture } from "tree-sitter";
 import { getNameAndTextFromCaptures } from "../../../helper/helper.js";
 import { type TypeInfo } from "../types/abstract-collector.js";
 
@@ -23,8 +23,8 @@ export abstract class AbstractCollector {
 
         const accessorsQuery = this.getAccessorsQuery();
         if (accessorsQuery) {
-            const publicAccessorsQuery = this.getAccessorsQuery()
-            for(const [FQTN, typeInfo] of typesFromFile) {
+            const publicAccessorsQuery = this.getAccessorsQuery();
+            for (const [FQTN, typeInfo] of typesFromFile) {
                 let publicAccessorsCaptures: QueryCapture[] = [];
                 if (publicAccessorsQuery !== undefined) {
                     publicAccessorsCaptures = publicAccessorsQuery.captures(typeInfo.node!);
@@ -47,6 +47,7 @@ export abstract class AbstractCollector {
 
                     index++;
                     publicAccessor.name = accessorsTextCaptures[index].text;
+                    publicAccessor.FQTN += typeInfo.namespaceDelimiter + publicAccessor.name;
 
                     if (publicAccessorsMap.get(publicAccessor.name) === undefined) {
                         publicAccessorsMap.set(publicAccessor.name, []);

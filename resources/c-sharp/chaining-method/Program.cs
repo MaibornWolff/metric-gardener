@@ -1,6 +1,7 @@
 using System.Net.Security;
 using System.Runtime.InteropServices;
 using ChainingMethodNamespace;
+
 namespace ChainingNamespace{
     class Chaining
     {

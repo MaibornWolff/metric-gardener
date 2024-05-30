@@ -58,7 +58,7 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it.skip("when the code contains chaining method calls", async () => {
+        it("when the code contains chaining method calls", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "chaining-method/",

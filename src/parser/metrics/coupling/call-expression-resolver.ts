@@ -26,13 +26,15 @@ export function getRelationshipsFromCallExpressions(
         const fileAdditionalRelationships: Relationship[] = [];
 
         for (const callExpression of callExpressions) {
-            if (processedCallExpressions.has(callExpression.name)) {
+            if (processedCallExpressions.has(callExpression.qualifiedName)) {
                 continue;
             }
 
-            processedCallExpressions.add(callExpression.name);
+            processedCallExpressions.add(callExpression.qualifiedName);
 
-            const qualifiedNameParts = callExpression.name.split(callExpression.namespaceDelimiter);
+            const qualifiedNameParts = callExpression.qualifiedName.split(
+                callExpression.namespaceDelimiter,
+            );
             if (callExpression.variableNameIncluded) {
                 qualifiedNameParts.shift();
             }

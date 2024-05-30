@@ -44,13 +44,14 @@ describe("CallExpressionResolver", () => {
             dependencyTree.set(thirdItem.toFile, []);
 
             const callExpression1: CallExpression = {
-                name: "myVariable?.UnknownAccessor?.AccessorInSecondItem?.AccessorInThirdItem?",
+                qualifiedName:
+                    "myVariable?.UnknownAccessor?.AccessorInSecondItem?.AccessorInThirdItem?",
                 namespaceDelimiter: ".",
                 variableNameIncluded: true,
             };
 
             const callExpression2: CallExpression = {
-                name: "myVariable.AccessorInSecondItem",
+                qualifiedName: "myVariable.AccessorInSecondItem",
                 namespaceDelimiter: ".",
                 variableNameIncluded: true,
             };

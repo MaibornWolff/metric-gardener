@@ -30,7 +30,7 @@ export type UsageCandidate = {
 };
 
 export type CallExpression = {
-    name: string;
+    qualifiedName: string;
     variableNameIncluded: boolean;
     namespaceDelimiter: string;
 };
@@ -515,7 +515,7 @@ export abstract class AbstractCollector {
     private buildCallExpression(qualifiedNameParts: string[]): CallExpression {
         const qualifiedName = qualifiedNameParts.join(this.getNamespaceDelimiter());
         return {
-            name: qualifiedName,
+            qualifiedName,
             variableNameIncluded:
                 this.getNamespaceDelimiter() === this.getFunctionCallDelimiter() &&
                 qualifiedName.includes(this.getNamespaceDelimiter()),

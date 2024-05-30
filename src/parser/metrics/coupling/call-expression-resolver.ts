@@ -10,13 +10,13 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 
 export function getRelationshipsFromCallExpressions(
     fileToRelations: Map<string, Relationship[]>,
-    unresolvedCallExpressions: Map<string, CallExpression[]>,
-    accessors: Map<string, Accessor[]>,
+    fileToCallExpressions: Map<string, CallExpression[]>,
+    accessorNameToAccessors: Map<string, Accessor[]>,
     alreadyAddedRelationships: Set<string>,
 ): Relationship[] {
     const additionalRelationships: Relationship[] = [];
 
-    for (const [filePath, callExpressions] of unresolvedCallExpressions) {
+    for (const [filePath, callExpressions] of fileToCallExpressions) {
         const fileDependencies = fileToRelations.get(filePath) ?? [];
 
         dlog("RESOLVING:", fileDependencies);
@@ -45,7 +45,7 @@ export function getRelationshipsFromCallExpressions(
                     namePart = namePart.slice(0, Math.max(0, namePart.length - 1));
                 }
 
-                const publicAccessorsOfPrefix = accessors.get(namePart);
+                const publicAccessorsOfPrefix = accessorNameToAccessors.get(namePart);
                 if (publicAccessorsOfPrefix === undefined) {
                     continue;
                 }

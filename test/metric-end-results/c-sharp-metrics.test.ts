@@ -65,6 +65,13 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
+        it("when the code contains equally named chaining method calls", async () => {
+            mockWin32Path({ skip: ["join", "resolve", "normalize"] });
+            const couplingResult = await getCouplingMetrics(
+                csharpTestResourcesPath + "advanced-chaining-method/",
+            );
+            expect(couplingResult).toMatchSnapshot();
+        }, 1000);
         it("for extended class", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "extends/");

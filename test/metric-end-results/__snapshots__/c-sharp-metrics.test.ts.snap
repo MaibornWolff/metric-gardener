@@ -1020,6 +1020,150 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 }
 `;
 
+exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > when the code contains equally named chaining method calls 1`] = `
+{
+  "metrics": Map {
+    "ChainingMethod.cs" => {
+      "coupling_between_objects": 4,
+      "incoming_dependencies": 3,
+      "instability": 0.25,
+      "outgoing_dependencies": 1,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+    "ProgrammTwo.cs" => {
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 1,
+    },
+  },
+  "relationships": [
+    {
+      "fromFQTN": "ChainingMethodNamespace.ClassE",
+      "fromFile": "ChainingMethod.cs",
+      "fromTypeName": "ClassE",
+      "toFQTN": "ChainingMethodNamespace.ClassA",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassA",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespace.Chaining",
+      "fromFile": "Program.cs",
+      "fromTypeName": "Chaining",
+      "toFQTN": "ChainingMethodNamespace.ClassA",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassA",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingMethodNamespace.ClassA",
+      "fromFile": "ChainingMethod.cs",
+      "fromTypeName": "ClassA",
+      "toFQTN": "ChainingMethodNamespace.ClassB",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassB",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespace.Chaining",
+      "fromFile": "Program.cs",
+      "fromTypeName": "Chaining",
+      "toFQTN": "ChainingMethodNamespace.ClassB",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassB",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespaceTwo.ChainingTwo",
+      "fromFile": "ProgrammTwo.cs",
+      "fromTypeName": "ChainingTwo",
+      "toFQTN": "ChainingMethodNamespace.ClassB",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassB",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingMethodNamespace.ClassB",
+      "fromFile": "ChainingMethod.cs",
+      "fromTypeName": "ClassB",
+      "toFQTN": "ChainingMethodNamespace.ClassC",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassC",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespace.Chaining",
+      "fromFile": "Program.cs",
+      "fromTypeName": "Chaining",
+      "toFQTN": "ChainingMethodNamespace.ClassC",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassC",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespaceTwo.ChainingTwo",
+      "fromFile": "ProgrammTwo.cs",
+      "fromTypeName": "ChainingTwo",
+      "toFQTN": "ChainingMethodNamespace.ClassC",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassC",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingMethodNamespace.ClassC",
+      "fromFile": "ChainingMethod.cs",
+      "fromTypeName": "ClassC",
+      "toFQTN": "ChainingMethodNamespace.ClassD",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassD",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespace.Chaining",
+      "fromFile": "Program.cs",
+      "fromTypeName": "Chaining",
+      "toFQTN": "ChainingMethodNamespace.ClassD",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassD",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespaceTwo.ChainingTwo",
+      "fromFile": "ProgrammTwo.cs",
+      "fromTypeName": "ChainingTwo",
+      "toFQTN": "ChainingMethodNamespace.ClassD",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassD",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingMethodNamespace.ClassD",
+      "fromFile": "ChainingMethod.cs",
+      "fromTypeName": "ClassD",
+      "toFQTN": "ChainingMethodNamespace.ClassE",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassE",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespaceTwo.ChainingTwo",
+      "fromFile": "ProgrammTwo.cs",
+      "fromTypeName": "ChainingTwo",
+      "toFQTN": "ChainingMethodNamespace.ClassE",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassE",
+      "usageType": "usage",
+    },
+  ],
+}
+`;
+
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > when the code contains extension method 1`] = `
 {
   "metrics": Map {

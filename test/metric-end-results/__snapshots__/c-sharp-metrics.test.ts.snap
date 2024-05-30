@@ -1167,44 +1167,53 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 exports[`C# metric tests > parsing C# dependencies should calculate the right dependencies and coupling metrics > when the code contains extension method 1`] = `
 {
   "metrics": Map {
-  "ExtensionMethod.cs" => {
-        "coupling_between_objects": 2,
-        "incoming_dependencies": 1,
-        "instability": 0.5,
-        "outgoing_dependencies": 1,
-      },
-  "Program.cs" => {
-          "coupling_between_objects": 1,
-          "incoming_dependencies": 0,
-          "instability": 1,
-          "outgoing_dependencies": 1,
-        },
-  "Enum.cs" => {
-            "coupling_between_objects": 1,
-            "incoming_dependencies": 1,
-            "instability": 0,
-            "outgoing_dependencies": 0,
-          },
+    "Enum.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 2,
+      "instability": 0,
+      "outgoing_dependencies": 0,
+    },
+    "ExtensionMethod.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 1,
+      "instability": 0.5,
+      "outgoing_dependencies": 1,
+    },
+    "Program.cs" => {
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 2,
+    },
   },
   "relationships": [
-  {
-        "fromTypeName": "ExtensionMethods2",
-        "fromFQTN": "mainNamespace.ExtensionMethods2",
-        "fromFile": "Program.cs",
-        "toTypeName": "MyExtensions",
-        "toFQTN": "ExtensionMethods.MyExtensions",
-        "toFile": "ExtensionMethod.cs",
-        "usageType": "usage",
-      },
-  {
-          "fromTypeName": "MyExtensions",
-          "fromFQTN": "ExtensionMethods.MyExtensions",
-          "fromFile": "ExtensionMethod.cs",
-          "toTypeName": "EnumType",
-          "toFQTN": "EnumNamespace.EnumType",
-          "toFile": "Enum.cs",
-          "usageType": "usage",
-        },
+    {
+      "fromFQTN": "ExtensionMethodNamespace.MyExtension",
+      "fromFile": "ExtensionMethod.cs",
+      "fromTypeName": "MyExtension",
+      "toFQTN": "EnumNamespace.EnumType",
+      "toFile": "Enum.cs",
+      "toTypeName": "EnumType",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ProgramNamespace.ProgramClass",
+      "fromFile": "Program.cs",
+      "fromTypeName": "ProgramClass",
+      "toFQTN": "EnumNamespace.EnumType",
+      "toFile": "Enum.cs",
+      "toTypeName": "EnumType",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ProgramNamespace.ProgramClass",
+      "fromFile": "Program.cs",
+      "fromTypeName": "ProgramClass",
+      "toFQTN": "ExtensionMethodNamespace.MyExtension",
+      "toFile": "ExtensionMethod.cs",
+      "toTypeName": "MyExtension",
+      "usageType": "usage",
+    },
   ],
 }
 `;

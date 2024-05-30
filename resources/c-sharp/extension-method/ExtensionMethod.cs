@@ -1,10 +1,10 @@
-using System.Net.Security;
+using EnumNamespace;
 
-namespace ExtensionMethods
+namespace ExtensionMethodNamespace
 {
-    public static class MyExtensions
+    public static class MyExtension
     {
-        public static int WordCount( this EnumType enumA)
+        public static int count(this EnumType enumA)
         {
             return 3;
         }

@@ -1,15 +1,15 @@
 using EnumNamespace;
-using ExtensionMethods;
+using ExtensionMethodNamespace;
 
-namespace mainNamespace
+namespace ProgramNamespace
 {
-    class ExtensionMethods2
+    class ProgramClass
     {
 
         static void Main()
         {
             EnumType enumA = EnumType.Thing1;
-            enumA.WordCount();
+            enumA.count();
         }
     }
 }

@@ -8,12 +8,12 @@ export class UsagesCollector {
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        typesFromFile: Map<FQTN, TypeInfo>,
+        typesFromFile: Map<FullyQualifiedName, TypeInfo>,
     ): {
         usageCandidates: UsageCandidate[];
         callExpressions: CallExpression[];
     } {
-        const collector = this.usageCollectorFactory.getCollector(parsedFile);
+        const collector = this.usageCollectorFactory.getCollector(parsedFile.language);
         return collector === undefined
             ? { usageCandidates: [], callExpressions: [] }
             : collector.getUsageCandidates(parsedFile, typesFromFile);

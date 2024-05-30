@@ -40,7 +40,7 @@ export abstract class AbstractCollector {
 
     getUsageCandidates(
         parsedFile: ParsedFile,
-        typesFromFile: Map<FQTN, TypeInfo>,
+        typesFromFile: Map<FullyQualifiedName, TypeInfo>,
     ): {
         usageCandidates: UsageCandidate[];
         callExpressions: CallExpression[];
@@ -127,7 +127,7 @@ export abstract class AbstractCollector {
 
     private getUsages(
         filePath: FilePath,
-        typesFromFile: Map<FQTN, TypeInfo>,
+        typesFromFile: Map<FullyQualifiedName, TypeInfo>,
         importReferences: Import[],
     ): {
         usageCandidates: UsageCandidate[];
@@ -197,7 +197,7 @@ export abstract class AbstractCollector {
     }
 
     private buildResolvedImportCandidates(
-        FQTN: FQTN,
+        FQTN: FullyQualifiedName,
         usageCapture: UsageCapture,
         qualifiedNameParts: string[],
         callExpressions: CallExpression[],
@@ -267,7 +267,7 @@ export abstract class AbstractCollector {
     }
 
     private buildUnresolvedImportCandidates(
-        FQTN: FQTN,
+        FQTN: FullyQualifiedName,
         usageCapture: UsageCapture,
         qualifiedNameParts: string[],
         callExpressions: CallExpression[],
@@ -340,7 +340,7 @@ export abstract class AbstractCollector {
     private buildCandidateForSameNamespace(
         typeInfo: TypeInfo,
         cleanQualifiedName: string,
-        FQTN: FQTN,
+        FQTN: FullyQualifiedName,
         filePath: string,
         usageType: UsageType,
     ): UsageCandidate {
@@ -358,7 +358,7 @@ export abstract class AbstractCollector {
     private buildCandidatesForParentNamespace(
         typeInfo: TypeInfo,
         cleanQualifiedName: string,
-        FQTN: FQTN,
+        FQTN: FullyQualifiedName,
         filePath: string,
         usageType: UsageType,
     ): UsageCandidate[] {
@@ -394,7 +394,7 @@ export abstract class AbstractCollector {
         qualifiedNameParts: string[],
         typeInfo: TypeInfo,
         cleanQualifiedName: string,
-        FQTN: FQTN,
+        FQTN: FullyQualifiedName,
         filePath: string,
         usageType: UsageType,
     ): UsageCandidate[] {
@@ -456,7 +456,7 @@ export abstract class AbstractCollector {
         }
     }
 
-    private getUsageCaptures(FQTN: FQTN, typeDeclaration: TypeInfo): UsageCapture[] {
+    private getUsageCaptures(FQTN: FullyQualifiedName, typeDeclaration: TypeInfo): UsageCapture[] {
         const usageCaptures: UsageCapture[] = this.getBaseClassAndInterfaceUsageCaptures(
             FQTN,
             typeDeclaration,
@@ -481,7 +481,10 @@ export abstract class AbstractCollector {
         return usageCaptures;
     }
 
-    private getBaseClassAndInterfaceUsageCaptures(FQTN: FQTN, typeInfo: TypeInfo): UsageCapture[] {
+    private getBaseClassAndInterfaceUsageCaptures(
+        FQTN: FullyQualifiedName,
+        typeInfo: TypeInfo,
+    ): UsageCapture[] {
         const usagesTextCaptures: UsageCapture[] = [];
 
         // Add implemented and extended classes as usages

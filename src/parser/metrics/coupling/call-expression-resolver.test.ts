@@ -59,38 +59,36 @@ describe("CallExpressionResolver", () => {
             unresolvedCallExpressions.set(firstItem.fromFile, [callExpression1, callExpression2]);
 
             const accessor1: Accessor = {
-                FQTN: "SecondItemNamespace.SecondItem",
+                FullyQualifiedAccessorName: "SecondItemNamespace.SecondItem",
                 filePath: "SecondItem",
                 name: "AccessorInSecondItem",
-                fromType:
-                    {
-                        namespace: "SecondItemNamespace",
-                        sourceFile: "SecondItem",
-                        typeName: "SecondItem",
-                        classType: "class",
-                        namespaceDelimiter: ".",
-                        implementedFrom: [],
-                    },
+                fromType: {
+                    namespace: "SecondItemNamespace",
+                    sourceFile: "SecondItem",
+                    typeName: "SecondItem",
+                    classType: "class",
+                    namespaceDelimiter: ".",
+                    implementedFrom: [],
+                },
                 returnType: "ThirdItem",
             };
 
             const accessor2: Accessor = {
-                FQTN: "ThirdItemNamespace.ThirdItem",
+                FullyQualifiedAccessorName: "ThirdItemNamespace.ThirdItem",
                 filePath: "ThirdItem",
                 name: "AccessorInThirdItem",
-                fromType:
-                    {
-                        namespace: "ThirdItemNamespace",
-                        sourceFile: "ThirdItem",
-                        typeName: "ThirdItem",
-                        classType: "class",
-                        namespaceDelimiter: ".",
-                        implementedFrom: [],
-                    },
+                fromType: {
+                    namespace: "ThirdItemNamespace",
+                    sourceFile: "ThirdItem",
+                    typeName: "ThirdItem",
+                    classType: "class",
+                    namespaceDelimiter: ".",
+                    implementedFrom: [],
+                },
                 returnType: "FourthItem",
             };
 
-            const publicAccessors  = new Map<string, Accessor[]>();
+            const publicAccessors = new Map<string, Accessor[]>();
             publicAccessors.set(accessor1.name, [accessor1]);
             publicAccessors.set(accessor2.name, [accessor2]);
 

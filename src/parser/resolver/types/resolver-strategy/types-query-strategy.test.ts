@@ -32,7 +32,7 @@ describe("Types Query strategy", () => {
             )) as ParsedFile;
             const csharpCollector: AbstractCollector = new CSharpCollector();
 
-            const result: Map<FQTN, TypeInfo> = new Map<string, TypeInfo>();
+            const result: Map<FullyQualifiedName, TypeInfo> = new Map<string, TypeInfo>();
 
             result.set("mainNamespace.FirstInterface", {
                 namespace: "mainNamespace",
@@ -59,11 +59,12 @@ describe("Types Query strategy", () => {
                 implementedFrom: [],
             });
             // When
-            const typesFromFile: Map<FQTN, TypeInfo> = new TypesQueryStrategy().getTypesFromFile(
-                parsedFile,
-                ".",
-                csharpCollector.getTypesQuery(),
-            );
+            const typesFromFile: Map<FullyQualifiedName, TypeInfo> =
+                new TypesQueryStrategy().getTypesFromFile(
+                    parsedFile,
+                    ".",
+                    csharpCollector.getTypesQuery(),
+                );
             // Then
             for (const [key, value] of typesFromFile.entries()) {
                 expect(value).toEqual(expect.objectContaining(result.get(key)));
@@ -79,7 +80,7 @@ describe("Types Query strategy", () => {
             )) as ParsedFile;
             const csharpCollector: AbstractCollector = new CSharpCollector();
 
-            const result: Map<FQTN, TypeInfo> = new Map<string, TypeInfo>();
+            const result: Map<FullyQualifiedName, TypeInfo> = new Map<string, TypeInfo>();
 
             result.set("App.CouplingExamplesOne.BlubControllerOne1", {
                 namespace: "App.CouplingExamplesOne",
@@ -134,7 +135,7 @@ describe("Types Query strategy", () => {
             )) as ParsedFile;
             const phpCollector: PHPCollector = new PHPCollector();
 
-            const result: Map<FQTN, TypeInfo> = new Map<string, TypeInfo>();
+            const result: Map<FullyQualifiedName, TypeInfo> = new Map<string, TypeInfo>();
 
             result.set("App\\CouplingExamplesOne\\BlubControllerOne1", {
                 namespace: "App\\CouplingExamplesOne",

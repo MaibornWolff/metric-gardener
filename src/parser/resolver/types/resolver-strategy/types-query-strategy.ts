@@ -3,13 +3,13 @@ import { type ClassType, type TypeInfo } from "../abstract-collector.js";
 import { type ParsedFile } from "../../../metrics/metric.js";
 
 export class TypesQueryStrategy {
-    protected fileToTypesMapCache = new Map<FilePath, Map<FQTN, TypeInfo>>();
+    protected fileToTypesMapCache = new Map<FilePath, Map<FullyQualifiedName, TypeInfo>>();
 
     getTypesFromFile(
         parsedFile: ParsedFile,
         namespaceDelimiter: string,
         typesQuery: Query,
-    ): Map<FQTN, TypeInfo> {
+    ): Map<FullyQualifiedName, TypeInfo> {
         const { filePath, tree } = parsedFile;
 
         let typesMap = this.fileToTypesMapCache.get(filePath);
@@ -17,7 +17,7 @@ export class TypesQueryStrategy {
             return typesMap;
         }
 
-        typesMap = new Map<FQTN, TypeInfo>();
+        typesMap = new Map<FullyQualifiedName, TypeInfo>();
 
         let matches: QueryMatch[] = [];
         if (typesQuery !== undefined) {
@@ -37,7 +37,7 @@ export class TypesQueryStrategy {
         match: QueryMatch,
         filePath: string,
         namespaceDelimiter: string,
-        typesMap: Map<FQTN, TypeInfo>,
+        typesMap: Map<FullyQualifiedName, TypeInfo>,
     ): void {
         let namespace = "";
         let classType: ClassType = "class";

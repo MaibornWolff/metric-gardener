@@ -8,9 +8,9 @@ export class PublicAccessorCollector {
 
     getAccessorsFromFile(
         parsedFile: ParsedFile,
-        typesFromFile: Map<FQTN, TypeInfo>,
+        typesFromFile: Map<FullyQualifiedName, TypeInfo>,
     ): Map<string, Accessor[]> {
-        const collector = this.accessorCollectorFactory.getCollector(parsedFile);
+        const collector = this.accessorCollectorFactory.getCollector(parsedFile.language);
         const accessors = collector?.getAccessorsFromFile(parsedFile.filePath, typesFromFile);
         return accessors ?? new Map<string, Accessor[]>();
     }

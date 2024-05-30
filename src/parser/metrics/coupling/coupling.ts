@@ -26,7 +26,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 export class Coupling implements CouplingMetric {
     private readonly alreadyAddedRelationships = new Set<string>();
 
-    private typesMap = new Map<FQTN, TypeInfo>();
+    private typesMap = new Map<FullyQualifiedName, TypeInfo>();
     private readonly accessorsMap = new Map<string, Accessor[]>();
     private readonly usageCandidates: UsageCandidate[] = [];
     private readonly callExpressions = new Map<string, CallExpression[]>();
@@ -39,7 +39,8 @@ export class Coupling implements CouplingMetric {
     ) {}
 
     processFile(parsedFile: ParsedFile): void {
-        const typesFromFile: Map<FQTN, TypeInfo> = this.typeCollector.getTypesFromFile(parsedFile);
+        const typesFromFile: Map<FullyQualifiedName, TypeInfo> =
+            this.typeCollector.getTypesFromFile(parsedFile);
         this.typesMap = new Map([...this.typesMap, ...typesFromFile]);
 
         const accessorsFromFile = this.accessorCollector.getAccessorsFromFile(
@@ -97,7 +98,7 @@ export class Coupling implements CouplingMetric {
     }
 
     private getRelationships(
-        types: Map<FQTN, TypeInfo>,
+        types: Map<FullyQualifiedName, TypeInfo>,
         usageCandidates: UsageCandidate[],
         accessorNameToAccessor: Map<string, Accessor[]>,
     ): Relationship[] {
@@ -143,7 +144,7 @@ export class Coupling implements CouplingMetric {
                 !this.alreadyAddedRelationships.has(uniqueId)
             ) {
                 for (const accessor of matchingPublicAccessors) {
-                    if (usage.usedNamespace === accessor.FQTN) {
+                    if (usage.usedNamespace === accessor.FullyQualifiedAccessorName) {
                         this.alreadyAddedRelationships.add(uniqueId);
                         return [
                             {
@@ -185,8 +186,8 @@ export class Coupling implements CouplingMetric {
         relationships: Relationship[],
     ): Map<FilePath, CouplingMetrics> {
         const couplingValues = new Map<string, CouplingMetrics>();
-        const outgoingDependenciesByFile = new Map<FilePath, Set<FQTN>>();
-        const incomingDependenciesByFile = new Map<FilePath, Set<FQTN>>();
+        const outgoingDependenciesByFile = new Map<FilePath, Set<FullyQualifiedName>>();
+        const incomingDependenciesByFile = new Map<FilePath, Set<FullyQualifiedName>>();
 
         for (const relationship of relationships) {
             const { fromFile } = relationship;
@@ -232,7 +233,7 @@ export class Coupling implements CouplingMetric {
     }
 
     private updateDependency(
-        dependencyByFile: Map<FilePath, Set<FQTN>>,
+        dependencyByFile: Map<FilePath, Set<FullyQualifiedName>>,
         thisFile: string,
         relationFile: string,
     ): void {

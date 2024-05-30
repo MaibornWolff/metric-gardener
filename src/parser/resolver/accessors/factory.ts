@@ -12,7 +12,7 @@ export class Factory {
         this.collectors.set(Language.PHP, new PHPCollector());
     }
 
-    getCollector(parsedFile: ParsedFile): AbstractCollector | undefined {
-        return this.collectors.get(parsedFile.language);
+    getCollector(language: Language): AbstractCollector | undefined {
+        return this.collectors.get(language);
     }
 }

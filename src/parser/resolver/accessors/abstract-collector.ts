@@ -7,7 +7,7 @@ let dlog: DebugLoggerFunction = debuglog("metric-gardener", (logger) => {
 });
 export type Accessor = {
     name: string;
-    FQTN: FQTN;
+    FullyQualifiedAccessorName: FullyQualifiedName;
     fromType: TypeInfo;
     filePath: string;
     returnType: string;
@@ -16,7 +16,7 @@ export type Accessor = {
 export abstract class AbstractCollector {
     getAccessorsFromFile(
         filePath: string,
-        typesFromFile: Map<FQTN, TypeInfo>,
+        typesFromFile: Map<FullyQualifiedName, TypeInfo>,
     ): Map<string, Accessor[]> {
         const accessorsMap = new Map<string, Accessor[]>();
 
@@ -68,7 +68,7 @@ export abstract class AbstractCollector {
         }
 
         return {
-            FQTN,
+            FullyQualifiedAccessorName: FQTN,
             name,
             fromType: typeInfo,
             filePath,

@@ -1,4 +1,3 @@
-import { type ParsedFile } from "../../metrics/metric.js";
 import { Language } from "../../../helper/language.js";
 import { type AbstractCollector } from "./abstract-collector.js";
 import { PHPCollector } from "./php-collector.js";

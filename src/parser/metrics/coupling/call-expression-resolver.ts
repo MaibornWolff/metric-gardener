@@ -179,7 +179,7 @@ function resolveAccessorReturnType(
                     fromFQTN: matchingDependency.fromFQTN,
                     fromFile: matchingDependency.fromFile,
                     toTypeName: accessorFileDependency.toTypeName,
-                    fromTypeName: accessorFileDependency.toTypeName,
+                    fromTypeName: matchingDependency.fromTypeName,
                     toFQTN: accessorFileDependency.toFQTN,
                     toFile: accessorFileDependency.toFile,
                     usageType: "usage",

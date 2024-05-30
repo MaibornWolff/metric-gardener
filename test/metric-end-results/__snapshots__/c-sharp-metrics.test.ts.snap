@@ -998,6 +998,24 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "toTypeName": "ClassC",
       "usageType": "usage",
     },
+    {
+      "fromFQTN": "ChainingMethodNamespace.ClassC",
+      "fromFile": "ChainingMethod.cs",
+      "fromTypeName": "ClassC",
+      "toFQTN": "ChainingMethodNamespace.ClassD",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassD",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "ChainingNamespace.Chaining",
+      "fromFile": "Program.cs",
+      "fromTypeName": "Chaining",
+      "toFQTN": "ChainingMethodNamespace.ClassD",
+      "toFile": "ChainingMethod.cs",
+      "toTypeName": "ClassD",
+      "usageType": "usage",
+    },
   ],
 }
 `;

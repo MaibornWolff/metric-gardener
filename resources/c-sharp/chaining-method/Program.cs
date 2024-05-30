@@ -1,5 +1,3 @@
-using System.Net.Security;
-using System.Runtime.InteropServices;
 using ChainingMethodNamespace;
 
 namespace ChainingNamespace{
@@ -8,7 +6,7 @@ namespace ChainingNamespace{
 
         static void Main()
         {
-            ClassC classC = new ClassA().returnClassB().returnClassC();
+            ClassD classD = new ClassA().returnClassB().returnClassC().returnClassD();
         }
     }
 }

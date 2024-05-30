@@ -18,7 +18,12 @@ namespace ChainingMethodNamespace
     }
     public class ClassC
     {
-
+        public ClassD returnClassD()
+        {
+            return new ClassD();
+        }
     }
-
+    public class ClassD
+    {
+    }
 }

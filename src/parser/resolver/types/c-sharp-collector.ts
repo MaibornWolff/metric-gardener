@@ -6,55 +6,31 @@ import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-colle
 
 export class CSharpCollector extends AbstractCollector {
     public getTypesQuery(): Query {
-        const queryString = `
+        const allTypeQueryStrings = [
+            this.getClassDeclarationQueryString(),
+            this.getInterfaceDeclarationQueryString(),
+            this.getEnumDeclarationQueryString(),
+            this.getStructDeclarationQueryString(),
+            this.getDelegateDeclarationQueryString(),
+        ];
+
+        const typeInNamespaceQueryString = `
             (namespace_declaration
                 name: (_) @namespace_definition_name
                 body: [
-                        (declaration_list
-                            (class_declaration
-                                name: (identifier) @class_name
-                                bases: (base_list
-                                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
-                                )?
-                                body: (declaration_list
-                                    (class_declaration name: (identifier) @class_name)
-                                )*
-                            ) @type_node
-                        )
-                        (declaration_list
-                            (interface_declaration
-                                "interface" @class_type
-                                name: (identifier) @class_name
-                                bases: (base_list
-                                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
-                                )?
-                            ) @type_node
-                        )
-                        (declaration_list
-                            (enum_declaration
-                                name: (identifier) @class_name
-                                bases: (base_list
-                                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
-                                )?
-                            ) @type_node
-                        )
-                        (declaration_list
-                            (struct_declaration
-                                name: (identifier) @class_name
-                                bases: (base_list
-                                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
-                                )?
-                            ) @type_node
-                        )
-                        (declaration_list
-                            (delegate_declaration
-                                name: (identifier) @class_name
-                            ) @type_node
-                        )
+
+                   ${allTypeQueryStrings.map((query) => `(declaration_list (${query}))`).join("\n")}
+
                 ]+
             )
         `;
+        const globalTypeQueryString = `
+            (compilation_unit .([
+              ${allTypeQueryStrings.map((query) => `(${query})`).join("\n")}
+            ]))
+        `;
 
+        const queryString = typeInNamespaceQueryString + globalTypeQueryString;
         const queryStatement = new SimpleLanguageSpecificQueryStatement(
             queryString,
             new Set<Language>([Language.CSharp]),
@@ -71,6 +47,62 @@ export class CSharpCollector extends AbstractCollector {
 
     protected getNamespaceDelimiter(): string {
         return ".";
+    }
+
+    private getClassDeclarationQueryString(): string {
+        return `
+            (class_declaration
+                name: (identifier) @class_name
+                bases: (base_list
+                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
+                )?
+                body: (declaration_list
+                    (class_declaration name: (identifier) @class_name)
+                )*
+            ) @type_node
+        `;
+    }
+
+    private getInterfaceDeclarationQueryString(): string {
+        return `
+            (interface_declaration
+                "interface" @class_type
+                name: (identifier) @class_name
+                bases: (base_list
+                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
+                )?
+            ) @type_node
+        `;
+    }
+
+    private getEnumDeclarationQueryString(): string {
+        return `
+            (enum_declaration
+                name: (identifier) @class_name
+                bases: (base_list
+                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
+                )?
+            ) @type_node
+        `;
+    }
+
+    private getStructDeclarationQueryString(): string {
+        return `
+            (struct_declaration
+                name: (identifier) @class_name
+                bases: (base_list
+                    (":" (identifier) @implemented_class ("," (identifier) @implemented_class)*)
+                )?
+            ) @type_node
+        `;
+    }
+
+    private getDelegateDeclarationQueryString(): string {
+        return `
+            (delegate_declaration
+                name: (identifier) @class_name
+            ) @type_node
+        `;
     }
 
     // TODO: @implemented_class must be named @extended_class for base classes

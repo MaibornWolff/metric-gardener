@@ -1,42 +1,30 @@
 import { type Query } from "tree-sitter";
-import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
+import { SimpleQueryStatement } from "../../queries/query-statements.js";
 import { Language } from "../../../helper/language.js";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
 export class PHPCollector extends AbstractCollector {
     public getTypesQuery(): Query {
-        const queryString = `
+        const allTypeQueryStrings = [
+            this.getClassDeclarationQueryString(),
+            this.getInterfaceDeclarationQueryString(),
+        ];
+
+        const namespaceQueryString = `
             (
                 (namespace_definition
                     name: (namespace_name) @namespace_definition_name
                 )
                 [
-                    (class_declaration
-                        (name) @class_name
-                        (base_clause (name) @extended_class)?
-                        (class_interface_clause
-                            (name)+ @implemented_class ("," (name) @implemented_class)*
-                        )?
-                    ) @type_node
-                    (interface_declaration
-                        "interface" @class_type
-                        (name) @class_name
-                        (base_clause
-                            (name)+ @implemented_class ("," (name) @implemented_class)*
-                        )?
-                    ) @type_node
+                    ${allTypeQueryStrings.join("\n")}
                 ]+
             )
         `;
-
-        const queryStatement = new SimpleLanguageSpecificQueryStatement(
-            queryString,
-            new Set<Language>([Language.PHP]),
-        );
+        const namespaceQueryStatement = new SimpleQueryStatement(namespaceQueryString);
 
         const queryBuilder = new QueryBuilder(Language.PHP);
-        queryBuilder.addStatement(queryStatement);
+        queryBuilder.addStatement(namespaceQueryStatement);
         return queryBuilder.build();
     }
 
@@ -46,5 +34,29 @@ export class PHPCollector extends AbstractCollector {
 
     protected getNamespaceDelimiter(): string {
         return "\\";
+    }
+
+    private getClassDeclarationQueryString(): string {
+        return `
+            (class_declaration
+                (name) @class_name
+                (base_clause (name) @extended_class)?
+                (class_interface_clause
+                    (name)+ @implemented_class ("," (name) @implemented_class)*
+                )?
+            ) @type_node
+        `;
+    }
+
+    private getInterfaceDeclarationQueryString(): string {
+        return `
+            (interface_declaration
+                "interface" @class_type
+                (name) @class_name
+                (base_clause
+                    (name)+ @implemented_class ("," (name) @implemented_class)*
+                )?
+            ) @type_node
+        `;
     }
 }

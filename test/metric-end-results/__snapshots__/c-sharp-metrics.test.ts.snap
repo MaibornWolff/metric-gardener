@@ -246,12 +246,12 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
   },
   "relationships": [
     {
-      "fromTypeName": "NoNamespaceDefinition",
-      "fromFQTN": "NoNamespaceDefinition",
+      "fromFQTN": ".NoNamespaceDefinition",
       "fromFile": "Program.cs",
-      "toTypeName": "ClassA",
-      "toFQTN": "ClassA",
+      "fromTypeName": "NoNamespaceDefinition",
+      "toFQTN": ".ClassA",
       "toFile": "ClassA.cs",
+      "toTypeName": "ClassA",
       "usageType": "usage",
     },
   ],
@@ -276,12 +276,12 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
   },
   "relationships": [
     {
-      "fromTypeName": "NoImport",
-      "fromFQTN": "NoImport",
+      "fromFQTN": ".NoImport",
       "fromFile": "Program.cs",
-      "toTypeName": "ClassA",
+      "fromTypeName": "NoImport",
       "toFQTN": "NamespaceA.ClassA",
       "toFile": "ClassA.cs",
+      "toTypeName": "ClassA",
       "usageType": "usage",
     },
   ],

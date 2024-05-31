@@ -26,7 +26,8 @@
         "xo": "xo",
         "xo:fix": "xo --fix",
         "prepare": "husky",
-        "import-grammars": "node dist/src/import-grammars/import-grammar.js"
+        "import-grammars": "node dist/src/import-grammars/import-grammar.js",
+        "generate-output-format-markdown": "node dist/docs/output-format/generate-output-format-md.js"
     },
     "dependencies": {
         "p-map": "^7.0.1",

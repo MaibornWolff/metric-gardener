@@ -1,9 +1,10 @@
 using System;
+using ClassANamespace;
 using ClassBNamespace;
 namespace GenericClassNamespace
 {
 
-public class GenericClass<T1, T2> where T2 : ClassB
+public class GenericClass<T1, T2, ClassA> where T2 : ClassB
 {
     public void GenericMethod<T>()
     {

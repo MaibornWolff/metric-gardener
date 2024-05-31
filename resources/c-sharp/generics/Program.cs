@@ -10,8 +10,8 @@ namespace mainNamespace
 
         static void Main()
         {
-            var genericObject = new GenericClass<ClassA, ClassD>();
-            
+            var genericObject = new GenericClass<ClassA, ClassD, ClassA>();
+
             genericObject.GenericMethod<ClassC>();
         }
     }

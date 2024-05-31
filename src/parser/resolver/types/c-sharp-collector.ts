@@ -1,8 +1,19 @@
 import { type Query } from "tree-sitter";
-import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
+import { SimpleQueryStatement } from "../../queries/query-statements.js";
 import { Language } from "../../../helper/language.js";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
+
+export class TopLevelQueryStatement extends SimpleQueryStatement {
+    constructor(query: string) {
+        const globalQueryString = `
+            (_ .([
+                ${query}
+            ]))
+        `;
+        super(globalQueryString);
+    }
+}
 
 export class CSharpCollector extends AbstractCollector {
     public getTypesQuery(): Query {
@@ -18,26 +29,22 @@ export class CSharpCollector extends AbstractCollector {
             (namespace_declaration
                 name: (_) @namespace_definition_name
                 body: [
-
                    ${allTypeQueryStrings.map((query) => `(declaration_list (${query}))`).join("\n")}
-
-                ]+
+                ]
             )
         `;
+        const namespaceQueryStatement = new SimpleQueryStatement(typeInNamespaceQueryString);
+
         const globalTypeQueryString = `
             (compilation_unit .([
-              ${allTypeQueryStrings.map((query) => `(${query})`).join("\n")}
+              ${allTypeQueryStrings.join("\n")}
             ]))
         `;
-
-        const queryString = typeInNamespaceQueryString + globalTypeQueryString;
-        const queryStatement = new SimpleLanguageSpecificQueryStatement(
-            queryString,
-            new Set<Language>([Language.CSharp]),
-        );
+        const globalQueryStatement = new SimpleQueryStatement(globalTypeQueryString);
 
         const queryBuilder = new QueryBuilder(Language.CSharp);
-        queryBuilder.addStatement(queryStatement);
+        queryBuilder.addStatement(namespaceQueryStatement);
+        queryBuilder.addStatement(globalQueryStatement);
         return queryBuilder.build();
     }
 

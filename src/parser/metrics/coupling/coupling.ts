@@ -102,34 +102,34 @@ export class Coupling implements CouplingMetric {
         usageCandidates: UsageCandidate[],
         accessorNameToAccessor: Map<string, Accessor[]>,
     ): Relationship[] {
-        return usageCandidates.flatMap((usage) => {
-            const usedNamespaceSource = types.get(usage.usedNamespace);
-            const fromNamespaceSource = types.get(usage.fromNamespace);
-            const uniqueId = usage.usedNamespace + usage.fromNamespace;
+        return usageCandidates.flatMap((usageCandidate) => {
+            const usedNamespaceSource = types.get(usageCandidate.usedNamespace);
+            const fromNamespaceSource = types.get(usageCandidate.fromNamespace);
+            const uniqueId = usageCandidate.usedNamespace + usageCandidate.fromNamespace;
 
-            const matchingPublicAccessors = accessorNameToAccessor.get(usage.usedName);
+            const matchingPublicAccessors = accessorNameToAccessor.get(usageCandidate.usedName);
 
             if (
                 usedNamespaceSource !== undefined &&
                 fromNamespaceSource !== undefined &&
                 !this.alreadyAddedRelationships.has(uniqueId) &&
-                usage.fromNamespace !== usage.usedNamespace
+                usageCandidate.fromNamespace !== usageCandidate.usedNamespace
             ) {
                 this.alreadyAddedRelationships.add(uniqueId);
 
                 // In C# we do not know if a base class is implemented or just extended
                 // But if class type is interface, then it must be implemented instead of extended
                 const fixedUsageType =
-                    usage.usageType === "implements" &&
+                    usageCandidate.usageType === "implements" &&
                     usedNamespaceSource.classType !== "interface"
                         ? "extends"
-                        : usage.usageType;
+                        : usageCandidate.usageType;
 
                 return [
                     {
-                        fromFQTN: usage.fromNamespace,
-                        toFQTN: usage.usedNamespace,
-                        fromFile: usage.sourceOfUsing,
+                        fromFQTN: usageCandidate.fromNamespace,
+                        toFQTN: usageCandidate.usedNamespace,
+                        fromFile: usageCandidate.sourceOfUsing,
                         toFile: usedNamespaceSource.sourceFile,
                         fromTypeName: fromNamespaceSource.typeName,
                         toTypeName: usedNamespaceSource.typeName,
@@ -144,16 +144,16 @@ export class Coupling implements CouplingMetric {
                 !this.alreadyAddedRelationships.has(uniqueId)
             ) {
                 for (const accessor of matchingPublicAccessors) {
-                    if (usage.usedNamespace === accessor.FullyQualifiedAccessorName) {
+                    if (usageCandidate.usedNamespace === accessor.FullyQualifiedAccessorName) {
                         this.alreadyAddedRelationships.add(uniqueId);
                         return [
                             {
-                                fromFQTN: usage.fromNamespace,
+                                fromFQTN: usageCandidate.fromNamespace,
                                 toFQTN:
                                     accessor.fromType.namespace +
                                     accessor.fromType.namespaceDelimiter +
                                     accessor.fromType.typeName,
-                                fromFile: usage.sourceOfUsing,
+                                fromFile: usageCandidate.sourceOfUsing,
                                 toFile: accessor.filePath,
                                 fromTypeName: fromNamespaceSource.typeName,
                                 toTypeName: accessor.name,

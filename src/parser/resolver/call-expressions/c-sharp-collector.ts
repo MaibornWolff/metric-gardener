@@ -99,6 +99,12 @@ export class CSharpCollector extends AbstractCollector {
             (attribute
                 name: (_) @qualified_name
             )
+            (type_parameter
+              name: (identifier) @qualified_name
+            )
+            (type_constraint
+                type: (identifier) @qualified_name
+            )
         `;
 
         const queryStatement = new SimpleLanguageSpecificQueryStatement(

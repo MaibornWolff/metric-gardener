@@ -3,15 +3,15 @@
     "metricInfo": {
         "complexity": {
             "title": "Cyclomatic Complexity",
-            "description": "asdf asdfhagfahg",
+            "description": "Cyclomatic complexity is a software metric used to indicate the complexity of a program. It is a quantitative measure of the number of linearly independent paths through a program's source code.",
             "higherIsBetter": true,
             "link": "https://en.wikipedia.org/wiki/Cyclomatic_complexity"
         },
         "functions": {
-            "title": "Number of Functions",
-            "description": "asdf asdfhagfahg",
+            "title": "Lines of Code",
+            "description": "Source lines of code (SLOC), also known as lines of code (LOC), is a software metric used to measure the size of a computer program by counting the number of lines in the text of the program's source code.",
             "higherIsBetter": false,
-            "link": "https://en.wikipedia.org/wiki/Cyclomatic_complexity"
+            "link": "https://en.wikipedia.org/wiki/Source_lines_of_code"
         }
     },
     "files": [

@@ -51,4 +51,4 @@ It does **not** count:
 
 ### lines_of_code, comment_lines, real_lines_of_code and keywords_in_comments
 
-There are no language-specific details for these metrics. See [README.md](README.md) for their general definition.
+There are no language-specific details for these metrics. See [README.md](../../README.md) for their general definition.

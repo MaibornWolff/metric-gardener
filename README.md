@@ -48,28 +48,28 @@ This is quite slow and can take up to one or two hours but can provide good resu
 
 ### Supported Languages
 
-- [Go](docs/Go.md)
-- [PHP](docs/PHP.md)
-- [TypeScript and TSX](docs/TS_TSX.md)
-- [Java](docs/Java.md)
-- [C#](docs/C_Sharp.md)
-- [C++](docs/CPP.md)
-- [Python](docs/Python.md)
-- [JavaScript](docs/JavaScript.md)
-- [Kotlin](docs/Kotlin.md)
-- [JSON](docs/JSON.md)
-- [YAML](docs/YAML.md))
+- [Go](docs/languages/Go.md)
+- [PHP](docs/languages/PHP.md)
+- [TypeScript and TSX](docs/languages/TS_TSX.md)
+- [Java](docs/languages/Java.md)
+- [C#](docs/languages/C_Sharp.md)
+- [C++](docs/languages/CPP.md)
+- [Python](docs/languages/Python.md)
+- [JavaScript](docs/languages/JavaScript.md)
+- [Kotlin](docs/languages/Kotlin.md)
+- [JSON](docs/languages/JSON.md)
+- [YAML](docs/languages/YAML.md))
 
 #### Basic support with missing or incomplete unit tests:
 
--   [C](docs/C.md) (take a look at the CLI
+-   [C](docs/languages/C.md) (take a look at the CLI
     option [`parse-h-as-c`](#command-line-options-for-the-parse-command)
     or [`parse-some-h-as-c`](#command-line-options-for-the-parse-command) for parsing `.h` C headers
     as C)
--   [Ruby](docs/Ruby.md)
--   [Rust](docs/Rust.md)
--   [Bash](docs/Bash.md)
--   [Flow-annotated JavaScript](docs/TS_TSX.md)
+-   [Ruby](docs/languages/Ruby.md)
+-   [Rust](docs/languages/Rust.md)
+-   [Bash](docs/languages/Bash.md)
+-   [Flow-annotated JavaScript](docs/languages/TS_TSX.md)
 
 ### Supported File Metrics
 

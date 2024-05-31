@@ -41,4 +41,4 @@ Bash doesn't have classes, so the value for this metric is always 0.
 
 ### lines_of_code, comment_lines, real_lines_of_code and keywords_in_comments
 
-see [README.md](../README.md)
+see [README.md](../../README.md)

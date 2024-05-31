@@ -99,7 +99,7 @@ describe("C# metric tests", () => {
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
 
-        it.skip("for generics", async () => {
+        it("for generics", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(csharpTestResourcesPath + "generics/");
             expect(couplingResult).toMatchSnapshot();

@@ -1,5 +1,7 @@
 import * as fs from "node:fs";
+import Ajv from "ajv";
 import schema from "./output-schema.json" with { type: "json" };
+import exampleOutput from "./example-output.json" with { type: "json" };
 
 const outputFormatPath = "docs/output-format/";
 const outputPath = outputFormatPath + "OutputFormat.md";
@@ -46,6 +48,31 @@ function parseJsonSchema(schema: any, indent = ""): string {
     return markdown;
 }
 
+function testExampleOutputFile(): boolean {
+    /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
+    // @ts-expect-error
+    const ajv = new Ajv({ allErrors: true });
+    const validate = ajv.compile(schema);
+    const valid = validate(exampleOutput);
+
+    if (!valid) {
+        console.log(
+            "Example output file does not match the schema:\n" + ajv.errorsText(validate.errors),
+        );
+        return false;
+    }
+
+    /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
+    console.log("Example output file matches the schema.");
+    return true;
+}
+
 // Write the generated markdown to the output file
-fs.writeFileSync(outputPath, generateMarkdown(schema), "utf8");
-console.log(`Markdown documentation has been generated at: ${outputPath}`);
+if (testExampleOutputFile()) {
+    fs.writeFileSync(outputPath, generateMarkdown(schema), "utf8");
+    console.log(`Markdown documentation has been generated at: ${outputPath}`);
+} else {
+    const errorMarkdown =
+        "# Error\n\nThe example output file does not match the schema. Please update the example output file to match the schema.";
+    fs.writeFileSync(outputPath, errorMarkdown, "utf8");
+}

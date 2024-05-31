@@ -1,4 +1,5 @@
-{   "author": "MaibornWolff GmbH",
+{
+    "author": "MaibornWolff GmbH",
     "bugs": {
         "url": "https://github.com/MaibornWolff/metric-gardener/issues",
         "email": ""
@@ -10,7 +11,11 @@
     "name": "metric-gardener",
     "version": "1.0.0",
     "description": "A tool to calculate metrics for imperative and object-oriented languages",
-    "files": ["dist/src/commands", "dist/src/helper", "dist/src/parser"],
+    "files": [
+        "dist/src/commands",
+        "dist/src/helper",
+        "dist/src/parser"
+    ],
     "main": "dist/src/app.js",
     "bin": {
         "metric-gardener": "dist/src/app.js"
@@ -27,9 +32,10 @@
         "xo:fix": "xo --fix",
         "prepare": "husky",
         "import-grammars": "node dist/src/import-grammars/import-grammar.js",
-        "generate-output-format-markdown": "node dist/docs/output-format/generate-output-format-md.js"
+        "generate-output-format-markdown": "npm run build && node dist/docs/output-format/generate-output-format-md.js"
     },
     "dependencies": {
+        "ajv": "^8.14.0",
         "p-map": "^7.0.1",
         "tree-sitter": "0.20.6",
         "tree-sitter-bash": "0.20.5",

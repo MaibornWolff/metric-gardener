@@ -84,14 +84,14 @@ describe("C# metric tests", () => {
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it.skip("for global classes without namespace", async () => {
+        it("for global classes without namespace", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "no-namespace-definition/",
             );
             expect(couplingResult).toMatchSnapshot();
         }, 1000);
-        it.skip("for global namespaces without import", async () => {
+        it("for global namespaces without import", async () => {
             mockWin32Path({ skip: ["join", "resolve", "normalize"] });
             const couplingResult = await getCouplingMetrics(
                 csharpTestResourcesPath + "use-namespace-without-import/",

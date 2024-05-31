@@ -36,7 +36,7 @@ export class PHPCollector extends AbstractCollector {
         );
 
         const queryBuilder = new QueryBuilder(Language.PHP);
-        queryBuilder.setStatement(queryStatement);
+        queryBuilder.addStatement(queryStatement);
         return queryBuilder.build();
     }
 

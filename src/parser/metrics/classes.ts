@@ -106,7 +106,7 @@ export class Classes implements Metric {
     calculate(parsedFile: ParsedFile): MetricResult {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
-        queryBuilder.setStatements(this.statementsSuperSet);
+        queryBuilder.addStatements(this.statementsSuperSet);
 
         const query = queryBuilder.build();
         let matches: QueryMatch[] = [];

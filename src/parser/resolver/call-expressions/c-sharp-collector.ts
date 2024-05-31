@@ -37,7 +37,7 @@ export class CSharpCollector extends AbstractCollector {
         );
 
         const queryBuilder = new QueryBuilder(Language.CSharp);
-        queryBuilder.setStatement(queryStatement);
+        queryBuilder.addStatement(queryStatement);
         return queryBuilder.build();
     }
 
@@ -107,7 +107,7 @@ export class CSharpCollector extends AbstractCollector {
         );
 
         const queryBuilder = new QueryBuilder(Language.CSharp);
-        queryBuilder.setStatement(queryStatement);
+        queryBuilder.addStatement(queryStatement);
         return queryBuilder.build();
     }
 }

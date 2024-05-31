@@ -1,12 +1,12 @@
+import { type Query } from "tree-sitter";
+import { SimpleLanguageSpecificQueryStatement } from "../../queries/query-statements.js";
+import { Language } from "../../../helper/language.js";
+import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector } from "./abstract-collector.js";
-import {SimpleLanguageSpecificQueryStatement} from "../../queries/query-statements.js";
-import {Language} from "../../../helper/language.js";
-import {QueryBuilder} from "../../queries/query-builder.js";
-import {Query} from "tree-sitter";
 
 export class PHPCollector extends AbstractCollector {
     protected getAccessorsQuery(): Query {
-        const queryString = ""
+        const queryString = "";
 
         const queryStatement = new SimpleLanguageSpecificQueryStatement(
             queryString,
@@ -14,7 +14,7 @@ export class PHPCollector extends AbstractCollector {
         );
 
         const queryBuilder = new QueryBuilder(Language.PHP);
-        queryBuilder.setStatement(queryStatement);
+        queryBuilder.addStatement(queryStatement);
         return queryBuilder.build();
     }
 }

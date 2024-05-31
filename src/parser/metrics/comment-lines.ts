@@ -67,7 +67,7 @@ export class CommentLines implements Metric {
         const { language, tree } = parsedFile;
         const queryBuilder = new QueryBuilder(language);
 
-        queryBuilder.setStatements(this.#statementsSuperSet);
+        queryBuilder.addStatements(this.#statementsSuperSet);
 
         const query = queryBuilder.build();
         let queryCaptures: QueryCapture[] = [];

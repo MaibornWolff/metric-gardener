@@ -1,5 +1,5 @@
 import { debuglog, type DebugLoggerFunction } from "node:util";
-import { type QueryCapture, type SyntaxNode } from "tree-sitter";
+import { type QueryCapture } from "tree-sitter";
 import { QueryBuilder } from "../queries/query-builder.js";
 import { NodeTypeCategory, type NodeTypeConfig } from "../../helper/model.js";
 import { getQueryStatementsByCategories } from "../../helper/helper.js";

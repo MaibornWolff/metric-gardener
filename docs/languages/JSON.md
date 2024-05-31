@@ -11,4 +11,4 @@ So we have `max_nesting_level = 0` for the JSON example `{"property": "value"}` 
 
 ### lines_of_code
 
-see [README.md](../README.md)
+see [README.md](../../README.md)

@@ -21,4 +21,4 @@ Examples: max_nesting_level is:
     ```
 ### lines_of_code
 
-see [README.md](../README.md)
+see [README.md](../../README.md)

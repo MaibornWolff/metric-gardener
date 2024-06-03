@@ -7,5 +7,5 @@
         "resolveJsonModule": true,
         "strict": true
     },
-    "exclude": ["resources", "node_modules", "test"]
+    "exclude": ["resources", "node_modules", "test", "src/**/*.test.ts"]
 }

@@ -46,7 +46,7 @@
                     },
                     "type": {
                         "description": "The type of the node.",
-                        "enum": ["source_code"]
+                        "enum": ["source_code", "structured_text"]
                     },
                     "metrics": {
                         "description": "Each metric has a key-value pair where the key is the name of the metric and the value is the value of the metric.",

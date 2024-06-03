@@ -132,7 +132,7 @@ function resolveAccessorReturnType(
     matchingDependency: Relationship,
     accessor: Accessor,
     fromType: TypeInfo,
-    tree: Map<string, Relationship[]>,
+    fileToRelationships: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>,
 ): number {
@@ -146,7 +146,7 @@ function resolveAccessorReturnType(
         "\n\n",
     );
 
-    const accessorFileDependencies = tree.get(fromType.sourceFile) ?? [];
+    const accessorFileDependencies = fileToRelationships.get(fromType.sourceFile) ?? [];
     dlog("namespace.source", fromType.sourceFile);
     dlog("accessorFileDependencies", accessorFileDependencies);
     for (const accessorFileDependency of accessorFileDependencies) {

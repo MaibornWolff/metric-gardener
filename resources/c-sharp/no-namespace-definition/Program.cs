@@ -4,6 +4,8 @@ class NoNamespaceDefinition
     {
         ClassA classA = new ClassA();
         classA.MyMethod();
+        ClassB classB = new ClassB();
+        classB.MyMethod();
     }
 }
 

@@ -175,8 +175,7 @@ environment variable `NODE_DEBUG` to `metric-gardener`.
 Activate dependency analysis by passing `--parseDependencies`
 
 - Coupling Between Objects (CBO)
-- Incoming Dependencies
-- Outgoing Dependencies
+- Incoming Dependencies and Outgoing Dependencies on file level
 - Instability: Outgoing Dependencies / (Outgoing Dependencies + Incoming Dependencies)
 
 **Limitations:**<br>

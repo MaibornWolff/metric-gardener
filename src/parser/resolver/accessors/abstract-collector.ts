@@ -55,21 +55,21 @@ export abstract class AbstractCollector {
         typeInfo: TypeInfo,
         filePath: string,
     ): Accessor {
-        let fullyQualifiedAccessorName = "";
+        let accessorName = "";
         let returnType = "";
 
         for (const capture of captures) {
             if (capture.name === "accessor_return_type") {
                 returnType = capture.node.text;
             } else if (capture.name === "accessor_name") {
-                fullyQualifiedAccessorName =
-                    fullyQualifiedTypeName + typeInfo.namespaceDelimiter + capture.node.text;
+                accessorName = capture.node.text;
             }
         }
 
         return {
-            FullyQualifiedAccessorName: fullyQualifiedTypeName,
-            name: fullyQualifiedAccessorName,
+            FullyQualifiedAccessorName:
+                fullyQualifiedTypeName + typeInfo.namespaceDelimiter + accessorName,
+            name: accessorName,
             fromType: typeInfo,
             filePath,
             returnType,

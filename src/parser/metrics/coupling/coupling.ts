@@ -185,13 +185,12 @@ export class Coupling implements CouplingMetric {
     private calculateCouplingMetrics(
         relationships: Relationship[],
     ): Map<FilePath, CouplingMetrics> {
-        const couplingValues = new Map<string, CouplingMetrics>();
+        const couplingValues = new Map<FilePath, CouplingMetrics>();
         const outgoingDependenciesByFile = new Map<FilePath, Set<FullyQualifiedName>>();
         const incomingDependenciesByFile = new Map<FilePath, Set<FullyQualifiedName>>();
 
         for (const relationship of relationships) {
-            const { fromFile } = relationship;
-            const { toFile } = relationship;
+            const { fromFile, toFile } = relationship;
 
             this.addNewCouplingMetricIfNotExists(couplingValues, fromFile);
             this.addNewCouplingMetricIfNotExists(couplingValues, toFile);
@@ -241,7 +240,9 @@ export class Coupling implements CouplingMetric {
             dependencyByFile.set(thisFile, new Set());
         }
 
-        dependencyByFile.get(thisFile)!.add(relationFile);
+        if (thisFile !== relationFile) {
+            dependencyByFile.get(thisFile)!.add(relationFile);
+        }
     }
 
     private calculateInstability(couplingMetrics: CouplingMetrics): void {

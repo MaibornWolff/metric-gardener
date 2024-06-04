@@ -1,3 +1,5 @@
+using classANamespace;
+
 namespace classBNamespace
 {
     public class ClassB

@@ -1231,15 +1231,15 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "ClassAFile.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 2,
+      "instability": 0.3333333333333333,
       "outgoing_dependencies": 1,
     },
     "ClassBFile.cs" => {
-      "coupling_between_objects": 4,
-      "incoming_dependencies": 3,
-      "instability": 0.25,
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 2,
+      "instability": 0.3333333333333333,
       "outgoing_dependencies": 1,
     },
     "Program.cs" => {
@@ -1254,6 +1254,15 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "fromFQTN": "ProgramNamespace.Program",
       "fromFile": "Program.cs",
       "fromTypeName": "Program",
+      "toFQTN": "classANamespace.ClassA",
+      "toFile": "ClassAFile.cs",
+      "toTypeName": "ClassA",
+      "usageType": "usage",
+    },
+    {
+      "fromFQTN": "classBNamespace.ClassAFactory",
+      "fromFile": "ClassBFile.cs",
+      "fromTypeName": "ClassAFactory",
       "toFQTN": "classANamespace.ClassA",
       "toFile": "ClassAFile.cs",
       "toTypeName": "ClassA",

@@ -45,33 +45,32 @@ export function getRelationshipsFromCallExpressions(
                     namePart = namePart.slice(0, Math.max(0, namePart.length - 1));
                 }
 
-                const publicAccessorsOfPrefix = accessorNameToAccessors.get(namePart);
-                if (publicAccessorsOfPrefix === undefined) {
-                    continue;
-                }
+                const allAccessorsByNamePart = getAccessorsByName(
+                    namePart,
+                    accessorNameToAccessors,
+                );
 
-                const clonedAccessors = [...publicAccessorsOfPrefix];
+                if (allAccessorsByNamePart === undefined) continue;
+
                 dlog(
                     "CLONED_ACCESSORS",
                     namePart,
                     filePath,
-                    clonedAccessors.length,
+                    allAccessorsByNamePart.length,
                     fileDependencies,
                 );
-                dlog(clonedAccessors.toString());
+                dlog(allAccessorsByNamePart.toString());
 
                 let added;
 
-                for (const accessor of clonedAccessors) {
-                    if (!accessor.fromType) {
-                        continue;
-                    }
-
+                for (const accessor of allAccessorsByNamePart) {
                     const type = accessor.fromType;
-                    const fullyQualifiedNameCandidate =
+                    if (!type) continue;
+
+                    const typeCandidateFQN =
                         type.namespace + type.namespaceDelimiter + type.typeName;
 
-                    dlog("\n\n", accessor, " -- ", fullyQualifiedNameCandidate);
+                    dlog("\n\n", accessor, " -- ", typeCandidateFQN);
 
                     // FirstAccessor is a property or method
                     // The type of myVariable must be an already added dependency of the current base type/class (filePath),
@@ -79,7 +78,7 @@ export function getRelationshipsFromCallExpressions(
                     // Example:
                     // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
                     const baseDependency = fileDependencies.find((relationship) => {
-                        return relationship.toFQTN === fullyQualifiedNameCandidate;
+                        return relationship.toFQTN === typeCandidateFQN;
                     });
 
                     // In case of chained accesses, look in dependencies added for previous chain elements:
@@ -87,7 +86,7 @@ export function getRelationshipsFromCallExpressions(
                     // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
                     const callExpressionDependency = fileAdditionalRelationships.find(
                         (dependency) => {
-                            return dependency.toFQTN === fullyQualifiedNameCandidate;
+                            return dependency.toFQTN === typeCandidateFQN;
                         },
                     );
 
@@ -95,7 +94,7 @@ export function getRelationshipsFromCallExpressions(
                         added = resolveAccessorReturnType(
                             baseDependency,
                             accessor,
-                            type,
+                            accessor.filePath,
                             fileToRelations,
                             fileAdditionalRelationships,
                             alreadyAddedRelationships,
@@ -104,7 +103,7 @@ export function getRelationshipsFromCallExpressions(
                         added = resolveAccessorReturnType(
                             callExpressionDependency,
                             accessor,
-                            type,
+                            accessor.filePath,
                             fileToRelations,
                             fileAdditionalRelationships,
                             alreadyAddedRelationships,
@@ -128,10 +127,21 @@ export function getRelationshipsFromCallExpressions(
     return additionalRelationships;
 }
 
+function getAccessorsByName(
+    name: FullyQualifiedName,
+    fromAccessors: Map<string, Accessor[]>,
+): Accessor[] | undefined {
+    const accessorForNamePart = fromAccessors.get(name);
+
+    if (accessorForNamePart === undefined) return undefined;
+
+    return [...accessorForNamePart];
+}
+
 function resolveAccessorReturnType(
     matchingDependency: Relationship,
     accessor: Accessor,
-    fromType: TypeInfo,
+    accessorFilePath: FilePath,
     fileToRelationships: Map<string, Relationship[]>,
     additionalRelationships: Relationship[],
     alreadyAddedRelationships: Set<string>,
@@ -146,10 +156,10 @@ function resolveAccessorReturnType(
         "\n\n",
     );
 
-    const accessorFileDependencies = fileToRelationships.get(fromType.sourceFile) ?? [];
-    dlog("namespace.source", fromType.sourceFile);
-    dlog("accessorFileDependencies", accessorFileDependencies);
-    for (const accessorFileDependency of accessorFileDependencies) {
+    const relationshipsFromAccessorFile = fileToRelationships.get(accessorFilePath) ?? [];
+    dlog("namespace.source", accessorFilePath);
+    dlog("accessorFileDependencies", relationshipsFromAccessorFile);
+    for (const relationship of relationshipsFromAccessorFile) {
         // TODO Imagine that returnType is MyTypeNumberOne
         //  and toTypeName MyType
         //  This would lead to a wrong dependency
@@ -157,31 +167,31 @@ function resolveAccessorReturnType(
         // Collection<MyTypeNumberOne>
         // Map<string, MyTypeNumberOne>
         // etc.
-        if (accessor.returnType.includes(accessorFileDependency.toTypeName)) {
-            const uniqueId = accessorFileDependency.toFQTN + matchingDependency.fromFQTN;
+        if (accessor.returnType.includes(relationship.toTypeName)) {
+            const uniqueId = relationship.toFQTN + matchingDependency.fromFQTN;
 
             if (alreadyAddedRelationships.has(uniqueId)) {
                 dlog(
                     "SKIP ADDING RETURN TYPE: ",
                     accessor.returnType,
                     "already added: ",
-                    accessorFileDependency,
+                    relationship,
                     alreadyAddedRelationships.has(uniqueId),
                     "\n\n",
                 );
                 continue;
             }
 
-            if (matchingDependency.fromFQTN !== accessorFileDependency.toFQTN) {
+            if (matchingDependency.fromFQTN !== relationship.toFQTN) {
                 alreadyAddedRelationships.add(uniqueId);
 
                 const dependencyClone: Relationship = {
                     fromFQTN: matchingDependency.fromFQTN,
                     fromFile: matchingDependency.fromFile,
-                    toTypeName: accessorFileDependency.toTypeName,
                     fromTypeName: matchingDependency.fromTypeName,
-                    toFQTN: accessorFileDependency.toFQTN,
-                    toFile: accessorFileDependency.toFile,
+                    toTypeName: relationship.toTypeName,
+                    toFQTN: relationship.toFQTN,
+                    toFile: relationship.toFile,
                     usageType: "usage",
                 };
 

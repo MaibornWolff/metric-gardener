@@ -78,8 +78,8 @@ export function getRelationshipsFromCallExpressions(
                     // so that subsequent method calls or attribute accesses can be resolved.
                     // Example:
                     // myVariable.FirstAccessor.SecondAccessor.ThirdAccessor
-                    const baseDependency = fileDependencies.find((dependency) => {
-                        return dependency.toFQTN === fullyQualifiedNameCandidate;
+                    const baseDependency = fileDependencies.find((relationship) => {
+                        return relationship.toFQTN === fullyQualifiedNameCandidate;
                     });
 
                     // In case of chained accesses, look in dependencies added for previous chain elements:

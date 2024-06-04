@@ -263,6 +263,15 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
       "toTypeName": "ClassA",
       "usageType": "usage",
     },
+    {
+      "fromFQTN": ".NoNamespaceDefinition",
+      "fromFile": "Program.cs",
+      "fromTypeName": "NoNamespaceDefinition",
+      "toFQTN": ".ClassB",
+      "toFile": "ClassA.cs",
+      "toTypeName": "ClassB",
+      "usageType": "usage",
+    },
   ],
 }
 `;

@@ -49,8 +49,6 @@ function parseJsonSchema(schema: any, indent = ""): string {
 }
 
 function testExampleOutputFile(): boolean {
-    /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
-    // @ts-expect-error
     const ajv = new Ajv({ allErrors: true });
     const validate = ajv.compile(schema);
     const valid = validate(exampleOutput);
@@ -62,7 +60,6 @@ function testExampleOutputFile(): boolean {
         return false;
     }
 
-    /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
     console.log("Example output file matches the schema.");
     return true;
 }

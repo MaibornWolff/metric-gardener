@@ -22,7 +22,7 @@ export abstract class AbstractCollector {
 
         const accessorsQuery = this.getAccessorsQuery();
 
-        for (const [FQTN, typeInfo] of typesFromFile) {
+        for (const [fullyQualifiedTypeName, typeInfo] of typesFromFile) {
             let accessorMatches: QueryMatch[] = [];
             if (accessorsQuery !== undefined) {
                 accessorMatches = accessorsQuery.matches(typeInfo.node!);
@@ -31,7 +31,7 @@ export abstract class AbstractCollector {
             for (const match of accessorMatches) {
                 const accessor = this.buildAccessorFromMatch(
                     match.captures,
-                    FQTN,
+                    fullyQualifiedTypeName,
                     typeInfo,
                     filePath,
                 );
@@ -51,25 +51,25 @@ export abstract class AbstractCollector {
 
     private buildAccessorFromMatch(
         captures: QueryCapture[],
-        FQTN: string,
+        fullyQualifiedTypeName: string,
         typeInfo: TypeInfo,
         filePath: string,
     ): Accessor {
-        let name = "";
+        let fullyQualifiedAccessorName = "";
         let returnType = "";
 
         for (const capture of captures) {
             if (capture.name === "accessor_return_type") {
                 returnType = capture.node.text;
             } else if (capture.name === "accessor_name") {
-                name = capture.node.text;
-                FQTN += typeInfo.namespaceDelimiter + name;
+                fullyQualifiedAccessorName =
+                    fullyQualifiedTypeName + typeInfo.namespaceDelimiter + capture.node.text;
             }
         }
 
         return {
-            FullyQualifiedAccessorName: FQTN,
-            name,
+            FullyQualifiedAccessorName: fullyQualifiedTypeName,
+            name: fullyQualifiedAccessorName,
             fromType: typeInfo,
             filePath,
             returnType,

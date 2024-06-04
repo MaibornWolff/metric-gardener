@@ -16,10 +16,10 @@ exports[`PHP metrics tests > parsing PHP dependencies > should calculate the rig
       "outgoing_dependencies": 0,
     },
     "BlubController.php" => {
-      "coupling_between_objects": 5,
-      "incoming_dependencies": 2,
-      "instability": 0.6,
-      "outgoing_dependencies": 3,
+      "coupling_between_objects": 3,
+      "incoming_dependencies": 1,
+      "instability": 0.6666666666666666,
+      "outgoing_dependencies": 2,
     },
     "ControllerInterface.php" => {
       "coupling_between_objects": 3,

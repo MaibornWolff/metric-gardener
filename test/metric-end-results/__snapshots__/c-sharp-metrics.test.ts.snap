@@ -862,10 +862,10 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "Program.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
-      "outgoing_dependencies": 1,
+      "coupling_between_objects": 0,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 0,
     },
   },
   "relationships": [
@@ -886,10 +886,10 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "Program.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
-      "outgoing_dependencies": 1,
+      "coupling_between_objects": 0,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 0,
     },
   },
   "relationships": [
@@ -910,16 +910,16 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "ClassToInterface.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
-      "outgoing_dependencies": 1,
+      "coupling_between_objects": 0,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 0,
     },
     "Program.cs" => {
-      "coupling_between_objects": 2,
-      "incoming_dependencies": 1,
-      "instability": 0.5,
-      "outgoing_dependencies": 1,
+      "coupling_between_objects": 0,
+      "incoming_dependencies": 0,
+      "instability": 1,
+      "outgoing_dependencies": 0,
     },
   },
   "relationships": [
@@ -949,10 +949,10 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "ChainingMethod.cs" => {
-      "coupling_between_objects": 3,
-      "incoming_dependencies": 2,
-      "instability": 0.3333333333333333,
-      "outgoing_dependencies": 1,
+      "coupling_between_objects": 1,
+      "incoming_dependencies": 1,
+      "instability": 0,
+      "outgoing_dependencies": 0,
     },
     "Program.cs" => {
       "coupling_between_objects": 1,
@@ -1033,10 +1033,10 @@ exports[`C# metric tests > parsing C# dependencies should calculate the right de
 {
   "metrics": Map {
     "ChainingMethod.cs" => {
-      "coupling_between_objects": 4,
-      "incoming_dependencies": 3,
-      "instability": 0.25,
-      "outgoing_dependencies": 1,
+      "coupling_between_objects": 2,
+      "incoming_dependencies": 2,
+      "instability": 0,
+      "outgoing_dependencies": 0,
     },
     "Program.cs" => {
       "coupling_between_objects": 1,

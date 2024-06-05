@@ -4,17 +4,6 @@ import { Language } from "../../../helper/language.js";
 import { QueryBuilder } from "../../queries/query-builder.js";
 import { AbstractCollector, type TypesResolvingStrategy } from "./abstract-collector.js";
 
-export class TopLevelQueryStatement extends SimpleQueryStatement {
-    constructor(query: string) {
-        const globalQueryString = `
-            (_ .([
-                ${query}
-            ]))
-        `;
-        super(globalQueryString);
-    }
-}
-
 export class CSharpCollector extends AbstractCollector {
     public getTypesQuery(): Query {
         const allTypeQueryStrings = [

@@ -36,8 +36,8 @@
     },
     "dependencies": {
         "ajv": "^8.14.0",
-        "p-map": "^7.0.1",
-        "tree-sitter": "0.20.6",
+        "p-map": "7.0.1",
+        "tree-sitter": "0.25.1",
         "tree-sitter-bash": "0.20.5",
         "tree-sitter-c": "0.20.8",
         "tree-sitter-c-sharp": "0.20.0",
@@ -53,17 +53,17 @@
         "tree-sitter-rust": "0.20.4",
         "tree-sitter-typescript": "0.20.5",
         "tree-sitter-yaml": "0.5.0",
-        "yargs": "17.7.2"
+        "yargs": "17.7.3"
     },
     "devDependencies": {
-        "@commitlint/config-conventional": "19.1.0",
-        "@types/node": "18.19.26",
-        "@types/yargs": "17.0.32",
-        "@vitest/coverage-v8": "1.4.0",
-        "commitlint": "19.2.1",
-        "husky": "9.0.11",
-        "lint-staged": "15.2.2",
-        "typescript": "5.3.3",
+        "@commitlint/config-conventional": "19.8.1",
+        "@types/node": "18.19.130",
+        "@types/yargs": "17.0.35",
+        "@vitest/coverage-v8": "1.6.1",
+        "commitlint": "19.8.1",
+        "husky": "9.1.7",
+        "lint-staged": "15.5.2",
+        "typescript": "5.9.3",
         "vitest": "1.4.0",
         "xo": "0.58.0"
     },

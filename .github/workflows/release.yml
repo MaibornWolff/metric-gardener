@@ -15,12 +15,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.7.0
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3.9.1
         with:
-          node-version: '20'
+          node-version: '20.20.2'
 
       - name: Build metric-gardener
         env:
@@ -51,7 +51,7 @@ jobs:
           echo "RELEASE_VERSION=${fullVersion:3}" >> $GITHUB_ENV
 
       - name: Upload Release Files to tagged release
-        uses: alexellis/upload-assets@0.4.0
+        uses: alexellis/upload-assets@0.5.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
